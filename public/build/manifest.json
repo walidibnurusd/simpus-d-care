@@ -1,0 +1,1156 @@
+{
+  "public/assets/fonts/flag-icon/er.svg": {
+    "file": "assets/er-c8a025d4.svg",
+    "src": "public/assets/fonts/flag-icon/er.svg"
+  },
+  "public/assets/fonts/flag-icon/et.svg": {
+    "file": "assets/et-69570758.svg",
+    "src": "public/assets/fonts/flag-icon/et.svg"
+  },
+  "public/assets/fonts/flag-icon/fi.svg": {
+    "file": "assets/fi-7acd48ad.svg",
+    "src": "public/assets/fonts/flag-icon/fi.svg"
+  },
+  "public/assets/fonts/flag-icon/fj.svg": {
+    "file": "assets/fj-a9110cd8.svg",
+    "src": "public/assets/fonts/flag-icon/fj.svg"
+  },
+  "public/assets/fonts/flag-icon/fk.svg": {
+    "file": "assets/fk-27d5cda3.svg",
+    "src": "public/assets/fonts/flag-icon/fk.svg"
+  },
+  "public/assets/fonts/flag-icon/fm.svg": {
+    "file": "assets/fm-2491fe2d.svg",
+    "src": "public/assets/fonts/flag-icon/fm.svg"
+  },
+  "public/assets/fonts/flag-icon/fo.svg": {
+    "file": "assets/fo-d558296a.svg",
+    "src": "public/assets/fonts/flag-icon/fo.svg"
+  },
+  "public/assets/fonts/flag-icon/fr.svg": {
+    "file": "assets/fr-0d287f3b.svg",
+    "src": "public/assets/fonts/flag-icon/fr.svg"
+  },
+  "public/assets/fonts/flag-icon/ga.svg": {
+    "file": "assets/ga-12d8d6bb.svg",
+    "src": "public/assets/fonts/flag-icon/ga.svg"
+  },
+  "public/assets/fonts/flag-icon/gb.svg": {
+    "file": "assets/gb-dafe41f9.svg",
+    "src": "public/assets/fonts/flag-icon/gb.svg"
+  },
+  "public/assets/fonts/flag-icon/gd.svg": {
+    "file": "assets/gd-650eac13.svg",
+    "src": "public/assets/fonts/flag-icon/gd.svg"
+  },
+  "public/assets/fonts/flag-icon/ge.svg": {
+    "file": "assets/ge-be5d9744.svg",
+    "src": "public/assets/fonts/flag-icon/ge.svg"
+  },
+  "public/assets/fonts/flag-icon/gf.svg": {
+    "file": "assets/gf-d731f16a.svg",
+    "src": "public/assets/fonts/flag-icon/gf.svg"
+  },
+  "public/assets/fonts/flag-icon/gg.svg": {
+    "file": "assets/gg-f71c12f5.svg",
+    "src": "public/assets/fonts/flag-icon/gg.svg"
+  },
+  "public/assets/fonts/flag-icon/gh.svg": {
+    "file": "assets/gh-9788593c.svg",
+    "src": "public/assets/fonts/flag-icon/gh.svg"
+  },
+  "public/assets/fonts/flag-icon/gi.svg": {
+    "file": "assets/gi-7ecdec4a.svg",
+    "src": "public/assets/fonts/flag-icon/gi.svg"
+  },
+  "public/assets/fonts/flag-icon/gl.svg": {
+    "file": "assets/gl-9a38c161.svg",
+    "src": "public/assets/fonts/flag-icon/gl.svg"
+  },
+  "public/assets/fonts/flag-icon/gm.svg": {
+    "file": "assets/gm-6f80b048.svg",
+    "src": "public/assets/fonts/flag-icon/gm.svg"
+  },
+  "public/assets/fonts/flag-icon/gn.svg": {
+    "file": "assets/gn-761ff70b.svg",
+    "src": "public/assets/fonts/flag-icon/gn.svg"
+  },
+  "public/assets/fonts/flag-icon/gp.svg": {
+    "file": "assets/gp-69e1b3ae.svg",
+    "src": "public/assets/fonts/flag-icon/gp.svg"
+  },
+  "public/assets/fonts/flag-icon/gq.svg": {
+    "file": "assets/gq-8b09ba7d.svg",
+    "src": "public/assets/fonts/flag-icon/gq.svg"
+  },
+  "public/assets/fonts/flag-icon/gr.svg": {
+    "file": "assets/gr-658f5491.svg",
+    "src": "public/assets/fonts/flag-icon/gr.svg"
+  },
+  "public/assets/fonts/flag-icon/gs.svg": {
+    "file": "assets/gs-1c6e109a.svg",
+    "src": "public/assets/fonts/flag-icon/gs.svg"
+  },
+  "public/assets/fonts/flag-icon/gt.svg": {
+    "file": "assets/gt-9dab3d01.svg",
+    "src": "public/assets/fonts/flag-icon/gt.svg"
+  },
+  "public/assets/fonts/flag-icon/gu.svg": {
+    "file": "assets/gu-b3ce0f7b.svg",
+    "src": "public/assets/fonts/flag-icon/gu.svg"
+  },
+  "public/assets/fonts/flag-icon/gw.svg": {
+    "file": "assets/gw-2bcf5c5f.svg",
+    "src": "public/assets/fonts/flag-icon/gw.svg"
+  },
+  "public/assets/fonts/flag-icon/gy.svg": {
+    "file": "assets/gy-f2ac6987.svg",
+    "src": "public/assets/fonts/flag-icon/gy.svg"
+  },
+  "public/assets/fonts/flag-icon/hk.svg": {
+    "file": "assets/hk-e50b7c7b.svg",
+    "src": "public/assets/fonts/flag-icon/hk.svg"
+  },
+  "public/assets/fonts/flag-icon/hm.svg": {
+    "file": "assets/hm-cfe87063.svg",
+    "src": "public/assets/fonts/flag-icon/hm.svg"
+  },
+  "public/assets/fonts/flag-icon/hn.svg": {
+    "file": "assets/hn-ee7a6f7d.svg",
+    "src": "public/assets/fonts/flag-icon/hn.svg"
+  },
+  "public/assets/fonts/flag-icon/hr.svg": {
+    "file": "assets/hr-baa88c94.svg",
+    "src": "public/assets/fonts/flag-icon/hr.svg"
+  },
+  "public/assets/fonts/flag-icon/ht.svg": {
+    "file": "assets/ht-d61347b3.svg",
+    "src": "public/assets/fonts/flag-icon/ht.svg"
+  },
+  "public/assets/fonts/flag-icon/hu.svg": {
+    "file": "assets/hu-ce62561a.svg",
+    "src": "public/assets/fonts/flag-icon/hu.svg"
+  },
+  "public/assets/fonts/flag-icon/bw.svg": {
+    "file": "assets/bw-e805bc58.svg",
+    "src": "public/assets/fonts/flag-icon/bw.svg"
+  },
+  "public/assets/fonts/flag-icon/by.svg": {
+    "file": "assets/by-9935c26a.svg",
+    "src": "public/assets/fonts/flag-icon/by.svg"
+  },
+  "public/assets/fonts/flag-icon/bz.svg": {
+    "file": "assets/bz-bd75a7f3.svg",
+    "src": "public/assets/fonts/flag-icon/bz.svg"
+  },
+  "public/assets/fonts/flag-icon/ca.svg": {
+    "file": "assets/ca-24c38d3f.svg",
+    "src": "public/assets/fonts/flag-icon/ca.svg"
+  },
+  "public/assets/fonts/flag-icon/cc.svg": {
+    "file": "assets/cc-01ffbd27.svg",
+    "src": "public/assets/fonts/flag-icon/cc.svg"
+  },
+  "public/assets/fonts/flag-icon/cd.svg": {
+    "file": "assets/cd-d755e707.svg",
+    "src": "public/assets/fonts/flag-icon/cd.svg"
+  },
+  "public/assets/fonts/flag-icon/cf.svg": {
+    "file": "assets/cf-94535a64.svg",
+    "src": "public/assets/fonts/flag-icon/cf.svg"
+  },
+  "public/assets/fonts/flag-icon/cg.svg": {
+    "file": "assets/cg-745039f2.svg",
+    "src": "public/assets/fonts/flag-icon/cg.svg"
+  },
+  "public/assets/fonts/flag-icon/ch.svg": {
+    "file": "assets/ch-e4178d15.svg",
+    "src": "public/assets/fonts/flag-icon/ch.svg"
+  },
+  "public/assets/fonts/flag-icon/ci.svg": {
+    "file": "assets/ci-178b7cff.svg",
+    "src": "public/assets/fonts/flag-icon/ci.svg"
+  },
+  "public/assets/fonts/flag-icon/ck.svg": {
+    "file": "assets/ck-5e277c2f.svg",
+    "src": "public/assets/fonts/flag-icon/ck.svg"
+  },
+  "public/assets/fonts/flag-icon/cl.svg": {
+    "file": "assets/cl-4fc3a015.svg",
+    "src": "public/assets/fonts/flag-icon/cl.svg"
+  },
+  "public/assets/fonts/flag-icon/cm.svg": {
+    "file": "assets/cm-794d54ef.svg",
+    "src": "public/assets/fonts/flag-icon/cm.svg"
+  },
+  "public/assets/fonts/flag-icon/cn.svg": {
+    "file": "assets/cn-22995be6.svg",
+    "src": "public/assets/fonts/flag-icon/cn.svg"
+  },
+  "public/assets/fonts/flag-icon/co.svg": {
+    "file": "assets/co-987633cb.svg",
+    "src": "public/assets/fonts/flag-icon/co.svg"
+  },
+  "public/assets/fonts/flag-icon/cr.svg": {
+    "file": "assets/cr-448ae310.svg",
+    "src": "public/assets/fonts/flag-icon/cr.svg"
+  },
+  "public/assets/fonts/flag-icon/cu.svg": {
+    "file": "assets/cu-11756825.svg",
+    "src": "public/assets/fonts/flag-icon/cu.svg"
+  },
+  "public/assets/fonts/flag-icon/cv.svg": {
+    "file": "assets/cv-dc12ffac.svg",
+    "src": "public/assets/fonts/flag-icon/cv.svg"
+  },
+  "public/assets/fonts/flag-icon/cw.svg": {
+    "file": "assets/cw-a54b946a.svg",
+    "src": "public/assets/fonts/flag-icon/cw.svg"
+  },
+  "public/assets/fonts/flag-icon/cx.svg": {
+    "file": "assets/cx-ae027c03.svg",
+    "src": "public/assets/fonts/flag-icon/cx.svg"
+  },
+  "public/assets/fonts/flag-icon/cy.svg": {
+    "file": "assets/cy-2737a726.svg",
+    "src": "public/assets/fonts/flag-icon/cy.svg"
+  },
+  "public/assets/fonts/flag-icon/cz.svg": {
+    "file": "assets/cz-1caa3e0a.svg",
+    "src": "public/assets/fonts/flag-icon/cz.svg"
+  },
+  "public/assets/fonts/flag-icon/de.svg": {
+    "file": "assets/de-0b1b5e16.svg",
+    "src": "public/assets/fonts/flag-icon/de.svg"
+  },
+  "public/assets/fonts/flag-icon/dj.svg": {
+    "file": "assets/dj-ee7c0ea7.svg",
+    "src": "public/assets/fonts/flag-icon/dj.svg"
+  },
+  "public/assets/fonts/flag-icon/dk.svg": {
+    "file": "assets/dk-0019fda6.svg",
+    "src": "public/assets/fonts/flag-icon/dk.svg"
+  },
+  "public/assets/fonts/flag-icon/dm.svg": {
+    "file": "assets/dm-db34e967.svg",
+    "src": "public/assets/fonts/flag-icon/dm.svg"
+  },
+  "public/assets/fonts/flag-icon/do.svg": {
+    "file": "assets/do-8aa9b0d6.svg",
+    "src": "public/assets/fonts/flag-icon/do.svg"
+  },
+  "public/assets/fonts/flag-icon/dz.svg": {
+    "file": "assets/dz-96d0a106.svg",
+    "src": "public/assets/fonts/flag-icon/dz.svg"
+  },
+  "public/assets/fonts/flag-icon/ec.svg": {
+    "file": "assets/ec-c307a9be.svg",
+    "src": "public/assets/fonts/flag-icon/ec.svg"
+  },
+  "public/assets/fonts/flag-icon/ee.svg": {
+    "file": "assets/ee-d739c3f6.svg",
+    "src": "public/assets/fonts/flag-icon/ee.svg"
+  },
+  "public/assets/fonts/flag-icon/eg.svg": {
+    "file": "assets/eg-73dd373e.svg",
+    "src": "public/assets/fonts/flag-icon/eg.svg"
+  },
+  "public/assets/fonts/flag-icon/eh.svg": {
+    "file": "assets/eh-60d6ed15.svg",
+    "src": "public/assets/fonts/flag-icon/eh.svg"
+  },
+  "public/assets/fonts/flag-icon/ir.svg": {
+    "file": "assets/ir-bf0ef300.svg",
+    "src": "public/assets/fonts/flag-icon/ir.svg"
+  },
+  "public/assets/fonts/flag-icon/is.svg": {
+    "file": "assets/is-12835876.svg",
+    "src": "public/assets/fonts/flag-icon/is.svg"
+  },
+  "public/assets/fonts/flag-icon/it.svg": {
+    "file": "assets/it-3b9e861d.svg",
+    "src": "public/assets/fonts/flag-icon/it.svg"
+  },
+  "public/assets/fonts/flag-icon/je.svg": {
+    "file": "assets/je-b4d3446b.svg",
+    "src": "public/assets/fonts/flag-icon/je.svg"
+  },
+  "public/assets/fonts/flag-icon/jm.svg": {
+    "file": "assets/jm-5e94b4b1.svg",
+    "src": "public/assets/fonts/flag-icon/jm.svg"
+  },
+  "public/assets/fonts/flag-icon/jo.svg": {
+    "file": "assets/jo-922ba9c4.svg",
+    "src": "public/assets/fonts/flag-icon/jo.svg"
+  },
+  "public/assets/fonts/flag-icon/jp.svg": {
+    "file": "assets/jp-cf3e0b78.svg",
+    "src": "public/assets/fonts/flag-icon/jp.svg"
+  },
+  "public/assets/fonts/flag-icon/ke.svg": {
+    "file": "assets/ke-e27306b1.svg",
+    "src": "public/assets/fonts/flag-icon/ke.svg"
+  },
+  "public/assets/fonts/flag-icon/kg.svg": {
+    "file": "assets/kg-b9cdecd3.svg",
+    "src": "public/assets/fonts/flag-icon/kg.svg"
+  },
+  "public/assets/fonts/flag-icon/kh.svg": {
+    "file": "assets/kh-d0223596.svg",
+    "src": "public/assets/fonts/flag-icon/kh.svg"
+  },
+  "public/assets/fonts/flag-icon/ki.svg": {
+    "file": "assets/ki-06a82dd5.svg",
+    "src": "public/assets/fonts/flag-icon/ki.svg"
+  },
+  "public/assets/fonts/flag-icon/km.svg": {
+    "file": "assets/km-377be34e.svg",
+    "src": "public/assets/fonts/flag-icon/km.svg"
+  },
+  "public/assets/fonts/flag-icon/kn.svg": {
+    "file": "assets/kn-b6ea77f0.svg",
+    "src": "public/assets/fonts/flag-icon/kn.svg"
+  },
+  "public/assets/fonts/flag-icon/kp.svg": {
+    "file": "assets/kp-122e59c3.svg",
+    "src": "public/assets/fonts/flag-icon/kp.svg"
+  },
+  "public/assets/fonts/flag-icon/kr.svg": {
+    "file": "assets/kr-fe42bd26.svg",
+    "src": "public/assets/fonts/flag-icon/kr.svg"
+  },
+  "public/assets/fonts/flag-icon/kw.svg": {
+    "file": "assets/kw-d1821136.svg",
+    "src": "public/assets/fonts/flag-icon/kw.svg"
+  },
+  "public/assets/fonts/flag-icon/ky.svg": {
+    "file": "assets/ky-6d540ab5.svg",
+    "src": "public/assets/fonts/flag-icon/ky.svg"
+  },
+  "public/assets/fonts/flag-icon/kz.svg": {
+    "file": "assets/kz-9e459b61.svg",
+    "src": "public/assets/fonts/flag-icon/kz.svg"
+  },
+  "public/assets/fonts/flag-icon/es.svg": {
+    "file": "assets/es-9e58bddf.svg",
+    "src": "public/assets/fonts/flag-icon/es.svg"
+  },
+  "public/assets/fonts/flag-icon/la.svg": {
+    "file": "assets/la-0d09f4b2.svg",
+    "src": "public/assets/fonts/flag-icon/la.svg"
+  },
+  "public/assets/fonts/flag-icon/lb.svg": {
+    "file": "assets/lb-71565121.svg",
+    "src": "public/assets/fonts/flag-icon/lb.svg"
+  },
+  "public/assets/fonts/flag-icon/lc.svg": {
+    "file": "assets/lc-304a50c8.svg",
+    "src": "public/assets/fonts/flag-icon/lc.svg"
+  },
+  "public/assets/fonts/flag-icon/li.svg": {
+    "file": "assets/li-1918e762.svg",
+    "src": "public/assets/fonts/flag-icon/li.svg"
+  },
+  "public/assets/fonts/flag-icon/lk.svg": {
+    "file": "assets/lk-18218cfb.svg",
+    "src": "public/assets/fonts/flag-icon/lk.svg"
+  },
+  "public/assets/fonts/flag-icon/lr.svg": {
+    "file": "assets/lr-4aa3c9a2.svg",
+    "src": "public/assets/fonts/flag-icon/lr.svg"
+  },
+  "public/assets/fonts/flag-icon/mk.svg": {
+    "file": "assets/mk-59449ecd.svg",
+    "src": "public/assets/fonts/flag-icon/mk.svg"
+  },
+  "public/assets/fonts/flag-icon/ml.svg": {
+    "file": "assets/ml-71a488d8.svg",
+    "src": "public/assets/fonts/flag-icon/ml.svg"
+  },
+  "public/assets/fonts/flag-icon/mm.svg": {
+    "file": "assets/mm-6de673b0.svg",
+    "src": "public/assets/fonts/flag-icon/mm.svg"
+  },
+  "public/assets/fonts/flag-icon/mn.svg": {
+    "file": "assets/mn-093d80b2.svg",
+    "src": "public/assets/fonts/flag-icon/mn.svg"
+  },
+  "public/assets/fonts/flag-icon/mo.svg": {
+    "file": "assets/mo-0a2e86e5.svg",
+    "src": "public/assets/fonts/flag-icon/mo.svg"
+  },
+  "public/assets/fonts/flag-icon/mp.svg": {
+    "file": "assets/mp-5a2318e3.svg",
+    "src": "public/assets/fonts/flag-icon/mp.svg"
+  },
+  "public/assets/fonts/flag-icon/mq.svg": {
+    "file": "assets/mq-2d0f611f.svg",
+    "src": "public/assets/fonts/flag-icon/mq.svg"
+  },
+  "public/assets/fonts/flag-icon/mr.svg": {
+    "file": "assets/mr-08a6397f.svg",
+    "src": "public/assets/fonts/flag-icon/mr.svg"
+  },
+  "public/assets/fonts/flag-icon/ms.svg": {
+    "file": "assets/ms-73ce9732.svg",
+    "src": "public/assets/fonts/flag-icon/ms.svg"
+  },
+  "public/assets/fonts/flag-icon/mt.svg": {
+    "file": "assets/mt-6fd5feb5.svg",
+    "src": "public/assets/fonts/flag-icon/mt.svg"
+  },
+  "public/assets/fonts/flag-icon/mu.svg": {
+    "file": "assets/mu-53c7d87a.svg",
+    "src": "public/assets/fonts/flag-icon/mu.svg"
+  },
+  "public/assets/fonts/flag-icon/mv.svg": {
+    "file": "assets/mv-2d69ba53.svg",
+    "src": "public/assets/fonts/flag-icon/mv.svg"
+  },
+  "public/assets/fonts/flag-icon/mw.svg": {
+    "file": "assets/mw-1acebe76.svg",
+    "src": "public/assets/fonts/flag-icon/mw.svg"
+  },
+  "public/assets/fonts/flag-icon/mx.svg": {
+    "file": "assets/mx-046ed33f.svg",
+    "src": "public/assets/fonts/flag-icon/mx.svg"
+  },
+  "public/assets/fonts/flag-icon/my.svg": {
+    "file": "assets/my-ff9d3581.svg",
+    "src": "public/assets/fonts/flag-icon/my.svg"
+  },
+  "public/assets/fonts/flag-icon/mz.svg": {
+    "file": "assets/mz-eee56c7e.svg",
+    "src": "public/assets/fonts/flag-icon/mz.svg"
+  },
+  "public/assets/fonts/flag-icon/na.svg": {
+    "file": "assets/na-24cd5fba.svg",
+    "src": "public/assets/fonts/flag-icon/na.svg"
+  },
+  "public/assets/fonts/flag-icon/nc.svg": {
+    "file": "assets/nc-2dba8ae8.svg",
+    "src": "public/assets/fonts/flag-icon/nc.svg"
+  },
+  "public/assets/fonts/flag-icon/ne.svg": {
+    "file": "assets/ne-8be56188.svg",
+    "src": "public/assets/fonts/flag-icon/ne.svg"
+  },
+  "public/assets/fonts/flag-icon/nf.svg": {
+    "file": "assets/nf-0749601e.svg",
+    "src": "public/assets/fonts/flag-icon/nf.svg"
+  },
+  "public/assets/fonts/flag-icon/ng.svg": {
+    "file": "assets/ng-3c541811.svg",
+    "src": "public/assets/fonts/flag-icon/ng.svg"
+  },
+  "public/assets/fonts/flag-icon/ni.svg": {
+    "file": "assets/ni-702bcb86.svg",
+    "src": "public/assets/fonts/flag-icon/ni.svg"
+  },
+  "public/assets/fonts/flag-icon/nl.svg": {
+    "file": "assets/nl-d2d62a99.svg",
+    "src": "public/assets/fonts/flag-icon/nl.svg"
+  },
+  "public/assets/fonts/flag-icon/no.svg": {
+    "file": "assets/no-ec20d8ff.svg",
+    "src": "public/assets/fonts/flag-icon/no.svg"
+  },
+  "public/assets/fonts/flag-icon/np.svg": {
+    "file": "assets/np-2148e306.svg",
+    "src": "public/assets/fonts/flag-icon/np.svg"
+  },
+  "public/assets/fonts/flag-icon/nr.svg": {
+    "file": "assets/nr-5ebe590e.svg",
+    "src": "public/assets/fonts/flag-icon/nr.svg"
+  },
+  "public/assets/fonts/flag-icon/nu.svg": {
+    "file": "assets/nu-1b0eff2d.svg",
+    "src": "public/assets/fonts/flag-icon/nu.svg"
+  },
+  "public/assets/fonts/flag-icon/nz.svg": {
+    "file": "assets/nz-da1553ee.svg",
+    "src": "public/assets/fonts/flag-icon/nz.svg"
+  },
+  "public/assets/fonts/flag-icon/om.svg": {
+    "file": "assets/om-b8905c16.svg",
+    "src": "public/assets/fonts/flag-icon/om.svg"
+  },
+  "public/assets/fonts/flag-icon/pa.svg": {
+    "file": "assets/pa-3f811103.svg",
+    "src": "public/assets/fonts/flag-icon/pa.svg"
+  },
+  "public/assets/fonts/flag-icon/pe.svg": {
+    "file": "assets/pe-501641c1.svg",
+    "src": "public/assets/fonts/flag-icon/pe.svg"
+  },
+  "public/assets/fonts/flag-icon/pf.svg": {
+    "file": "assets/pf-83aa6c3e.svg",
+    "src": "public/assets/fonts/flag-icon/pf.svg"
+  },
+  "public/assets/fonts/flag-icon/pg.svg": {
+    "file": "assets/pg-a43dee10.svg",
+    "src": "public/assets/fonts/flag-icon/pg.svg"
+  },
+  "public/assets/fonts/flag-icon/be.svg": {
+    "file": "assets/be-d1b8dae6.svg",
+    "src": "public/assets/fonts/flag-icon/be.svg"
+  },
+  "public/assets/fonts/flag-icon/bf.svg": {
+    "file": "assets/bf-239c939c.svg",
+    "src": "public/assets/fonts/flag-icon/bf.svg"
+  },
+  "public/assets/fonts/flag-icon/bl.svg": {
+    "file": "assets/bl-907c95fc.svg",
+    "src": "public/assets/fonts/flag-icon/bl.svg"
+  },
+  "public/assets/fonts/flag-icon/bm.svg": {
+    "file": "assets/bm-de3b1b3a.svg",
+    "src": "public/assets/fonts/flag-icon/bm.svg"
+  },
+  "public/assets/fonts/flag-icon/bn.svg": {
+    "file": "assets/bn-bcc7c315.svg",
+    "src": "public/assets/fonts/flag-icon/bn.svg"
+  },
+  "public/assets/fonts/flag-icon/bo.svg": {
+    "file": "assets/bo-20cd76c2.svg",
+    "src": "public/assets/fonts/flag-icon/bo.svg"
+  },
+  "public/assets/fonts/flag-icon/bq.svg": {
+    "file": "assets/bq-f71e86fe.svg",
+    "src": "public/assets/fonts/flag-icon/bq.svg"
+  },
+  "public/assets/fonts/flag-icon/ls.svg": {
+    "file": "assets/ls-d0aa0585.svg",
+    "src": "public/assets/fonts/flag-icon/ls.svg"
+  },
+  "public/assets/fonts/flag-icon/lt.svg": {
+    "file": "assets/lt-379cf448.svg",
+    "src": "public/assets/fonts/flag-icon/lt.svg"
+  },
+  "public/assets/fonts/flag-icon/lu.svg": {
+    "file": "assets/lu-17db7a11.svg",
+    "src": "public/assets/fonts/flag-icon/lu.svg"
+  },
+  "public/assets/fonts/flag-icon/lv.svg": {
+    "file": "assets/lv-892e03d3.svg",
+    "src": "public/assets/fonts/flag-icon/lv.svg"
+  },
+  "public/assets/fonts/flag-icon/ly.svg": {
+    "file": "assets/ly-55aabfbb.svg",
+    "src": "public/assets/fonts/flag-icon/ly.svg"
+  },
+  "public/assets/fonts/flag-icon/ma.svg": {
+    "file": "assets/ma-77fa0b59.svg",
+    "src": "public/assets/fonts/flag-icon/ma.svg"
+  },
+  "public/assets/fonts/flag-icon/mc.svg": {
+    "file": "assets/mc-c922d6af.svg",
+    "src": "public/assets/fonts/flag-icon/mc.svg"
+  },
+  "public/assets/fonts/flag-icon/md.svg": {
+    "file": "assets/md-7ec2456a.svg",
+    "src": "public/assets/fonts/flag-icon/md.svg"
+  },
+  "public/assets/fonts/flag-icon/bg.svg": {
+    "file": "assets/bg-211dd587.svg",
+    "src": "public/assets/fonts/flag-icon/bg.svg"
+  },
+  "public/assets/fonts/flag-icon/bh.svg": {
+    "file": "assets/bh-e4fbc994.svg",
+    "src": "public/assets/fonts/flag-icon/bh.svg"
+  },
+  "public/assets/fonts/flag-icon/bi.svg": {
+    "file": "assets/bi-e0f5c657.svg",
+    "src": "public/assets/fonts/flag-icon/bi.svg"
+  },
+  "public/assets/fonts/flag-icon/bj.svg": {
+    "file": "assets/bj-d4eda6db.svg",
+    "src": "public/assets/fonts/flag-icon/bj.svg"
+  },
+  "public/assets/fonts/flag-icon/br.svg": {
+    "file": "assets/br-63f3538b.svg",
+    "src": "public/assets/fonts/flag-icon/br.svg"
+  },
+  "public/assets/fonts/flag-icon/bs.svg": {
+    "file": "assets/bs-ec7d0199.svg",
+    "src": "public/assets/fonts/flag-icon/bs.svg"
+  },
+  "public/assets/fonts/flag-icon/bt.svg": {
+    "file": "assets/bt-e121fd85.svg",
+    "src": "public/assets/fonts/flag-icon/bt.svg"
+  },
+  "public/assets/fonts/flag-icon/bv.svg": {
+    "file": "assets/bv-419b84c3.svg",
+    "src": "public/assets/fonts/flag-icon/bv.svg"
+  },
+  "public/assets/fonts/flag-icon/ph.svg": {
+    "file": "assets/ph-d3f0eed9.svg",
+    "src": "public/assets/fonts/flag-icon/ph.svg"
+  },
+  "public/assets/fonts/flag-icon/st.svg": {
+    "file": "assets/st-a1d4a4cf.svg",
+    "src": "public/assets/fonts/flag-icon/st.svg"
+  },
+  "public/assets/fonts/flag-icon/sv.svg": {
+    "file": "assets/sv-45d3552e.svg",
+    "src": "public/assets/fonts/flag-icon/sv.svg"
+  },
+  "public/assets/fonts/flag-icon/sx.svg": {
+    "file": "assets/sx-84601655.svg",
+    "src": "public/assets/fonts/flag-icon/sx.svg"
+  },
+  "public/assets/fonts/flag-icon/sy.svg": {
+    "file": "assets/sy-6d45772b.svg",
+    "src": "public/assets/fonts/flag-icon/sy.svg"
+  },
+  "public/assets/fonts/flag-icon/sz.svg": {
+    "file": "assets/sz-c1f84adc.svg",
+    "src": "public/assets/fonts/flag-icon/sz.svg"
+  },
+  "public/assets/fonts/flag-icon/tc.svg": {
+    "file": "assets/tc-e849a342.svg",
+    "src": "public/assets/fonts/flag-icon/tc.svg"
+  },
+  "public/assets/fonts/flag-icon/td.svg": {
+    "file": "assets/td-dbc1ce84.svg",
+    "src": "public/assets/fonts/flag-icon/td.svg"
+  },
+  "public/assets/fonts/flag-icon/tf.svg": {
+    "file": "assets/tf-9576536a.svg",
+    "src": "public/assets/fonts/flag-icon/tf.svg"
+  },
+  "public/assets/fonts/flag-icon/tg.svg": {
+    "file": "assets/tg-085e2364.svg",
+    "src": "public/assets/fonts/flag-icon/tg.svg"
+  },
+  "public/assets/fonts/flag-icon/th.svg": {
+    "file": "assets/th-e092e880.svg",
+    "src": "public/assets/fonts/flag-icon/th.svg"
+  },
+  "public/assets/fonts/flag-icon/tj.svg": {
+    "file": "assets/tj-98e3ac2f.svg",
+    "src": "public/assets/fonts/flag-icon/tj.svg"
+  },
+  "public/assets/fonts/flag-icon/tk.svg": {
+    "file": "assets/tk-d53728e7.svg",
+    "src": "public/assets/fonts/flag-icon/tk.svg"
+  },
+  "public/assets/fonts/flag-icon/tl.svg": {
+    "file": "assets/tl-7a804ba9.svg",
+    "src": "public/assets/fonts/flag-icon/tl.svg"
+  },
+  "public/assets/fonts/flag-icon/tm.svg": {
+    "file": "assets/tm-9744b436.svg",
+    "src": "public/assets/fonts/flag-icon/tm.svg"
+  },
+  "public/assets/fonts/flag-icon/tn.svg": {
+    "file": "assets/tn-1a3ede87.svg",
+    "src": "public/assets/fonts/flag-icon/tn.svg"
+  },
+  "public/assets/fonts/flag-icon/to.svg": {
+    "file": "assets/to-9ee00a69.svg",
+    "src": "public/assets/fonts/flag-icon/to.svg"
+  },
+  "public/assets/fonts/flag-icon/tr.svg": {
+    "file": "assets/tr-fbd916f2.svg",
+    "src": "public/assets/fonts/flag-icon/tr.svg"
+  },
+  "public/assets/fonts/flag-icon/tt.svg": {
+    "file": "assets/tt-b3ddc475.svg",
+    "src": "public/assets/fonts/flag-icon/tt.svg"
+  },
+  "public/assets/fonts/flag-icon/tv.svg": {
+    "file": "assets/tv-81f37770.svg",
+    "src": "public/assets/fonts/flag-icon/tv.svg"
+  },
+  "public/assets/fonts/font-awesome/fontawesome-webfont.eot": {
+    "file": "assets/fontawesome-webfont-7bfcab6d.eot",
+    "src": "public/assets/fonts/font-awesome/fontawesome-webfont.eot"
+  },
+  "public/assets/fonts/slick/slick.eot": {
+    "file": "assets/slick-06d80cf0.eot",
+    "src": "public/assets/fonts/slick/slick.eot"
+  },
+  "public/assets/fonts/themify/themify.eot": {
+    "file": "assets/themify-dff415da.eot",
+    "src": "public/assets/fonts/themify/themify.eot"
+  },
+  "public/assets/fonts/flag-icon/es-ct.svg": {
+    "file": "assets/es-ct-2f51e487.svg",
+    "src": "public/assets/fonts/flag-icon/es-ct.svg"
+  },
+  "public/assets/fonts/flag-icon/eu.svg": {
+    "file": "assets/eu-2d65d182.svg",
+    "src": "public/assets/fonts/flag-icon/eu.svg"
+  },
+  "public/assets/fonts/flag-icon/gb-eng.svg": {
+    "file": "assets/gb-eng-172429ee.svg",
+    "src": "public/assets/fonts/flag-icon/gb-eng.svg"
+  },
+  "public/assets/fonts/flag-icon/gb-nir.svg": {
+    "file": "assets/gb-nir-8e2f8c4f.svg",
+    "src": "public/assets/fonts/flag-icon/gb-nir.svg"
+  },
+  "public/assets/fonts/flag-icon/gb-sct.svg": {
+    "file": "assets/gb-sct-5da688c9.svg",
+    "src": "public/assets/fonts/flag-icon/gb-sct.svg"
+  },
+  "public/assets/fonts/flag-icon/gb-wls.svg": {
+    "file": "assets/gb-wls-f7444312.svg",
+    "src": "public/assets/fonts/flag-icon/gb-wls.svg"
+  },
+  "public/assets/fonts/flag-icon/un.svg": {
+    "file": "assets/un-0ce3c8bb.svg",
+    "src": "public/assets/fonts/flag-icon/un.svg"
+  },
+  "public/assets/fonts/flag-icon/ad.svg": {
+    "file": "assets/ad-b8f66c80.svg",
+    "src": "public/assets/fonts/flag-icon/ad.svg"
+  },
+  "public/assets/fonts/flag-icon/ae.svg": {
+    "file": "assets/ae-327bf467.svg",
+    "src": "public/assets/fonts/flag-icon/ae.svg"
+  },
+  "public/assets/fonts/flag-icon/af.svg": {
+    "file": "assets/af-0f4a6a68.svg",
+    "src": "public/assets/fonts/flag-icon/af.svg"
+  },
+  "public/assets/fonts/flag-icon/ag.svg": {
+    "file": "assets/ag-d62d9cb5.svg",
+    "src": "public/assets/fonts/flag-icon/ag.svg"
+  },
+  "public/assets/fonts/flag-icon/ai.svg": {
+    "file": "assets/ai-619d2b6f.svg",
+    "src": "public/assets/fonts/flag-icon/ai.svg"
+  },
+  "public/assets/fonts/flag-icon/al.svg": {
+    "file": "assets/al-3bc41f68.svg",
+    "src": "public/assets/fonts/flag-icon/al.svg"
+  },
+  "public/assets/fonts/flag-icon/am.svg": {
+    "file": "assets/am-50743f38.svg",
+    "src": "public/assets/fonts/flag-icon/am.svg"
+  },
+  "public/assets/fonts/flag-icon/ao.svg": {
+    "file": "assets/ao-348830a9.svg",
+    "src": "public/assets/fonts/flag-icon/ao.svg"
+  },
+  "public/assets/fonts/flag-icon/aq.svg": {
+    "file": "assets/aq-34de96f7.svg",
+    "src": "public/assets/fonts/flag-icon/aq.svg"
+  },
+  "public/assets/fonts/flag-icon/ar.svg": {
+    "file": "assets/ar-741809e1.svg",
+    "src": "public/assets/fonts/flag-icon/ar.svg"
+  },
+  "public/assets/fonts/flag-icon/as.svg": {
+    "file": "assets/as-8ff61247.svg",
+    "src": "public/assets/fonts/flag-icon/as.svg"
+  },
+  "public/assets/fonts/flag-icon/at.svg": {
+    "file": "assets/at-a0af7b25.svg",
+    "src": "public/assets/fonts/flag-icon/at.svg"
+  },
+  "public/assets/fonts/flag-icon/au.svg": {
+    "file": "assets/au-1b50a800.svg",
+    "src": "public/assets/fonts/flag-icon/au.svg"
+  },
+  "public/assets/fonts/flag-icon/aw.svg": {
+    "file": "assets/aw-94f33e5c.svg",
+    "src": "public/assets/fonts/flag-icon/aw.svg"
+  },
+  "public/assets/fonts/flag-icon/ax.svg": {
+    "file": "assets/ax-a0a803ff.svg",
+    "src": "public/assets/fonts/flag-icon/ax.svg"
+  },
+  "public/assets/fonts/flag-icon/az.svg": {
+    "file": "assets/az-647e6236.svg",
+    "src": "public/assets/fonts/flag-icon/az.svg"
+  },
+  "public/assets/fonts/flag-icon/ba.svg": {
+    "file": "assets/ba-cf0cd8cd.svg",
+    "src": "public/assets/fonts/flag-icon/ba.svg"
+  },
+  "public/assets/fonts/flag-icon/bb.svg": {
+    "file": "assets/bb-aa11235b.svg",
+    "src": "public/assets/fonts/flag-icon/bb.svg"
+  },
+  "public/assets/fonts/flag-icon/bd.svg": {
+    "file": "assets/bd-c97a362f.svg",
+    "src": "public/assets/fonts/flag-icon/bd.svg"
+  },
+  "public/assets/fonts/flag-icon/me.svg": {
+    "file": "assets/me-9c7dc32a.svg",
+    "src": "public/assets/fonts/flag-icon/me.svg"
+  },
+  "public/assets/fonts/flag-icon/mf.svg": {
+    "file": "assets/mf-318c9294.svg",
+    "src": "public/assets/fonts/flag-icon/mf.svg"
+  },
+  "public/assets/fonts/flag-icon/mg.svg": {
+    "file": "assets/mg-2017e651.svg",
+    "src": "public/assets/fonts/flag-icon/mg.svg"
+  },
+  "public/assets/fonts/flag-icon/mh.svg": {
+    "file": "assets/mh-ec2c2f3a.svg",
+    "src": "public/assets/fonts/flag-icon/mh.svg"
+  },
+  "public/assets/images/dashboard-2/balance-bg.png": {
+    "file": "assets/balance-bg-eb757ef4.png",
+    "src": "public/assets/images/dashboard-2/balance-bg.png"
+  },
+  "public/assets/images/dashboard-3/bg.jpg": {
+    "file": "assets/bg-1d41996e.jpg",
+    "src": "public/assets/images/dashboard-3/bg.jpg"
+  },
+  "public/assets/images/social-app/social-image.png": {
+    "file": "assets/social-image-d177aeb1.png",
+    "src": "public/assets/images/social-app/social-image.png"
+  },
+  "public/assets/images/dashboard-4/bg-balance.png": {
+    "file": "assets/bg-balance-dc949986.png",
+    "src": "public/assets/images/dashboard-4/bg-balance.png"
+  },
+  "public/assets/images/dashboard/widget-bg.png": {
+    "file": "assets/widget-bg-fcce1c75.png",
+    "src": "public/assets/images/dashboard/widget-bg.png"
+  },
+  "public/assets/images/other-images/maintenance-bg.jpg": {
+    "file": "assets/maintenance-bg-a367feed.jpg",
+    "src": "public/assets/images/other-images/maintenance-bg.jpg"
+  },
+  "public/assets/images/login/login_bg.jpg": {
+    "file": "assets/login_bg-4e2ac6b8.jpg",
+    "src": "public/assets/images/login/login_bg.jpg"
+  },
+  "public/assets/fonts/flag-icon/id.svg": {
+    "file": "assets/id-873365ba.svg",
+    "src": "public/assets/fonts/flag-icon/id.svg"
+  },
+  "public/assets/fonts/flag-icon/ie.svg": {
+    "file": "assets/ie-9535326f.svg",
+    "src": "public/assets/fonts/flag-icon/ie.svg"
+  },
+  "public/assets/fonts/flag-icon/il.svg": {
+    "file": "assets/il-234f76a8.svg",
+    "src": "public/assets/fonts/flag-icon/il.svg"
+  },
+  "public/assets/fonts/flag-icon/im.svg": {
+    "file": "assets/im-30d81c24.svg",
+    "src": "public/assets/fonts/flag-icon/im.svg"
+  },
+  "public/assets/fonts/flag-icon/in.svg": {
+    "file": "assets/in-480b4bfc.svg",
+    "src": "public/assets/fonts/flag-icon/in.svg"
+  },
+  "public/assets/fonts/flag-icon/io.svg": {
+    "file": "assets/io-2a377b5b.svg",
+    "src": "public/assets/fonts/flag-icon/io.svg"
+  },
+  "public/assets/fonts/flag-icon/iq.svg": {
+    "file": "assets/iq-2f9f7605.svg",
+    "src": "public/assets/fonts/flag-icon/iq.svg"
+  },
+  "public/assets/fonts/flag-icon/pk.svg": {
+    "file": "assets/pk-5597845f.svg",
+    "src": "public/assets/fonts/flag-icon/pk.svg"
+  },
+  "public/assets/fonts/flag-icon/pl.svg": {
+    "file": "assets/pl-a7902e5e.svg",
+    "src": "public/assets/fonts/flag-icon/pl.svg"
+  },
+  "public/assets/fonts/flag-icon/pm.svg": {
+    "file": "assets/pm-db603fa7.svg",
+    "src": "public/assets/fonts/flag-icon/pm.svg"
+  },
+  "public/assets/fonts/flag-icon/pn.svg": {
+    "file": "assets/pn-db72fbe6.svg",
+    "src": "public/assets/fonts/flag-icon/pn.svg"
+  },
+  "public/assets/fonts/flag-icon/pr.svg": {
+    "file": "assets/pr-df64fe2f.svg",
+    "src": "public/assets/fonts/flag-icon/pr.svg"
+  },
+  "public/assets/fonts/flag-icon/ps.svg": {
+    "file": "assets/ps-8b0a4cf0.svg",
+    "src": "public/assets/fonts/flag-icon/ps.svg"
+  },
+  "public/assets/fonts/flag-icon/pt.svg": {
+    "file": "assets/pt-ed387ac8.svg",
+    "src": "public/assets/fonts/flag-icon/pt.svg"
+  },
+  "public/assets/fonts/flag-icon/pw.svg": {
+    "file": "assets/pw-6a5d7ee5.svg",
+    "src": "public/assets/fonts/flag-icon/pw.svg"
+  },
+  "public/assets/fonts/flag-icon/py.svg": {
+    "file": "assets/py-3ae907f5.svg",
+    "src": "public/assets/fonts/flag-icon/py.svg"
+  },
+  "public/assets/fonts/flag-icon/qa.svg": {
+    "file": "assets/qa-8026eab5.svg",
+    "src": "public/assets/fonts/flag-icon/qa.svg"
+  },
+  "public/assets/fonts/flag-icon/re.svg": {
+    "file": "assets/re-f9345a5e.svg",
+    "src": "public/assets/fonts/flag-icon/re.svg"
+  },
+  "public/assets/fonts/flag-icon/ro.svg": {
+    "file": "assets/ro-9e96959c.svg",
+    "src": "public/assets/fonts/flag-icon/ro.svg"
+  },
+  "public/assets/fonts/flag-icon/rs.svg": {
+    "file": "assets/rs-238d0dc5.svg",
+    "src": "public/assets/fonts/flag-icon/rs.svg"
+  },
+  "public/assets/fonts/flag-icon/ru.svg": {
+    "file": "assets/ru-d053f1f2.svg",
+    "src": "public/assets/fonts/flag-icon/ru.svg"
+  },
+  "public/assets/fonts/flag-icon/rw.svg": {
+    "file": "assets/rw-2a720029.svg",
+    "src": "public/assets/fonts/flag-icon/rw.svg"
+  },
+  "public/assets/fonts/flag-icon/sa.svg": {
+    "file": "assets/sa-6fdba503.svg",
+    "src": "public/assets/fonts/flag-icon/sa.svg"
+  },
+  "public/assets/fonts/flag-icon/sb.svg": {
+    "file": "assets/sb-41b15358.svg",
+    "src": "public/assets/fonts/flag-icon/sb.svg"
+  },
+  "public/assets/fonts/flag-icon/sc.svg": {
+    "file": "assets/sc-e16c1140.svg",
+    "src": "public/assets/fonts/flag-icon/sc.svg"
+  },
+  "public/assets/fonts/flag-icon/sd.svg": {
+    "file": "assets/sd-bc6d5802.svg",
+    "src": "public/assets/fonts/flag-icon/sd.svg"
+  },
+  "public/assets/fonts/flag-icon/se.svg": {
+    "file": "assets/se-62e50417.svg",
+    "src": "public/assets/fonts/flag-icon/se.svg"
+  },
+  "public/assets/fonts/flag-icon/sg.svg": {
+    "file": "assets/sg-3be11500.svg",
+    "src": "public/assets/fonts/flag-icon/sg.svg"
+  },
+  "public/assets/fonts/flag-icon/sh.svg": {
+    "file": "assets/sh-1ce8a63f.svg",
+    "src": "public/assets/fonts/flag-icon/sh.svg"
+  },
+  "public/assets/fonts/flag-icon/si.svg": {
+    "file": "assets/si-62bbf9f7.svg",
+    "src": "public/assets/fonts/flag-icon/si.svg"
+  },
+  "public/assets/fonts/flag-icon/sj.svg": {
+    "file": "assets/sj-58f03e90.svg",
+    "src": "public/assets/fonts/flag-icon/sj.svg"
+  },
+  "public/assets/fonts/flag-icon/sk.svg": {
+    "file": "assets/sk-e407af32.svg",
+    "src": "public/assets/fonts/flag-icon/sk.svg"
+  },
+  "public/assets/fonts/flag-icon/sl.svg": {
+    "file": "assets/sl-d178d32d.svg",
+    "src": "public/assets/fonts/flag-icon/sl.svg"
+  },
+  "public/assets/fonts/flag-icon/sm.svg": {
+    "file": "assets/sm-bbe071f1.svg",
+    "src": "public/assets/fonts/flag-icon/sm.svg"
+  },
+  "public/assets/fonts/flag-icon/sn.svg": {
+    "file": "assets/sn-a299cadc.svg",
+    "src": "public/assets/fonts/flag-icon/sn.svg"
+  },
+  "public/assets/fonts/flag-icon/so.svg": {
+    "file": "assets/so-a15cccf2.svg",
+    "src": "public/assets/fonts/flag-icon/so.svg"
+  },
+  "public/assets/fonts/flag-icon/sr.svg": {
+    "file": "assets/sr-5a3c600f.svg",
+    "src": "public/assets/fonts/flag-icon/sr.svg"
+  },
+  "public/assets/fonts/flag-icon/ss.svg": {
+    "file": "assets/ss-30aed5c1.svg",
+    "src": "public/assets/fonts/flag-icon/ss.svg"
+  },
+  "public/assets/fonts/flag-icon/tw.svg": {
+    "file": "assets/tw-373777d9.svg",
+    "src": "public/assets/fonts/flag-icon/tw.svg"
+  },
+  "public/assets/fonts/flag-icon/tz.svg": {
+    "file": "assets/tz-121dc103.svg",
+    "src": "public/assets/fonts/flag-icon/tz.svg"
+  },
+  "public/assets/fonts/flag-icon/ua.svg": {
+    "file": "assets/ua-88435e43.svg",
+    "src": "public/assets/fonts/flag-icon/ua.svg"
+  },
+  "public/assets/fonts/flag-icon/ug.svg": {
+    "file": "assets/ug-08901c52.svg",
+    "src": "public/assets/fonts/flag-icon/ug.svg"
+  },
+  "public/assets/fonts/flag-icon/um.svg": {
+    "file": "assets/um-d0b48d5c.svg",
+    "src": "public/assets/fonts/flag-icon/um.svg"
+  },
+  "public/assets/fonts/flag-icon/us.svg": {
+    "file": "assets/us-b14d42e6.svg",
+    "src": "public/assets/fonts/flag-icon/us.svg"
+  },
+  "public/assets/fonts/flag-icon/uy.svg": {
+    "file": "assets/uy-17472984.svg",
+    "src": "public/assets/fonts/flag-icon/uy.svg"
+  },
+  "public/assets/fonts/flag-icon/uz.svg": {
+    "file": "assets/uz-b354681d.svg",
+    "src": "public/assets/fonts/flag-icon/uz.svg"
+  },
+  "public/assets/fonts/flag-icon/va.svg": {
+    "file": "assets/va-5bde521a.svg",
+    "src": "public/assets/fonts/flag-icon/va.svg"
+  },
+  "public/assets/fonts/flag-icon/vc.svg": {
+    "file": "assets/vc-e0a2dd6a.svg",
+    "src": "public/assets/fonts/flag-icon/vc.svg"
+  },
+  "public/assets/fonts/flag-icon/ve.svg": {
+    "file": "assets/ve-f1d67a67.svg",
+    "src": "public/assets/fonts/flag-icon/ve.svg"
+  },
+  "public/assets/fonts/flag-icon/vg.svg": {
+    "file": "assets/vg-fb055cf6.svg",
+    "src": "public/assets/fonts/flag-icon/vg.svg"
+  },
+  "public/assets/fonts/flag-icon/vi.svg": {
+    "file": "assets/vi-1b956a72.svg",
+    "src": "public/assets/fonts/flag-icon/vi.svg"
+  },
+  "public/assets/fonts/flag-icon/vn.svg": {
+    "file": "assets/vn-c1b1b0f0.svg",
+    "src": "public/assets/fonts/flag-icon/vn.svg"
+  },
+  "public/assets/fonts/flag-icon/vu.svg": {
+    "file": "assets/vu-5ae59b56.svg",
+    "src": "public/assets/fonts/flag-icon/vu.svg"
+  },
+  "public/assets/fonts/flag-icon/wf.svg": {
+    "file": "assets/wf-3155ee02.svg",
+    "src": "public/assets/fonts/flag-icon/wf.svg"
+  },
+  "public/assets/fonts/flag-icon/ws.svg": {
+    "file": "assets/ws-52063c4a.svg",
+    "src": "public/assets/fonts/flag-icon/ws.svg"
+  },
+  "public/assets/fonts/flag-icon/ye.svg": {
+    "file": "assets/ye-b345955a.svg",
+    "src": "public/assets/fonts/flag-icon/ye.svg"
+  },
+  "public/assets/fonts/flag-icon/yt.svg": {
+    "file": "assets/yt-c84e8053.svg",
+    "src": "public/assets/fonts/flag-icon/yt.svg"
+  },
+  "public/assets/fonts/flag-icon/za.svg": {
+    "file": "assets/za-1fac7adc.svg",
+    "src": "public/assets/fonts/flag-icon/za.svg"
+  },
+  "public/assets/fonts/flag-icon/zm.svg": {
+    "file": "assets/zm-26e65d69.svg",
+    "src": "public/assets/fonts/flag-icon/zm.svg"
+  },
+  "public/assets/fonts/flag-icon/zw.svg": {
+    "file": "assets/zw-2ae0466c.svg",
+    "src": "public/assets/fonts/flag-icon/zw.svg"
+  },
+  "public/assets/images/ajax-loader.gif": {
+    "file": "assets/ajax-loader-e7b44c86.gif",
+    "src": "public/assets/images/ajax-loader.gif"
+  },
+  "public/assets/images/dashboard-5/profile-bg.png": {
+    "file": "assets/profile-bg-fa04b142.png",
+    "src": "public/assets/images/dashboard-5/profile-bg.png"
+  },
+  "public/assets/images/details_open.png": {
+    "file": "assets/details_open-f848d63f.png",
+    "src": "public/assets/images/details_open.png"
+  },
+  "public/assets/images/other-images/coming-soon-bg.jpg": {
+    "file": "assets/coming-soon-bg-40079f45.jpg",
+    "src": "public/assets/images/other-images/coming-soon-bg.jpg"
+  },
+  "public/assets/images/other-images/bg-profile.png": {
+    "file": "assets/bg-profile-a7071c0d.png",
+    "src": "public/assets/images/other-images/bg-profile.png"
+  },
+  "public/assets/images/other-images/boxbg.jpg": {
+    "file": "assets/boxbg-4d2e6f65.jpg",
+    "src": "public/assets/images/other-images/boxbg.jpg"
+  },
+  "public/assets/fonts/ico/icofont.eot": {
+    "file": "assets/icofont-e4cbd167.eot",
+    "src": "public/assets/fonts/ico/icofont.eot"
+  },
+  "public/assets/fonts/font-awesome/fontawesome-webfont.woff2": {
+    "file": "assets/fontawesome-webfont-2adefcbc.woff2",
+    "src": "public/assets/fonts/font-awesome/fontawesome-webfont.woff2"
+  },
+  "public/assets/fonts/slick/slick.woff": {
+    "file": "assets/slick-26726bac.woff",
+    "src": "public/assets/fonts/slick/slick.woff"
+  },
+  "public/assets/fonts/themify/themify.woff": {
+    "file": "assets/themify-0db5c5a1.woff",
+    "src": "public/assets/fonts/themify/themify.woff"
+  },
+  "public/assets/fonts/ico/icofont.ttf": {
+    "file": "assets/icofont-ac2e76e0.ttf",
+    "src": "public/assets/fonts/ico/icofont.ttf"
+  },
+  "public/assets/fonts/font-awesome/fontawesome-webfont.woff": {
+    "file": "assets/fontawesome-webfont-ba0c59de.woff",
+    "src": "public/assets/fonts/font-awesome/fontawesome-webfont.woff"
+  },
+  "public/assets/fonts/slick/slick.ttf": {
+    "file": "assets/slick-37bc99cf.ttf",
+    "src": "public/assets/fonts/slick/slick.ttf"
+  },
+  "public/assets/fonts/themify/themify.ttf": {
+    "file": "assets/themify-350663a4.ttf",
+    "src": "public/assets/fonts/themify/themify.ttf"
+  },
+  "public/assets/fonts/ico/icofont.woff": {
+    "file": "assets/icofont-00f9608b.woff",
+    "src": "public/assets/fonts/ico/icofont.woff"
+  },
+  "public/assets/fonts/font-awesome/fontawesome-webfont.ttf": {
+    "file": "assets/fontawesome-webfont-aa58f33f.ttf",
+    "src": "public/assets/fonts/font-awesome/fontawesome-webfont.ttf"
+  },
+  "public/assets/fonts/slick/slick.svg": {
+    "file": "assets/slick-12459f22.svg",
+    "src": "public/assets/fonts/slick/slick.svg"
+  },
+  "public/assets/fonts/themify/themify.svg": {
+    "file": "assets/themify-2e242102.svg",
+    "src": "public/assets/fonts/themify/themify.svg"
+  },
+  "public/assets/fonts/font-awesome/fontawesome-webfont.svg": {
+    "file": "assets/fontawesome-webfont-fc378232.svg",
+    "src": "public/assets/fonts/font-awesome/fontawesome-webfont.svg"
+  },
+  "public/assets/fonts/ico/icofont.svg": {
+    "file": "assets/icofont-84d98252.svg",
+    "src": "public/assets/fonts/ico/icofont.svg"
+  },
+  "public/assets/scss/app.scss": {
+    "file": "assets/app-6bd73d29.css",
+    "src": "public/assets/scss/app.scss",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-b0a4c440.js",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}

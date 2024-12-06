@@ -1,0 +1,418 @@
+    /* Ensure no element exceeds viewport width */
+    .profile-picture {
+        width: 100px;
+        /* Adjust width as needed */
+        height: 100px;
+        /* Adjust height as needed */
+        object-fit: cover;
+        /* Ensure the image covers the area without distortion */
+        border-radius: 50%;
+        /* Make the image circular */
+        border: 2px solid #ddd;
+        /* Optional: Add a border around the image */
+    }
+
+    .card-header {
+        border-bottom: 1px solid #dee2e6;
+        /* Light gray border color */
+        padding-bottom: 0.75rem;
+        /* Padding below the header text */
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        /* Add space between buttons */
+    }
+
+    body {
+        padding-top: 60px;
+        /* Adjust according to the height of the navbar */
+    }
+
+    .content {
+        margin-left: 270px !important;
+        /* Expanded sidebar width */
+        transition: margin-left 0.3s ease;
+    }
+
+    .content.sidenav-collapsed {
+        margin-left: 100px !important;
+        /* Collapsed sidebar width */
+    }
+
+    .captcha-canvas {
+        border: 1px solid #ccc;
+        /* Border abu-abu */
+        background-color: #f7f7f7;
+        /* Latar belakang abu-abu */
+        border-radius: 8px;
+        /* Sudut membulat */
+    }
+
+    .sidenav {
+        transition: width 0.3s ease;
+        width: 250px;
+        /* Expanded width */
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        background: #fff;
+        border-right: 1px solid #ddd;
+    }
+
+    .sidenav.collapsed {
+        width: 80px;
+        /* Collapsed width */
+    }
+
+    .sidenav .navbar-brand img {
+        width: 50px;
+        /* Expanded logo size */
+        transition: width 0.3s ease;
+    }
+
+    .sidenav.collapsed .navbar-brand img {
+        width: 24px;
+        /* Collapsed logo size */
+    }
+
+    .sidenav .navbar-brand span {
+        transition: opacity 0.3s ease;
+    }
+
+    .sidenav.collapsed .navbar-brand span {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .sidenav .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        white-space: nowrap;
+        transition: opacity 0.3s ease;
+    }
+
+    .sidenav.collapsed .nav-link .nav-link-text {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .sidenav .icon {
+        width: 24px;
+        text-align: center;
+    }
+
+    .collapse-btn {
+        transition: transform 0.3s ease;
+    }
+
+    .sidenav.collapsed .collapse-btn {
+        transform: rotate(180deg);
+        /* Rotate icon when collapsed */
+    }
+
+    .sidenav {
+        z-index: 9995 !important;
+    }
+
+
+
+    .alert {
+        z-index: 9997 !important;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    /* Container styling */
+    .captcha-container {
+        display: flex;
+        align-items: center;
+
+        /* Add space between CAPTCHA box and input */
+        margin-top: 10px;
+        /* Add some space at the top */
+    }
+
+    /* CAPTCHA box styling */
+    .captcha-box {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .captcha-canvas {
+        border: 1px solid #ccc;
+        background-color: #f7f7f7;
+        border-radius: 5px 0 0 5px;
+        height: 50px;
+        width: 150px;
+        /* Adjust width */
+    }
+
+    .btn-refresh {
+        background-color: #6c757d;
+        border: none;
+        height: 50px;
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        border-radius: 0 5px 5px 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    input#captcha-input {
+        height: 50px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #e2e8f0;
+        flex-grow: 1;
+    }
+
+    .page-header {
+        background: #ffffff;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    h4.font-weight-bolder {
+        color: #2D3748;
+    }
+
+    .card-custom {
+        border-radius: 8px;
+        background-color: #ffffff;
+        padding: 20px;
+        /* Add padding inside the card */
+        margin-top: 20px;
+        /* Add space at the top of the card */
+    }
+
+    .card-header {
+        border-bottom: none;
+        padding-bottom: 10px;
+        background-color: #ffffff;
+        /* Padding below card header */
+    }
+
+    .card-body {
+        padding-top: 20px;
+        overflow: hidden;
+        /* Padding above card body */
+    }
+
+    .form-control {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+    }
+
+    .btn-primary {
+        background-color: #f5365c;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #f52c4b;
+    }
+
+    .header-text {
+        text-align: start;
+        font-size: 16px;
+        font-weight: bold;
+        color: #2D3748;
+        overflow: hidden;
+
+    }
+
+
+    .header-logo {
+        margin-top: 10px;
+        max-height: 50px;
+        margin-left: 15px;
+        overflow: hidden;
+    }
+
+    .row.align-items-center {
+        display: flex;
+        align-items: center;
+    }
+
+    .modal-dialog-centered {
+        display: flex;
+        align-items: center;
+        align-content: center;
+
+    }
+
+    .modal-dialog {
+        max-width: 100%;
+        margin: 1.75rem auto;
+    }
+
+    @media (max-width: 768px) {
+        .modal-dialog {
+            margin: 0.5rem;
+        }
+
+        .modal-content {
+            padding: 15px;
+        }
+
+        .modal-header h5 {
+            font-size: 1.1rem;
+        }
+    }
+
+
+
+    /* Pastikan modal content memiliki z-index lebih tinggi */
+    .modal-content {
+        z-index: 1055;
+        background-color: white !important;
+        /* Pastikan background modal tetap putih */
+    }
+
+    /* Pastikan backdrop modal muncul di belakang modal */
+    .modal-backdrop {
+        z-index: 1040;
+        background-color: rgba(0, 0, 0, 0.5) !important;
+        /* Latar belakang hitam dengan transparansi */
+    }
+
+    /* Overide untuk mencegah modal background menjadi hitam */
+    .modal {
+        background-color: transparent !important;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        border: none;
+        /* Remove border from each section */
+    }
+
+    .icon-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        /* Adjust size as needed */
+        height: 50px;
+
+        /* Background color of the circle */
+        border-radius: 50%;
+        /* Make it circular */
+        border: 2px solid red;
+        /* Border color of the circle */
+        position: relative;
+        /* Positioning context for the icon */
+    }
+
+    .icon-container i {
+        font-size: 24px;
+        /* Size of the icon */
+        color: red;
+        /* Color of the icon */
+    }
+
+    .age-red {
+        color: red;
+    }
+
+    .form-control {
+        min-width: 100px;
+        /* Minimum width for the input */
+        max-width: 100%;
+        /* Prevent overflow out of its container */
+        transition: width 0.2s;
+        /* Smooth transition */
+    }
+
+    #widthTester {
+        font-family: inherit;
+        font-size: inherit;
+        padding-left: inherit;
+        padding-right: inherit;
+        position: absolute;
+        top: -9999px;
+        left: 0;
+    }
+
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    .swal2-container {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        height: 100vh !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10000;
+        /* memastikan swal ada di atas elemen lainnya */
+    }
+
+    .swal2-popup {
+        max-width: 400px !important;
+        width: 90% !important;
+        padding: 20px !important;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    @media (max-width: 576px) {
+        .swal2-popup {
+            width: 95% !important;
+            max-width: 350px !important;
+        }
+
+        .swal2-title {
+            font-size: 18px !important;
+        }
+
+        .swal2-content {
+            font-size: 14px !important;
+        }
+
+        .swal2-actions {
+            display: flex;
+            justify-content: space-between !important;
+        }
+
+        .swal2-styled {
+            width: 45% !important;
+            font-size: 14px !important;
+        }
+    }
+
+    .swal2-actions {
+        display: flex !important;
+        justify-content: space-around !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .swal2-styled {
+        width: 40% !important;
+        font-size: 14px !important;
+        padding: 10px !important;
+    }

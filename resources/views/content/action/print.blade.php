@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Data Tindakan</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 12px;
+        }
+        .header {
+            text-align: center;
+        }
+        .header img {
+            width: 80px;
+            height: auto;
+        }
+        .header h1, .header h2, .header p {
+            margin: 0;
+            line-height: 1.2;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: center;
+        }
+        table th {
+            background-color: #f0f0f0;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <img src="{{ asset('assets/assets/img/logo.png') }}" alt="Logo Left">
+            <div>
+                <h1>PEMERINTAH KOTA MAKASSAR</h1>
+                <h2 style="margin: 0px">DINAS KESEHATAN</h2>
+                <h3 style="margin:0px">UPT Puskesmas Makassar</h3>
+                <p>Jl. xx yy No.264 Kode Pos : 90235 Makassar</p>
+                <p>Telp. 0411-494014 Call Center : 081245194368</p>
+                <p>Email: pkmmakassar@gmail.com | Situs: puskesmasmakassar.or.id</p>
+            </div>
+            <img src="../assets/assets/img/logo-puskesmas.png" alt="Logo Right">
+        </div>
+        <hr>
+        <h3 style="margin-top: 20px;">PENCATATAN POLI UMUM</h3>
+        <p>TANGGAL S/D</p>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>TANGGAL</th>
+                    <th>NO.RM</th>
+                    <th>NIK</th>
+                    <th>NAMA PASIEN</th>
+                    <th>TGL.LAHIR</th>
+                    <th>KEPESERTAAN</th>
+                    <th>ALAMAT</th>
+                    <th>JENIS KELAMIN</th>
+                    <th>TD</th>
+                    <th>TB</th>
+                    <th>BB</th>
+                    <th>LP</th>
+                    <th>KUNJ</th>
+                    <th>KELUHAN</th>
+                    <th>DIAGNOSA</th>
+                    <th>TINDAKAN</th>
+                    <th>RUJUKAN</th>
+                    <th>KETERANGAN</th>
+                    <th>DOKTER</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{-- @foreach ($actions as $index => $actions)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $actions->no_rm }}</td>
+                        <td>{{ $actions->nik }}</td>
+                        <td>{{ $actions->name }}</td>
+                        <td>{{ $actions->dob }}<br>{{ $actions->place_birth }}</td>
+                        <td>{{ $actions->umur }} thn</td>
+                        <td>{{ $actions->genderName->name }}</td>
+                        <td>{{ $actions->address }}</td>
+                        <td>{{ $actions->rw }}</td>
+                        <td>{{ $actions->phone }}</td>
+                        <td>{{ $actions->marritalStatus->name }}</td>
+                        <td>{{ $actions->educations->name }}</td>
+                        <td>{{ $actions->occupations->name }}</td>
+                        <td>{{ $actions->blood_type }}</td>
+                        <td>{{ $actions->created_at }}</td>
+                    </tr>
+                @endforeach --}}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
