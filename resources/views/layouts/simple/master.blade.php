@@ -29,6 +29,16 @@
     @include('layouts.simple.css')
     @yield('style')
     <style>
+      .modal-fullscreen {
+        max-width: 100%;
+        margin: 0;
+      }
+      .modal-content {
+        height: 100vh; /* Fullscreen height */
+      }
+    </style>
+    <style>
+      
       .badge {
     display: inline-block;
     padding: 0.25em 0.4em;

@@ -7,9 +7,17 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Yajra\DataTables\DataTables;
 
 class PatientsController extends Controller
 {
+    public function getPatients(Request $request)
+{
+    $patients = Patients::all();
+
+    // Return data in the format required by DataTables
+    return response()->json(['data' => $patients]);
+}
     public function index()
     {
         $patients = Patients::all();
