@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Session;
 Route::get('/', function () {
     if (Auth::check()) {
         // Jika user sudah login, arahkan ke dashboard
-        return redirect()->route('general-widget');
+        return redirect()->route('profile');
     } else {
         // Jika user belum login, arahkan ke halaman login
         return redirect()->route('login');

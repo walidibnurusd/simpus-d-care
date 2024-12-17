@@ -26,21 +26,30 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 <script>
-    $(document).ready(function () {
-        // Initialize DataTable only once
-        const table = $('#tablePasien').DataTable({
+$(document).ready(function () {
+    let table; // Declare the variable outside
+    
+    // Check if the DataTable is already initialized
+    if (!$.fn.DataTable.isDataTable('#tablePasien')) {
+        table = $('#tablePasien').DataTable({
             ajax: {
-                url: '/get-patients', // Endpoint to fetch patient data
+                url: '/get-patients',
                 type: 'GET',
                 dataSrc: function (json) {
-                    return json.data;  // Ensure data is returned as 'data'
+                    if (!json.data) {
+                        console.error("Data source error: 'data' field is missing in response.");
+                        alert('Invalid data format from server.');
+                        return [];
+                    }
+                    return json.data;
                 },
                 error: function (xhr, error, code) {
-                    console.error('Error fetching data:', error);
-                    alert('Error fetching patient data!');
+                    console.error('Error fetching data:', xhr.responseText || error);
+                    alert('Failed to load patient data. Please try again.');
                 }
             },
             columns: [
@@ -71,47 +80,44 @@
                     },
                 },
             ],
+            processing: true,
+            serverSide: true,
         });
+    }
 
-        // Handle 'Pilih' button click
-        $(document).on('click', '.btnPilihPasien', function () {
-            const id = $(this).data('id');
-            const nik = $(this).data('nik');
-            const name = $(this).data('name');
-            const gender = $(this).data('gender');
-            const age = $(this).data('age');
-            const phone = $(this).data('phone');
-            const address = $(this).data('address');
-            const blood = $(this).data('blood');
-            const education = $(this).data('education');
-            const job = $(this).data('job');
-            const rmNumber = $(this).data('rm');
+    // Handle 'Pilih' button click
+    $(document).on('click', '.btnPilihPasien', function () {
+        const data = $(this).data();
 
-            // Display selected patient data outside the modal
-            $('#displayNIK').text(nik);
-            $('#displayName').text(name);
-            $('#displayGender').text(gender);
-            $('#displayAge').text(age);
-            $('#displayPhone').text(phone);
-            $('#displayAddress').text(address);
-            $('#displayBlood').text(blood);
-            $('#displayEducation').text(education);
-            $('#displayJob').text(job);
-            $('#displayRmNumber').text(rmNumber);
+        // Display selected patient data outside the modal
+        $('#displayNIK').text(data.nik);
+        $('#displayName').text(data.name);
+        $('#displayGender').text(data.gender);
+        $('#displayAge').text(data.age);
+        $('#displayPhone').text(data.phone);
+        $('#displayAddress').text(data.address);
+        $('#displayBlood').text(data.blood);
+        $('#displayEducation').text(data.education);
+        $('#displayJob').text(data.job);
+        $('#displayRmNumber').text(data.rm);
 
-            // Show the patient details
-            $('#patientDetails').show();
+        // Set ID into an input field for form submission
+        $('#nik').val(data.id);
 
-            // Optionally, you can store NIK in an input field (if needed for forms)
-            $('#nik').val(id);  // Example: Replace '#nik' with the correct input field ID
+        // Show patient details section
+        $('#patientDetails').show();
 
-            // Close the modal
-            $('#modalPasien').modal('hide');
-        });
-
-        // Refresh DataTables when the modal is shown
-        $('#modalPasien').on('shown.bs.modal', function () {
-            table.ajax.reload();  // Reload the table to show fresh data
-        });
+        // Close the modal
+        $('#modalPasien').modal('hide');
     });
+
+    // Refresh DataTables when the modal is shown
+    $('#modalPasien').on('shown.bs.modal', function () {
+        if (table) {
+            table.ajax.reload(null, false);  // Reload the table without resetting pagination
+        }
+    });
+});
+
+
 </script>
