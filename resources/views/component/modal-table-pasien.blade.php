@@ -54,6 +54,7 @@
                     render: function (data, type, row) {
                         return `
                             <button class="btn btn-success btnPilihPasien" 
+                                data-id="${row.id}" 
                                 data-nik="${row.nik}" 
                                 data-name="${row.name}" 
                                 data-gender="${row.gender}" 
@@ -74,6 +75,7 @@
 
         // Handle 'Pilih' button click
         $(document).on('click', '.btnPilihPasien', function () {
+            const id = $(this).data('id');
             const nik = $(this).data('nik');
             const name = $(this).data('name');
             const gender = $(this).data('gender');
@@ -101,7 +103,7 @@
             $('#patientDetails').show();
 
             // Optionally, you can store NIK in an input field (if needed for forms)
-            $('#nik').val(nik);  // Example: Replace '#nik' with the correct input field ID
+            $('#nik').val(id);  // Example: Replace '#nik' with the correct input field ID
 
             // Close the modal
             $('#modalPasien').modal('hide');

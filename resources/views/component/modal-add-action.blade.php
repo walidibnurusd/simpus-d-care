@@ -9,7 +9,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('patient.store') }}" method="POST" class="px-3">
+                <form id="addPatientForm" action="{{ route('action.store') }}" method="POST" class="px-3">
                     @csrf
                     <div class="row">
                         <div class="col-4">
@@ -36,7 +36,7 @@
                                             <label for="nik">Cari Pasien</label>
                                             <div class="input-group">
                                                 <input readonly type="text" class="form-control" id="nik"
-                                                    name="nik" placeholder="NIK" required>
+                                                    name="id_patient" placeholder="NIK" required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
                                                         data-bs-toggle="modal" data-bs-target="#modalPasien">
@@ -56,7 +56,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="doctor">Dokter</label>
-                                            <select class="form-control" id="doctor" name="doctor" required>
+                                            <select class="form-control" id="doctor" name="id_doctor" required>
                                                 <option value="" disabled selected>Pilih Dokter</option>
                                                 @foreach ($dokter as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -104,7 +104,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="wilayah_faskes">Wilayah Faskes</label>
-                                            <select class="form-control" id="wilayah_faskes" name="wilayah_faskes"
+                                            <select class="form-control" id="wilayah_faskes" name="faskes"
                                                 required>
                                                 <option value="" disabled selected>Pilih Wilayah Faskes</option>
                                                 <option value="ya">Ya</option>
@@ -142,21 +142,21 @@
                                         <div class="form-group">
                                             <label for="berat_badan">Berat Badan</label>
                                             <input type="text" class="form-control" id="berat_badan"
-                                                name="berat_badan" placeholder="Masukkan Berat Badan" required>
+                                                name="beratBadan" placeholder="Masukkan Berat Badan" required>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="tinggi_badan">Tinggi Badan</label>
                                             <input type="text" class="form-control" id="tinggi_badan"
-                                                name="tinggi_badan" placeholder="Masukkan Tinggi Badan" required>
+                                                name="tinggiBadan" placeholder="Masukkan Tinggi Badan" required>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="ling_pinggang">Ling. Pinggang</label>
                                             <input type="text" class="form-control" id="ling_pinggang"
-                                                name="ling_pinggang" placeholder="Masukkan Ling. Pinggang" required>
+                                                name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang" required>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -180,7 +180,7 @@
                                     </div>
                                     <div class="col-md-2 ">
                                         <label for="aktivitas_fisik" style="color: green;">Aktivitas Fisik</label>
-                                        <select class="form-control" id="aktivitas_fisik" name="aktivitas_fisik">
+                                        <select class="form-control" id="aktivitas_fisik" name="fisik">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="aktif">Aktif</option>
                                             <option value="tidak_aktif">Tidak Aktif</option>
@@ -188,7 +188,7 @@
                                     </div>
                                     <div class="col-md-2 ">
                                         <label for="gula" style="color: green;">Gula Berlebih</label>
-                                        <select class="form-control" id="gula" name="gula">
+                                        <select class="form-control" id="gula" name="gula_lebih">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
@@ -232,7 +232,7 @@
                                     </div>
                                     <div class="col-md-2 ">
                                         <label for="kondisi_hidup" style="color: green;">Kondisi Hidup</label>
-                                        <select class="form-control" id="kondisi_hidup" name="kondisi_hidup">
+                                        <select class="form-control" id="kondisi_hidup" name="hidup">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
@@ -246,7 +246,7 @@
                                 <div class="row g-2 mt-2">
                                     <div class="col-md-3 ">
                                         <label for="alkohol" style="color: rgb(128, 87, 0);">Hasil IVA</label>
-                                        <select class="form-control" id="alkohol" name="alkohol">
+                                        <select class="form-control" id="alkohol" name="hasil_iva">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="positif">Positif</option>
                                             <option value="negatif">Negatif</option>
@@ -255,7 +255,7 @@
                                     </div>
                                     <div class="col-md-3 ">
                                         <label for="kondisi_hidup" style="color: rgb(128, 87, 0);">Tindak Lanjut IVA</label>
-                                        <select class="form-control" id="kondisi_hidup" name="kondisi_hidup">
+                                        <select class="form-control" id="kondisi_hidup" name="tindak_iva">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="krioterapi">KRIOTERAPI</option>
                                             <option value="rujuk">RUJUK</option>
@@ -263,7 +263,7 @@
                                     </div>
                                     <div class="col-md-3 ">
                                         <label for="kondisi_hidup" style="color: rgb(128, 87, 0);">HASIL SADANIS</label>
-                                        <select class="form-control" id="kondisi_hidup" name="kondisi_hidup">
+                                        <select class="form-control" id="kondisi_hidup" name="hasil_sadanis">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="benjolan">Benjolan</option>
                                             <option value="tidak">Tidak ada Benjolan</option>
@@ -272,7 +272,7 @@
                                     </div>
                                     <div class="col-md-3 ">
                                         <label for="kondisi_hidup" style="color: rgb(128, 87, 0);">Tindak Lanjut SADANIS</label>
-                                        <select class="form-control" id="kondisi_hidup" name="kondisi_hidup">
+                                        <select class="form-control" id="kondisi_hidup" name="tindak_sadanis">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="rujuk">RUJUK</option>
                                             
@@ -285,7 +285,7 @@
                                 <div class="row g-2 mt-2">
                                     <div class="col-md-3 ">
                                         <label for="alkohol" style="color: green;">Konseling</label>
-                                        <select class="form-control" id="alkohol" name="alkohol">
+                                        <select class="form-control" id="alkohol" name="konseling">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="konseling1">Konseling1</option>
                                             <option value="konseling2">Konseling2</option>
@@ -298,7 +298,7 @@
                                     </div>
                                     <div class="col-md-3 ">
                                         <label for="kondisi_hidup" style="color: green;">CAR</label>
-                                        <select class="form-control" id="kondisi_hidup" name="kondisi_hidup">
+                                        <select class="form-control" id="kondisi_hidup" name="car">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="car3">CAR3</option>
                                             <option value="car6">CAR6</option>
@@ -308,7 +308,7 @@
                                     </div>
                                     <div class="col-md-3 ">
                                         <label for="kondisi_hidup" style="color: green;">RUJUK UBM</label>
-                                        <select class="form-control" id="kondisi_hidup" name="kondisi_hidup">
+                                        <select class="form-control" id="kondisi_hidup" name="rujuk_ubm">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
@@ -316,7 +316,7 @@
                                     </div>
                                     <div class="col-md-3 ">
                                         <label for="kondisi_hidup" style="color: green;">KONDISI</label>
-                                        <select class="form-control" id="kondisi_hidup" name="kondisi_hidup">
+                                        <select class="form-control" id="kondisi_hidup" name="kondisi">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="sukses">Sukses</option>
                                             <option value="kambuh">Kambuh</option>
@@ -331,7 +331,7 @@
                                 <div class="row g-2 mt-2">
                                     <div class="col-md-3 ">
                                         <label for="alkohol" style="color: rgb(22, 24, 22);">Konseling Edukasi Kesehatan</label>
-                                        <select class="form-control" id="alkohol" name="alkohol">
+                                        <select class="form-control" id="alkohol" name="edukasi">
                                             <option value="" disabled selected>pilih</option>
                                             <option value="konseling1">Konseling1</option>
                                             <option value="konseling2">Konseling2</option>
@@ -352,7 +352,8 @@
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular Pada Keluarga</label>
-                            <select class="form-control" id="alkohol" name="alkohol">
+                            <select class="form-control" id="alkohol" name="riwayat_penyakit_keluarga">
+                                <option value="" disabled selected>pilih</option>
                                 @foreach ($penyakit as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
@@ -360,7 +361,8 @@
                         </div>
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular Pada Sendiri</label>
-                            <select class="form-control" id="alkohol" name="alkohol">
+                            <select class="form-control" id="alkohol" name="riwayat_penyakit_tidak_menular">
+                                <option value="" disabled selected>pilih</option>
                                 @foreach ($penyakit as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
@@ -369,21 +371,22 @@
                         <div class="col-md-4">
                             <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
                             <input type="text" class="form-control" id="keluhan" name="keluhan"
-                            placeholder="Kosongkan Bila sehat" required>
+                            placeholder="Kosongkan Bila sehat" >
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                            <select class="form-control" id="alkohol" name="alkohol">
-                                @foreach ($penyakit as $item)
+                            <select class="form-control" id="alkohol" name="diagnosa">
+                                <option value="" disabled selected>pilih</option>
+                                @foreach ($diagnosa as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                            <select class="form-control" id="alkohol" name="alkohol">
+                            <select class="form-control" id="alkohol" name="tindakan">
                                 <option value="" disabled selected>pilih</option>
                                 <option value="diberikan">Diberikan Obat</option>
                                 <option value="tidak">Tidak</option>
@@ -393,7 +396,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">RUJUK RS</label>
-                            <select class="form-control" id="alkohol" name="alkohol">
+                            <select class="form-control" id="alkohol" name="rujuk_rs">
                                 <option value="" disabled selected>pilih</option>
                                 @foreach ($rs as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>

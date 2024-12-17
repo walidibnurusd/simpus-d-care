@@ -29,8 +29,11 @@ return new class extends Migration
             $table->string('merokok');
             $table->string('fisik');
             $table->string('gula_lebih');
+            $table->string('garam');
             $table->string('lemak');
             $table->string('buah_sayur');
+            $table->string('alkohol');
+            $table->string('hidup');
             $table->string('hasil_iva');
             $table->string('tindak_iva');
             $table->string('hasil_sadanis');

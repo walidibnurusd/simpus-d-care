@@ -21,6 +21,13 @@
 
 @section('content')
 <div class="main-content content mt-6" id="main-content">
+    @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
     <div class="row">
         <div class="col-12 mb-4">
             <div class="button-container">
@@ -96,53 +103,52 @@
                                             <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Row number -->
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->nik }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->tanggal }}</p>
                                             <!-- NIK -->
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->nik }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->patient->nik }}</p>
                                             <!-- NIK -->
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->nik }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->patient->name }}</p>
                                             <!-- NIK -->
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->name }}</p>
+                                            <p class="text-xs font-weight-bold mb-0"></p>
                                             <!-- Name -->
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->address }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->kartu }}</p>
                                             <!-- Address -->
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->place_birth }}</p>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->dob }}
-                                                <span class="age-red">({{ $action->getAgeAttribute() }}-thn)</span>
-                                            </p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
+                                           
                                             <!-- Date of Birth -->
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">
-                                                {{ $action->genderName->name }}</p>
-                                            <!-- Gender -->
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->diagnosis->name }}</p>
+                                           
+                                            <!-- Date of Birth -->
                                         </td>
+                                       
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->phone }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->tindakan }}</p>
                                             <!-- Phone -->
                                         </td>
+                                       
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">
-                                                {{ $action->marritalStatus->name }}</p>
-                                            <!-- Marital Status -->
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->no_rm }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->hospitalReferral->name }}</p>
                                             <!-- No RM -->
                                         </td>
 
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{ $action->created_at }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->kunjungan }}</p>
+                                            <!-- Place of Birth -->
+                                        </td>
+                                        <td>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $action->faskes }}</p>
                                             <!-- Place of Birth -->
                                         </td>
                                         <td>

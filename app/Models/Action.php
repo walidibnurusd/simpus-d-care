@@ -25,8 +25,11 @@ class Action extends Model
         'gula',
         'merokok',
         'fisik',
+        'garam',
         'gula_lebih',
         'lemak',
+        'alkohol',
+        'hidup',
         'buah_sayur',
         'hasil_iva',
         'tindak_iva',
@@ -51,7 +54,7 @@ class Action extends Model
      */
     public function patient()
     {
-        return $this->belongsTo(Patient::class, 'id_patient');
+        return $this->belongsTo(Patients::class, 'id_patient');
     }
 
     /**
