@@ -53,6 +53,7 @@ Route::get('provinces', [DependentDropdownController::class, 'provinces'])->name
 Route::get('cities/{provinceId}', [DependentDropdownController::class, 'citiesData'])->name('cities');
 Route::get('districts/{cityId}', [DependentDropdownController::class, 'districtsData'])->name('districts');
 Route::get('villages/{districtId}', [DependentDropdownController::class, 'villagesData'])->name('villages');
+Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('get-patients');
 
 
 

@@ -22,9 +22,9 @@
 @section('content')
 <div class="main-content content mt-6" id="main-content">
     <div class="row">
-        <div class="col-12" style="min-height: 100vh; overflow-x: hidden;">
+        <div class="col-12 mb-4">
             <div class="button-container">
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addActionModal">
                     Tambah
                     <i class="fas fa-plus ms-2"></i> <!-- Icon with margin to the left -->
                 </button>
@@ -36,9 +36,7 @@
 
             </div>
 
-            {{-- @include('component.modal-add-action') --}}
-            <!-- Modal -->
-
+            @include('component.modal-add-action')
 
             <div class="card mb-4">
                 <div class="card-header pb-0">
