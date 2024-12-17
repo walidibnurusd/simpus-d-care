@@ -9,34 +9,46 @@ use App\Models\Doctor;
 use App\Models\Hospital;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ActionController extends Controller
 {
     public function index()
     {
+        $response = Http::withHeaders([
+            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
+        ])->get('https://simpusdignityspace.cloud/api/master/docters');
+
+        if ($response->successful()) {
+            $dokter = $response->json()['data'];
+        } else {
+            $dokter = [];
+        }
         $actions = Action::all();
-        $dokter = Doctor::all();
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $diagnosa = Diagnosis::all();
-        return view('content.action.index', compact('actions','dokter','penyakit','rs','diagnosa'));
+
+        // Mengirim data ke view
+        return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa'));
     }
+
     public function actionReport()
-{
-    $actions = Action::all(); // Ganti dengan query sesuai kebutuhan
-    return view('content.action.print', compact('actions'));
-}
-public function store(Request $request)
-    { 
+    {
+        $actions = Action::all(); // Ganti dengan query sesuai kebutuhan
+        return view('content.action.print', compact('actions'));
+    }
+    public function store(Request $request)
+    {
         $request->merge([
             'tanggal' => Carbon::createFromFormat('d-m-Y', $request->tanggal)->format('Y-m-d'),
         ]);
-    
+
         // dd($request->all());
         $validatedData = $request->validate([
             'id_patient' => 'required|exists:patients,id',
             'tanggal' => 'required|date',
-            'id_doctor' => 'required|exists:doctors,id',
+            'doctor' => 'required',
             'kunjungan' => 'nullable|string',
             'kartu' => 'nullable|string',
             'nomor' => 'nullable|string',
