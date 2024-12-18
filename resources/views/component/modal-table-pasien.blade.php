@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-striped" id="tablePasien">
+                <table class="table table-striped" id="pasien">
                     <thead>
                         <tr>
                             <th>NIK</th>
@@ -16,7 +16,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- DataTables content will be populated here -->
+                       
                     </tbody>
                 </table>
             </div>
@@ -26,30 +26,28 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
 
 <script>
-$(document).ready(function () {
-    let table; // Declare the variable outside
-    
-    // Check if the DataTable is already initialized
-    if (!$.fn.DataTable.isDataTable('#tablePasien')) {
-        table = $('#tablePasien').DataTable({
+ $(document).ready(function () {
+    let table; // Deklarasi variabel DataTable
+
+    // Fungsi untuk menginisialisasi DataTable
+    function initializeTable() {
+        if ($.fn.DataTable.isDataTable('#pasien')) {
+            $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
+        }
+
+        table = $('#pasien').DataTable({
             ajax: {
-                url: '/get-patients',
+                url: '/get-patients', // Endpoint untuk mengambil data
                 type: 'GET',
                 dataSrc: function (json) {
-                    if (!json.data) {
-                        console.error("Data source error: 'data' field is missing in response.");
-                        alert('Invalid data format from server.');
-                        return [];
-                    }
-                    return json.data;
+                    return json.data; // Pastikan data dalam key 'data'
                 },
                 error: function (xhr, error, code) {
-                    console.error('Error fetching data:', xhr.responseText || error);
-                    alert('Failed to load patient data. Please try again.');
+                    console.error('Error fetching data:', error);
+                    alert('Error fetching patient data!');
                 }
             },
             columns: [
@@ -80,16 +78,17 @@ $(document).ready(function () {
                     },
                 },
             ],
+            destroy: true, // Mengizinkan inisialisasi ulang
             processing: true,
             serverSide: true,
         });
     }
 
-    // Handle 'Pilih' button click
+    // Handle tombol "Pilih" diklik
     $(document).on('click', '.btnPilihPasien', function () {
         const data = $(this).data();
 
-        // Display selected patient data outside the modal
+        // Tampilkan data pasien di elemen luar modal
         $('#displayNIK').text(data.nik);
         $('#displayName').text(data.name);
         $('#displayGender').text(data.gender);
@@ -101,23 +100,20 @@ $(document).ready(function () {
         $('#displayJob').text(data.job);
         $('#displayRmNumber').text(data.rm);
 
-        // Set ID into an input field for form submission
+        // Set nilai ID ke input form
         $('#nik').val(data.id);
 
-        // Show patient details section
+        // Tampilkan bagian detail pasien
         $('#patientDetails').show();
 
-        // Close the modal
+        // Tutup modal
         $('#modalPasien').modal('hide');
     });
 
-    // Refresh DataTables when the modal is shown
+    // Inisialisasi ulang DataTables saat modal ditampilkan
     $('#modalPasien').on('shown.bs.modal', function () {
-        if (table) {
-            table.ajax.reload(null, false);  // Reload the table without resetting pagination
-        }
+        initializeTable();
     });
 });
-
 
 </script>

@@ -9,15 +9,30 @@
             </div>
 
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('action.store') }}" method="POST" class="px-3">
+                <form id="addPatientForm" action="{{ route('action.update',$action->id ) }}" method="POST" class="px-3">
                     @csrf
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
+                            @if ($action->id)
+                            <div id="patientDetails"
+                            style=" margin-top: 10px; padding: 10px; border-radius: 5px;">
+                            <p><strong>N I K</strong> : <span id="displayNIK">{{ $action->patient->nik }}</span></p>
+                            <p><strong>Nama Pasien</strong> : <span id="displayName">{{ $action->patient->name }}</span> </p>
+                            <p><strong>J.Kelamin</strong> : <span id="displayGender">{{ $action->patient->genderName->name }}</span></p>
+                            <p><strong>Umur</strong> : <span id="displayAge"></span></p>
+                            <p><strong>Telepon/WA</strong> : <span id="displayPhone"></span></p>
+                            <p><strong>Alamat</strong> : <span id="displayAddress"></span></p>
+                            <p><strong>Darah</strong> : <span id="displayBlood"></span></p>
+                            <p><strong>Pendidikan</strong> : <span id="displayEducation"></span></p>
+                            <p><strong>Pekerjaan</strong> : <span id="displayJob"></span></p>
+                            <p><strong>Nomor RM</strong> : <span id="displayRmNumber"></span></p>
+                        </div>
+                            @endif
                             <div id="patientDetails"
                                 style="display:none; margin-top: 10px; padding: 10px; border-radius: 5px;">
-                                <p><strong>N I K</strong> : <span id="displayNIK"></span></p>
-                                <p><strong>Nama Pasien</strong> : <span id="displayName"></span></p>
+                                <p><strong>N I K</strong> : <span id="displayNIK">{{ $action->patient->nik }}</span></p>
+                                <p><strong>Nama Pasien</strong> : <span id="displayName"></span> </p>
                                 <p><strong>J.Kelamin</strong> : <span id="displayGender"></span></p>
                                 <p><strong>Umur</strong> : <span id="displayAge"></span></p>
                                 <p><strong>Telepon/WA</strong> : <span id="displayPhone"></span></p>
@@ -36,7 +51,7 @@
                                             <label for="nik">Cari Pasien</label>
                                             <div class="input-group">
                                                 <input readonly type="text" class="form-control" id="nik"
-                                                    name="id_patient" placeholder="NIK" required>
+                                                    name="id_patient" placeholder="NIK" value="{{ $action->patient->id }}" required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
                                                         data-bs-toggle="modal" data-bs-target="#modalPasien">
@@ -50,7 +65,7 @@
                                         <div class="form-group">
                                             <label for="tanggal">Tanggal</label>
                                             <input type="text" class="form-control flatpickr-input" id="tanggal"
-                                                name="tanggal" placeholder="Pilih Tanggal" required>
+                                                name="tanggal" value="{{ $action->tanggal }}" placeholder="Pilih Tanggal" required>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -59,8 +74,8 @@
                                             <select class="form-control" id="doctor" name="id_doctor" required>
                                                 <option value="" disabled selected>Pilih Dokter</option>
                                                 @foreach ($dokter as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                @endforeach
+                                                <option value="{{ $item['name'] }}">{{ $item['name'] }}</option>
+                                            @endforeach
                                               
                                             </select>
                                         </div>

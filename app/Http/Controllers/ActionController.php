@@ -24,6 +24,7 @@ class ActionController extends Controller
         } else {
             $dokter = [];
         }
+        // dd($dokter);
         $actions = Action::all();
         $penyakit = Disease::all();
         $rs = Hospital::all();
