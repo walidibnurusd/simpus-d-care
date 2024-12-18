@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_patient');
             $table->date('tanggal');
-            $table->unsignedBigInteger('id_doctor');
+            $table->string('doctor');
             $table->string('kunjungan');
             $table->string('kartu');
             $table->string('nomor');
@@ -43,20 +43,20 @@ return new class extends Migration
             $table->string('rujuk_ubm');
             $table->string('kondisi');
             $table->string('edukasi');
-            $table->unsignedBigInteger('riwayat_penyakit_keluarga');
-            $table->unsignedBigInteger('riwayat_penyakit_tidak_menular');
+            $table->string('riwayat_penyakit_keluarga');
+            $table->string('riwayat_penyakit_tidak_menular');
             $table->string('keluhan');
-            $table->unsignedBigInteger('diagnosa');
+            $table->string('diagnosa');
             $table->string('tindakan');
             $table->unsignedBigInteger('rujuk_rs');
             $table->string('keterangan');
             $table->timestamps();
             $table->foreign('id_patient')->references('id')->on('patients')->onDelete('cascade');
-            $table->foreign('id_doctor')->references('id')->on('doctors')->onDelete('cascade');
-            $table->foreign('diagnosa')->references('id')->on('diagnosis')->onDelete('cascade');
+            // $table->foreign('id_doctor')->references('id')->on('doctors')->onDelete('cascade');
+            // $table->foreign('diagnosa')->references('id')->on('diagnosis')->onDelete('cascade');
             $table->foreign('rujuk_rs')->references('id')->on('hospitals')->onDelete('cascade');
-            $table->foreign('riwayat_penyakit_keluarga')->references('id')->on('diseases')->onDelete('cascade');
-            $table->foreign('riwayat_penyakit_tidak_menular')->references('id')->on('diseases')->onDelete('cascade');
+            // $table->foreign('riwayat_penyakit_keluarga')->references('id')->on('diseases')->onDelete('cascade');
+            // $table->foreign('riwayat_penyakit_tidak_menular')->references('id')->on('diseases')->onDelete('cascade');
         });
     }
 

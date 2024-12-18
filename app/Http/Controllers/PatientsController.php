@@ -13,7 +13,7 @@ class PatientsController extends Controller
 {
     public function getPatients(Request $request)
 {
-    $patients = Patients::all();
+    $patients = Patients::with('genderName','educations','occupations')->get();
 
     // Return data in the format required by DataTables
     return response()->json(['data' => $patients]);

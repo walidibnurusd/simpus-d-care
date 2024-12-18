@@ -94,7 +94,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($actions as $index => $action)
-                                        @include('component.modal-edit-action', ['action' => $action]) <!-- Modal Include -->
+                                     
                                         <tr>
                                             <td>
                                                 <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Nomor urut -->
@@ -146,7 +146,7 @@
                                                         data-bs-target="#editActionModal{{ $action->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-
+                                                    @include('component.modal-edit-action') 
                                                     <!-- Tombol Delete -->
                                                     <form action="{{ route('action.destroy', $action->id) }}"
                                                         method="POST" class="d-inline">
@@ -161,6 +161,7 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                      
                                     @endforeach
                                 </tbody>
                             </table>
@@ -231,26 +232,6 @@
 
                     var formAction = this.getAttribute('data-form-action');
 
-<<<<<<< HEAD
-                Swal.fire({
-                    title: 'Konfirmasi Penghapusan',
-                    text: 'Apakah Anda yakin ingin menghapus Tindakan ini?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Hapus',
-                    cancelButtonText: 'Batal',
-                    customClass: {
-                        popup: 'swal2-popup-custom'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Create and submit the form
-                        var form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = formAction;
-=======
                     Swal.fire({
                         title: 'Konfirmasi Penghapusan',
                         text: 'Apakah Anda yakin ingin menghapus Tindakan ini?',
@@ -269,7 +250,6 @@
                             var form = document.createElement('form');
                             form.method = 'POST';
                             form.action = formAction;
->>>>>>> 3e471908cd40c1fbd21f1046e8f228e8830ff952
 
                             var csrfToken = document.createElement('input');
                             csrfToken.type = 'hidden';

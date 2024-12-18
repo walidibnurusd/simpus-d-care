@@ -84,25 +84,43 @@
                 </tr>
             </thead>
             <tbody>
-                {{-- @foreach ($actions as $index => $actions)
+                @foreach ($actions as $index => $actions)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $actions->no_rm }}</td>
-                        <td>{{ $actions->nik }}</td>
-                        <td>{{ $actions->name }}</td>
-                        <td>{{ $actions->dob }}<br>{{ $actions->place_birth }}</td>
-                        <td>{{ $actions->umur }} thn</td>
-                        <td>{{ $actions->genderName->name }}</td>
-                        <td>{{ $actions->address }}</td>
-                        <td>{{ $actions->rw }}</td>
-                        <td>{{ $actions->phone }}</td>
-                        <td>{{ $actions->marritalStatus->name }}</td>
+                        <td>{{ $actions->tanggal }}</td>
+                        <td>{{ $actions->patient->no_rm }}</td>
+                        <td>{{ $actions->patient->nik }}</td>
+                        <td>{{ $actions->patient->name }}<br>{{ $actions->place_birth }}</td>
+                        <td>{{ $actions->patient->dob }}</td>
+                        <td>{{ $actions->kartu}}</td>
+                        <td>{{ $actions->patient->address }}</td>
+                        <td>{{ $actions->patient->genderName->name }}</td>
+                        <td>{{ $actions->tinggiBadan }}</td>
+                        <td>{{ $actions->tinggiBadan }}</td>
+                        <td>{{ $actions->beratBadan }}</td>
+                        <td>{{ $actions->lingkarPinggang }}</td>
+                        <td>{{ $actions->kunjungan }}</td>
+                        <td>{{ $actions->keluhan }}</td>
+                        @php
+                        // Assuming $actions->diagnosa is an array of Diagnosis IDs
+                        $diagnosaIds = $actions->diagnosa; // This should be an array of IDs.
+                        $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get(); // Fetch the diagnoses by IDs
+                    @endphp
+                    
+                    <td>
+                        {{ implode(', ', $diagnosa->pluck('name')->toArray()) }}  <!-- Join diagnosis names into a comma-separated string -->
+                    </td>
+                    
+                        {{-- <td>{{ $actions->marritalStatus->name }}</td>
                         <td>{{ $actions->educations->name }}</td>
-                        <td>{{ $actions->occupations->name }}</td>
-                        <td>{{ $actions->blood_type }}</td>
-                        <td>{{ $actions->created_at }}</td>
+                        <td>{{ $actions->occupations->name }}</td> --}}
+                        <td>{{ $actions->tindakan }}</td>
+                        <td>{{ $actions->hospitalReferral->name }}</td>
+                       
+                        <td>{{ $actions->keterangan }}</td>
+                        <td>{{ $actions->doctor }}</td>
                     </tr>
-                @endforeach --}}
+                @endforeach
             </tbody>
         </table>
     </div>

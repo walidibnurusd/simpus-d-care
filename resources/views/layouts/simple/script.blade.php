@@ -18,6 +18,10 @@
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{asset('assets/js/select2/select2.full.min.js')}}"></script>
+<script src="{{asset('assets/js/select2/select2-custom.js')}}"></script>
+
+
 <script src="{{ asset('assets/js/chart/apex-chart/apex-chart.js') }}"></script>
 <script src="{{ asset('assets/js/chart/apex-chart/stock-prices.js') }}"></script>
 <script id="menu" src="{{asset('assets/js/sidebar-menu.js')}}"></script>

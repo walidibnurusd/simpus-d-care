@@ -15,37 +15,23 @@
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
-                            @if ($action->id)
-                                <div id="patientDetails" style=" margin-top: 10px; padding: 10px; border-radius: 5px;">
-                                    <p><strong>N I K</strong> : <span id="displayNIK">{{ $action->patient->nik }}</span>
-                                    </p>
-                                    <p><strong>Nama Pasien</strong> : <span
-                                            id="displayName">{{ $action->patient->name }}</span> </p>
-                                    <p><strong>J.Kelamin</strong> : <span
-                                            id="displayGender">{{ $action->patient->genderName->name }}</span></p>
-                                    <p><strong>Umur</strong> : <span id="displayAge"></span></p>
-                                    <p><strong>Telepon/WA</strong> : <span id="displayPhone"></span></p>
-                                    <p><strong>Alamat</strong> : <span id="displayAddress"></span></p>
-                                    <p><strong>Darah</strong> : <span id="displayBlood"></span></p>
-                                    <p><strong>Pendidikan</strong> : <span id="displayEducation"></span></p>
-                                    <p><strong>Pekerjaan</strong> : <span id="displayJob"></span></p>
-                                    <p><strong>Nomor RM</strong> : <span id="displayRmNumber"></span></p>
+                            
+                          
+                                <div id="patientDetailsEdit" style=" margin-top: 10px; padding: 10px; border-radius: 5px;">
+                                    <p><strong>N I K</strong> : <span id="NIK">{{ $action->patient->nik }}</span></p>
+                                    <p><strong>Nama Pasien</strong> : <span id="Name">{{ $action->patient->name }}</span></p>
+                                    {{-- <p><strong>J.Kelamin</strong> : <span id="Gender">{{ $action->patient->genderName->name }}</span></p> --}}
+                                    <p><strong>Umur</strong> : <span id="Age"></span> {{ \Carbon\Carbon::parse($action->patient->dob)->age }}</p>
+                                    <p><strong>Telepon/WA</strong> : <span id="Phone">{{ $action->patient->phone }}</span></p>
+                                    <p><strong>Alamat</strong> : <span id="Address">{{ $action->patient->address }}</span></p>
+                                    <p><strong>Darah</strong> : <span id="Blood">{{ $action->patient->blood_type }}</span></p>
+                                    {{-- <p><strong>Pendidikan</strong> : <span id="Education">{{ $action->patient->educations->name }}</span></p> --}}
+                                    {{-- <p><strong>Pekerjaan</strong> : <span id="Job"></span>{{ $action->patient->occupations->name }}</p> --}}
+                                    <p><strong>Nomor RM</strong> : <span id="RmNumber">{{ $action->patient->no_rm }}</span></p>
                                 </div>
-                            @endif
-                            <div id="patientDetails"
-                                style="display:none; margin-top: 10px; padding: 10px; border-radius: 5px;">
-                                <p><strong>N I K</strong> : <span id="displayNIK">{{ $action->patient->nik }}</span></p>
-                                <p><strong>Nama Pasien</strong> : <span id="displayName"></span> </p>
-                                <p><strong>J.Kelamin</strong> : <span id="displayGender"></span></p>
-                                <p><strong>Umur</strong> : <span id="displayAge"></span></p>
-                                <p><strong>Telepon/WA</strong> : <span id="displayPhone"></span></p>
-                                <p><strong>Alamat</strong> : <span id="displayAddress"></span></p>
-                                <p><strong>Darah</strong> : <span id="displayBlood"></span></p>
-                                <p><strong>Pendidikan</strong> : <span id="displayEducation"></span></p>
-                                <p><strong>Pekerjaan</strong> : <span id="displayJob"></span></p>
-                                <p><strong>Nomor RM</strong> : <span id="displayRmNumber"></span></p>
-                            </div>
+                           
                         </div>
+                        
                         <div class="row col-8">
                             <div class="col-12">
                                 <div class="row g-2">
@@ -53,12 +39,11 @@
                                         <div class="form-group">
                                             <label for="nik">Cari Pasien</label>
                                             <div class="input-group">
-                                                <input readonly type="text" class="form-control" id="nik"
-                                                    name="id_patient" placeholder="NIK"
-                                                    value="{{ $action->patient->nik }}" required>
+                                                <input readonly type="text" class="form-control" id="nikEdit"
+                                                    name="nikEdit" placeholder="NIK" required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
-                                                        data-bs-toggle="modal" data-bs-target="#modalPasien">
+                                                        data-bs-toggle="modal" data-bs-target="#modalPasienEdit">
                                                         Cari
                                                     </button>
                                                 </div>
@@ -199,8 +184,7 @@
                                             <label for="ling_pinggang">Ling. Pinggang</label>
                                             <input type="text" class="form-control" id="ling_pinggang"
                                                 name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang" required
-                                                value="
-                                                {{ $action->lingkarPinggang }}">
+                                                value="{{ $action->lingkarPinggang }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -259,222 +243,420 @@
                                                 Tidak</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2 ">
+                                    <div class="col-md-2">
                                         <label for="garam" style="color: green;">Garam Berlebih</label>
                                         <select class="form-control" id="garam" name="garam">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
+                                            <option value="" disabled {{ old('garam', $action->garam) == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('garam', $action->garam) == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('garam', $action->garam) == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2 ">
+                                    
+                                    <div class="col-md-2">
                                         <label for="buah_sayur" style="color: green;">Mkn Buah/Sayur</label>
                                         <select class="form-control" id="buah_sayur" name="buah_sayur">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="cukup">Cukup</option>
-                                            <option value="kurang">Kurang</option>
+                                            <option value="" disabled {{ old('buah_sayur', $action->buah_sayur) == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="cukup" {{ old('buah_sayur', $action->buah_sayur) == 'cukup' ? 'selected' : '' }}>Cukup</option>
+                                            <option value="kurang" {{ old('buah_sayur', $action->buah_sayur) == 'kurang' ? 'selected' : '' }}>Kurang</option>
                                         </select>
                                     </div>
+                                    
                                 </div>
                             </div>
-                            <div class="container">
+                            <div class="container mb-4">
                                 <div class="row g-2 mt-2">
-                                    <div class="col-md-2 ">
+                                    <div class="col-md-2">
                                         <label for="alkohol" style="color: green;">Minum Alkohol</label>
                                         <select class="form-control" id="alkohol" name="alkohol">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
+                                            <option value="" disabled {{ old('alkohol', $action->alkohol) == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('alkohol', $action->alkohol) == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('alkohol', $action->alkohol) == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2 ">
+                            
+                                    <div class="col-md-2">
                                         <label for="kondisi_hidup" style="color: green;">Kondisi Hidup</label>
                                         <select class="form-control" id="kondisi_hidup" name="hidup">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
+                                            <option value="" disabled {{ old('hidup', $action->hidup) == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('hidup', $action->hidup) == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('hidup', $action->hidup) == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
                                     </div>
-
                                 </div>
                             </div>
+                            
                             <hr>
                             <div class="container">
                                 <div class="row g-2 mt-2">
-                                    <div class="col-md-3 ">
+                                    <!-- Hasil IVA -->
+                                    <div class="col-md-3">
                                         <label for="alkohol" style="color: rgb(128, 87, 0);">Hasil IVA</label>
                                         <select class="form-control" id="alkohol" name="hasil_iva">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="positif">Positif</option>
-                                            <option value="negatif">Negatif</option>
-                                            <option value="kanker">Curiga Kanker</option>
+                                            <option value="" disabled {{ old('hasil_iva', $action->hasil_iva ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="positif" {{ old('hasil_iva', $action->hasil_iva ?? '') == 'positif' ? 'selected' : '' }}>Positif</option>
+                                            <option value="negatif" {{ old('hasil_iva', $action->hasil_iva ?? '') == 'negatif' ? 'selected' : '' }}>Negatif</option>
+                                            <option value="kanker" {{ old('hasil_iva', $action->hasil_iva ?? '') == 'kanker' ? 'selected' : '' }}>Curiga Kanker</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 ">
-                                        <label for="kondisi_hidup" style="color: rgb(128, 87, 0);">Tindak Lanjut
-                                            IVA</label>
-                                        <select class="form-control" id="kondisi_hidup" name="tindak_iva">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="krioterapi">KRIOTERAPI</option>
-                                            <option value="rujuk">RUJUK</option>
+                            
+                                    <!-- Tindak Lanjut IVA -->
+                                    <div class="col-md-3">
+                                        <label for="tindak_iva" style="color: rgb(128, 87, 0);">Tindak Lanjut IVA</label>
+                                        <select class="form-control" id="tindak_iva" name="tindak_iva">
+                                            <option value="" disabled {{ old('tindak_iva', $action->tindak_iva ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="krioterapi" {{ old('tindak_iva', $action->tindak_iva ?? '') == 'krioterapi' ? 'selected' : '' }}>KRIOTERAPI</option>
+                                            <option value="rujuk" {{ old('tindak_iva', $action->tindak_iva ?? '') == 'rujuk' ? 'selected' : '' }}>RUJUK</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 ">
-                                        <label for="kondisi_hidup" style="color: rgb(128, 87, 0);">HASIL
-                                            SADANIS</label>
-                                        <select class="form-control" id="kondisi_hidup" name="hasil_sadanis">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="benjolan">Benjolan</option>
-                                            <option value="tidak">Tidak ada Benjolan</option>
-                                            <option value="kanker">Curiga Kanker</option>
+                            
+                                    <!-- Hasil SADANIS -->
+                                    <div class="col-md-3">
+                                        <label for="hasil_sadanis" style="color: rgb(128, 87, 0);">Hasil SADANIS</label>
+                                        <select class="form-control" id="hasil_sadanis" name="hasil_sadanis">
+                                            <option value="" disabled {{ old('hasil_sadanis', $action->hasil_sadanis ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="benjolan" {{ old('hasil_sadanis', $action->hasil_sadanis ?? '') == 'benjolan' ? 'selected' : '' }}>Benjolan</option>
+                                            <option value="tidak" {{ old('hasil_sadanis', $action->hasil_sadanis ?? '') == 'tidak' ? 'selected' : '' }}>Tidak ada Benjolan</option>
+                                            <option value="kanker" {{ old('hasil_sadanis', $action->hasil_sadanis ?? '') == 'kanker' ? 'selected' : '' }}>Curiga Kanker</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 ">
-                                        <label for="kondisi_hidup" style="color: rgb(128, 87, 0);">Tindak Lanjut
-                                            SADANIS</label>
-                                        <select class="form-control" id="kondisi_hidup" name="tindak_sadanis">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="rujuk">RUJUK</option>
-
+                            
+                                    <!-- Tindak Lanjut SADANIS -->
+                                    <div class="col-md-3">
+                                        <label for="tindak_sadanis" style="color: rgb(128, 87, 0);">Tindak Lanjut SADANIS</label>
+                                        <select class="form-control" id="tindak_sadanis" name="tindak_sadanis">
+                                            <option value="" disabled {{ old('tindak_sadanis', $action->tindak_sadanis ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="rujuk" {{ old('tindak_sadanis', $action->tindak_sadanis ?? '') == 'rujuk' ? 'selected' : '' }}>RUJUK</option>
                                         </select>
                                     </div>
-
                                 </div>
                             </div>
+                            
                             <div class="container">
                                 <div class="row g-2 mt-2">
-                                    <div class="col-md-3 ">
-                                        <label for="alkohol" style="color: green;">Konseling</label>
-                                        <select class="form-control" id="alkohol" name="konseling">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="konseling1">Konseling1</option>
-                                            <option value="konseling2">Konseling2</option>
-                                            <option value="konseling3">Konseling3</option>
-                                            <option value="konseling4">Konseling4</option>
-                                            <option value="konseling5">Konseling5</option>
-                                            <option value="konseling6">Konseling6</option>
+                                    <!-- Konseling -->
+                                    <div class="col-md-3">
+                                        <label for="konseling" style="color: green;">Konseling</label>
+                                        <select class="form-control" id="konseling" name="konseling">
+                                            <option value="" disabled {{ old('konseling', $action->konseling ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="konseling1" {{ old('konseling', $action->konseling ?? '') == 'konseling1' ? 'selected' : '' }}>Konseling1</option>
+                                            <option value="konseling2" {{ old('konseling', $action->konseling ?? '') == 'konseling2' ? 'selected' : '' }}>Konseling2</option>
+                                            <option value="konseling3" {{ old('konseling', $action->konseling ?? '') == 'konseling3' ? 'selected' : '' }}>Konseling3</option>
+                                            <option value="konseling4" {{ old('konseling', $action->konseling ?? '') == 'konseling4' ? 'selected' : '' }}>Konseling4</option>
+                                            <option value="konseling5" {{ old('konseling', $action->konseling ?? '') == 'konseling5' ? 'selected' : '' }}>Konseling5</option>
+                                            <option value="konseling6" {{ old('konseling', $action->konseling ?? '') == 'konseling6' ? 'selected' : '' }}>Konseling6</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 ">
-                                        <label for="kondisi_hidup" style="color: green;">CAR</label>
-                                        <select class="form-control" id="kondisi_hidup" name="car">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="car3">CAR3</option>
-                                            <option value="car6">CAR6</option>
-                                            <option value="car9">CAR9</option>
+                            
+                                    <!-- CAR -->
+                                    <div class="col-md-3">
+                                        <label for="car" style="color: green;">CAR</label>
+                                        <select class="form-control" id="car" name="car">
+                                            <option value="" disabled {{ old('car', $action->car ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="car3" {{ old('car', $action->car ?? '') == 'car3' ? 'selected' : '' }}>CAR3</option>
+                                            <option value="car6" {{ old('car', $action->car ?? '') == 'car6' ? 'selected' : '' }}>CAR6</option>
+                                            <option value="car9" {{ old('car', $action->car ?? '') == 'car9' ? 'selected' : '' }}>CAR9</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 ">
-                                        <label for="kondisi_hidup" style="color: green;">RUJUK UBM</label>
-                                        <select class="form-control" id="kondisi_hidup" name="rujuk_ubm">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
+                            
+                                    <!-- Rujuk UBM -->
+                                    <div class="col-md-3">
+                                        <label for="rujuk_ubm" style="color: green;">RUJUK UBM</label>
+                                        <select class="form-control" id="rujuk_ubm" name="rujuk_ubm">
+                                            <option value="" disabled {{ old('rujuk_ubm', $action->rujuk_ubm ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('rujuk_ubm', $action->rujuk_ubm ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('rujuk_ubm', $action->rujuk_ubm ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 ">
-                                        <label for="kondisi_hidup" style="color: green;">KONDISI</label>
-                                        <select class="form-control" id="kondisi_hidup" name="kondisi">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="sukses">Sukses</option>
-                                            <option value="kambuh">Kambuh</option>
-                                            <option value="do">DO</option>
+                            
+                                    <!-- Kondisi -->
+                                    <div class="col-md-3">
+                                        <label for="kondisi" style="color: green;">KONDISI</label>
+                                        <select class="form-control" id="kondisi" name="kondisi">
+                                            <option value="" disabled {{ old('kondisi', $action->kondisi ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="sukses" {{ old('kondisi', $action->kondisi ?? '') == 'sukses' ? 'selected' : '' }}>Sukses</option>
+                                            <option value="kambuh" {{ old('kondisi', $action->kondisi ?? '') == 'kambuh' ? 'selected' : '' }}>Kambuh</option>
+                                            <option value="do" {{ old('kondisi', $action->kondisi ?? '') == 'do' ? 'selected' : '' }}>DO</option>
                                         </select>
                                     </div>
-
                                 </div>
                             </div>
+                            
                             <div class="container">
                                 <div class="row g-2 mt-2">
-                                    <div class="col-md-3 ">
-                                        <label for="alkohol" style="color: rgb(22, 24, 22);">Konseling Edukasi
-                                            Kesehatan</label>
-                                        <select class="form-control" id="alkohol" name="edukasi">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="konseling1">Konseling1</option>
-                                            <option value="konseling2">Konseling2</option>
-                                            <option value="konseling3">Konseling3</option>
-                                            <option value="konseling4">Konseling4</option>
-                                            <option value="konseling5">Konseling5</option>
-                                            <option value="konseling6">Konseling6</option>
-
+                                    <!-- Konseling Edukasi Kesehatan -->
+                                    <div class="col-md-3">
+                                        <label for="edukasi" style="color: rgb(22, 24, 22);">Konseling Edukasi Kesehatan</label>
+                                        <select class="form-control" id="edukasi" name="edukasi">
+                                            <option value="" disabled {{ old('edukasi', $action->edukasi ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="gizi" {{ old('edukasi', $action->edukasi ?? '') == 'gizi' ? 'selected' : '' }}>Gizi</option>
+                                            <option value="aktifitas_fisik" {{ old('edukasi', $action->edukasi ?? '') == 'aktifitas_fisik' ? 'selected' : '' }}>Aktifitas Fisik</option>
                                         </select>
                                     </div>
-
-
                                 </div>
                             </div>
-
+                            
+                            <div style="display: flex; align-items: center; text-align: center;">
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Fisik</span>
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                            </div>
+                            <div class="container">
+                            <div class="row g-2">
+                              
+                                    <!-- Mata-Anemia -->
+                                    <div class="col-md-2">
+                                        <label for="mata_anemia" style="color: green;">Mata-Anemia</label>
+                                        <select class="form-control" id="mata_anemia" name="mata_anemia">
+                                            <option value="" disabled {{ old('mata_anemia', $action->mata_anemia ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('mata_anemia', $action->mata_anemia ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('mata_anemia', $action->mata_anemia ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                        </select>
+                                    </div>
+                                    <!-- Mata-Pupil -->
+                                    <div class="col-md-2">
+                                        <label for="pupil" style="color: green;">Mata-Pupil</label>
+                                        <select class="form-control" id="pupil" name="pupil">
+                                            <option value="" disabled {{ old('pupil', $action->pupil ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="isokor" {{ old('pupil', $action->pupil ?? '') == 'isokor' ? 'selected' : '' }}>Isokor</option>
+                                            <option value="anisokor" {{ old('pupil', $action->pupil ?? '') == 'anisokor' ? 'selected' : '' }}>Anisokor</option>
+                                        </select>
+                                    </div>
+                                    <!-- Mata-Ikterus -->
+                                    <div class="col-md-2">
+                                        <label for="ikterus" style="color: green;">Mata-Ikterus</label>
+                                        <select class="form-control" id="ikterus" name="ikterus">
+                                            <option value="" disabled {{ old('ikterus', $action->ikterus ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('ikterus', $action->ikterus ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('ikterus', $action->ikterus ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                        </select>
+                                    </div>
+                                    <!-- Mata-Udem Palpebral -->
+                                    <div class="col-md-2">
+                                        <label for="udem_palpebral" style="color: green;">Mata-Udem Palpebral</label>
+                                        <select class="form-control" id="udem_palpebral" name="udem_palpebral">
+                                            <option value="" disabled {{ old('udem_palpebral', $action->udem_palpebral ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('udem_palpebral', $action->udem_palpebral ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('udem_palpebral', $action->udem_palpebral ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                        </select>
+                                    </div>
+                                    <!-- Abdomen-Nyeri Tekan -->
+                                    <div class="col-md-2">
+                                        <label for="nyeri_tekan" style="color: green;">Abdomen-Nyeri Tekan</label>
+                                        <select class="form-control" id="nyeri_tekan" name="nyeri_tekan">
+                                            <option value="" disabled {{ old('nyeri_tekan', $action->nyeri_tekan ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('nyeri_tekan', $action->nyeri_tekan ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('nyeri_tekan', $action->nyeri_tekan ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                        </select>
+                                    </div>
+                                    <!-- Abdomen-Peristaltik -->
+                                    <div class="col-md-2">
+                                        <label for="peristaltik" style="color: green;">Abdomen-Peristaltik</label>
+                                        <select class="form-control" id="peristaltik" name="peristaltik">
+                                            <option value="" disabled {{ old('peristaltik', $action->peristaltik ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="normal" {{ old('peristaltik', $action->peristaltik ?? '') == 'normal' ? 'selected' : '' }}>Normal</option>
+                                            <option value="meningkat" {{ old('peristaltik', $action->peristaltik ?? '') == 'meningkat' ? 'selected' : '' }}>Meningkat</option>
+                                            <option value="menurun" {{ old('peristaltik', $action->peristaltik ?? '') == 'menurun' ? 'selected' : '' }}>Menurun</option>
+                                        </select>
+                                    </div>
+                                    <!-- Abdomen-Ascites -->
+                                    <div class="col-md-2">
+                                        <label for="ascites" style="color: green;">Abdomen-Ascites</label>
+                                        <select class="form-control" id="ascites" name="ascites">
+                                            <option value="" disabled {{ old('ascites', $action->ascites ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('ascites', $action->ascites ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('ascites', $action->ascites ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                        </select>
+                                    </div>
+                                
+                                    <div class="col-md-2">
+                                        <label for="lokasi_abdomen" style="color: green;">Abdomen-Lokasi</label>
+                                        <input type="text" class="form-control" id="lokasi_abdomen" name="lokasi_abdomen"
+                                            value="{{ old('lokasi_abdomen', $action->lokasi_abdomen ?? '') }}" placeholder="Lokasi Abdomen">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="thorax" style="color: green;">Thorax</label>
+                                        <select class="form-control" id="thorax" name="thorax">
+                                            <option value="" disabled {{ old('thorax', $action->thorax ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="simetris" {{ old('thorax', $action->thorax ?? '') == 'simetris' ? 'selected' : '' }}>Simetris</option>
+                                            <option value="asimetris" {{ old('thorax', $action->thorax ?? '') == 'asimetris' ? 'selected' : '' }}>Asimetris</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="thorax_bj" style="color: green;">Thorax-BJ I/II</label>
+                                        <select class="form-control" id="thorax_bj" name="thorax_bj">
+                                            <option value="" disabled {{ old('thorax_bj', $action->thorax_bj ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="regular" {{ old('thorax_bj', $action->thorax_bj ?? '') == 'regular' ? 'selected' : '' }}>Regular</option>
+                                            <option value="irregular" {{ old('thorax_bj', $action->thorax_bj ?? '') == 'irregular' ? 'selected' : '' }}>Irregular</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="paru" style="color: green;">Thorax-Paru</label>
+                                        <input type="text" class="form-control" id="paru" name="paru"
+                                            value="{{ old('paru', $action->paru ?? '') }}" placeholder="Paru">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="suara_nafas" style="color: green;">Thorax-Suara Nafas</label>
+                                        <input type="text" class="form-control" id="suara_nafas" name="suara_nafas"
+                                            value="{{ old('suara_nafas', $action->suara_nafas ?? '') }}" placeholder="Suara Nafas">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="ronchi" style="color: green;">Thorax-Ronchi</label>
+                                        <select class="form-control" id="ronchi" name="ronchi">
+                                            <option value="" disabled {{ old('ronchi', $action->ronchi ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('ronchi', $action->ronchi ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('ronchi', $action->ronchi ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="wheezing" style="color: green;">Thorax-Wheezing</label>
+                                        <select class="form-control" id="wheezing" name="wheezing">
+                                            <option value="" disabled {{ old('wheezing', $action->wheezing ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('wheezing', $action->wheezing ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('wheezing', $action->wheezing ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="ekstremitas" style="color: green;">Ekstremitas</label>
+                                        <select class="form-control" id="ekstremitas" name="ekstremitas">
+                                            <option value="" disabled {{ old('ekstremitas', $action->ekstremitas ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="hangat" {{ old('ekstremitas', $action->ekstremitas ?? '') == 'hangat' ? 'selected' : '' }}>Hangat</option>
+                                            <option value="dingin" {{ old('ekstremitas', $action->ekstremitas ?? '') == 'dingin' ? 'selected' : '' }}>Dingin</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="edema" style="color: green;">Ekstremitas-Edema</label>
+                                        <select class="form-control" id="edema" name="edema">
+                                            <option value="" disabled {{ old('edema', $action->edema ?? '') == '' ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ old('edema', $action->edema ?? '') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ old('edema', $action->edema ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                            <option value="lainnya" {{ old('edema', $action->edema ?? '') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="tonsil" style="color: green;">THT-Tonsil</label>
+                                        <input type="text" class="form-control" id="tonsil" name="tonsil"
+                                            value="{{ old('tonsil', $action->tonsil ?? '') }}" placeholder="Tonsil">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="fharing" style="color: green;">THT-Fharing</label>
+                                        <input type="text" class="form-control" id="fharing" name="fharing"
+                                            value="{{ old('fharing', $action->fharing ?? '') }}" placeholder="Fharing">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="kelenjar" style="color: green;">Leher-Pembesaran Kelenjar</label>
+                                        <input type="text" class="form-control" id="kelenjar" name="kelenjar"
+                                            value="{{ old('kelenjar', $action->kelenjar ?? '') }}" placeholder="Pembesaran Kelenjar">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="genetalia" style="color: green;">Genetalia</label>
+                                        <input type="text" class="form-control" id="genetalia" name="genetalia"
+                                            value="{{ old('genetalia', $action->genetalia ?? '') }}" placeholder="Genetalia Jika Diperlukan">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="warna_kulit" style="color: green;">Kulit-Warna</label>
+                                        <input type="text" class="form-control" id="warna_kulit" name="warna_kulit"
+                                            value="{{ old('warna_kulit', $action->warna_kulit ?? '') }}" placeholder="Warna Kulit">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="turgor" style="color: green;">Kulit-Turgor</label>
+                                        <input type="text" class="form-control" id="turgor" name="turgor"
+                                            value="{{ old('turgor', $action->turgor ?? '') }}" placeholder="Turgor Kulit">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="neurologis" style="color: green;">Pemeriksaan Neurologis</label>
+                                        <input type="text" class="form-control" id="neurologis" name="neurologis"
+                                            value="{{ old('neurologis', $action->neurologis ?? '') }}" placeholder="Pemeriksaan Neurologis Jika Diperlukan">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; text-align: center;">
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Penunjang</span>
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                            </div>
+                            <div class="container">
+                                <div class="row g-2">
+                                    <div class="col-md-12">
+                                        <label for="hasil_lab" style="color: green;">Hasil Laboratorium</label>
+                                        <input type="text" class="form-control" id="hasil_lab" name="hasil_lab"
+                                            value="{{ old('hasil_lab', $action->hasil_lab ?? '') }}" placeholder="Hasil Laboratorium">
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular Pada
-                                Keluarga</label>
-                            <select class="form-control" id="alkohol" name="riwayat_penyakit_keluarga">
-                                <option value="" disabled selected>pilih</option>
+                            <label for="riwayat_penyakit_keluargaEdit" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular Pada Keluarga</label>
+                            <select class="form-control" id="riwayat_penyakit_keluargaEdit" name="riwayat_penyakit_keluarga[]" multiple>
                                 @foreach ($penyakit as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}" 
+                                        {{ in_array($item->id, old('riwayat_penyakit_keluarga', $action->riwayat_penyakit_keluarga ?? [])) ? 'selected' : '' }}>
+                                        {{ $item->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular Pada
-                                Sendiri</label>
-                            <select class="form-control" id="alkohol" name="riwayat_penyakit_tidak_menular">
-                                <option value="" disabled selected>pilih</option>
+                            <label for="riwayat_penyakit_tidak_menularEdit" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular Pada Sendiri</label>
+                            <select class="form-control" id="riwayat_penyakit_tidak_menularEdit" name="riwayat_penyakit_tidak_menular[]" multiple>
                                 @foreach ($penyakit as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}" 
+                                        {{ in_array($item->id, old('riwayat_penyakit_tidak_menular', $action->riwayat_penyakit_tidak_menular ?? [])) ? 'selected' : '' }}>
+                                        {{ $item->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
-                            <input type="text" class="form-control" id="keluhan" name="keluhan"
-                                placeholder="Kosongkan Bila sehat">
+                            <input type="text" class="form-control" id="keluhan" name="keluhan" 
+                                value="{{ old('keluhan', $action->keluhan ?? '') }}" placeholder="Kosongkan Bila sehat">
                         </div>
                     </div>
+                    
                     <div class="row mt-3">
                         <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                            <select class="form-control" id="alkohol" name="diagnosa">
-                                <option value="" disabled selected>pilih</option>
+                            <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                            <select class="form-control" id="diagnosaEdit" name="diagnosa[]" multiple>
                                 @foreach ($diagnosa as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}" 
+                                        {{ in_array($item->id, old('diagnosa', $action->diagnosa ?? [])) ? 'selected' : '' }}>
+                                        {{ $item->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                            <select class="form-control" id="alkohol" name="tindakan">
-                                <option value="" disabled selected>pilih</option>
-                                <option value="diberikan">Diberikan Obat</option>
-                                <option value="tidak">Tidak</option>
-
-
+                            <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                            <select class="form-control" id="tindakanEdit" name="tindakan">
+                                <option value="diberikan" {{ old('tindakan', $action->tindakan ?? '') == 'diberikan' ? 'selected' : '' }}>Diberikan Obat</option>
+                                <option value="tidak" {{ old('tindakan', $action->tindakan ?? '') == 'tidak' ? 'selected' : '' }}>Tidak</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(19, 11, 241);">RUJUK RS</label>
-                            <select class="form-control" id="alkohol" name="rujuk_rs">
+                            <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                            <select class="form-control" id="rujuk_rs" name="rujuk_rs">
                                 <option value="" disabled selected>pilih</option>
                                 @foreach ($rs as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}" 
+                                        {{ old('rujuk_rs', $action->rujuk_rs ?? '') == $item->id ? 'selected' : '' }}>
+                                        {{ $item->name }}
+                                    </option>
                                 @endforeach
-
                             </select>
                         </div>
-
                     </div>
+                    
                     <div class="row mt-3">
                         <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(19, 11, 241);">KETERANGAN</label>
-                            <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                placeholder="Keterangan jenis Obatnya" required>
+                            <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
+                            <input type="text" class="form-control" id="keterangan" name="keterangan" 
+                                value="{{ old('keterangan', $action->keterangan ?? '') }}" placeholder="Keterangan jenis Obatnya" required>
                         </div>
-
-
                     </div>
+                    
 
             </div>
         </div>
@@ -486,22 +668,51 @@
     </div>
 </div>
 
-{{-- 
-@include('component.modal-table-pasien') --}}
+
+@include('component.modal-table-edit-pasien')
 
 <script>
-    $(document).ready(function() {
-        // Set z-index for modalPasien to be higher than addActionModal
-        $('#modalPasien').on('show.bs.modal', function() {
-            $(this).css('z-index', '2000'); // set a high z-index for modalPasien
-        });
+     var nikValue = "{{ $action->patient->nik ?? '' }}";
+     document.getElementById('nikEdit').value = nikValue;
+    //  console.log(nikValue);
+     
+</script>
+<script>
 
-        // Remove backdrop when modalPasien is closed
-        $('#modalPasien').on('hidden.bs.modal', function() {
-            $('.modal-backdrop').not('.modal-stack').remove();
+    $(document).ready(function() {
+        $('#riwayat_penyakit_keluargaEdit').select2({
+            placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#riwayat_penyakit_tidak_menularEdit').select2({
+            placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#diagnosaEdit').select2({
+            placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#tindakanEdit').select2({
+            placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
         });
     });
 </script>
+
+<style>.select2-dropdown {
+    z-index: 9999 !important;
+}
+</style>
 
 <script>
     // Initialize Flatpickr for the date picker

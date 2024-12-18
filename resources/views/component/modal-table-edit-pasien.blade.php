@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalPasien" tabindex="-1" aria-labelledby="modalPasienLabel" aria-hidden="true">
+<div class="modal fade" id="modalPasienEdit" tabindex="-1" aria-labelledby="modalPasienLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-striped" id="pasien">
+                <table class="table table-striped" id="pasienEdit">
                     <thead>
                         <tr>
                             <th>NIK</th>
@@ -30,16 +30,15 @@
 
 <script>
  $(document).ready(function () {
-   
     let table; // Deklarasi variabel DataTable
 
     // Fungsi untuk menginisialisasi DataTable
     function initializeTable() {
-        // if ($.fn.DataTable.isDataTable('#pasien')) {
-        //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
+        // if ($.fn.DataTable.isDataTable('#pasienEdit')) {
+        //     $('#pasienEdit').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
         // }
 
-        table = $('#pasien').DataTable({
+        table = $('#pasienEdit').DataTable({
             ajax: {
                 url: '/get-patients', // Endpoint untuk mengambil data
                 type: 'GET',
@@ -61,7 +60,7 @@
                     searchable: false,
                     render: function (data, type, row) {
                         return `
-                            <button class="btn btn-success btnPilihPasien" 
+                            <button class="btn btn-success btnPilihPasienEdit" 
                                 data-id="${row.id}" 
                                 data-nik="${row.nik}" 
                                 data-name="${row.name}" 
@@ -86,11 +85,9 @@
     }
 
     // Handle tombol "Pilih" diklik
-    $(document).on('click', '.btnPilihPasien', function () {
-        
+    $(document).on('click', '.btnPilihPasienEdit', function () {
         const data = $(this).data();
-        // Assuming 'data.dob' contains the date of birth, e.g., "1990-01-01"
-  var dob = data.age;  // data.dob should be in the format 'YYYY-MM-DD'
+        var dob = data.age;  // data.dob should be in the format 'YYYY-MM-DD'
 
 // Function to calculate age from dob
 function calculateAge(dob) {
@@ -102,34 +99,31 @@ function calculateAge(dob) {
 
 // Get the age
 var age = calculateAge(dob);
+        
         // Tampilkan data pasien di elemen luar modal
-        $('#displayNIK').text(data.nik);
-        $('#displayName').text(data.name);
-        $('#displayGender').text(data.gender);
-        $('#displayAge').text(age);
-        $('#displayPhone').text(data.phone);
-        $('#displayAddress').text(data.address);
-        $('#displayBlood').text(data.blood);
-        $('#displayEducation').text(data.education);
-        $('#displayJob').text(data.job);
-        $('#displayRmNumber').text(data.rm);
+        $('#NIK').text(data.nik);
+        $('#Name').text(data.name);
+        $('#Gender').text(data.gender);
+        $('#Age').text(age);
+        $('#Phone').text(data.phone);
+        $('#Address').text(data.address);
+        $('#Blood').text(data.blood);
+        $('#Education').text(data.education);
+        $('#Job').text(data.job);
+        $('#RmNumber').text(data.rm);
 
         // Set nilai ID ke input form
-        $('#nik').val(data.nik);
-        console.log
-       
+        $('#nikEdit').val(data.nik);
 
-        $('#patientDetails').show();
-        console.log( $('#patientDetails').show());
-        
-     
+        // Tampilkan bagian detail pasien
+        $('#patientDetailsEdit').show();
 
         // Tutup modal
-        $('#modalPasien').modal('hide');
+        $('#modalPasienEdit').modal('hide');
     });
 
     // Inisialisasi ulang DataTables saat modal ditampilkan
-    $('#modalPasien').on('shown.bs.modal', function () {
+    $('#modalPasienEdit').on('shown.bs.modal', function () {
         initializeTable();
     });
 });

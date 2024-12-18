@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/action', [ActionController::class, 'index'])->name('action.index');
     Route::post('/action', [ActionController::class, 'store'])->name('action.store');
-    Route::put('/action/{id}', [ActionController::class, 'update'])->name('action.update');
+    Route::POST('/action/{id}', [ActionController::class, 'update'])->name('action.update');
     Route::delete('/action/{id}', [ActionController::class, 'destroy'])->name('action.destroy');
     Route::get('/report/action', [ActionController::class, 'actionReport'])->name('action.report');
 
