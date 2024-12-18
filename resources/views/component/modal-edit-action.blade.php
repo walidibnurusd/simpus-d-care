@@ -1,6 +1,6 @@
 <!-- Modal Add Action -->
-<div class="modal fade" style="z-index: 1050;" id="addActionModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" style="z-index: 1050;" id="editActionModal{{ $action->id }}" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
@@ -9,15 +9,33 @@
             </div>
 
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('action.store') }}" method="POST" class="px-3">
+                <form id="addPatientForm" action="{{ route('action.update', $action->id) }}" method="POST"
+                    class="px-3">
                     @csrf
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
+                            @if ($action->id)
+                                <div id="patientDetails" style=" margin-top: 10px; padding: 10px; border-radius: 5px;">
+                                    <p><strong>N I K</strong> : <span id="displayNIK">{{ $action->patient->nik }}</span>
+                                    </p>
+                                    <p><strong>Nama Pasien</strong> : <span
+                                            id="displayName">{{ $action->patient->name }}</span> </p>
+                                    <p><strong>J.Kelamin</strong> : <span
+                                            id="displayGender">{{ $action->patient->genderName->name }}</span></p>
+                                    <p><strong>Umur</strong> : <span id="displayAge"></span></p>
+                                    <p><strong>Telepon/WA</strong> : <span id="displayPhone"></span></p>
+                                    <p><strong>Alamat</strong> : <span id="displayAddress"></span></p>
+                                    <p><strong>Darah</strong> : <span id="displayBlood"></span></p>
+                                    <p><strong>Pendidikan</strong> : <span id="displayEducation"></span></p>
+                                    <p><strong>Pekerjaan</strong> : <span id="displayJob"></span></p>
+                                    <p><strong>Nomor RM</strong> : <span id="displayRmNumber"></span></p>
+                                </div>
+                            @endif
                             <div id="patientDetails"
                                 style="display:none; margin-top: 10px; padding: 10px; border-radius: 5px;">
-                                <p><strong>N I K</strong> : <span id="displayNIK"></span></p>
-                                <p><strong>Nama Pasien</strong> : <span id="displayName"></span></p>
+                                <p><strong>N I K</strong> : <span id="displayNIK">{{ $action->patient->nik }}</span></p>
+                                <p><strong>Nama Pasien</strong> : <span id="displayName"></span> </p>
                                 <p><strong>J.Kelamin</strong> : <span id="displayGender"></span></p>
                                 <p><strong>Umur</strong> : <span id="displayAge"></span></p>
                                 <p><strong>Telepon/WA</strong> : <span id="displayPhone"></span></p>
@@ -36,7 +54,8 @@
                                             <label for="nik">Cari Pasien</label>
                                             <div class="input-group">
                                                 <input readonly type="text" class="form-control" id="nik"
-                                                    name="id_patient" placeholder="NIK" required>
+                                                    name="id_patient" placeholder="NIK"
+                                                    value="{{ $action->patient->nik }}" required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
                                                         data-bs-toggle="modal" data-bs-target="#modalPasien">
@@ -50,18 +69,22 @@
                                         <div class="form-group">
                                             <label for="tanggal">Tanggal</label>
                                             <input type="text" class="form-control flatpickr-input" id="tanggal"
-                                                name="tanggal" placeholder="Pilih Tanggal" required>
+                                                name="tanggal" value="{{ $action->tanggal }}"
+                                                placeholder="Pilih Tanggal" required>
                                         </div>
                                     </div>
+
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="doctor">Dokter</label>
                                             <select class="form-control" id="doctor" name="doctor" required>
                                                 <option value="" disabled selected>Pilih Dokter</option>
                                                 @foreach ($dokter as $item)
-                                                    <option value="{{ $item['name'] }}">{{ $item['name'] }}</option>
+                                                    <option value="{{ $item['name'] }}"
+                                                        {{ $action->doctor == $item['name'] ? 'selected' : '' }}>
+                                                        {{ $item['name'] }}
+                                                    </option>
                                                 @endforeach
-
                                             </select>
                                         </div>
                                     </div>
@@ -69,10 +92,13 @@
                                         <div class="form-group">
                                             <label for="kunjungan">Kunjungan</label>
                                             <select class="form-control" id="kunjungan" name="kunjungan" required>
-                                                <option value="" disabled selected>Pilih Jenis Kunjungan</option>
-                                                <option value="baru">Baru </option>
-                                                <option value="lama">Lama </option>
-
+                                                <option value="" disabled
+                                                    {{ empty($action->kunjungan) ? 'selected' : '' }}>Pilih Jenis
+                                                    Kunjungan</option>
+                                                <option value="baru"
+                                                    {{ $action->kunjungan == 'baru' ? 'selected' : '' }}>Baru</option>
+                                                <option value="lama"
+                                                    {{ $action->kunjungan == 'lama' ? 'selected' : '' }}>Lama</option>
                                             </select>
                                         </div>
                                     </div>
@@ -80,17 +106,27 @@
                             </div>
                             <div class="col-12">
                                 <div class="row g-2">
-
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="kartu">Kartu</label>
                                             <select class="form-control" id="kartu" name="kartu" required>
-                                                <option value="" disabled selected>Pilih Jenis Kartu</option>
-                                                <option value="umum">Umum</option>
-                                                <option value="akses">AKSES</option>
-                                                <option value="bpjs">BPJS-KIS_JKM</option>
-                                                <option value="gratis_jkd">Gratis-JKD</option>
-                                                <option value="bpjs_mandiri">BPJS-Mandiri</option>
+                                                <option value="" disabled
+                                                    {{ empty($action->kartu) ? 'selected' : '' }}>Pilih Jenis Kartu
+                                                </option>
+                                                <option value="umum"
+                                                    {{ $action->kartu == 'umum' ? 'selected' : '' }}>Umum</option>
+                                                <option value="akses"
+                                                    {{ $action->kartu == 'akses' ? 'selected' : '' }}>AKSES</option>
+                                                <option value="bpjs"
+                                                    {{ $action->kartu == 'bpjs' ? 'selected' : '' }}>BPJS-KIS_JKM
+                                                </option>
+                                                <option value="gratis_jkd"
+                                                    {{ $action->kartu == 'gratis_jkd' ? 'selected' : '' }}>Gratis-JKD
+                                                </option>
+                                                <option value="bpjs_mandiri"
+                                                    {{ $action->kartu == 'bpjs_mandiri' ? 'selected' : '' }}>
+                                                    BPJS-Mandiri
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
@@ -98,16 +134,20 @@
                                         <div class="form-group">
                                             <label for="nomor">Nomor Kartu</label>
                                             <input type="text" class="form-control" id="nomor" name="nomor"
-                                                placeholder="Masukkan Nomor" required>
+                                                placeholder="Masukkan Nomor" value="{{ $action->nomor }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="wilayah_faskes">Wilayah Faskes</label>
                                             <select class="form-control" id="wilayah_faskes" name="faskes" required>
-                                                <option value="" disabled selected>Pilih Wilayah Faskes</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
+                                                <option value="" disabled
+                                                    {{ empty($action->faskes) ? 'selected' : '' }}>Pilih Wilayah Faskes
+                                                </option>
+                                                <option value="ya"
+                                                    {{ $action->faskes == 'ya' ? 'selected' : '' }}>Ya</option>
+                                                <option value="tidak"
+                                                    {{ $action->faskes == 'tidak' ? 'selected' : '' }}>Tidak</option>
 
                                             </select>
                                         </div>
@@ -127,63 +167,47 @@
                                         <div class="form-group">
                                             <label for="sistol">Sistol</label>
                                             <input type="text" class="form-control" id="sistol" name="sistol"
-                                                placeholder="Masukkan Sistol" required>
+                                                placeholder="Masukkan Sistol" required value="{{ $action->sistol }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="diastol">Diastol</label>
                                             <input type="text" class="form-control" id="diastol" name="diastol"
-                                                placeholder="Masukkan Diastol" required>
+                                                placeholder="Masukkan Diastol" required
+                                                value="{{ $action->diastol }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="berat_badan">Berat Badan</label>
                                             <input type="text" class="form-control" id="berat_badan"
-                                                name="beratBadan" placeholder="Masukkan Berat Badan" required>
+                                                name="beratBadan" placeholder="Masukkan Berat Badan" required
+                                                value="{{ $action->beratBadan }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="tinggi_badan">Tinggi Badan</label>
                                             <input type="text" class="form-control" id="tinggi_badan"
-                                                name="tinggiBadan" placeholder="Masukkan Tinggi Badan" required>
+                                                name="tinggiBadan" placeholder="Masukkan Tinggi Badan" required
+                                                value="{{ $action->tinggiBadan }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="ling_pinggang">Ling. Pinggang</label>
                                             <input type="text" class="form-control" id="ling_pinggang"
-                                                name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang" required>
+                                                name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang" required
+                                                value="
+                                                {{ $action->lingkarPinggang }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="gula">Gula</label>
                                             <input type="text" class="form-control" id="gula" name="gula"
-                                                placeholder="Masukkan Gula" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="nadi">Nadi</label>
-                                            <input type="text" class="form-control" id="nadi" name="nadi"
-                                                placeholder="Masukkan Nadi" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="nafas">Pernafasan</label>
-                                            <input type="text" class="form-control" id="nafas" name="nafas"
-                                                placeholder="Masukkan Nafas" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="suhu">Suhu</label>
-                                            <input type="text" class="form-control" id="suhu" name="suhu"
-                                                placeholder="Masukkan Suhu" required>
+                                                placeholder="Masukkan Gula" required value="{{ $action->gula }}">
                                         </div>
                                     </div>
                                 </div>
@@ -193,33 +217,46 @@
                                     <div class="col-md-2 ">
                                         <label for="merokok" style="color: green;">Merokok</label>
                                         <select class="form-control" id="merokok" name="merokok">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
+                                            <option value="" disabled
+                                                {{ empty($action->merokok) ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ $action->merokok == 'ya' ? 'selected' : '' }}>Ya
+                                            </option>
+                                            <option value="tidak"
+                                                {{ $action->merokok == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
                                     </div>
                                     <div class="col-md-2 ">
                                         <label for="aktivitas_fisik" style="color: green;">Aktivitas Fisik</label>
                                         <select class="form-control" id="aktivitas_fisik" name="fisik">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="aktif">Aktif</option>
-                                            <option value="tidak_aktif">Tidak Aktif</option>
+                                            <option value="" disabled
+                                                {{ empty($action->fisik) ? 'selected' : '' }}>pilih</option>
+                                            <option value="aktif" {{ $action->fisik == 'aktif' ? 'selected' : '' }}>
+                                                Aktif</option>
+                                            <option value="tidak_aktif"
+                                                {{ $action->fisik == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="col-md-2 ">
                                         <label for="gula" style="color: green;">Gula Berlebih</label>
                                         <select class="form-control" id="gula" name="gula_lebih">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
+                                            <option value="" disabled
+                                                {{ empty($action->gula_lebih) ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya"
+                                                {{ $action->gula_lebih == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak"
+                                                {{ $action->gula_lebih == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
                                     </div>
                                     <div class="col-md-2 ">
                                         <label for="lemak" style="color: green;">Lemak Berlebih</label>
                                         <select class="form-control" id="lemak" name="lemak">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
+                                            <option value="" disabled
+                                                {{ empty($action->lemak) ? 'selected' : '' }}>pilih</option>
+                                            <option value="ya" {{ $action->lemak == 'ya' ? 'selected' : '' }}>Ya
+                                            </option>
+                                            <option value="tidak" {{ $action->lemak == 'tidak' ? 'selected' : '' }}>
+                                                Tidak</option>
                                         </select>
                                     </div>
                                     <div class="col-md-2 ">
@@ -370,185 +407,7 @@
 
                                 </div>
                             </div>
-                            <div style="display: flex; align-items: center; text-align: center;">
-                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                                <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Fisik</span>
-                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                            </div>
-                            <div class="container">
-                                <div class="row g-2">
-                                    <div class="col-md-2 ">
-                                        <label for="mata_anemia" style="color: green;">Mata-Anemia</label>
-                                        <select class="form-control" id="mata_anemia" name="mata_anemia">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="pupil" style="color: green;">Mata-Pupil</label>
-                                        <select class="form-control" id="pupil" name="pupil">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="isokor">Isokor</option>
-                                            <option value="anisokor">Anisokor</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="ikterus" style="color: green;">Mata-Ikterus</label>
-                                        <select class="form-control" id="ikterus" name="ikterus">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="udem_palpebral" style="color: green;">Mata-Udem Palpebral</label>
-                                        <select class="form-control" id="udem_palpebral" name="udem_palpebral">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="nyeri_tekan" style="color: green;">Abdomen-Nyeri Tekan</label>
-                                        <select class="form-control" id="nyeri_tekan" name="nyeri_tekan">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="peristaltik" style="color: green;">Abdomen-Peristaltik</label>
-                                        <select class="form-control" id="peristaltik" name="peristaltik">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="normal">Normal</option>
-                                            <option value="meningkat">Meningkat</option>
-                                            <option value="menurun">Menurun</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="ascites" style="color: green;">Abdomen-Ascites</label>
-                                        <select class="form-control" id="ascites" name="ascites">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="lokasi_abdomen" style="color: green;">Abdomen-Lokasi</label>
-                                        <input type="text" class="form-control" id="lokasi_abdomen"
-                                            name="lokasi_abdomen" placeholder="Lokasi Abdomen">
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="thorax" style="color: green;">Thorax</label>
-                                        <select class="form-control" id="thorax" name="thorax">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="simetris">Simetris</option>
-                                            <option value="asimetris">Asimetris</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="thorax_bj" style="color: green;">Thorax-BJ I/II</label>
-                                        <select class="form-control" id="thorax_bj" name="thorax_bj">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="regular">Regular</option>
-                                            <option value="irregular">Irregular</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="paru" style="color: green;">Thorax-Paru</label>
-                                        <input type="text" class="form-control" id="paru" name="paru"
-                                            placeholder="Paru">
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="suara_nafas" style="color: green;">Thorax-Suara Nafas</label>
-                                        <input type="text" class="form-control" id="suara_nafas"
-                                            name="suara_nafas" placeholder="Suara Nafas">
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="ronchi" style="color: green;">Thorax-Ronchi</label>
-                                        <select class="form-control" id="ronchi" name="ronchi">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="wheezing" style="color: green;">Thorax-Wheezing</label>
-                                        <select class="form-control" id="wheezing" name="wheezing">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="ekstremitas" style="color: green;">Ekstremitas</label>
-                                        <select class="form-control" id="ekstremitas" name="ekstremitas">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="hangat">Hangat</option>
-                                            <option value="dingin">Dingin</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="edema" style="color: green;">Ekstremitas-Edema</label>
-                                        <select class="form-control" id="edema" name="edema">
-                                            <option value="" disabled selected>pilih</option>
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                            <option value="lainnya">Lainnya</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="tonsil" style="color: green;">THT-Tonsil</label>
-                                        <input type="text" class="form-control" id="tonsil" name="tonsil"
-                                            placeholder="Tonsil">
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="fharing" style="color: green;">THT-Fharing</label>
-                                        <input type="text" class="form-control" id="fharing" name="fharing"
-                                            placeholder="Fharing">
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="kelenjar" style="color: green;">Leher-Pembesaran Kelenjar</label>
-                                        <input type="text" class="form-control" id="kelenjar" name="kelenjar"
-                                            placeholder="Pembesaran Kelenjar">
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="genetalia" style="color: green;">Genetalia</label>
-                                        <input type="text" class="form-control" id="genetalia" name="genetalia"
-                                            placeholder="Genetalia Jika Diperlukan">
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="warna_kulit" style="color: green;">Kulit-Warna</label>
-                                        <input type="text" class="form-control" id="warna_kulit"
-                                            name="warna_kulit" placeholder="Warna Kulit">
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="turgor" style="color: green;">Kulit-Turgor</label>
-                                        <input type="text" class="form-control" id="turgor" name="turgor"
-                                            placeholder="Turgor Kulit">
-                                    </div>
-                                    <div class="col-md-2 ">
-                                        <label for="neurologis" style="color: green;">Pemeriksaan Neurologis</label>
-                                        <input type="text" class="form-control" id="neurologis" name="neurologis"
-                                            placeholder="Pemeriksaan Neurologis Jika Diperlukan">
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; text-align: center;">
-                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                                <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Penunjang</span>
-                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                            </div>
-                            <div class="container">
-                                <div class="row g-2">
-                                    <div class="col-md-12 ">
-                                        <label for="hasil_lab" style="color: green;">Hasil Laboratorium</label>
-                                        <input type="text" class="form-control" id="hasil_lab" name="hasil_lab"
-                                            placeholder="Hasil Laboratorium">
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -630,8 +489,8 @@
     </div>
 </div>
 
-
-@include('component.modal-table-pasien')
+{{-- 
+@include('component.modal-table-pasien') --}}
 
 <script>
     $(document).ready(function() {
