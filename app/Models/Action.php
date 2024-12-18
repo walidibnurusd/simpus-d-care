@@ -12,7 +12,7 @@ class Action extends Model
     protected $fillable = [
         'id_patient',
         'tanggal',
-        'id_doctor',
+        'doctor',
         'kunjungan',
         'kartu',
         'nomor',
