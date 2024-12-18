@@ -51,7 +51,6 @@ return new class extends Migration
             $table->unsignedBigInteger('rujuk_rs');
             $table->string('keterangan');
             $table->timestamps();
-
             $table->foreign('id_patient')->references('id')->on('patients')->onDelete('cascade');
             $table->foreign('id_doctor')->references('id')->on('doctors')->onDelete('cascade');
             $table->foreign('diagnosa')->references('id')->on('diagnosis')->onDelete('cascade');

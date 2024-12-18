@@ -28,7 +28,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
- 
+
     Route::get('/patients', [PatientsController::class, 'index'])->name('patient.index');
     Route::post('/patients', [PatientsController::class, 'store'])->name('patient.store');
     Route::put('/patients/{id}', [PatientsController::class, 'update'])->name('patient.update');
@@ -43,10 +43,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
 
-
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
- 
 });
 
 Route::get('provinces', [DependentDropdownController::class, 'provinces'])->name('provinces');
@@ -54,8 +52,6 @@ Route::get('cities/{provinceId}', [DependentDropdownController::class, 'citiesDa
 Route::get('districts/{cityId}', [DependentDropdownController::class, 'districtsData'])->name('districts');
 Route::get('villages/{districtId}', [DependentDropdownController::class, 'villagesData'])->name('villages');
 Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('get-patients');
-
-
 
 //Language Change
 Route::get('lang/{locale}', function ($locale) {
@@ -75,7 +71,6 @@ Route::prefix('dashboard')->group(function () {
     Route::view('dashboard-05', 'dashboard.dashboard-05')->name('dashboard-05');
 });
 Route::prefix('widgets')->group(function () {
-
     Route::view('chart-widget', 'widgets.chart-widget')->name('chart-widget');
 });
 
@@ -125,7 +120,6 @@ Route::prefix('users')->group(function () {
     Route::view('edit-profile', 'apps.edit-profile')->name('edit-profile');
     Route::view('user-cards', 'apps.user-cards')->name('user-cards');
 });
-
 
 Route::view('bookmark', 'apps.bookmark')->name('bookmark');
 Route::view('contacts', 'apps.contacts')->name('contacts');
@@ -195,7 +189,6 @@ Route::prefix('animation')->group(function () {
     Route::view('tilt', 'animation.tilt')->name('tilt');
     Route::view('wow', 'animation.wow')->name('wow');
 });
-
 
 Route::prefix('icons')->group(function () {
     Route::view('flag-icon', 'icons.flag-icon')->name('flag-icon');
@@ -325,7 +318,6 @@ Route::view('template-email-2', 'email-templates.template-email-2')->name('templ
 Route::view('ecommerce-templates', 'email-templates.ecommerce-templates')->name('ecommerce-templates');
 Route::view('email-order-success', 'email-templates.email-order-success')->name('email-order-success');
 
-
 Route::prefix('gallery')->group(function () {
     Route::view('index', 'apps.gallery')->name('gallery');
     Route::view('with-gallery-description', 'apps.gallery-with-description')->name('gallery-with-description');
@@ -339,7 +331,6 @@ Route::prefix('blog')->group(function () {
     Route::view('blog-single', 'apps.blog-single')->name('blog-single');
     Route::view('add-post', 'apps.add-post')->name('add-post');
 });
-
 
 Route::view('faq', 'apps.faq')->name('faq');
 
@@ -373,7 +364,7 @@ Route::view('landing-page', 'pages.landing-page')->name('landing-page');
 
 Route::prefix('layouts')->group(function () {
     Route::view('compact-sidebar', 'admin_unique_layouts.compact-sidebar'); //default //Dubai
-    Route::view('box-layout', 'admin_unique_layouts.box-layout');    //default //New York //
+    Route::view('box-layout', 'admin_unique_layouts.box-layout'); //default //New York //
     Route::view('dark-sidebar', 'admin_unique_layouts.dark-sidebar');
 
     Route::view('default-body', 'admin_unique_layouts.default-body');
@@ -404,5 +395,5 @@ Route::get('/clear-cache', function () {
     Artisan::call('config:clear');
     Artisan::call('view:clear');
     Artisan::call('route:clear');
-    return "Cache is cleared";
+    return 'Cache is cleared';
 })->name('clear.cache');
