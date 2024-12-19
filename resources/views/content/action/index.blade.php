@@ -94,7 +94,6 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($actions as $index => $action)
-                                     
                                         <tr>
                                             <td>
                                                 <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Nomor urut -->
@@ -111,31 +110,38 @@
                                                     {{ optional($action->patient)->name }}</p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">Umur</p>
-                                                <!-- Ganti dengan perhitungan umur jika perlu -->
+                                                <p class="text-xs font-weight-bold mb-0">
+                                                    {{ \Carbon\Carbon::parse($action->patient->dob)->age }}-thn
+                                                </p>
                                             </td>
+
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->kartu }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->kartu) }}</p>
                                             </td>
+
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->keluhan) }}
+                                                </p>
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
                                                     {{ optional($action->diagnosis)->name }}</p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->tindakan }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->tindakan) }}
+                                                </p>
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
                                                     {{ optional($action->hospitalReferral)->name }}</p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->kunjungan }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->kunjungan) }}
+                                                </p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->faskes }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->faskes) }}
+                                                </p>
                                             </td>
                                             <td>
                                                 <div class="action-buttons">
@@ -146,7 +152,7 @@
                                                         data-bs-target="#editActionModal{{ $action->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    @include('component.modal-edit-action') 
+                                                    @include('component.modal-edit-action')
                                                     <!-- Tombol Delete -->
                                                     <form action="{{ route('action.destroy', $action->id) }}"
                                                         method="POST" class="d-inline">
@@ -161,7 +167,6 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                      
                                     @endforeach
                                 </tbody>
                             </table>
