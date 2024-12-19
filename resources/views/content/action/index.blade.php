@@ -104,14 +104,14 @@
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->patient)->nik }}</p>
+                                                    {{ optional($action->patient)->nik  }}/{{ optional($action->patient)->no_rm  }}</p>
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
                                                     {{ optional($action->patient)->name }}</p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">Umur</p>
+                                                <p class="text-xs font-weight-bold mb-0">  {{ \Carbon\Carbon::parse($action->patient->dob)->age }}</p>
                                                 <!-- Ganti dengan perhitungan umur jika perlu -->
                                             </td>
                                             <td>
