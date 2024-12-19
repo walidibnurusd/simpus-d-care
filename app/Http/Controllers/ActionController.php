@@ -35,11 +35,27 @@ class ActionController extends Controller
         return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa'));
     }
 
-    public function actionReport()
+    public function actionReport(Request $request)
     {
-        $actions = Action::all(); // Ganti dengan query sesuai kebutuhan
+        // Ambil parameter filter awal dan akhir dari query string
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+    
+        // Query data dari tabel 'actions'
+        $query = Action::query();
+    
+        // Jika filter tanggal diberikan, tambahkan kondisi ke query
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+    
+        // Eksekusi query untuk mendapatkan hasil
+        $actions = $query->get();
+    
+        // Kirim data ke view
         return view('content.action.print', compact('actions'));
     }
+    
         public function store(Request $request)
         {
             try {

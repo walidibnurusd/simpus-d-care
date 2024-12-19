@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/action', [ActionController::class, 'actionReport'])->name('action.report');
 
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
-
+    Route::get('/report/tifoid', [ReportController::class, 'printTifoid'])->name('report.tifoid');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
 });

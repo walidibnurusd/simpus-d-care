@@ -30,17 +30,47 @@
         <div class="row">
             <div class="col-12 mb-4">
                 <div class="button-container">
+                    <!-- Tombol Tambah -->
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addActionModal">
                         Tambah
-                        <i class="fas fa-plus ms-2"></i> <!-- Icon with margin to the left -->
+                        <i class="fas fa-plus ms-2"></i> <!-- Ikon Tambah -->
                     </button>
-                    <a href="{{ route('action.report') }}" class="btn btn-warning" target="_blank">
-                        Print
-                        <i class="fas fa-print ms-2"></i> <!-- Ikon print dengan margin -->
-                    </a>
-
-
+                
+                    <!-- Form untuk Print dan Filter -->
+                    <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3">
+                        <div class="row">
+                            <!-- Start Date -->
+                            <div class="col-md-4">
+                                <label for="start_date" class="form-label">Start Date</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control">
+                            </div>
+                
+                            <!-- End Date -->
+                            <div class="col-md-4">
+                                <label for="end_date" class="form-label">End Date</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control">
+                            </div>
+                
+                            <!-- Tombol Print -->
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-warning w-100">
+                                    Print
+                                    <i class="fas fa-print ms-2"></i> <!-- Ikon Print -->
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                
+                    <!-- Tombol Filter -->
+                    <div class="row mt-3">
+                        <div class="col-md-2 offset-md-8 d-flex align-items-end">
+                            <button type="button" id="filterButton" class="btn btn-primary w-100">
+                                Cari <i class="fas fa-search ms-2"></i> <!-- Ikon Cari -->
+                            </button>
+                        </div>
+                    </div>
                 </div>
+                
 
                 @include('component.modal-add-action')
 
@@ -100,8 +130,9 @@
                                                 <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Nomor urut -->
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->tanggal }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ \Carbon\Carbon::parse($action->tanggal)->format('Y-m-d') }}</p>
                                             </td>
+                                            
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
                                                     {{ optional($action->patient)->nik  }}/{{ optional($action->patient)->no_rm  }}</p>
@@ -111,7 +142,7 @@
                                                     {{ optional($action->patient)->name }}</p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">  {{ \Carbon\Carbon::parse($action->patient->dob)->age }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">  {{ \Carbon\Carbon::parse($action->patient->dob)->age }} Tahun</p>
                                                 <!-- Ganti dengan perhitungan umur jika perlu -->
                                             </td>
                                             <td>
@@ -120,9 +151,14 @@
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
                                             </td>
+                                            @php
+                                            // Assuming $actions->diagnosa is an array of Diagnosis IDs
+                                            $diagnosaIds = $action->diagnosa; // This should be an array of IDs.
+                                            $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get(); // Fetch the diagnoses by IDs
+                                        @endphp
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->diagnosis)->name }}</p>
+                                                    {{ implode(', ', $diagnosa->pluck('name')->toArray()) }} </p>
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $action->tindakan }}</p>
@@ -179,24 +215,47 @@
 @endsection
 
 @section('script')
-    <script>
-        $(document).ready(function() {
-            $('#actionTable').DataTable({
+<script>
+    $(document).ready(function() {
+        var table = $('#actionTable').DataTable({
+            "language": {
+                "info": "_PAGE_ dari _PAGES_ halaman",
+                "paginate": {
+                    "previous": "<",
+                    "next": ">",
+                    "first": "<<",
+                    "last": ">>"
+                }
+            },
+            "responsive": true,
+            "lengthMenu": [10, 25, 50, 100], // Set the number of rows per page
+            "initComplete": function () {
+                // Custom search function for date range
+                $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                    var startDate = $('#start_date').val();
+                    var endDate = $('#end_date').val();
+                    var actionDate = data[1]; // Assumes the 'Tanggal' column is the second column (index 1)
 
-                "language": {
-                    "info": "_PAGE_ dari _PAGES_ halaman",
-                    "paginate": {
-                        "previous": "<",
-                        "next": ">",
-                        "first": "<<",
-                        "last": ">>"
+                    if (startDate && endDate) {
+                        return actionDate >= startDate && actionDate <= endDate;
                     }
-                },
-                "responsive": true,
-                "lengthMenu": [10, 25, 50, 100] // Set the number of rows per page
-            });
+                    return true;
+                });
+            }
         });
-    </script>
+
+        // Event listener for the filter button
+        $('#filterButton').on('click', function() {
+            table.draw();
+        });
+
+        // // Clear filters if either date is changed
+        // $('#start_date, #end_date').on('change', function() {
+        //     table.draw();
+        // });
+    });
+</script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Check for success message
