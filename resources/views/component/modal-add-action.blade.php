@@ -1,3 +1,4 @@
+
 <!-- Modal Add Action -->
 <div class="modal fade" style="z-index: 1050;" id="addActionModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -18,13 +19,13 @@
                                 style="display:none; margin-top: 10px; padding: 10px; border-radius: 5px;">
                                 <p><strong>N I K</strong> : <span id="displayNIK"></span></p>
                                 <p><strong>Nama Pasien</strong> : <span id="displayName"></span></p>
-                                <p><strong>J.Kelamin</strong> : <span id="displayGender"></span></p>
+                                {{-- <p><strong>J.Kelamin</strong> : <span id="displayGender"></span></p> --}}
                                 <p><strong>Umur</strong> : <span id="displayAge"></span></p>
                                 <p><strong>Telepon/WA</strong> : <span id="displayPhone"></span></p>
                                 <p><strong>Alamat</strong> : <span id="displayAddress"></span></p>
                                 <p><strong>Darah</strong> : <span id="displayBlood"></span></p>
-                                <p><strong>Pendidikan</strong> : <span id="displayEducation"></span></p>
-                                <p><strong>Pekerjaan</strong> : <span id="displayJob"></span></p>
+                                {{-- <p><strong>Pendidikan</strong> : <span id="displayEducation"></span></p> --}}
+                                {{-- <p><strong>Pekerjaan</strong> : <span id="displayJob"></span></p> --}}
                                 <p><strong>Nomor RM</strong> : <span id="displayRmNumber"></span></p>
                             </div>
                         </div>
@@ -36,7 +37,7 @@
                                             <label for="nik">Cari Pasien</label>
                                             <div class="input-group">
                                                 <input readonly type="text" class="form-control" id="nik"
-                                                    name="id_patient" placeholder="NIK" required>
+                                                    name="nik" placeholder="NIK" required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
                                                         data-bs-toggle="modal" data-bs-target="#modalPasien">
@@ -240,7 +241,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="container">
+                            <div class="container mb-4">
                                 <div class="row g-2 mt-2">
                                     <div class="col-md-2 ">
                                         <label for="alkohol" style="color: green;">Minum Alkohol</label>
@@ -555,18 +556,19 @@
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular Pada
                                 Keluarga</label>
-                            <select class="form-control" id="alkohol" name="riwayat_penyakit_keluarga">
-                                <option value="" disabled selected>pilih</option>
-                                @foreach ($penyakit as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
+                                <select class="form-control =" id="riwayat_penyakit_keluarga" name="riwayat_penyakit_keluarga[]" multiple >
+                               
+                                    @foreach ($penyakit as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                                
                         </div>
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular Pada
                                 Sendiri</label>
-                            <select class="form-control" id="alkohol" name="riwayat_penyakit_tidak_menular">
-                                <option value="" disabled selected>pilih</option>
+                            <select class="form-control" id="riwayat_penyakit_tidak_menular" name="riwayat_penyakit_tidak_menular[]" multiple>
+                              =
                                 @foreach ($penyakit as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
@@ -581,8 +583,8 @@
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                            <select class="form-control" id="alkohol" name="diagnosa">
-                                <option value="" disabled selected>pilih</option>
+                            <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
+                              
                                 @foreach ($diagnosa as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
@@ -590,8 +592,8 @@
                         </div>
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                            <select class="form-control" id="alkohol" name="tindakan">
-                                <option value="" disabled selected>pilih</option>
+                            <select class="form-control" id="tindakan" name="tindakan">
+                              
                                 <option value="diberikan">Diberikan Obat</option>
                                 <option value="tidak">Tidak</option>
 
@@ -633,17 +635,52 @@
 
 @include('component.modal-table-pasien')
 
+
+<script>
+    $(document).ready(function() {
+        $('#riwayat_penyakit_keluarga').select2({
+            placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#riwayat_penyakit_tidak_menular').select2({
+            placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#diagnosa').select2({
+            placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#tindakan').select2({
+            placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+        });
+    });
+</script>
+<style>.select2-dropdown {
+    z-index: 9999 !important;
+}
+</style>
 <script>
     $(document).ready(function() {
         // Set z-index for modalPasien to be higher than addActionModal
-        $('#modalPasien').on('show.bs.modal', function() {
-            $(this).css('z-index', '2000'); // set a high z-index for modalPasien
-        });
+        // $('#modalPasien').on('show.bs.modal', function() {
+        //     $(this).css('z-index', '2000'); // set a high z-index for modalPasien
+        // });
 
-        // Remove backdrop when modalPasien is closed
-        $('#modalPasien').on('hidden.bs.modal', function() {
-            $('.modal-backdrop').not('.modal-stack').remove();
-        });
+        // // Remove backdrop when modalPasien is closed
+        // $('#modalPasien').on('hidden.bs.modal', function() {
+        //     $('.modal-backdrop').not('.modal-stack').remove();
+        // });
     });
 </script>
 

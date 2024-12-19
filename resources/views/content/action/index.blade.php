@@ -94,7 +94,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($actions as $index => $action)
-                                        @include('component.modal-edit-action', ['action' => $action]) <!-- Modal Include -->
+                                     
                                         <tr>
                                             <td>
                                                 <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Nomor urut -->
@@ -146,7 +146,7 @@
                                                         data-bs-target="#editActionModal{{ $action->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-
+                                                    @include('component.modal-edit-action') 
                                                     <!-- Tombol Delete -->
                                                     <form action="{{ route('action.destroy', $action->id) }}"
                                                         method="POST" class="d-inline">
@@ -161,6 +161,7 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                      
                                     @endforeach
                                 </tbody>
                             </table>

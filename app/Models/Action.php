@@ -47,8 +47,40 @@ class Action extends Model
         'tindakan',
         'rujuk_rs',
         'keterangan',
+        'nadi',
+        'nafas',
+        'suhu',
+        'mata_anemia',
+        'pupil',
+        'ikterus',
+        'udem_palpebral',
+        'nyeri_tekan',
+        'peristaltik',
+        'ascites',
+        'lokasi_abdomen',
+        'thorax',
+        'thorax_bj',
+        'paru',
+        'suara_nafas',
+        'ronchi',
+        'wheezing',
+        'ekstremitas',
+        'edema',
+        'tonsil',
+        'fharing',
+        'kelenjar',
+        'genetalia',
+        'warna_kulit',
+        'turgor',
+        'neurologis',
+        'hasil_lab',
     ];
 
+    protected $casts = [
+        'riwayat_penyakit_keluarga' => 'array',
+        'riwayat_penyakit_tidak_menular' => 'array',
+        'diagnosa' => 'array',
+    ];
     /**
      * Relasi ke model Patient
      */
