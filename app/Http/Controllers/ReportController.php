@@ -15,4 +15,10 @@ class ReportController extends Controller
         
         return view('content.report.index');
     }
+    public function printTifoid()
+    {   
+        
+        return view('content.report.print-tifoid');
+    }
+   
 }
