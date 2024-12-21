@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+
 Route::get('/', function () {
     if (Auth::check()) {
         // Jika user sudah login, arahkan ke dashboard
