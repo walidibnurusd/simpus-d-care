@@ -20,5 +20,15 @@ class ReportController extends Controller
         
         return view('content.report.print-tifoid');
     }
+    public function printDiare()
+    {   
+        
+        return view('content.report.print-diare');
+    }
+    public function reportDiare()
+    {   
+        
+        return view('content.report.report-diare');
+    }
    
 }
