@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
     Route::get('/report/tifoid', [ReportController::class, 'printTifoid'])->name('report.tifoid');
+    Route::get('/report/diare', [ReportController::class, 'printDiare'])->name('report.diare');
+    Route::get('/report-poli-umum/diare', [ReportController::class, 'reportDiare'])->name('report.poli.diare');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
 });
