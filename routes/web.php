@@ -47,6 +47,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/report-poli-umum/diare', [ReportController::class, 'reportDiare'])->name('report.poli.diare');
     Route::get('/report/stp', [ReportController::class, 'reportSTP'])->name('report.stp');
     Route::get('/report/ptm', [ReportController::class, 'reportPTM'])->name('report.ptm');
+    Route::get('/report/afp', [ReportController::class, 'reportAFP'])->name('report.afp');
+    Route::get('/report/difteri', [ReportController::class, 'reportDifteri'])->name('report.difteri');
+    Route::get('/report/C1', [ReportController::class, 'reportC1'])->name('report.C1');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
 });
