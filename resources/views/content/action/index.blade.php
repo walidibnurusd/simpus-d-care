@@ -35,7 +35,6 @@
                         Tambah
                         <i class="fas fa-plus ms-2"></i> <!-- Ikon Tambah -->
                     </button>
-
                     <!-- Form untuk Print dan Filter -->
                     <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3">
                         <div class="row">
@@ -83,7 +82,8 @@
                             <table id="actionTable" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            No
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -118,7 +118,8 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             FASKES</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">AKSI
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            AKSI
                                         </th>
                                     </tr>
                                 </thead>
@@ -145,15 +146,13 @@
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
                                                     {{ \Carbon\Carbon::parse($action->patient->dob)->age }} Tahun</p>
+                                                <!-- Ganti dengan perhitungan umur jika perlu -->
                                             </td>
-
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->kartu) }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $action->kartu }}</p>
                                             </td>
-
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->keluhan) }}
-                                                </p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
                                             </td>
                                             @php
                                                 // Assuming $actions->diagnosa is an array of Diagnosis IDs
@@ -165,7 +164,8 @@
                                                     {{ implode(', ', $diagnosa->pluck('name')->toArray()) }} </p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->tindakan) }}
+                                                <p class="text-xs font-weight-bold mb-0">
+                                                    {{ ucwords($action->tindakan) }}
                                                 </p>
                                             </td>
                                             <td>
@@ -173,7 +173,8 @@
                                                     {{ optional($action->hospitalReferral)->name }}</p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->kunjungan) }}
+                                                <p class="text-xs font-weight-bold mb-0">
+                                                    {{ ucwords($action->kunjungan) }}
                                                 </p>
                                             </td>
                                             <td>
@@ -221,6 +222,48 @@
 @endsection
 
 @section('script')
+    <<<<<<< HEAD <script>
+        $(document).ready(function() {
+            var table = $('#actionTable').DataTable({
+                "language": {
+                    "info": "_PAGE_ dari _PAGES_ halaman",
+                    "paginate": {
+                        "previous": "<",
+                        "next": ">",
+                        "first": "<<",
+                        "last": ">>"
+                    }
+                },
+                "responsive": true,
+                "lengthMenu": [10, 25, 50, 100], // Set the number of rows per page
+                "initComplete": function() {
+                    // Custom search function for date range
+                    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                        var startDate = $('#start_date').val();
+                        var endDate = $('#end_date').val();
+                        var actionDate = data[
+                            1]; // Assumes the 'Tanggal' column is the second column (index 1)
+
+                        if (startDate && endDate) {
+                            return actionDate >= startDate && actionDate <= endDate;
+                        }
+                        return true;
+                    });
+                }
+            });
+
+            // Event listener for the filter button
+            $('#filterButton').on('click', function() {
+                table.draw();
+            });
+
+            // // Clear filters if either date is changed
+            // $('#start_date, #end_date').on('change', function() {
+            //     table.draw();
+            // });
+        });
+    </script>
+    =======
     <script>
         $(document).ready(function() {
             var table = $('#actionTable').DataTable({
@@ -262,6 +305,7 @@
             // });
         });
     </script>
+    >>>>>>> 2ee6ea62d31ca1aaadf028d598b84e86e6089018
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
