@@ -30,5 +30,30 @@ class ReportController extends Controller
         
         return view('content.report.report-diare');
     }
+    public function reportSTP()
+    {   
+        
+        return view('content.report.laporan-stp');
+    }
+    public function reportPTM()
+    {   
+        
+        return view('content.report.laporan-ptm');
+    }
+    public function reportAFP()
+    {   
+        
+        return view('content.report.laporan-afp');
+    }
+    public function reportDifteri()
+    {   
+        
+        return view('content.report.laporan-difteri');
+    }
+    public function reportC1()
+    {   
+        
+        return view('content.report.laporan-c1');
+    }
    
 }

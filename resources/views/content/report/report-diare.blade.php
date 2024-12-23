@@ -1,43 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Data Tindakan</title>
+    <title>Laporan Poli Umum Diare</title>
     <style>
         body {
             font-family: "Times New Roman", Times, serif;
             font-size: 12px;
         }
+
         .header {
             text-align: center;
         }
+
         .header img {
             width: 80px;
             height: auto;
         }
-        .header h1, .header h2, .header p {
+
+        .header h1,
+        .header h2,
+        .header p {
             margin: 0;
             line-height: 1.2;
         }
+
         .table-container {
             margin-top: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        table th, table td {
+
+        table th,
+        table td {
             border: 1px solid #000;
             padding: 5px;
             text-align: center;
         }
+
         table th {
             background-color: #f0f0f0;
         }
     </style>
-    
+
 </head>
+
 <body>
     <div class="header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -53,7 +65,7 @@
             <img src="../assets/assets/img/logo-puskesmas.png" alt="Logo Right">
         </div>
         <hr>
-        <h3 style="margin-top: 20px;">PENCATATAN POLI UMUM</h3>
+        <h3 style="margin-top: 20px;">LAPORAN DATA REGISTER KASUS PENYAKIT DIARE</h3>
         <p>TANGGAL S/D</p>
     </div>
 
@@ -67,7 +79,6 @@
                     <th>NIK</th>
                     <th>NAMA PASIEN</th>
                     <th>TGL.LAHIR</th>
-                    <th></th>
                     <th>KEPESERTAAN</th>
                     <th>ALAMAT</th>
                     <th>JENIS KELAMIN</th>
@@ -78,13 +89,10 @@
                     <th>KUNJ</th>
                     <th>KELUHAN</th>
                     <th>DIAGNOSA</th>
-                    <th></th>
                     <th>TINDAKAN</th>
                     <th>RUJUKAN</th>
                     <th>KETERANGAN</th>
                     <th>DOKTER</th>
-                    <th>Oralit (Bungkus)</th>
-                    <th>Zinc (Tablet)</th>
                 </tr>
             </thead>
             <tbody>
@@ -95,7 +103,6 @@
                     <td>1234567890123456</td>
                     <td>Ahmad Fauzi</td>
                     <td>1990-02-15</td>
-                    <td></td>
                     <td>BPJS</td>
                     <td>Jl. Merdeka No. 10</td>
                     <td>Laki-laki</td>
@@ -106,13 +113,10 @@
                     <td>Rawat Jalan</td>
                     <td>Demam Tinggi</td>
                     <td>Diare Akut</td>
-                    <td></td>
                     <td>Pemberian Obat</td>
                     <td>Tidak</td>
                     <td>-</td>
                     <td>Dr. Surya</td>
-                    <td>2</td>
-                    <td>3</td>
                 </tr>
                 <tr>
                     <td>2</td>
@@ -121,7 +125,6 @@
                     <td>2345678901234567</td>
                     <td>Siti Aminah</td>
                     <td>1995-06-10</td>
-                    <td></td>
                     <td>Umum</td>
                     <td>Jl. Pahlawan No. 20</td>
                     <td>Perempuan</td>
@@ -132,13 +135,10 @@
                     <td>Rawat Jalan</td>
                     <td>Sakit Kepala</td>
                     <td>Hipertensi</td>
-                    <td></td>
                     <td>Konseling</td>
                     <td>Tidak</td>
                     <td>-</td>
                     <td>Dr. Budi</td>
-                    <td>1</td>
-                    <td>2</td>
                 </tr>
                 <tr>
                     <td>3</td>
@@ -147,7 +147,6 @@
                     <td>3456789012345678</td>
                     <td>Joko Susanto</td>
                     <td>1988-03-25</td>
-                    <td></td>
                     <td>BPJS</td>
                     <td>Jl. Raya No. 30</td>
                     <td>Laki-laki</td>
@@ -158,17 +157,15 @@
                     <td>Rawat Inap</td>
                     <td>Nyeri Perut</td>
                     <td>Maag Kronis</td>
-                    <td></td>
                     <td>Pemberian Cairan</td>
                     <td>Tidak</td>
                     <td>-</td>
                     <td>Dr. Sari</td>
-                    <td>3</td>
-                    <td>5</td>
                 </tr>
             </tbody>
         </table>
-        
+
     </div>
 </body>
+
 </html>

@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Harian Diare</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQpzPvcKRFEM3fDMXaWWf8fR25S4HCo97uNx0Tk3hRChY7Ntuw3s4lB6E" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQpzPvcKRFEM3fDMXaWWf8fR25S4HCo97uNx0Tk3hRChY7Ntuw3s4lB6E" crossorigin="anonymous">
 
     <!-- Custom styles -->
     <style>
@@ -67,10 +68,10 @@
 
 <body>
     <h1 style="text-align: center">
-       REGISTER HARIAN PISP FASYANKES
+        REGISTER HARIAN PISP FASYANKES
     </h1>
 
-    
+
     <div class="header" style="align-content: left">
         <table style="width: 40%; margin-left: 0; border: none; border-radius: 10px; overflow: hidden;">
             <tbody style="border: none;">
@@ -88,18 +89,19 @@
                 </tr>
                 <tr style="border: none;">
                     <th style="text-align: left; border: none;">Tahun</th>
-                    <th style="border: none;text-align: left;"><span class="badge bg-warning text-dark">:2024</span></th>
+                    <th style="border: none;text-align: left;"><span class="badge bg-warning text-dark">:2024</span>
+                    </th>
                 </tr>
             </tbody>
         </table>
     </div>
-    
+
     <table class="table">
         <thead>
             <tr>
-                <td style="border: NONE"></td>
-                <th colspan="8">INFO DASAR PASIEN</th>
-                <th colspan="8">DIARE</th>
+
+                <th colspan="9">INFO DASAR PASIEN</th>
+                <th colspan="9">DIARE</th>
             </tr>
             <tr>
                 <th rowspan="2">No</th>
@@ -149,7 +151,9 @@
     </table>
 
     <!-- Bootstrap JS (including Popper.js) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-p6eV0HO9s6rYY2gMXU+quz4v0N4zBi9hZSPz5CFOCjI4CgWcIeec1/c3p6tI2DT8" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p6eV0HO9s6rYY2gMXU+quz4v0N4zBi9hZSPz5CFOCjI4CgWcIeec1/c3p6tI2DT8" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>

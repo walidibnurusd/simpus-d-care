@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 2ee6ea62d31ca1aaadf028d598b84e86e6089018
 Route::get('/', function () {
     if (Auth::check()) {
         // Jika user sudah login, arahkan ke dashboard
@@ -45,6 +49,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/tifoid', [ReportController::class, 'printTifoid'])->name('report.tifoid');
     Route::get('/report/diare', [ReportController::class, 'printDiare'])->name('report.diare');
     Route::get('/report-poli-umum/diare', [ReportController::class, 'reportDiare'])->name('report.poli.diare');
+    Route::get('/report/stp', [ReportController::class, 'reportSTP'])->name('report.stp');
+    Route::get('/report/ptm', [ReportController::class, 'reportPTM'])->name('report.ptm');
+    Route::get('/report/afp', [ReportController::class, 'reportAFP'])->name('report.afp');
+    Route::get('/report/difteri', [ReportController::class, 'reportDifteri'])->name('report.difteri');
+    Route::get('/report/C1', [ReportController::class, 'reportC1'])->name('report.C1');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
 });
