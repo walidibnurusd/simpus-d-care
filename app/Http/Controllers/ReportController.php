@@ -75,5 +75,15 @@ class ReportController extends Controller
         
         return view('content.report.laporan-lrkg');
     }
+    public function reportLKT()
+    {   
+        
+        return view('content.report.laporan-lkt');
+    }
+    public function reportLBKT()
+    {   
+        
+        return view('content.report.laporan-lbkt');
+    }
    
 }
