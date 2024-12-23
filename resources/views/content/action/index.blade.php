@@ -222,48 +222,7 @@
 @endsection
 
 @section('script')
-    <<<<<<< HEAD <script>
-        $(document).ready(function() {
-            var table = $('#actionTable').DataTable({
-                "language": {
-                    "info": "_PAGE_ dari _PAGES_ halaman",
-                    "paginate": {
-                        "previous": "<",
-                        "next": ">",
-                        "first": "<<",
-                        "last": ">>"
-                    }
-                },
-                "responsive": true,
-                "lengthMenu": [10, 25, 50, 100], // Set the number of rows per page
-                "initComplete": function() {
-                    // Custom search function for date range
-                    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                        var startDate = $('#start_date').val();
-                        var endDate = $('#end_date').val();
-                        var actionDate = data[
-                            1]; // Assumes the 'Tanggal' column is the second column (index 1)
 
-                        if (startDate && endDate) {
-                            return actionDate >= startDate && actionDate <= endDate;
-                        }
-                        return true;
-                    });
-                }
-            });
-
-            // Event listener for the filter button
-            $('#filterButton').on('click', function() {
-                table.draw();
-            });
-
-            // // Clear filters if either date is changed
-            // $('#start_date, #end_date').on('change', function() {
-            //     table.draw();
-            // });
-        });
-    </script>
-    =======
     <script>
         $(document).ready(function() {
             var table = $('#actionTable').DataTable({
@@ -305,7 +264,6 @@
             // });
         });
     </script>
-    >>>>>>> 2ee6ea62d31ca1aaadf028d598b84e86e6089018
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
