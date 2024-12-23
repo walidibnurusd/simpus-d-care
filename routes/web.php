@@ -50,6 +50,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/afp', [ReportController::class, 'reportAFP'])->name('report.afp');
     Route::get('/report/difteri', [ReportController::class, 'reportDifteri'])->name('report.difteri');
     Route::get('/report/C1', [ReportController::class, 'reportC1'])->name('report.C1');
+    Route::get('/report/rjp', [ReportController::class, 'reportRJP'])->name('report.rjp');
+    Route::get('/report/skdr', [ReportController::class, 'reportSKDR'])->name('report.skdr');
+    Route::get('/report/lkg', [ReportController::class, 'reportLKG'])->name('report.lkg');
+    Route::get('/report/lrkg', [ReportController::class, 'reportLRKG'])->name('report.lrkg');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
 });

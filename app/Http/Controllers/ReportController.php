@@ -55,5 +55,25 @@ class ReportController extends Controller
         
         return view('content.report.laporan-c1');
     }
+    public function reportRJP()
+    {   
+        
+        return view('content.report.laporan-rjp');
+    }
+    public function reportSKDR()
+    {   
+        
+        return view('content.report.laporan-skdr');
+    }
+    public function reportLKG()
+    {   
+        
+        return view('content.report.laporan-lkg');
+    }
+    public function reportLRKG()
+    {   
+        
+        return view('content.report.laporan-lrkg');
+    }
    
 }
