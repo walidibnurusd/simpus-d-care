@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 2ee6ea62d31ca1aaadf028d598b84e86e6089018
 Route::get('/', function () {
     if (Auth::check()) {
         // Jika user sudah login, arahkan ke dashboard

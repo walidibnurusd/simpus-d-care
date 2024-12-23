@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIS PENDERITA AFP</title>
+    <title>LIST PENDERITA AFP</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
@@ -17,7 +17,7 @@
 
         .header {
             text-align: center;
-           
+
         }
 
         .header h1 {
@@ -33,7 +33,7 @@
         .table {
             width: 100%;
             border-collapse: collapse;
-        
+
         }
 
         .table th,
@@ -68,8 +68,8 @@
 
 <body>
     <h1 style="text-align: center">
-        <span class="badge bg-primary">LIS PENDERITA AFP</span>
-  
+        <span class="badge bg-primary">LIST PENDERITA AFP</span>
+
     </h1>
 
     <div class="header" style="align-content: left">
@@ -77,16 +77,16 @@
             <tbody style="border: none;">
                 <tr style="border: none;">
                     <th style="text-align: left; border: none;width: 100%;">Dinas Kesehatan Kota Makassar</th>
-                    
-                   
+
+
                 </tr>
                 <tr style="border: none;">
-                    <th style="text-align: left; border: none;width: 100%;">Bulan/Tahun : MARET/2024</th>                
+                    <th style="text-align: left; border: none;width: 100%;">Bulan/Tahun : MARET/2024</th>
                 </tr>
             </tbody>
         </table>
     </div>
-   
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -181,7 +181,7 @@
             </tr>
         </tbody>
     </table>
-    
+
     <div style="margin-top: 30px;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px;">
             <!-- Bagian Kiri -->
@@ -191,7 +191,7 @@
                 <br><br><br>
                 <p><strong>(___________________)</strong></p>
             </div>
-    
+
             <!-- Bagian Kanan -->
             <div style="text-align: left; width: 40%; padding-left: 50%;">
                 <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
@@ -202,7 +202,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- Bootstrap JS (including Popper.js) -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
