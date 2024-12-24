@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/lrkg', [ReportController::class, 'reportLRKG'])->name('report.lrkg');
     Route::get('/report/lkt', [ReportController::class, 'reportLKT'])->name('report.lkt');
     Route::get('/report/lbkt', [ReportController::class, 'reportLBKT'])->name('report.lbkt');
-    
+    //route
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
 });
