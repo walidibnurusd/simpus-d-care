@@ -39,9 +39,13 @@
         <div class="row">
             <!-- Kolom 1 -->
             <div class="col-md-4 mb-3">
-                <button class="btn btn-primary btn-block w-100 mb-2">TELUSUR KUNJUNGAN</button>
-                <button class="btn btn-primary btn-block w-100 mb-2">Pengendalian ISPA</button>
-                <button class="btn btn-success btn-block w-100 mb-2">Rekap Pesakitan</button>
+                <a href="{{ route('report.lkg') }}" class="btn btn-primary btn-block w-100 mb-2" target="_blank">Laporan
+                    Kegiatan Pelayanan Kesehatan Gigi dan Mulut</a>
+                <a href="{{ route('report.lrkg') }}" class="btn btn-primary btn-block w-100 mb-2" target="_blank">Laporan
+                    Bulanan Kesakitan Gigi dan Mulut</a>
+                <a href="{{ route('report.rjp') }}" class="btn btn-success btn-block w-100 mb-2" target="_blank">Rekap Jenis
+                    Pelayanan Tindakan di Ruang
+                    Tindakan</a>
                 <button class="btn btn-danger btn-block w-100 mb-2">Rekap Kunjungan</button>
                 <button class="btn btn-dark btn-block w-100 mb-2">Kesehatan Jiwa</button>
                 <button class="btn btn-dark btn-block w-100 mb-2">Laporan Berdasarkan Kasus</button>
@@ -65,8 +69,9 @@
                     Surveilans Integrasi Difteri</a>
                 <a href="{{ route('report.C1') }}" class="btn btn-info btn-block w-100 mb-2" target="_blank">Laporan Kasus
                     Campak</a>
-                <button class="btn btn-warning btn-block w-100 mb-2">Rekap Kesakitan Formulir 12</button>
-                <button class="btn btn-info btn-block w-100 mb-2">MATA Tahunan</button>
+                <a href="{{ route('report.skdr') }}" class="btn btn-warning btn-block w-100 mb-2" target="_blank">Laporan
+                    SKDR</a>
+
             </div>
 
             <!-- Kolom 3 -->
