@@ -74,6 +74,8 @@ class Action extends Model
         'turgor',
         'neurologis',
         'hasil_lab',
+        'hamil',
+        'tipe'
     ];
 
     protected $casts = [
