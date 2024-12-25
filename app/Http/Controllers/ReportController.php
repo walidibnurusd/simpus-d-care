@@ -100,5 +100,15 @@ class ReportController extends Controller
         
         return view('content.report.laporan-rrt');
     }
+    public function reportLL()
+    {   
+        
+        return view('content.report.laporan-ll');
+    }
+    public function reportFormulir10()
+    {   
+        
+        return view('content.report.laporan-formulir10');
+    }
    
 }
