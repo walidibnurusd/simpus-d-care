@@ -62,6 +62,7 @@
                                 <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
                                     data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
                                     data-alamat="{{ $item->address }}"
+                                    data-jenis_kelamin="{{ $item->genderName->name }}"
                                     {{ old('pasien', $kecacingan->pasien ?? '') == $item->id ? 'selected' : '' }}>
                                     {{ $item->name }} - {{ $item->nik }}
                                 </option>

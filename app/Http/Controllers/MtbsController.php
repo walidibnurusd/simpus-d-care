@@ -7,6 +7,7 @@ use App\Models\GangguanJiwaRemaja;
 use App\Models\Merokok;
 use App\Models\Napza;
 use App\Models\Obesitas;
+use App\Models\Patients;
 use App\Models\TesDayaDengar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,16 +16,17 @@ class MtbsController extends Controller
 {
     public function showSdqAnak()
     {
-        return view('mtbs.gangguan_jiwa_anak');
+        $pasien = Patients::all();
+        return view('mtbs.gangguan_jiwa_anak',compact('pasien'));
     }
     public function storeSdqAnak(Request $request)
     {
         // Definisikan aturan validasi
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
+            // 'tanggal_lahir' => 'required|date',
+            // 'jenis_kelamin' => 'required|string|max:10',
+            // 'alamat' => 'required|string|max:500',
             'berusaha_baik' => 'nullable',
             'gelisah' => 'nullable',
             'sakit' => 'nullable',
