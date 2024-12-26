@@ -247,16 +247,14 @@ class KiaController extends Controller
 
     public function showAnemia()
     {
-        return view('kia.anemia');
+        $pasien = Patients::all();
+        return view('kia.anemia', compact('pasien'));
     }
     public function storeAnemia(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string', // Assuming "L" for male, "P" for female
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
             'keluhan_5l' => 'required|boolean',
             'mudah_mengantuk' => 'required|boolean',
             'sulit_konsentrasi' => 'required|boolean',

@@ -67,37 +67,32 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($hipertensi as $item)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->nama }}</td>
-
-                                            <td>{{ $item->alamat }}</td>
-                                            <td>{{ $item->jenis_kelamin }}</td>
-
-                                            <td>
-                                                <ul class="action">
-                                                    <li class="edit"> <a
-                                                            href="{{ route('hipertensi.edit', $item->id) }}"><i
-                                                                class="icon-pencil-alt"></i></a>
-                                                    </li>
-                                                    <li class="delete">
-                                                        <a href="javascript:void(0)"
-                                                            onclick="confirmDelete({{ $item->id }})">
-                                                            <i class="icon-trash"></i>
-                                                        </a>
-
-                                                        <!-- Hidden form for deletion, which will be submitted when confirmed -->
-                                                        <form action="{{ route('hipertensi.delete', $item->id) }}"
-                                                            method="POST" id="delete-form-{{ $item->id }}"
-                                                            style="display:none;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                    </li>
-
-                                                </ul>
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->listPasien->name }}</td>
+                                        
+                                        <td>{{ $item->listPasien->address }}</td>
+                                        <td>{{ $item->listPasien->genderName->name }}</td>
+                                      
+                                        <td>
+                                            <ul class="action">
+                                                <li class="edit"> <a href="{{ route('hipertensi.edit', $item->id) }}"><i class="icon-pencil-alt"></i></a>
+                                                </li>
+                                                <li class="delete">
+                                                    <a href="javascript:void(0)" onclick="confirmDelete({{ $item->id }})">
+                                                        <i class="icon-trash"></i>
+                                                    </a>
+                                                    
+                                                    <!-- Hidden form for deletion, which will be submitted when confirmed -->
+                                                    <form action="{{ route('hipertensi.delete', $item->id) }}" method="POST" id="delete-form-{{ $item->id }}" style="display:none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </li>
+                                                
+                                            </ul>
+                                        </td>
+                                    </tr> 
                                     @endforeach
 
 

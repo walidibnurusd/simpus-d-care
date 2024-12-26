@@ -78,7 +78,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir" readonly
                             value="{{ old('tanggal_lahir', isset($gangguanJiwaAnak) ? $gangguanJiwaAnak->tanggal_lahir : '') }}">
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Alamat Lengkap</label>
-                        <input type="text" class="form-control" name="alamat" placeholder="Masukkan alamat lengkap" id="alamat"
+                        <input type="text" class="form-control" name="alamat" placeholder="Masukkan alamat lengkap" id="alamat" readonly
                             value="{{ old('alamat', isset($gangguanJiwaAnak) ? $gangguanJiwaAnak->alamat : '') }}">
                     </div>
                 </div>
