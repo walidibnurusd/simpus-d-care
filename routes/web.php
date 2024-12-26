@@ -61,6 +61,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/rrt', [ReportController::class, 'reportRRT'])->name('report.rrt');
     Route::get('/report/ll', [ReportController::class, 'reportLL'])->name('report.ll');
     Route::get('/report/formulir10', [ReportController::class, 'reportFormulir10'])->name('report.formulir10');
+    Route::get('/report/formulir11', [ReportController::class, 'reportFormulir11'])->name('report.formulir11');
+    Route::get('/report/formulir12', [ReportController::class, 'reportFormulir12'])->name('report.formulir12');
+    Route::get('/report/lr', [ReportController::class, 'reportLR'])->name('report.lr');
+    Route::get('/report/up', [ReportController::class, 'reportUP'])->name('report.up');
     
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');

@@ -4,7 +4,13 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
+                @if (Auth::user()->role == 'admin-poli-umum')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
+                @elseif(Auth::user()->role == 'admin-poli-gigi')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
+                @else
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
+                @endif
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -890,12 +896,12 @@
                                         {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Sulung Tumpatan Sementara' ? 'selected' : '' }}>
                                         Gigi Sulung Tumpatan Sementara
                                     </option>
-                                    <option value="Gigi Tetap Tumpatan Sementara"
-                                        {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Tetap Tumpatan Sementara' ? 'selected' : '' }}>
-                                        Gigi Tetap Tumpatan Sementara
+                                    <option value="Tidak Ada"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Tidak Ada' ? 'selected' : '' }}>
+                                        Tidak Ada
                                     </option>
-                                    <option value="Gigi Tetap Tumpatan Sementara"
-                                        {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Tetap Tumpatan Sementara' ? 'selected' : '' }}>
+                                    <option value="Gigi Tetap Tumpatan Tetap"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Tetap Tumpatan Tetap' ? 'selected' : '' }}>
                                         Gigi Tetap Tumpatan Tetap
                                     </option>
                                     <option value="Gigi Sulung Tumpatan Tetap"
@@ -930,8 +936,8 @@
                                         {{ old('tindakan', $action->tindakan ?? '') == 'Penuh Prothesa' ? 'selected' : '' }}>
                                         Penuh Prothesa
                                     </option>
-                                    <option value="Reparasai Prothesa"
-                                        {{ old('tindakan', $action->tindakan ?? '') == 'Reparasai Prothesa' ? 'selected' : '' }}>
+                                    <option value="Reparasi Prothesa"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Reparasi Prothesa' ? 'selected' : '' }}>
                                         Reparasi Prothesa
                                     </option>
                                     <option value="Premedikasi"
@@ -945,6 +951,65 @@
                                     <option value="Incici Abses Gigi"
                                         {{ old('tindakan', $action->tindakan ?? '') == 'Incici Abses Gigi' ? 'selected' : '' }}>
                                         Incici Abses Gigi</option>
+                                @else
+                                    <option value="Observasi Tanpa Tindakan Invasif"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Observasi Tanpa Tindakan Invasif' ? 'selected' : '' }}>
+                                        Observasi Tanpa Tindakan Invasif
+                                    </option>
+                                    <option value="Observasi Dengan Tindakan Invasif"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Observasi Dengan Tindakan Invasif' ? 'selected' : '' }}>
+                                        Observasi Dengan Tindakan Invasif
+                                    </option>
+                                    <option value="Tidak Ada"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Tidak Ada' ? 'selected' : '' }}>
+                                        Tidak Ada
+                                    </option>
+                                    <option value="Corpus Alineum"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Corpus Alineum' ? 'selected' : '' }}>
+                                        Corpus Alineum
+                                    </option>
+                                    <option value="Ekstraksi Kuku"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Ekstraksi Kuku' ? 'selected' : '' }}>
+                                        Ekstraksi Kuku
+                                    </option>
+                                    <option value="Sircumsisi (Bedah Ringan)"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Sircumsisi (Bedah Ringan)' ? 'selected' : '' }}>
+                                        Sircumsisi (Bedah Ringan)
+                                    </option>
+                                    <option value="Incisi Abses"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Incisi Abses' ? 'selected' : '' }}>
+                                        Incisi Abses
+                                    </option>
+                                    <option value="Rawat Luka"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Rawat Luka' ? 'selected' : '' }}>
+                                        Rawat Luka
+                                    </option>
+                                    <option value="Ganti Verban"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Ganti Verban' ? 'selected' : '' }}>
+                                        Ganti Verban
+                                    </option>
+                                    <option value="Spooling"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Spooling' ? 'selected' : '' }}>
+                                        Spooling
+                                    </option>
+                                    <option value="Toilet Telinga"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Toilet Telinga' ? 'selected' : '' }}>
+                                        Toilet Telinga
+                                    </option>
+                                    <option value="Tetes Telinga"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Tetes Telinga' ? 'selected' : '' }}>
+                                        Tetes Telinga
+                                    </option>
+                                    <option value="Aff Hecting"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Aff Hecting' ? 'selected' : '' }}>
+                                        Aff Hecting
+                                    </option>
+                                    <option value="Hecting (Jahit Luka)"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Hecting (Jahit Luka)' ? 'selected' : '' }}>
+                                        Hecting (Jahit Luka)</option>
+                                    <option value="Tampon/Off Tampon"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Tampon/Off Tampon' ? 'selected' : '' }}>
+                                        Tampon/Off Tampon</option>
                                 @endif
                             </select>
                         </div>

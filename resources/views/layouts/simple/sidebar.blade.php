@@ -62,6 +62,8 @@
                             </svg><span>Poli Umum</span></a>
                     @elseif (Auth::user()->role == 'admin-poli-gigi')
                         </svg><span>Poli Gigi</span></a>
+                    @else
+                        </svg><span>UGD</span></a>
                         @endif
                         <ul class="sidebar-submenu">
                             <li><a href="{{ route('action.index') }}">Tindakan</a></li>

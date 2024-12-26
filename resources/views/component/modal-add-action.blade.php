@@ -4,7 +4,13 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
+                @if (Auth::user()->role == 'admin-poli-umum')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
+                @elseif(Auth::user()->role == 'admin-poli-gigi')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
+                @else
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
+                @endif
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -652,6 +658,37 @@
                                     <option value="Tindakan Lain">Tindakan Lain
                                     </option>
                                     <option value="Incici Abses Gigi">Incici Abses Gigi</option>
+                                @else
+                                    <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan Invasif
+                                    </option>
+                                    <option value="Observasi Dengan Tindakan Invasif">Observasi Dengan Tindakan Invasif
+                                    </option>
+                                    <option value="Tidak Ada">Tidak Ada
+                                    </option>
+                                    <option value="Corpus Alineum">Corpus Alineum
+                                    </option>
+                                    <option value="Ekstraksi Kuku">Ekstraksi Kuku
+                                    </option>
+                                    <option value="Sircumsisi (Bedah Ringan)">Sircumsisi (Bedah Ringan)
+                                    </option>
+                                    <option value="Incisi Abses">Incisi Abses
+                                    </option>
+                                    <option value="Rawat Luka">Rawat Luka
+                                    </option>
+                                    <option value="Ganti Verban">Ganti Verban
+                                    </option>
+                                    <option value="Spooling">Spooling
+                                    </option>
+                                    <option value="Toilet Telinga">Toilet Telinga
+                                    </option>
+                                    <option value="Tetes Telinga">Tetes Telinga
+                                    </option>
+                                    <option value="Aff Hecting">Aff Hecting
+                                    </option>
+                                    </option>
+                                    <option value="Hecting (Jahit Luka)">Hecting (Jahit Luka)
+                                    </option>
+                                    <option value="Tampon/Off Tampon">Tampon/Off Tampon</option>
                                 @endif
                             </select>
                         </div>
