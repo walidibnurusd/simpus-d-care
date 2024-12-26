@@ -12,7 +12,23 @@
             </button>
         </div>
     @endif
-
+    <style>
+        .select2-container--default .select2-selection--single {
+            height: calc(1.5em + .75rem + 2px);
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            padding: .375rem .75rem;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: calc(1.5em + .75rem);
+        }
+        
+        .select2-container .select2-selection--single {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 
     <!-- Validation Errors Alert -->
     @if ($errors->any())
@@ -40,19 +56,31 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>1. Nama</label>
-                        <input type="text" 
-                               class="form-control" 
-                               name="nama" 
-                               placeholder="Masukkan nama lengkap" 
-                               value="{{ isset($triple->nama) ? $triple->nama : old('nama') }}">
+                        <label>1. Pasien</label>
+                        <select class="form-control form-select select2" id="pasien" name="pasien">
+                            <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
+                            @foreach ($pasien as $item)
+                                <option 
+                                    value="{{ $item->id }}" 
+                                    data-no_hp="{{ $item->phone }}" 
+                                    data-nik="{{ $item->nik }}" 
+                                    data-dob="{{ $item->dob }}"
+                                    data-jenis_kelamin="{{ $item->genderName->name }}"
+                                    data-alamat="{{ $item->address }}"
+                                    data-tempat_lahir="{{ $item->place_birth }}"
+                                    {{ old('pasien', $triple->pasien ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }} - {{ $item->nik }}
+                                </option>   
+                            @endforeach
+                        </select>
+                        @error('pasien') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>2. Tempat lahir</label>
-                        <input type="text" 
-                               class="form-control" 
+                        <input type="text" readonly
+                               class="form-control"  id="tempat_lahir"
                                name="tempat_lahir" 
                                placeholder="Masukkan tempat lahir" 
                                value="{{ isset($triple->tempat_lahir) ? $triple->tempat_lahir : old('tempat_lahir') }}">
@@ -64,8 +92,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>3. Tanggal Lahir</label>
-                        <input type="date" 
-                               class="form-control" 
+                        <input type="date" readonly
+                               class="form-control"  id="tanggal_lahir"
                                name="tanggal_lahir" 
                                value="{{ isset($triple->tanggal_lahir) ? $triple->tanggal_lahir->format('Y-m-d') : old('tanggal_lahir') }}">
                     </div>
@@ -230,8 +258,8 @@
                         <label>11. No Telp/Hp</label>
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="number" 
-                                       name="no_hp" 
+                                <input type="number" id="no_hp"
+                                       name="no_hp"  readonly
                                        class="form-control" 
                                        placeholder="masukkan no hp" 
                                        value="{{ isset($triple->no_hp) ? $triple->no_hp : old('no_hp') }}">
@@ -262,9 +290,9 @@
                         <label>13. Alamat</label>
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="text" 
+                                <input type="text" id="alamat"
                                        name="alamat" 
-                                       class="form-control" 
+                                       class="form-control" readonly
                                        placeholder="masukkan alamat" 
                                        value="{{ isset($triple->alamat) ? $triple->alamat : old('alamat') }}">
                             </div>
@@ -993,4 +1021,44 @@
         });
     </script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Inisialisasi Select2
+        $('.select2').select2({
+            placeholder: "Pilih pasien",
+            allowClear: true    
+        });
+    
+        // Event listener saat pasien dipilih
+        $('#pasien').on('change', function() {
+            var selectedOption = $(this).find(':selected');
+    
+            // Ambil data dari atribut data-*
+            var no_hp = selectedOption.data('no_hp');
+            var nik = selectedOption.data('nik');
+            var dob = selectedOption.data('dob');
+            var alamat = selectedOption.data('alamat');
+            var tempat_lahir = selectedOption.data('tempat_lahir');
+            var jk = selectedOption.data('jenis_kelamin');
+            console.log(jk);
+            
+            // Isi input dengan data yang diambil
+            $('#no_hp').val(no_hp);
+            $('#nik').val(nik);
+            $('#tanggal_lahir').val(dob);
+            $('#alamat').val(alamat);
+            $('#tempat_lahir').val(tempat_lahir);
+            $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
+            if (jk === 'Laki-Laki') {
+                $('#jk_laki').prop('checked', true);
+            } else if (jk === 'Perempuan') {
+                $('#jk_perempuan').prop('checked', true);
+            }
+                });
+        $('#pasien').trigger('change');
+    });
+    
+    </script>
 @endsection

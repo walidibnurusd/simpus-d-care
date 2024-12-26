@@ -69,16 +69,10 @@
                                     @foreach ($kankerKolorektal as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->nama }}</td>
+                                        <td>{{ $item->listPasien->name }}</td>
                                         
-                                        <td>{{ $item->tanggal }}</td>
-                                        @if ($item->jenis_kelamin ==0)
-                                        <td>Perempuan</td>
-                                        @else
-                                            <td>Laki-laki</td>  
-                                        @endif
-                                      
-                                      
+                                        <td>{{ $item->listPasien->dob }}</td>
+                                        <td>{{ $item->listPasien->genderName->name }}</td>
                                         <td>
                                             <ul class="action">
                                                 <li class="edit"> <a href="{{ route('kankerKolorektal.lansia.edit', $item->id) }}"><i class="icon-pencil-alt"></i></a>

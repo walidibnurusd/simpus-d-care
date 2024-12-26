@@ -17,9 +17,10 @@ class KankerKolorektal extends Model
      * @var array
      */
     protected $fillable = [
-        'nama',
-        'tanggal',
-        'jenis_kelamin',
+        // 'nama',
+        // 'tanggal',
+        // 'jenis_kelamin',
+        'pasien',
         'usia',
         'riwayat_kanker',
         'merokok',
@@ -31,4 +32,8 @@ class KankerKolorektal extends Model
         'klaster',
         'poli',
     ];
+    public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }
