@@ -139,13 +139,15 @@ class AdminLansiaController extends Controller
     }
     public function viewKankerKolorektal()
     {
+        $pasien = Patients::all();
         $kankerKolorektal = KankerKolorektal::all();
-        return view('lansia.table.kanker_kolorektal', compact('kankerKolorektal'));
+        return view('lansia.table.kanker_kolorektal', compact('kankerKolorektal','pasien'));
     }
     public function editKankerKolorektal($id)
     {
+        $pasien = Patients::all();
         $kankerKolorektal = KankerKolorektal::findOrFail($id);
-        return view('lansia.kanker_kolorektal', compact('kankerKolorektal'));
+        return view('lansia.kanker_kolorektal', compact('kankerKolorektal','pasien'));
     }
     public function deleteKankerKolorektal($id)
     {
@@ -165,9 +167,9 @@ class AdminLansiaController extends Controller
 
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'jenis_kelamin' => 'required|integer|in:0,1',
+            'pasien' => 'required',
+            // 'tanggal' => 'required|date',
+            // 'jenis_kelamin' => 'required|integer|in:0,1',
             'usia' => 'required|integer|min:0',
             'riwayat_kanker' => 'nullable',
             'merokok' => 'nullable',
@@ -206,7 +208,8 @@ class AdminLansiaController extends Controller
     public function editKankerPayudara($id)
     {
         $kankerPayudara = KankerPayudara::findOrFail($id);
-        return view('lansia.kanker_payudara', compact('kankerPayudara'));
+        $pasien = Patients::all();
+        return view('lansia.kanker_payudara', compact('kankerPayudara','pasien'));
     }
     public function deleteKankerPayudara($id)
     {
@@ -224,20 +227,20 @@ class AdminLansiaController extends Controller
         // Validasi input
         $validator = Validator::make($request->all(), [
             'nomor_klien' => 'required|string|max:255',
-            'nama' => 'required|string|max:255',
+            'pasien' => 'required',
             'umur' => 'required|integer|min:1',
             'suku_bangsa' => 'nullable|string|max:255',
             'agama' => 'nullable|string|max:255',
             'berat_badan' => 'nullable|numeric|min:1',
             'tinggi_badan' => 'nullable|numeric|min:1',
-            'alamat' => 'nullable|string|max:500',
+            // 'alamat' => 'nullable|string|max:500',
             'perkawinan_pasangan' => 'nullable',
             'klien' => 'nullable',
-            'pekerjaan_klien' => 'nullable',
+            // 'pekerjaan_klien' => 'nullable',
             'pekerjaan_suami' => 'nullable',
-            'pendidikan_terakhir' => 'nullable',
+            // 'pendidikan_terakhir' => 'nullable',
             'jmlh_anak_kandung' => 'nullable|integer|min:0',
-            'rt_rw' => 'nullable',
+            // 'rt_rw' => 'nullable',
             'kelurahan_desa' => 'nullable',
             'menstruasi' => 'nullable',
             'usia_seks' => 'nullable|integer|min:0',

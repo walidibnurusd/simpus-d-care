@@ -816,12 +816,14 @@ class AdminController extends Controller
     public function viewTripleEliminasi()
     {
         $triple = TripleEliminasi::all();
+
         return view('kia.table.triple_eliminasi', compact('triple'));
     }
     public function editTripleEliminasi($id)
     {
         $triple = TripleEliminasi::findOrFail($id);
-        return view('kia.triple_eliminasi', compact('triple'));
+        $pasien = Patients::all();
+        return view('kia.triple_eliminasi', compact('triple','pasien'));
     }
     public function deleteTripleEliminasi($id)
     {
@@ -838,9 +840,9 @@ class AdminController extends Controller
     {
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tempat_lahir' => 'nullable|string|max:255',
-            'tanggal_lahir' => 'nullable|date',
+            'pasien' => 'required',
+            // 'tempat_lahir' => 'nullable|string|max:255',
+            // 'tanggal_lahir' => 'nullable|date',
             'pekerjaan' => 'nullable|string|max:255',
             'status_kawin' => 'nullable|string|max:255',
             'gravida' => 'nullable|integer',
@@ -850,9 +852,9 @@ class AdminController extends Controller
             'taksiran_kehamilan' => 'nullable',
             'nama_puskesmas' => 'nullable',
             'kode_specimen' => 'nullable',
-            'no_hp' => 'nullable|string|max:15',
+            // 'no_hp' => 'nullable|string|max:15',
             'umur_ibu' => 'nullable|integer',
-            'alamat' => 'nullable|string',
+            // 'alamat' => 'nullable|string',
             'pendidikan' => 'nullable',
             'gejala_hepatitis' => 'nullable|boolean',
             'gejala_urine_gelap' => 'nullable|boolean',

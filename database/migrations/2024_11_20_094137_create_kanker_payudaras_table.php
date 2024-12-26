@@ -12,14 +12,16 @@ return new class extends Migration {
     {
         Schema::create('kanker_payudara', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->string('nomor_klien')->default(0);
-            $table->string('nama')->nullable();
+            // $table->string('nama')->nullable();
             $table->integer('umur')->default(0);
             $table->string('suku_bangsa')->nullable();
             $table->string('agama')->nullable();
             $table->integer('berat_badan')->nullable();
             $table->integer('tinggi_badan')->nullable();
-            $table->string('alamat')->nullable();
+            // $table->string('alamat')->nullable();
             $table->integer('perkawinan_pasangan')->default(0);
             $table->integer('klien')->default(0);
             $table->string('pekerjaan_klien')->nullable();

@@ -12,9 +12,11 @@ return new class extends Migration {
     {
         Schema::create('triple_eliminasi', function (Blueprint $table) {
             $table->id();
-            $table->string('nama')->nullable();
-            $table->string('tempat_lahir')->nullable();
-            $table->date('tanggal_lahir')->nullable();
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
+            // $table->string('nama')->nullable();
+            // $table->string('tempat_lahir')->nullable();
+            // $table->date('tanggal_lahir')->nullable();
             $table->integer('pekerjaan')->default(0);
             $table->integer('status_kawin')->default(0);
             $table->integer('gravida')->default(0);
@@ -24,9 +26,9 @@ return new class extends Migration {
             $table->string('taksiran_kehamilan')->nullable();
             $table->string('nama_puskesmas')->nullable();
             $table->string('kode_specimen')->nullable();
-            $table->string('no_hp')->nullable();
+            // $table->string('no_hp')->nullable();
             $table->string('umur_ibu')->nullable();
-            $table->string('alamat')->nullable();
+            // $table->string('alamat')->nullable();
             $table->integer('pendidikan')->default(0);
             $table->boolean('gejala_hepatitis')->default(0);
             $table->string('gejala_urine_gelap')->nullable();

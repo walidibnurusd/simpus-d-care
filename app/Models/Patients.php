@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravolt\Indonesia\Models\Village;
 
 class Patients extends Model
 {
@@ -36,5 +37,9 @@ class Patients extends Model
     public function occupations()
     {
         return $this->belongsTo(Occupation::class, 'occupation', 'id');
+    }
+    public function villages()
+    {
+        return $this->belongsTo(Village::class, '	indonesia_village_id', 'id');
     }
 }

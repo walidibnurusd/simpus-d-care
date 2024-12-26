@@ -22,9 +22,9 @@ class TripleEliminasi extends Model
      * @var array
      */
     protected $fillable = [
-        'nama',
-        'tempat_lahir',
-        'tanggal_lahir',
+        'pasien',
+        // 'tempat_lahir',
+        // 'tanggal_lahir',
         'pekerjaan',
         'status_kawin',
         'gravida',
@@ -34,9 +34,9 @@ class TripleEliminasi extends Model
         'taksiran_kehamilan',
         'nama_puskesmas',
         'kode_specimen',
-        'no_hp',
+        // 'no_hp',
         'umur_ibu',
-        'alamat',
+        // 'alamat',
         'pendidikan',
         'gejala_hepatitis',
         'gejala_urine_gelap',
@@ -84,7 +84,7 @@ class TripleEliminasi extends Model
      * @var array
      */
     protected $casts = [
-        'tanggal_lahir' => 'date',
+        // 'tanggal_lahir' => 'date',
         'tanggal_tes' => 'date',
         'kapan_arv' => 'date',
         'kapan_pms' => 'date',
@@ -100,4 +100,8 @@ class TripleEliminasi extends Model
         'arv_check' => 'boolean',
         'gejala_pms' => 'boolean',
     ];
+    public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }

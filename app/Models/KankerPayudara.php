@@ -23,13 +23,13 @@ class KankerPayudara extends Model
      */
     protected $fillable = [
         'nomor_klien',
-        'nama',
+        'pasien',
         'umur',
         'suku_bangsa',
         'agama',
         'berat_badan',
         'tinggi_badan',
-        'alamat',
+        // 'alamat',
         'perkawinan_pasangan',
         'klien',
         'pekerjaan_klien',
@@ -104,5 +104,9 @@ class KankerPayudara extends Model
         'rujukan' => 'array',
    
     ];
+    public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 
 }
