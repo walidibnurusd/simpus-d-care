@@ -22,12 +22,7 @@ class Geriatri extends Model
      * @var array
      */
     protected $fillable = [
-        'nama',
-        'umur',
-        'jenis_kelamin',
-        'alamat',
-        'rt',
-        'rw',
+        'pasien',
         'tempat_waktu',
         'ulang_kata',
         'tes_berdiri',
@@ -42,4 +37,8 @@ class Geriatri extends Model
         'klaster',
         'poli',
     ];
+         public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }

@@ -13,10 +13,6 @@ return new class extends Migration {
         Schema::create('hipertensi', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('pasien');
-            // $table->string('nama');
-            // $table->date('tanggal_lahir');
-            // $table->string('jenis_kelamin');
-            // $table->string('alamat');
             $table->boolean('ortu_hipertensi')->default(false);
             $table->boolean('saudara_hipertensi')->default(false);
             $table->boolean('tubuh_gemuk')->default(false);

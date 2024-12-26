@@ -10,9 +10,14 @@ class Anemia extends Model
     use HasFactory;
     protected $table = 'anemia';
 
-    protected $fillable = ['nama', 'tanggal_lahir', 'jenis_kelamin', 'alamat', 'keluhan_5l', 'mudah_mengantuk', 'sulit_konsentrasi', 'sering_pusing', 'sakit_kepala', 'riwayat_talasemia', 'gaya_hidup', 'riwayat_talasemia', 'gaya_hidup', 'makan_lemak', 'kongjungtiva_pucat', 'pucat', 'kadar_hemoglobin', 'klaster', 'poli'];
+    protected $fillable = ['pasien', 'keluhan_5l', 'mudah_mengantuk', 'sulit_konsentrasi', 'sering_pusing', 'sakit_kepala', 'riwayat_talasemia', 'gaya_hidup', 'riwayat_talasemia', 'gaya_hidup', 'makan_lemak', 'kongjungtiva_pucat', 'pucat', 'kadar_hemoglobin', 'klaster', 'poli'];
     protected $casts = [
         'gaya_hidup' => 'array',
         'kadar_hemoglobin' => 'array',
     ];
+      public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
+
 }

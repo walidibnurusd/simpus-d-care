@@ -12,10 +12,8 @@ return new class extends Migration {
     {
         Schema::create('anemia', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal_lahir');
-            $table->string('jenis_kelamin');
-            $table->string('alamat');
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->boolean('keluhan_5l')->default(false);
             $table->boolean('mudah_mengantuk')->default(false);
             $table->boolean('sulit_konsentrasi')->default(false);

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('tes_daya_dengar', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal');
-            $table->string('jenis_kelamin')->nullable();
+            $table->unsignedBigInteger('pasien');
+            // $table->string('nama');
+            // $table->date('tanggal');
+            // $table->string('jenis_kelamin')->nullable();
             $table->string('usia');
             $table->longText('ekspresif')->nullable();
             $table->longText('reseptif')->nullable();
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->integer('klaster');
             $table->string('poli');
             $table->timestamps();
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
         });
     }
 

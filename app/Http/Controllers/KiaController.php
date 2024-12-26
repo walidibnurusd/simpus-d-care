@@ -24,7 +24,7 @@ class KiaController extends Controller
     public function showLayakHamil()
     {
         $pasien = Patients::all();
-        return view('kia.layak_hamil',compact('pasien'));
+        return view('kia.layak_hamil', compact('pasien'));
     }
     public function storeLayakHamil(Request $request)
     {
@@ -64,7 +64,7 @@ class KiaController extends Controller
     public function showHipertensi()
     {
         $pasien = Patients::all();
-        return view('kia.hipertensi',compact('pasien'));
+        return view('kia.hipertensi', compact('pasien'));
     }
     public function storeHipertensi(Request $request)
     {
@@ -110,16 +110,14 @@ class KiaController extends Controller
     }
     public function showGangguanAutis()
     {
-        return view('kia.gangguan_autis');
+        $pasien = Patients::all();
+        return view('kia.gangguan_autis', compact('pasien'));
     }
     public function storeGangguanAutis(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required',
-            'alamat' => 'nullable|string|max:500',
+            'pasien' => 'required',
             'lihat_objek' => 'nullable|boolean',
             'tuli' => 'nullable|boolean',
             'main_pura_pura' => 'nullable|boolean',
@@ -160,18 +158,15 @@ class KiaController extends Controller
     }
     public function showKecacingan()
     {
-         $pasien = Patients::all();
-        return view('kia.kecacingan',compact('pasien'));
+        $pasien = Patients::all();
+        return view('kia.kecacingan', compact('pasien'));
     }
 
     public function storeKecacingan(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string|max:500',
-            'jenis_kelamin' => 'required|string',
+            'pasien' => 'required',
             'sakit_perut' => 'required|boolean',
             'diare' => 'required|boolean',
             'bab_darah' => 'required|boolean',
@@ -204,16 +199,14 @@ class KiaController extends Controller
 
     public function showHiv()
     {
-        return view('kia.hiv');
+        $pasien = Patients::all();
+        return view('kia.hiv', compact('pasien'));
     }
     public function storeHiv(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
             'tes_hiv' => 'required|boolean',
             'tanggal_tes_terakhir' => '',
             'penurunan_berat' => 'required|boolean',
@@ -250,16 +243,14 @@ class KiaController extends Controller
 
     public function showAnemia()
     {
-        return view('kia.anemia');
+        $pasien = Patients::all();
+        return view('kia.anemia', compact('pasien'));
     }
     public function storeAnemia(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string', // Assuming "L" for male, "P" for female
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
             'keluhan_5l' => 'required|boolean',
             'mudah_mengantuk' => 'required|boolean',
             'sulit_konsentrasi' => 'required|boolean',
@@ -298,15 +289,14 @@ class KiaController extends Controller
     }
     public function showTalasemia()
     {
-        return view('kia.talasemia');
+        $pasien = Patients::all();
+        return view('kia.talasemia', compact('pasien'));
     }
     public function storeTalasemia(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
             'terima_darah' => 'required|boolean',
             'saudara_talasemia' => 'required|boolean',
             'keluarga_transfusi' => 'required|boolean',
@@ -317,7 +307,7 @@ class KiaController extends Controller
             'perut_buncit' => 'required|boolean',
             'gizi_buruk' => 'required|boolean',
             'tubuh_pendek' => 'required|boolean',
-            'hipergimentasi_kulit' => 'required|boolean',
+            'hiperpigmentasi_kulit' => 'required|boolean',
         ]);
 
         // Check if validation fails
@@ -340,17 +330,15 @@ class KiaController extends Controller
     }
     public function showHepatitis()
     {
-        return view('kia.hepatitis');
+        $pasien = Patients::all();
+        return view('kia.hepatitis', compact('pasien'));
     }
     public function storeHepatitis(Request $request)
     {
         // Define validation rules
         // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string|max:500',
-            'jenis_kelamin' => 'required|string',
+            'pasien' => 'required',
             'sudah_periksa_hepatitis' => 'required|boolean',
             'keluhan' => 'required|array',
             'demam' => 'required|boolean',
@@ -385,17 +373,14 @@ class KiaController extends Controller
 
     public function showKekerasanAnak()
     {
-        return view('kia.kekerasan_anak');
+        $pasien = Patients::all();
+        return view('kia.kekerasan_anak', compact('pasien'));
     }
     public function storeKekerasanAnak(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tempat_lahir' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string|max:500',
-            'jenis_kelamin' => 'required|string',
+            'pasien' => 'required',
             'diperoleh_dari' => 'required|string|max:255',
             'hubungan_pasien' => 'required',
             'kekerasan' => 'required',
@@ -465,19 +450,14 @@ class KiaController extends Controller
 
     public function showDiabetesMellitus()
     {
-        return view('kia.diabetes_mellitus');
+        $pasien = Patients::all();
+        return view('kia.diabetes_mellitus', compact('pasien'));
     }
     public function storeDiabetesMellitus(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'tempat_lahir' => 'required|string|max:255',
-            'alamat' => 'required|string|max:500',
-            'penyakit_dulu' => 'nullable|string|max:500',
-            'penyakit_sekarang' => 'nullable|string|max:500',
-            'penyakit_keluarga' => 'nullable|string|max:500',
+            'pasien' => 'required',
             'tinggi_badan' => 'required|numeric',
             'berat_badan' => 'required|numeric',
             'lingkar_perut' => 'required|numeric',
@@ -505,29 +485,29 @@ class KiaController extends Controller
         return redirect()->route('diabetes.mellitus.view')->with('success', 'Data Diabetes Mellitus created successfully!');
     }
     public function showTbc()
-    {
-        return view('kia.tbc');
+    { $pasien = Patients::all();
+        return view('kia.tbc',compact('pasien'));
     }
     public function storeTbc(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
+            'pasien' => 'required',
             'tempat_skrining' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat_domisili' => 'required|string|max:500',
-            'alamat_ktp' => 'nullable|string|max:500',
-            'nik' => 'required',
-            'pekerjaan' => 'nullable|string|max:255',
-            'imt' => 'nullable',
+            // 'tanggal_lahir' => 'required|date',
+            // 'alamat_domisili' => 'required|string|max:500',
+            // 'alamat_ktp' => 'nullable|string|max:500',
+            // 'nik' => 'required',
+            // 'pekerjaan' => 'nullable|string|max:255',
+            // 'imt' => ''??0,
             'usia' => 'nullable',
-            'jenis_kelamin' => 'required|string',
-            'no_hp' => 'required',
+            // 'jenis_kelamin' => 'required|string',
+            // 'no_hp' => 'required',
             'tinggi_badan' => 'required|numeric',
             'berat_badan' => 'required|numeric',
             'status_gizi' => 'nullable|string|max:255',
-            'kontak_dengan_pasien' => 'required|in:1,2,3',
-            'kontak_tbc' => 'required',
+            'kontak_dengan_pasien' => '',
+            'kontak_tbc' => '',
             'jenis_tbc' => 'nullable|string|max:255',
             'pernah_berobat_tbc' => 'required',
             'kapan' => 'nullable|date',
@@ -571,17 +551,14 @@ class KiaController extends Controller
     }
     public function showTripleEliminasi()
     {
-        return view('kia.triple_eliminasi');
+        $pasien = Patients::all();
+        return view('kia.triple_eliminasi', compact('pasien'));
     }
     public function storeTripleEliminasi(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tempat_lahir' => 'nullable|string|max:255',
-            'tanggal_lahir' => 'nullable|date',
-            'pekerjaan' => 'nullable|string|max:255',
-            'status_kawin' => 'nullable|string|max:255',
+            'pasien' => 'required',
             'gravida' => 'nullable|integer',
             'partus' => 'nullable|integer',
             'abortus' => 'nullable|integer',

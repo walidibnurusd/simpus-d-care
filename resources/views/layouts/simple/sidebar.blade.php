@@ -87,7 +87,7 @@
                                 <li><a href="{{ route('anemia.admin') }}">Anemia</a></li>
                                 <li><a href="{{ route('hiv.admin') }}">HIV & IMS</a></li>
                                 <li><a href="{{ route('hepatitis.admin') }}">Hepatitis</a></li>
-                                <li><a href="{{ route('talasemia.admin') }}">Talamsemia</a></li>
+                                <li><a href="{{ route('talasemia.admin') }}">Talasemia</a></li>
                                 <li><a href="{{ route('kecacingan.admin') }}">Kecacingan</a></li>
                                 <li><a href="{{ route('diabetes.mellitus.admin') }}">Diabetes Mellitus</a></li>
                                 <li><a href="{{ route('tbc.admin') }}">TBC</a></li>

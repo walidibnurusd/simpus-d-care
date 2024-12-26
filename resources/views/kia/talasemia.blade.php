@@ -39,15 +39,27 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Nama</label>
-                        <input type="text" class="form-control" name="nama" placeholder="Masukkan nama lengkap"
-                            value="{{ isset($talasemia) ? $talasemia->nama : '' }}">
+                        <label>Pasien</label>
+                        <select class="form-control form-select select2" id="pasien" name="pasien">
+                            <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
+                            @foreach ($pasien as $item)
+                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
+                                    data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
+                                    data-alamat="{{ $item->address }}" data-jenis_kelamin="{{ $item->genderName->name }}"
+                                    {{ old('pasien', $talasemia->pasien ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }} - {{ $item->nik }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('pasien')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir"
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
                             value="{{ isset($talasemia) ? $talasemia->tanggal_lahir : '' }}">
                     </div>
                 </div>
@@ -58,7 +70,7 @@
                     <div class="form-group">
                         <label>Alamat Lengkap</label>
                         <input type="text" class="form-control" name="alamat" placeholder="Masukkan alamat lengkap"
-                            value="{{ isset($talasemia) ? $talasemia->alamat : '' }}">
+                            id="alamat" value="{{ isset($talasemia) ? $talasemia->alamat : '' }}">
                     </div>
                 </div>
             </div>
@@ -292,4 +304,27 @@
 
 
     </form>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            $('.select2').select2({
+                placeholder: "Pilih pasien",
+                allowClear: true
+            });
+
+            $('#pasien').on('change', function() {
+                var selectedOption = $(this).find(':selected');
+
+                var dob = selectedOption.data('dob');
+                var alamat = selectedOption.data('alamat');
+
+
+                $('#tanggal_lahir').val(dob);
+                $('#alamat').val(alamat);
+            });
+            $('#pasien').trigger('change');
+        });
+    </script>
 @endsection

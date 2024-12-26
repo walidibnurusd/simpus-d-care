@@ -14,9 +14,9 @@ class TesDayaDengar extends Model
 
     // The attributes that are mass assignable
     protected $fillable = [
-        'nama', 
-        'tanggal', 
-        'jenis_kelamin', 
+        'pasien', 
+        // 'tanggal', 
+        // 'jenis_kelamin', 
         'usia', 
         'ekspresif', 
         'reseptif', 
@@ -37,4 +37,8 @@ class TesDayaDengar extends Model
 
     // If you want to treat 'tanggal' as a Carbon instance
     protected $dates = ['tanggal'];
+    public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }

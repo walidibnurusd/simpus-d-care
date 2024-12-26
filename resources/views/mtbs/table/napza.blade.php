@@ -69,7 +69,7 @@
                                     @foreach ($napza as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->nama_pasien }}</td>
+                                            <td>{{ $item->listPasien->name }}</td>
 
                                             <td>{{ $item->nama_dokter }}</td>
                                             <td>{{ $item->klinik }}</td>

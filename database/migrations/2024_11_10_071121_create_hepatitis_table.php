@@ -12,10 +12,8 @@ return new class extends Migration {
     {
         Schema::create('hepatitis', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal_lahir');
-            $table->string('alamat');
-            $table->string('jenis_kelamin');
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->boolean('sudah_periksa_hepatitis')->default(false);
             $table->longText('keluhan')->nullable();
             $table->boolean('demam')->default(false);

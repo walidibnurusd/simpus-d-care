@@ -6,7 +6,9 @@ use App\Models\Geriatri;
 use App\Models\KankerKolorektal;
 use App\Models\KankerParu;
 use App\Models\KankerPayudara;
+use App\Models\Patients;
 use App\Models\Puma;
+use App\Models\Patients;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,16 +16,17 @@ class LansiaController extends Controller
 {
     public function showPuma()
     {
-        return view('lansia.puma');
+        $pasien = Patients::all();
+        return view('lansia.puma',compact('pasien'));
     }
     public function storePuma(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
+            'pasien' => 'required',
             'puskesmas' => 'required|string|max:255',
             'petugas' => 'required|string|max:255',
-            'jenis_kelamin' => 'required',
+            // 'jenis_kelamin' => 'required',
             'usia' => 'required|integer|min:0',
             'merokok' => 'required|boolean',
             'jumlah_rokok' => 'nullable|integer|min:0',
@@ -37,37 +40,33 @@ class LansiaController extends Controller
 
         // Periksa apakah validasi gagal
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Terdapat kesalahan validasi.')
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
         }
 
         // Menyimpan data ke dalam database
-        Puma::create(array_merge(
-            $validator->validated(), // Data hasil validasi
-            [
-                'klaster' => 3, // Nilai default untuk klaster
-                'poli' => 'lansia', // Nilai default untuk poli
-            ]
-        ));
+        Puma::create(
+            array_merge(
+                $validator->validated(), // Data hasil validasi
+                [
+                    'klaster' => 3, // Nilai default untuk klaster
+                    'poli' => 'lansia', // Nilai default untuk poli
+                ],
+            ),
+        );
 
         // Redirect dengan pesan sukses
-        return redirect()->route('puma.lansia.view')
-            ->with('success', 'Data Puma berhasil disimpan!');
+        return redirect()->route('puma.lansia.view')->with('success', 'Data Puma berhasil disimpan!');
     }
     public function showKankerParu()
     {
-        return view('lansia.kanker_paru');
+        $pasien = Patients::all();
+        return view('lansia.kanker_paru', compact('pasien'));
     }
     public function storeKankerParu(Request $request)
     {
         // Validate the input data
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'jenis_kelamin' => 'required|string|max:50',
-            'usia' => 'required|integer|min:0',
+            'pasien' => 'required|string|max:255',
             'kanker' => 'nullable',
             'keluarga_kanker' => 'nullable',
             'merokok' => 'nullable',
@@ -75,30 +74,27 @@ class LansiaController extends Controller
             'tempat_tinggal' => 'nullable',
             'lingkungan_rumah' => 'nullable',
             'paru_kronik' => 'nullable',
-         
         ]);
 
         // Check if validation failed
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'There were validation errors.')
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
         }
 
         // Store the validated data into the database
-        KankerParu::create(array_merge(
-            $validator->validated(), // Validated data
-            [
-                // Optionally add default values if required
-                'klaster' => 3, // Already passed in request
-                'poli' => 'lansia', // Already passed in request
-            ]
-        ));
+        KankerParu::create(
+            array_merge(
+                $validator->validated(), // Validated data
+                [
+                    // Optionally add default values if required
+                    'klaster' => 3, // Already passed in request
+                    'poli' => 'lansia', // Already passed in request
+                ],
+            ),
+        );
 
         // Redirect with success message
-        return redirect()->route('kankerParu.lansia.view')
-            ->with('success', 'Data Kanker Paru has been successfully saved!');
+        return redirect()->route('kankerParu.lansia.view')->with('success', 'Data Kanker Paru has been successfully saved!');
     }
     public function showKankerKolorektal()
     {
@@ -123,24 +119,22 @@ class LansiaController extends Controller
 
         // Periksa apakah validasi gagal
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Terdapat kesalahan validasi.')
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
         }
 
         // Menyimpan data ke dalam database
-        KankerKolorektal::create(array_merge(
-            $validator->validated(), // Data hasil validasi
-            [
-                'klaster' => 3, // Nilai default untuk klaster
-                'poli' => 'lansia', // Nilai default untuk poli
-            ]
-        ));
+        KankerKolorektal::create(
+            array_merge(
+                $validator->validated(), // Data hasil validasi
+                [
+                    'klaster' => 3, // Nilai default untuk klaster
+                    'poli' => 'lansia', // Nilai default untuk poli
+                ],
+            ),
+        );
 
         // Redirect dengan pesan sukses
-        return redirect()->route('kankerKolorektal.lansia.view')
-            ->with('success', 'Data Kanker Kolorektal berhasil disimpan!');
+        return redirect()->route('kankerKolorektal.lansia.view')->with('success', 'Data Kanker Kolorektal berhasil disimpan!');
     }
     public function showKankerPayudara()
     {
@@ -220,10 +214,7 @@ class LansiaController extends Controller
 
         // Periksa apakah validasi gagal
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Terdapat kesalahan validasi.')
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
         }
 
         // Tambahkan nilai default untuk ukuran_benjolan jika kosong
@@ -231,32 +222,28 @@ class LansiaController extends Controller
         $validatedData['ukuran_benjolan'] = $validatedData['ukuran_benjolan'] ?? 0;
 
         // Simpan data ke database
-        KankerPayudara::create(array_merge(
-            $validatedData,
-            [
+        KankerPayudara::create(
+            array_merge($validatedData, [
                 'klaster' => 3, // Nilai default klaster
                 'poli' => 'lansia', // Nilai default poli
-            ]
-        ));
+            ]),
+        );
 
         // Redirect dengan pesan sukses
-        return redirect()->route('kankerPayudara.lansia.view') // Ganti dengan rute yang sesuai
+        return redirect()
+            ->route('kankerPayudara.lansia.view') // Ganti dengan rute yang sesuai
             ->with('success', 'Data Kanker Payudara berhasil disimpan!');
     }
     public function showGeriatri()
     {
-        return view('lansia.geriatri');
+        $pasien = Patients::all();
+        return view('lansia.geriatri', compact('pasien'));
     }
     public function storeGeriatri(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'umur' => 'required|integer|min:0',
-            'jenis_kelamin' => 'nullable|string|max:50',
-            'alamat' => 'nullable|string|max:255',
-            'rt' => 'nullable|string|max:10',
-            'rw' => 'nullable|string|max:10',
+            'pasien' => 'required',
             'tempat_waktu' => 'nullable|integer|min:0',
             'ulang_kata' => 'nullable|integer|min:0',
             'tes_berdiri' => 'nullable|integer|min:0',
@@ -272,26 +259,20 @@ class LansiaController extends Controller
 
         // Periksa apakah validasi gagal
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Terdapat kesalahan validasi.')
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
         }
 
         // Menyimpan data ke dalam database
-        Geriatri::create(array_merge(
-            $validator->validated(),
-            [
+        Geriatri::create(
+            array_merge($validator->validated(), [
                 'klaster' => 3, // Nilai default untuk klaster
                 'poli' => 'lansia', // Nilai default untuk poli
-            ]
-        ));
+            ]),
+        );
 
         // Redirect dengan pesan sukses
-        return redirect()->route('geriatri.lansia.view') // Ganti sesuai rute Anda
+        return redirect()
+            ->route('geriatri.lansia.view') // Ganti sesuai rute Anda
             ->with('success', 'Data Geriatri berhasil disimpan!');
     }
-
-
-
 }

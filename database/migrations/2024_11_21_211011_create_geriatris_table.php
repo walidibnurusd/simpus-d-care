@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,12 +12,8 @@ return new class extends Migration
     {
         Schema::create('geriatri', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->integer('umur');
-            $table->string('jenis_kelamin')->nullable();
-            $table->string('alamat')->nullable();
-            $table->string('rt')->nullable();
-            $table->string('rw')->nullable();
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->integer('tempat_waktu')->default(0);
             $table->integer('ulang_kata')->default(0);
             $table->integer('tes_berdiri')->default(0);
@@ -30,9 +25,8 @@ return new class extends Migration
             $table->integer('tes_bisik')->default(0);
             $table->integer('perasaan_sedih')->default(0);
             $table->integer('kesenangan')->default(0);
-          
             $table->integer('klaster');
-            $table->string('poli'); 
+            $table->string('poli');
             $table->timestamps();
         });
     }

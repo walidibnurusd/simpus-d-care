@@ -10,7 +10,7 @@ class KekerasanAnak extends Model
     use HasFactory;
     protected $table = 'kekerasan_anak';
 
-    protected $fillable = ['nama', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'jenis_kelamin', 'diperoleh_dari', 'hubungan_pasien', 'kekerasan', 'tempat', 'dampak_pasien', 'dampak_pada_anak', 'penelantaran_fisik', 'tanda_kekerasan_check','tanda_kekerasan', 'kekerasan_seksual','derajat_luka_bakar' ,'dampak_kekerasan', 'klaster', 'poli'];
+    protected $fillable = ['pasien', 'diperoleh_dari', 'hubungan_pasien', 'kekerasan', 'tempat', 'dampak_pasien', 'dampak_pada_anak', 'penelantaran_fisik', 'tanda_kekerasan_check','tanda_kekerasan', 'kekerasan_seksual','derajat_luka_bakar' ,'dampak_kekerasan', 'klaster', 'poli'];
     protected $casts = [
         'kekerasan' => 'array',
         'tempat' => 'array',
@@ -22,4 +22,8 @@ class KekerasanAnak extends Model
         'kekerasan_seksual' => 'array',
         'dampak_kekerasan' => 'array',
     ];
+     public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }

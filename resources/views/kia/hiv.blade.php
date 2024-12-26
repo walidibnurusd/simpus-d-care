@@ -38,15 +38,28 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Nama</label>
-                        <input type="text" class="form-control" name="nama"
-                            value="{{ old('nama', $hiv->nama ?? '') }}" placeholder="Masukkan nama lengkap">
+                        <label>Pasien</label>
+                        <select class="form-control form-select select2" id="pasien" name="pasien">
+                            <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
+                            @foreach ($pasien as $item)
+                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
+                                    data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
+                                    data-alamat="{{ $item->address }}" data-jenis_kelamin="{{ $item->genderName->name }}"
+                                    data-pob="{{ $item->place_birth }}"
+                                    {{ old('pasien', $hiv->pasien ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }} - {{ $item->nik }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('pasien')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir"
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
                             value="{{ old('tanggal_lahir', $hiv->tanggal_lahir ?? '') }}">
                     </div>
                 </div>
@@ -56,7 +69,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Alamat Lengkap</label>
-                        <input type="text" class="form-control" name="alamat"
+                        <input type="text" class="form-control" name="alamat" id="alamat"
                             value="{{ old('alamat', $hiv->alamat ?? '') }}" placeholder="Masukkan alamat lengkap">
                     </div>
                 </div>
@@ -65,14 +78,14 @@
                         <label>Jenis Kelamin</label>
                         <div class="d-flex">
                             <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki"
-                                    id="laki-laki"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin_kecacingan"
+                                    value="laki-laki" id="jk_laki"
                                     {{ old('jenis_kelamin', $hiv->jenis_kelamin ?? '') == 'laki-laki' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan"
-                                    id="perempuan"
+                                    id="jk_perempuan"
                                     {{ old('jenis_kelamin', $hiv->jenis_kelamin ?? '') == 'perempuan' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perempuan">Perempuan</label>
                             </div>
@@ -272,11 +285,13 @@
                         diet?</label>
                     <div class="d-flex">
                         <div class="form-check mr-3">
-                            <input type="radio" class="form-check-input" name="penurunan_berat" value="1">
+                            <input type="radio" class="form-check-input" name="penurunan_berat" value="1"
+                                {{ isset($hiv->penurunan_berat) && $hiv->penurunan_berat == 1 ? 'checked' : '' }}>
                             <label class="form-check-label">Ya</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="penurunan_berat" value="0">
+                            <input type="radio" class="form-check-input" name="penurunan_berat" value="0"
+                                {{ isset($hiv->penurunan_berat) && $hiv->penurunan_berat == 0 ? 'checked' : '' }}>
                             <label class="form-check-label">Tidak</label>
                         </div>
                     </div>
@@ -286,12 +301,14 @@
                     <div class="d-flex">
                         <div class="form-check mr-3">
                             <input type="radio" class="form-check-input" name="jumlah_berat_badan_turun"
-                                value="1">
+                                value="1"
+                                {{ isset($hiv->jumlah_berat_badan_turun) && $hiv->jumlah_berat_badan_turun == 1 ? 'checked' : '' }}>
                             <label class="form-check-label">Ya</label>
                         </div>
                         <div class="form-check">
                             <input type="radio" class="form-check-input" name="jumlah_berat_badan_turun"
-                                value="0">
+                                value="0"
+                                {{ isset($hiv->jumlah_berat_badan_turun) && $hiv->jumlah_berat_badan_turun == 0 ? 'checked' : '' }}>
                             <label class="form-check-label">Tidak</label>
                         </div>
                     </div>
@@ -301,11 +318,13 @@
                         herpes?</label>
                     <div class="d-flex">
                         <div class="form-check mr-3">
-                            <input type="radio" class="form-check-input" name="penyakit_kulit" value="1">
+                            <input type="radio" class="form-check-input" name="penyakit_kulit" value="1"
+                                {{ isset($hiv->penyakit_kulit) && $hiv->penyakit_kulit == 1 ? 'checked' : '' }}>
                             <label class="form-check-label">Ya</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="penyakit_kulit" value="0">
+                            <input type="radio" class="form-check-input" name="penyakit_kulit" value="0"
+                                {{ isset($hiv->penyakit_kulit) && $hiv->penyakit_kulit == 0 ? 'checked' : '' }}>
                             <label class="form-check-label">Tidak</label>
                         </div>
                     </div>
@@ -314,11 +333,13 @@
                     <label>5. Apakah anda mengalami gejala ISPA (flu, sinusitis) yang berulang?</label>
                     <div class="d-flex">
                         <div class="form-check mr-3">
-                            <input type="radio" class="form-check-input" name="gejala_ispa" value="1">
+                            <input type="radio" class="form-check-input" name="gejala_ispa" value="1"
+                                {{ isset($hiv->gejala_ispa) && $hiv->gejala_ispa == 1 ? 'checked' : '' }}>
                             <label class="form-check-label">Ya</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="gejala_ispa" value="0">
+                            <input type="radio" class="form-check-input" name="gejala_ispa" value="0"
+                                {{ isset($hiv->gejala_ispa) && $hiv->gejala_ispa == 0 ? 'checked' : '' }}>
                             <label class="form-check-label">Tidak</label>
                         </div>
                     </div>
@@ -328,11 +349,13 @@
                         bulan?</label>
                     <div class="d-flex">
                         <div class="form-check mr-3">
-                            <input type="radio" class="form-check-input" name="gejala_sariawan" value="1">
+                            <input type="radio" class="form-check-input" name="gejala_sariawan" value="1"
+                                {{ isset($hiv->gejala_sariawan) && $hiv->gejala_sariawan == 1 ? 'checked' : '' }}>
                             <label class="form-check-label">Ya</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="gejala_sariawan" value="0">
+                            <input type="radio" class="form-check-input" name="gejala_sariawan" value="0"
+                                {{ isset($hiv->gejala_sariawan) && $hiv->gejala_sariawan == 0 ? 'checked' : '' }}>
                             <label class="form-check-label">Tidak</label>
                         </div>
                     </div>
@@ -342,11 +365,13 @@
                         terakhir?</label>
                     <div class="d-flex">
                         <div class="form-check mr-3">
-                            <input type="radio" class="form-check-input" name="riwayat_sesak" value="1">
+                            <input type="radio" class="form-check-input" name="riwayat_sesak" value="1"
+                                {{ isset($hiv->riwayat_sesak) && $hiv->riwayat_sesak == 1 ? 'checked' : '' }}>
                             <label class="form-check-label">Ya</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="riwayat_sesak" value="0">
+                            <input type="radio" class="form-check-input" name="riwayat_sesak" value="0"
+                                {{ isset($hiv->riwayat_sesak) && $hiv->riwayat_sesak == 0 ? 'checked' : '' }}>
                             <label class="form-check-label">Tidak</label>
                         </div>
                     </div>
@@ -355,11 +380,13 @@
                     <label>8. Apakah anda memiliki riwayat Hepatitis B / C?</label>
                     <div class="d-flex">
                         <div class="form-check mr-3">
-                            <input type="radio" class="form-check-input" name="riwayat_hepatitis" value="1">
+                            <input type="radio" class="form-check-input" name="riwayat_hepatitis" value="1"
+                                {{ isset($hiv->riwayat_hepatitis) && $hiv->riwayat_hepatitis == 1 ? 'checked' : '' }}>
                             <label class="form-check-label">Ya</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="riwayat_hepatitis" value="0">
+                            <input type="radio" class="form-check-input" name="riwayat_hepatitis" value="0"
+                                {{ isset($hiv->riwayat_hepatitis) && $hiv->riwayat_hepatitis == 0 ? 'checked' : '' }}>
                             <label class="form-check-label">Tidak</label>
                         </div>
                     </div>
@@ -370,11 +397,13 @@
                         sesama jenis?</label>
                     <div class="d-flex">
                         <div class="form-check mr-3">
-                            <input type="radio" class="form-check-input" name="riwayat_seks_bebas" value="1">
+                            <input type="radio" class="form-check-input" name="riwayat_seks_bebas" value="1"
+                                {{ isset($hiv->riwayat_seks_bebas) && $hiv->riwayat_seks_bebas == 1 ? 'checked' : '' }}>
                             <label class="form-check-label">Ya</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="riwayat_seks_bebas" value="0">
+                            <input type="radio" class="form-check-input" name="riwayat_seks_bebas" value="0"
+                                {{ isset($hiv->riwayat_seks_bebas) && $hiv->riwayat_seks_bebas == 0 ? 'checked' : '' }}>
                             <label class="form-check-label">Tidak</label>
                         </div>
                     </div>
@@ -383,32 +412,20 @@
                     <label>10. Apakah ada riwayat penggunaan obat-obat terlarang (narkoba suntik)?</label>
                     <div class="d-flex">
                         <div class="form-check mr-3">
-                            <input type="radio" class="form-check-input" name="riwayat_narkoba" value="1">
+                            <input type="radio" class="form-check-input" name="riwayat_narkoba" value="1"
+                                {{ isset($hiv->riwayat_narkoba) && $hiv->riwayat_narkoba == 1 ? 'checked' : '' }}>
                             <label class="form-check-label">Ya</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="riwayat_narkoba" value="0">
+                            <input type="radio" class="form-check-input" name="riwayat_narkoba" value="0"
+                                {{ isset($hiv->riwayat_narkoba) && $hiv->riwayat_narkoba == 0 ? 'checked' : '' }}>
                             <label class="form-check-label">Tidak</label>
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>11. Apakah anda memiliki riwayat penyakit menular seksual yang berulang?</label>
-                    <div class="d-flex">
-                        <div class="form-check mr-3">
-                            <input type="radio" class="form-check-input" name="riwayat_penyakit_menular"
-                                value="1">
-                            <label class="form-check-label">Ya</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="riwayat_penyakit_menular"
-                                value="0">
-                            <label class="form-check-label">Tidak</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>12. Apakah anda memiliki riwayat penyakit menular seksual yang berulang?</label>
                     <div class="d-flex">
                         <div class="form-check mr-3">
                             <input type="radio" class="form-check-input" name="riwayat_penyakit_menular"
@@ -430,10 +447,12 @@
 
         <div class="text-right mt-4">
             @if (isset($hiv))
-            <a href="{{ route('hiv.admin') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-        @else
-            <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-        @endif
+                <a href="{{ route('hiv.admin') }}" type="button" class="btn btn-secondary mr-2"
+                    style="font-size: 20px">Kembali</a>
+            @else
+                <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
+                    style="font-size: 20px">Kembali</a>
+            @endif
             <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
         </div>
     </form>
@@ -449,5 +468,39 @@
             document.getElementById('last_test_date').style.display = tesHivYa ? 'block' : 'none';
             document.getElementById('symptom_questions').style.display = tesHivTidak ? 'block' : 'none';
         }
+        document.addEventListener('DOMContentLoaded', toggleFollowUpQuestions);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            $('.select2').select2({
+                placeholder: "Pilih pasien",
+                allowClear: true
+            });
+
+            $('#pasien').on('change', function() {
+                var selectedOption = $(this).find(':selected');
+
+                var dob = selectedOption.data('dob');
+                var alamat = selectedOption.data('alamat');
+                var jk = selectedOption.data('jenis_kelamin');
+                var pob = selectedOption.data('pob');
+
+
+
+                $('#tanggal_lahir').val(dob);
+                $('#alamat').val(alamat);
+                $('#tempat_lahir').val(pob);
+                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
+                if (jk === 'Laki-Laki') {
+                    $('#jk_laki').prop('checked', true);
+                } else if (jk === 'Perempuan') {
+                    $('#jk_perempuan').prop('checked', true);
+                }
+            });
+            $('#pasien').trigger('change');
+        });
     </script>
 @endsection
