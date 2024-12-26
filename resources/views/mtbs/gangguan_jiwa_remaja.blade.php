@@ -12,7 +12,23 @@
         </div>
     @endif
 
-
+    <style>
+        .select2-container--default .select2-selection--single {
+            height: calc(1.5em + .75rem + 2px);
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            padding: .375rem .75rem;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: calc(1.5em + .75rem);
+        }
+        
+        .select2-container .select2-selection--single {
+            display: flex;
+            align-items: center;
+        }
+    </style>
     <!-- Validation Errors Alert -->
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -40,15 +56,29 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Nama</label>
-                        <input type="text" class="form-control" name="nama" placeholder="Masukkan nama lengkap"
-                            value="{{ isset($gangguanJiwaRemaja) ? $gangguanJiwaRemaja->nama : old('nama') }}">
+                        <label>Pasien</label>
+                        <select class="form-control form-select select2" id="pasien" name="pasien">
+                            <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
+                            @foreach ($pasien as $item)
+                                <option 
+                                    value="{{ $item->id }}" 
+                                    data-no_hp="{{ $item->phone }}" 
+                                    data-nik="{{ $item->nik }}" 
+                                    data-dob="{{ $item->dob }}"
+                                    data-jenis_kelamin="{{ $item->genderName->name }}"
+                                    data-alamat="{{ $item->address }}"
+                                    {{ old('pasien', $gangguanJiwaRemaja->pasien ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }} - {{ $item->nik }}
+                                </option>   
+                            @endforeach
+                        </select>
+                        @error('pasien') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir"
+                        <input type="date" readonly class="form-control" name="tanggal_lahir" id="tanggal_lahir"
                             value="{{ isset($gangguanJiwaRemaja) ? $gangguanJiwaRemaja->tanggal_lahir : old('tanggal_lahir') }}">
                     </div>
                 </div>
@@ -60,13 +90,13 @@
                         <label>Jenis Kelamin</label>
                         <div class="d-flex">
                             <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki" id="jk_laki"
                                     id="laki-laki"
                                     {{ isset($gangguanJiwaRemaja) && $gangguanJiwaRemaja->jenis_kelamin == 'laki-laki' ? 'checked' : (old('jenis_kelamin') == 'laki-laki' ? 'checked' : '') }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan" id="jk_perempuan"
                                     id="perempuan"
                                     {{ isset($gangguanJiwaRemaja) && $gangguanJiwaRemaja->jenis_kelamin == 'perempuan' ? 'checked' : (old('jenis_kelamin') == 'perempuan' ? 'checked' : '') }}>
                                 <label class="form-check-label" for="perempuan">Perempuan</label>
@@ -789,5 +819,41 @@
             input.addEventListener('change', calculateTotalScore);
         });
     </script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Inisialisasi Select2
+        $('.select2').select2({
+            placeholder: "Pilih pasien",
+            allowClear: true    
+        });
+    
+        // Event listener saat pasien dipilih
+        $('#pasien').on('change', function() {
+            var selectedOption = $(this).find(':selected');
+    
+            // Ambil data dari atribut data-*
+            var no_hp = selectedOption.data('no_hp');
+            var nik = selectedOption.data('nik');
+            var dob = selectedOption.data('dob');
+            var alamat = selectedOption.data('alamat');
+            var jk = selectedOption.data('jenis_kelamin');
+            console.log(jk);
+            
+            // Isi input dengan data yang diambil
+            $('#no_hp').val(no_hp);
+            $('#nik').val(nik);
+            $('#tanggal_lahir').val(dob);
+            $('#alamat').val(alamat);
+            $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
+            if (jk === 'Laki-Laki') {
+                $('#jk_laki').prop('checked', true);
+            } else if (jk === 'Perempuan') {
+                $('#jk_perempuan').prop('checked', true);
+            }
+                });
+        $('#pasien').trigger('change');
+    });
+    
+    </script>
 @endsection

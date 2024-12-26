@@ -32,7 +32,6 @@
             align-items: center;
         }
     </style>
-
     <!-- Validation Errors Alert -->
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">

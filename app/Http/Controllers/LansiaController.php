@@ -6,6 +6,7 @@ use App\Models\Geriatri;
 use App\Models\KankerKolorektal;
 use App\Models\KankerParu;
 use App\Models\KankerPayudara;
+use App\Models\Patients;
 use App\Models\Puma;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -14,16 +15,17 @@ class LansiaController extends Controller
 {
     public function showPuma()
     {
-        return view('lansia.puma');
+        $pasien = Patients::all();
+        return view('lansia.puma',compact('pasien'));
     }
     public function storePuma(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
+            'pasien' => 'required',
             'puskesmas' => 'required|string|max:255',
             'petugas' => 'required|string|max:255',
-            'jenis_kelamin' => 'required',
+            // 'jenis_kelamin' => 'required',
             'usia' => 'required|integer|min:0',
             'merokok' => 'required|boolean',
             'jumlah_rokok' => 'nullable|integer|min:0',

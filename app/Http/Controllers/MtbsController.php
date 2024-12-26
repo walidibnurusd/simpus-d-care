@@ -7,6 +7,7 @@ use App\Models\GangguanJiwaRemaja;
 use App\Models\Merokok;
 use App\Models\Napza;
 use App\Models\Obesitas;
+use App\Models\Patients;
 use App\Models\TesDayaDengar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,16 +16,17 @@ class MtbsController extends Controller
 {
     public function showSdqAnak()
     {
-        return view('mtbs.gangguan_jiwa_anak');
+        $pasien = Patients::all();
+        return view('mtbs.gangguan_jiwa_anak',compact('pasien'));
     }
     public function storeSdqAnak(Request $request)
     {
         // Definisikan aturan validasi
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
+            // 'tanggal_lahir' => 'required|date',
+            // 'jenis_kelamin' => 'required|string|max:10',
+            // 'alamat' => 'required|string|max:500',
             'berusaha_baik' => 'nullable',
             'gelisah' => 'nullable',
             'sakit' => 'nullable',
@@ -75,16 +77,17 @@ class MtbsController extends Controller
     }
     public function showSdqRemaja()
     {
-        return view('mtbs.gangguan_jiwa_remaja');
+        $pasien = Patients::all();
+        return view('mtbs.gangguan_jiwa_remaja',compact('pasien'));
     }
     public function storeSdqRemaja(Request $request)
     {
         // Definisikan aturan validasi
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
+            // 'tanggal_lahir' => 'required|date',
+            // 'jenis_kelamin' => 'required|string|max:10',
+            // 'alamat' => 'required|string|max:500',
             'peduli_perasaan' => 'nullable',
             'gelisah' => 'nullable',
             'sakit' => 'nullable',
@@ -173,18 +176,18 @@ class MtbsController extends Controller
             ->with('success', 'Data Obesitas berhasil disimpan!');
     }
     public function showNapza()
-    {
-        return view('mtbs.napza');
+    {  $pasien = Patients::all();
+        return view('mtbs.napza',compact('pasien'));
     }
     public function storeNapza(Request $request)
 {
     // Validasi input
     $validator = Validator::make($request->all(), [
-        'nama_pasien' => 'required|string|max:255',
+        'pasien' => 'required',
         'nama_dokter' => 'required|string|max:255',
         'klinik' => 'nullable|string|max:255',
         'pertanyaan1' => 'nullable',
-        'nama_zat_lain' => 'nullable',
+        // 'nama_zat_lain' => 'nullable',
         'pertanyaan2' => 'nullable',
         'pertanyaan3' => 'nullable',
         'pertanyaan4' => 'nullable',
@@ -218,7 +221,8 @@ class MtbsController extends Controller
 
     public function showMerokok()
     {
-        return view('mtbs.merokok');
+        $pasien = Patients::all();
+        return view('mtbs.merokok', compact('pasien'));
     }
     public function storeMerokok(Request $request)
 {
@@ -229,11 +233,11 @@ class MtbsController extends Controller
         'provinsi' => 'nullable|string|max:255',
         'puskesmas' => 'nullable|string|max:255',
         'petugas' => 'nullable|string|max:255',
-        'name_responden' => 'required|string|max:255',
-        'nik' => 'required|string|max:16',
-        'tanggal_lahir' => 'required',
+        'pasien' => 'required',
+        // 'nik' => 'required|string|max:16',
+        // 'tanggal_lahir' => 'required',
         'umur' => 'required|integer',
-        'jenis_kelamin' => 'required|string',
+        // 'jenis_kelamin' => 'required|string',
         'merokok' => 'nullable',
         'jenis_rokok' => 'nullable',
         'jenis_rokok_lainnya' => 'nullable',
@@ -284,15 +288,16 @@ class MtbsController extends Controller
 
     public function showTestPendengaran()
     {
-        return view('mtbs.tes_pendengaran');
+        $pasien = Patients::all();
+        return view('mtbs.tes_pendengaran',compact('pasien'));
     }
     public function storeTestPendengaran(Request $request)
     {
         // Validate input
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'jenis_kelamin' => 'nullable|string|max:10',
+            'pasien' => 'required',
+            // 'tanggal' => 'required|date',
+            // 'jenis_kelamin' => 'nullable|string|max:10',
             'usia' => 'required|string|max:50',
             // 'ekspresif' => 'nullable|array',
             // 'ekspresif.*.question' => 'required|string',
@@ -315,9 +320,9 @@ class MtbsController extends Controller
 
         // Save the data to the TesDayaDengar model
         TesDayaDengar::create([
-            'nama' => $request->input('nama'),
-            'tanggal' => $request->input('tanggal'),
-            'jenis_kelamin' => $request->input('jenis_kelamin'),
+            'pasien' => $request->input('pasien'),
+            // 'tanggal' => $request->input('tanggal'),
+            // 'jenis_kelamin' => $request->input('jenis_kelamin'),
             'usia' => $request->input('usia'),
             'ekspresif' => $request->input('ekspresif', []), // Default to empty array if not provided
             'reseptif' => $request->input('reseptif', []), // Default to empty array if not provided

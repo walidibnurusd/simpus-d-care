@@ -17,11 +17,11 @@ class Merokok extends Model
         'provinsi',
         'puskesmas',
         'petugas',
-        'name_responden',
-        'nik',
-        'tanggal_lahir',
+        'pasien',
+        // 'nik',
+        // 'tanggal_lahir',
         'umur',
-        'jenis_kelamin',
+        // 'jenis_kelamin',
         'merokok',
         'jenis_rokok',
         'jenis_rokok_lainnya',
@@ -58,4 +58,8 @@ class Merokok extends Model
     ];
     // Jika ingin melindungi field tertentu, gunakan $guarded
     // protected $guarded = ['id'];
+    public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }

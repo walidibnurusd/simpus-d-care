@@ -1,4 +1,4 @@
-<?php
+ke<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,10 +12,11 @@ return new class extends Migration {
     {
         Schema::create('gangguan_jiwa_anak', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal_lahir');
-            $table->string('alamat')->nullable();
-            $table->string('jenis_kelamin')->nullable();
+            $table->unsignedBigInteger('pasien');
+            // $table->string('nama');
+            // $table->date('tanggal_lahir');
+            // $table->string('alamat')->nullable();
+            // $table->string('jenis_kelamin')->nullable();
             $table->integer('berusaha_baik')->default(0);
             $table->integer('gelisah')->default(0);
             $table->integer('sakit')->default(0);
@@ -44,7 +45,9 @@ return new class extends Migration {
             $table->integer('klaster');
             $table->string('poli');
             $table->timestamps();
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
         });
+
     }
 
     /**

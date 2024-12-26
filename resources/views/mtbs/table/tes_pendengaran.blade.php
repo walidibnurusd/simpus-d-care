@@ -69,10 +69,10 @@
                                     @foreach ($testPendengaran as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->nama }}</td>
+                                            <td>{{ $item->listPasien->name }}</td>
 
-                                            <td>{{ $item->tanggal }}</td>
-                                            <td>{{ $item->jenis_kelamin }}</td>
+                                            <td>{{ $item->listPasien->dob }}</td>
+                                            <td>{{ $item->listPasien->genderName->name }}</td>
 
                                             <td>
                                                 <ul class="action">
