@@ -12,6 +12,7 @@ use App\Models\Hiv;
 use App\Models\KekerasanAnak;
 use App\Models\KekerasanPerempuan;
 use App\Models\DiabetesMellitus;
+use App\Models\Patients;
 use App\Models\Tbc;
 use App\Models\Talasemia;
 use App\Models\TripleEliminasi;
@@ -22,20 +23,21 @@ class KiaController extends Controller
 {
     public function showLayakHamil()
     {
-        return view('kia.layak_hamil');
+        $pasien = Patients::all();
+        return view('kia.layak_hamil',compact('pasien'));
     }
     public function storeLayakHamil(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:15',
-            'nik' => 'required|string|max:16|unique:layak_hamil,nik',
+            'pasien' => 'required',
+            // 'no_hp' => 'required|string|max:15',
+            // 'nik' => 'required|string|max:16|unique:layak_hamil,nik',
             'status' => 'required|string|max:50',
             'nama_suami' => 'required|string|max:255',
-            'alamat' => 'required|string',
+            // 'alamat' => 'required|string',
             'ingin_hamil' => 'required|boolean',
-            'tanggal_lahir' => 'required|date',
+            // 'tanggal_lahir' => 'required|date',
             'umur' => 'required',
             'jumlah_anak' => 'required',
             'waktu_persalinan_terakhir' => 'required',
@@ -61,16 +63,17 @@ class KiaController extends Controller
 
     public function showHipertensi()
     {
-        return view('kia.hipertensi');
+        $pasien = Patients::all();
+        return view('kia.hipertensi',compact('pasien'));
     }
     public function storeHipertensi(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:255',
+            'pasien' => 'required',
+            // 'tanggal_lahir' => 'required|date',
+            // 'jenis_kelamin' => 'required|string|max:10',
+            // 'alamat' => 'required|string|max:255',
             'ortu_hipertensi' => 'required|boolean',
             'saudara_hipertensi' => 'required|boolean',
             'tubuh_gemuk' => 'required|boolean',
@@ -86,7 +89,7 @@ class KiaController extends Controller
             'rutin_olahraga' => 'required|boolean',
             'makan_sayur' => 'required|boolean',
             'makan_buah' => 'required|boolean',
-            'jmlh_rokok' => 'nullable',
+            // 'jmlh_rokok' => ''??0,
         ]);
 
         // Check validation

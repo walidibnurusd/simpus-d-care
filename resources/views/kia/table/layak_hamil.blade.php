@@ -72,11 +72,11 @@
                                     @foreach ($layakHamil as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->nama }}</td>
-                                            <td>{{ $item->no_hp }}</td>
+                                            <td>{{ $item->listPasien->name }}</td>
+                                            <td>{{ $item->listPasien->nik }}</td>
                                             <td>{{ $item->status }}</td>
-                                            <td>{{ $item->no_hp }}</td>
-                                            <td>{{ $item->alamat }}</td>
+                                            <td>{{ $item->listPasien->phone }}</td>
+                                            <td>{{ $item->listPasien->address }}</td>
                                             <td>{{ $item->umur }}</td>
 
                                             <td>
