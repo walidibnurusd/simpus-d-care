@@ -12,10 +12,7 @@ return new class extends Migration {
     {
         Schema::create('kecacingan', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal_lahir');
-            $table->string('alamat');
-            $table->string('jenis_kelamin');
+            $table->unsignedBigInteger('pasien');
             $table->boolean('sakit_perut')->default(false);
             $table->boolean('diare')->default(false);
             $table->boolean('bab_darah')->default(false);
