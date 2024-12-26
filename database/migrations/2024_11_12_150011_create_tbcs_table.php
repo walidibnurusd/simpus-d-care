@@ -12,15 +12,16 @@ return new class extends Migration {
     {
         Schema::create('tbc', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
+            $table->unsignedBigInteger('pasien');
+            // $table->string('nama');
             $table->string('tempat_skrining');
-            $table->date('tanggal_lahir');
-            $table->string('alamat_ktp')->nullable();
-            $table->string('alamat_domisili')->nullable();
-            $table->string('nik')->nullable();
-            $table->string('pekerjaan')->nullable();
-            $table->string('jenis_kelamin')->nullable();
-            $table->string('no_hp')->nullable();
+            // $table->date('tanggal_lahir');
+            // $table->string('alamat_ktp')->nullable();
+            // $table->string('alamat_domisili')->nullable();
+            // $table->string('nik')->nullable();
+            // $table->string('pekerjaan')->nullable();
+            // $table->string('jenis_kelamin')->nullable();
+            // $table->string('no_hp')->nullable();
             $table->integer('tinggi_badan')->default(0);
             $table->integer('berat_badan')->default(0);
             $table->integer('status_gizi')->nullable();
@@ -49,9 +50,12 @@ return new class extends Migration {
             $table->string('hasil_rontgen')->nullable();
             $table->boolean('terduga_tbc')->default(0);
             $table->boolean('periksa_tbc_laten')->default(0);
+            $table->integer('usia')->default(0);
+            $table->integer('imt')->default(0);
             $table->integer('klaster');
             $table->string('poli');
             $table->timestamps();
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
         });
     }
 

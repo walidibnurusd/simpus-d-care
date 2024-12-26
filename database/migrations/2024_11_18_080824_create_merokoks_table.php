@@ -17,11 +17,12 @@ return new class extends Migration {
             $table->string('provinsi')->nullable();
             $table->string('puskesmas')->nullable();
             $table->string('petugas')->nullable();
-            $table->string('name_responden')->nullable();
-            $table->string('nik')->nullable();
-            $table->date('tanggal_lahir')->nullable();
+            $table->unsignedBigInteger('pasien');
+            // $table->string('name_responden')->nullable();
+            // $table->string('nik')->nullable();
+            // $table->date('tanggal_lahir')->nullable();
             $table->integer('umur')->default(0);
-            $table->string('jenis_kelamin')->nullable();
+            // $table->string('jenis_kelamin')->nullable();
             $table->integer('merokok')->default(0);
             $table->longText('jenis_rokok')->nullable();
             $table->string('jenis_rokok_lainnya')->nullable();
@@ -49,6 +50,7 @@ return new class extends Migration {
             $table->integer('klaster');
             $table->string('poli');
             $table->timestamps();
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
         });
     }
 

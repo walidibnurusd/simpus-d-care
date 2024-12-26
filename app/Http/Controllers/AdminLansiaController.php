@@ -6,6 +6,7 @@ use App\Models\Geriatri;
 use App\Models\KankerKolorektal;
 use App\Models\KankerParu;
 use App\Models\KankerPayudara;
+use App\Models\Patients;
 use App\Models\Puma;
 use App\Models\Patients;
 use Illuminate\Http\Request;
@@ -15,13 +16,15 @@ class AdminLansiaController extends Controller
 {
     public function viewPuma()
     {
-        $puma = Puma::all();
-        return view('lansia.table.puma', compact('puma'));
+        $pasien = Patients::all();
+        $puma =  Puma::all();
+        return view('lansia.table.puma', compact('puma','pasien'));
     }
     public function editPuma($id)
     {
         $puma = Puma::findOrFail($id);
-        return view('lansia.Puma', compact('puma'));
+        $pasien = Patients::all();
+        return view('lansia.Puma', compact('puma','pasien'));
     }
     public function deletePuma($id)
     {
@@ -35,23 +38,23 @@ class AdminLansiaController extends Controller
         return redirect()->route('puma.lansia.admin')->with('success', 'Data Puma berhasil dihapus.');
     }
     public function updatePuma(Request $request, $id)
-    {
-        // Validasi input
-        $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'puskesmas' => 'required|string|max:255',
-            'petugas' => 'required|string|max:255',
-            'jenis_kelamin' => 'required',
-            'usia' => 'required|integer|min:0',
-            'merokok' => 'required|boolean',
-            'jumlah_rokok' => 'nullable|integer|min:0',
-            'lama_rokok' => 'nullable|integer|min:0',
-            'rokok_per_tahun' => 'nullable|numeric|min:0',
-            'nafas_pendek' => 'required|boolean',
-            'punya_dahak' => 'required|boolean',
-            'batuk' => 'required|boolean',
-            'periksa_paru' => 'required|boolean',
-        ]);
+{
+    // Validasi input
+    $validator = Validator::make($request->all(), [
+        'pasien' => 'required',
+        'puskesmas' => 'required|string|max:255',
+        'petugas' => 'required|string|max:255',
+        // 'jenis_kelamin' => 'required',
+        'usia' => 'required|integer|min:0',
+        'merokok' => 'required|boolean',
+        'jumlah_rokok' => 'nullable|integer|min:0',
+        'lama_rokok' => 'nullable|integer|min:0',
+        'rokok_per_tahun' => 'nullable|numeric|min:0',
+        'nafas_pendek' => 'required|boolean',
+        'punya_dahak' => 'required|boolean',
+        'batuk' => 'required|boolean',
+        'periksa_paru' => 'required|boolean',
+    ]);
 
         // Periksa apakah validasi gagal
         if ($validator->fails()) {

@@ -485,9 +485,8 @@ class KiaController extends Controller
         return redirect()->route('diabetes.mellitus.view')->with('success', 'Data Diabetes Mellitus created successfully!');
     }
     public function showTbc()
-    {
-        $pasien = Patients::all();
-        return view('kia.tbc', compact('pasien'));
+    { $pasien = Patients::all();
+        return view('kia.tbc',compact('pasien'));
     }
     public function storeTbc(Request $request)
     {
@@ -495,15 +494,20 @@ class KiaController extends Controller
         $validator = Validator::make($request->all(), [
             'pasien' => 'required',
             'tempat_skrining' => 'required|string|max:255',
-            'imt' => 'nullable',
+            // 'tanggal_lahir' => 'required|date',
+            // 'alamat_domisili' => 'required|string|max:500',
+            // 'alamat_ktp' => 'nullable|string|max:500',
+            // 'nik' => 'required',
+            // 'pekerjaan' => 'nullable|string|max:255',
+            // 'imt' => ''??0,
             'usia' => 'nullable',
-            'jenis_kelamin' => 'required|string',
-            'no_hp' => 'required',
+            // 'jenis_kelamin' => 'required|string',
+            // 'no_hp' => 'required',
             'tinggi_badan' => 'required|numeric',
             'berat_badan' => 'required|numeric',
             'status_gizi' => 'nullable|string|max:255',
-            'kontak_dengan_pasien' => 'required|in:1,2,3',
-            'kontak_tbc' => 'required',
+            'kontak_dengan_pasien' => '',
+            'kontak_tbc' => '',
             'jenis_tbc' => 'nullable|string|max:255',
             'pernah_berobat_tbc' => 'required',
             'kapan' => 'nullable|date',

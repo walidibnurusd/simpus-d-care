@@ -609,15 +609,16 @@ class AdminController extends Controller
         // Redirect with a success message
         return redirect()->route('diabetes.mellitus.admin')->with('success', 'Data Diabetes Mellitus updated successfully!');
     }
-    public function viewTbc()
-    {
-        $tbc = Tbc::all();
-        return view('kia.table.tbc', compact('tbc'));
+    public function viewTbc(){
+        $pasien = Patients::all();
+        $tbc =  Tbc::all();
+        return view('kia.table.tbc',compact('tbc','pasien'));
     }
     public function editTbc($id)
     {
+        $pasien = Patients::all();
         $tbc = Tbc::findOrFail($id);
-        return view('kia.tbc', compact('tbc'));
+        return view('kia.tbc', compact('tbc','pasien'));
     }
     public function deleteTbc($id)
     {
@@ -635,48 +636,48 @@ class AdminController extends Controller
         // Find the existing Tbc record by ID
         $tbc = Tbc::findOrFail($id);
 
-        // Define validation rules
-        $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tempat_skrining' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat_domisili' => 'required|string|max:500',
-            'alamat_ktp' => 'nullable|string|max:500',
-            'nik' => 'required',
-            'imt' => 'nullable',
-            'usia' => 'nullable',
-            'pekerjaan' => 'nullable|string|max:255',
-            'jenis_kelamin' => 'required|string',
-            'no_hp' => 'required',
-            'tinggi_badan' => 'required|numeric',
-            'berat_badan' => 'required|numeric',
-            'status_gizi' => 'nullable',
-            'kontak_dengan_pasien' => 'required',
-            'kontak_tbc' => 'required|boolean',
-            'jenis_tbc' => 'nullable|string|max:255',
-            'pernah_berobat_tbc' => 'required|boolean',
-            'kapan' => 'nullable|date',
-            'pernah_berobat_tbc_tdk_tuntas' => 'required|boolean',
-            'kurang_gizi' => 'required|boolean',
-            'merokok' => 'required|boolean',
-            'perokok_pasif' => 'required|boolean',
-            'kencing_manis' => 'required|boolean',
-            'odhiv' => '',
-            'lansia' => 'required|boolean',
-            'ibu_hamil' => 'required|boolean',
-            'tinggal_wilayah_kumuh' => 'required|boolean',
-            'batuk' => 'required|boolean',
-            'durasi' => 'nullable|string|max:255',
-            'batuk_darah' => 'required|boolean',
-            'bb_turun' => 'required|boolean',
-            'demam' => 'required|boolean',
-            'lesu' => 'required|boolean',
-            'pembesaran_kelenjar' => 'required|boolean',
-            'sudah_rontgen' => 'required|boolean',
-            'hasil_rontgen' => 'nullable|string|max:255',
-            'terduga_tbc' => 'required|boolean',
-            'periksa_tbc_laten' => 'required|boolean',
-        ]);
+    // Define validation rules
+    $validator = FacadesValidator::make($request->all(), [
+        'pasien' => 'required',
+        'tempat_skrining' => 'required|string|max:255',
+        // 'tanggal_lahir' => 'required|date',
+        // 'alamat_domisili' => 'required|string|max:500',
+        // 'alamat_ktp' => 'nullable|string|max:500',
+        // 'nik' => 'required',
+        // 'imt' => 'nullable',
+        'usia' => 'nullable',
+        // 'pekerjaan' => 'nullable|string|max:255',
+        // 'jenis_kelamin' => 'required|string',
+        // 'no_hp' => 'required',
+        'tinggi_badan' => 'required|numeric',
+        'berat_badan' => 'required|numeric',
+        'status_gizi' => 'nullable',
+        'kontak_dengan_pasien' => '',
+        'kontak_tbc' => 'boolean',
+        'jenis_tbc' => 'nullable|string|max:255',
+        'pernah_berobat_tbc' => 'required|boolean',
+        'kapan' => 'nullable|date',
+        'pernah_berobat_tbc_tdk_tuntas' => 'required|boolean',
+        'kurang_gizi' => 'required|boolean',
+        'merokok' => 'required|boolean',
+        'perokok_pasif' => 'required|boolean',
+        'kencing_manis' => 'required',
+        'odhiv' => '',
+        'lansia' => 'required|boolean',
+        'ibu_hamil' => 'required|boolean',
+        'tinggal_wilayah_kumuh' => 'required|boolean',
+        'batuk' => 'required|boolean',
+        'durasi' => 'nullable|string|max:255',
+        'batuk_darah' => 'required|boolean',
+        'bb_turun' => 'required|boolean',
+        'demam' => 'required|boolean',
+        'lesu' => 'required|boolean',
+        'pembesaran_kelenjar' => 'required',
+        'sudah_rontgen' => 'required|boolean',
+        'hasil_rontgen' => 'nullable|string|max:255',
+        'terduga_tbc' => 'required|boolean',
+        'periksa_tbc_laten' => 'required|boolean',
+    ]);
 
         // Check if validation fails
         if ($validator->fails()) {

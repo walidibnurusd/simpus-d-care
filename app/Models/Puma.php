@@ -10,5 +10,9 @@ class Puma extends Model
     use HasFactory;
     protected $table = 'puma';
 
-    protected $fillable = ['nama', 'puskesmas', 'petugas', 'jenis_kelamin', 'usia', 'merokok', 'jumlah_rokok', 'lama_rokok', 'rokok_per_tahun', 'nafas_pendek', 'punya_dahak', 'batuk', 'periksa_paru', 'klaster', 'poli'];
+    protected $fillable = ['pasien', 'puskesmas', 'petugas', 'usia', 'merokok', 'jumlah_rokok', 'lama_rokok', 'rokok_per_tahun', 'nafas_pendek', 'punya_dahak', 'batuk', 'periksa_paru', 'klaster', 'poli'];
+    public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }
