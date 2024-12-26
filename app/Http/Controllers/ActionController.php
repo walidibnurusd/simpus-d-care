@@ -32,6 +32,9 @@ class ActionController extends Controller
         } elseif (Auth::user()->role == 'admin-poli-gigi') {
             $actions = Action::where('tipe', 'poli-gigi')->get();
             $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
+        } else {
+            $actions = Action::where('tipe', 'ruang-tindakan')->get();
+            $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
         }
 
         $penyakit = Disease::all();
@@ -76,6 +79,10 @@ class ActionController extends Controller
             }
             if (Auth::user()->role == 'admin-poli-gigi') {
                 $tipe = 'poli-gigi';
+            } elseif (Auth::user()->role == 'admin-poli-umum') {
+                $tipe = 'poli-umum';
+            } else {
+                $tipe = 'ruang-tindakan';
             }
 
             // Format the date and merge the patient ID into the request
