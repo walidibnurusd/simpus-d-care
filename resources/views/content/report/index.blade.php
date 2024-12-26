@@ -51,6 +51,8 @@
                     <a href="{{ route('report.up') }}" class="btn btn-danger btn-block w-100 mb-2" target="_blank">Pasien
                         Produktif Baru (15-59THN)</a>
                     <button class="btn btn-info btn-block w-100 mb-2">ISPA Tahunan</button>
+                    <a href="{{ route('report.rrt') }}" class="btn btn-warning btn-block w-100 mb-2" target="_blank">Rekap
+                        Rujukan Terbanyak</a>
                 </div>
 
                 <!-- Kolom 2 -->
@@ -82,9 +84,13 @@
                 <div class="col-md-4 mb-3">
                     <button class="btn btn-success btn-block w-100 mb-2">Rekap Pesakitan Formulir 11</button>
                     <button class="btn btn-danger btn-block w-100 mb-2">Rekap Kunjungan Umur</button>
-                    <button class="btn btn-info btn-block w-100 mb-2">Kunjungan Rawat Jalan</button>
-                    <button class="btn btn-danger btn-block w-100 mb-2">Rekap Tahunan Penyakit Terbanyak 10</button>
-                    <button class="btn btn-dark btn-block w-100 mb-2">Rekap Bulanan Kasus Terbanyak Formulir 14</button>
+                    <a href="{{ route('report.lkrj') }}" class="btn btn-info btn-block w-100 mb-2"
+                        target="_blank">Kunjungan
+                        Rawat Jalan</a>
+                    <a href="{{ route('report.lkt') }}" class="btn btn-danger btn-block w-100 mb-2" target="_blank">Rekap
+                        Tahunan Penyakit Terbanyak 10</a>
+                    <a href="{{ route('report.lbkt') }}" class="btn btn-dark btn-block w-100 mb-2" target="_blank">Rekap
+                        Bulanan Kasus Terbanyak Formulir 14</a>
                     <button class="btn btn-danger btn-block w-100 mb-2">Kunjungan Sehat</button>
                     <button class="btn btn-info btn-block w-100 mb-2">TELINGA Tahunan</button>
                     <a href="{{ route('report.poli.diare') }}" class="btn btn-danger btn-block w-100 mb-2" target="_blank">

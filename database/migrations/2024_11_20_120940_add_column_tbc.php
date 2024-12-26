@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tbc', function (Blueprint $table) {
-            $table->integer('usia')->after('tanggal_lahir')->default(0);
             $table->integer('imt')->after('berat_badan')->default(0);
         });
     }
