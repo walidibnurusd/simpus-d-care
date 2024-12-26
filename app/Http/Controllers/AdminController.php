@@ -15,6 +15,7 @@ use App\Models\Talasemia;
 use App\Models\KekerasanAnak;
 use App\Models\Tbc;
 use App\Models\KekerasanPerempuan;
+use App\Models\Patients;
 use App\Models\TripleEliminasi;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
@@ -23,26 +24,28 @@ use Illuminate\Support\Facades\Validator as FacadesValidator;
 class AdminController extends Controller
 {
     public function viewLayakHamil(){
-        $layakHamil =  LayakHamil::all();
+        $layakHamil =  LayakHamil::with('listPasien')->get();
+        // dd($layakHamil);
         return view('kia.table.layak_hamil',compact('layakHamil'));
     }
     public function editLayakHamil($id)
     {
+        $pasien = Patients::all();
         $layakHamil = LayakHamil::findOrFail($id);
-        return view('kia.layak_hamil', compact('layakHamil'));
+        return view('kia.layak_hamil', compact('layakHamil','pasien'));
     }
     public function updateLayakHamil(Request $request, $id)
     {
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:15',
-            'nik' => 'required|string|max:16|unique:layak_hamil,nik,' . $id,
+            'pasien' => 'required',
+            // 'no_hp' => 'required|string|max:15',
+            // 'nik' => 'required|string|max:16|unique:layak_hamil,nik,' . $id,
             'status' => 'required|string|max:50',
             'nama_suami' => 'required|string|max:255',
-            'alamat' => 'required|string',
+            // 'alamat' => 'required|string',
             'ingin_hamil' => 'required|boolean',
-            'tanggal_lahir' => 'required|date',
+            // 'tanggal_lahir' => 'required|date',
             'umur' => 'required',
             'jumlah_anak' => 'required',
             'waktu_persalinan_terakhir' => 'required',
@@ -94,17 +97,19 @@ class AdminController extends Controller
     }
     public function editHipertensi($id)
     {
+        $pasien = Patients::all();
         $hipertensi = Hipertensi::findOrFail($id);
-        return view('kia.hipertensi', compact('hipertensi'));
+        return view('kia.hipertensi', compact('hipertensi','pasien'));
     }
     public function updateHipertensi(Request $request, $id)
     {
         $hipertensi = Hipertensi::findOrFail($id);
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:255',
+            'pasien' => 'required',
+            // 'nama' => 'required|string|max:255',
+            // 'tanggal_lahir' => 'required',
+            // 'jenis_kelamin' => 'required|string|max:10',
+            // 'alamat' => 'required|string|max:255',
             'ortu_hipertensi' => 'required|boolean',
             'saudara_hipertensi' => 'required|boolean',
             'tubuh_gemuk' => 'required|boolean',
@@ -120,7 +125,7 @@ class AdminController extends Controller
             'rutin_olahraga' => 'required|boolean',
             'makan_sayur' => 'required|boolean',
             'makan_buah' => 'required|boolean',
-            'jmlh_rokok' =>'nullable'
+            // 'jmlh_rokok' =>'nullable'
         ]);
 
         // Check validation

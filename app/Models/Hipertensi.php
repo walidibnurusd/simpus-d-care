@@ -10,7 +10,10 @@ class Hipertensi extends Model
     use HasFactory;
     protected $table = 'hipertensi';
 
-    protected $fillable = ['nama', 'tanggal_lahir','jenis_kelamin','alamat','ortu_hipertensi','saudara_hipertensi','tubuh_gemuk','usia_50','merokok','makan_asin','makan_santan','makan_lemak','sakit_kepala','sakit_tenguk','tertekan','sulit_tidur','rutin_olahraga','makan_sayur','makan_buah','klaster','poli','jmlh_rokok'];
+    protected $fillable = ['pasien','ortu_hipertensi','saudara_hipertensi','tubuh_gemuk','usia_50','merokok','makan_asin','makan_santan','makan_lemak','sakit_kepala','sakit_tenguk','tertekan','sulit_tidur','rutin_olahraga','makan_sayur','makan_buah','klaster','poli','jmlh_rokok'];
 
-   
+    public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }

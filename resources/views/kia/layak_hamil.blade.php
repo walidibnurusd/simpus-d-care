@@ -1,5 +1,7 @@
 @extends('layouts.skrining.master')
 @section('title', 'Skrining Layak Hamil')
+
+
 @section('content')
     <!-- Identitas Section -->
     <!-- Success Alert -->
@@ -13,7 +15,24 @@
         </div>
     @endif
 
-
+    <style>
+        .select2-container--default .select2-selection--single {
+            height: calc(1.5em + .75rem + 2px);
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            padding: .375rem .75rem;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: calc(1.5em + .75rem);
+        }
+        
+        .select2-container .select2-selection--single {
+            display: flex;
+            align-items: center;
+        }
+        </style>
+        
     <!-- Validation Errors Alert -->
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -40,16 +59,31 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>1. Nama</label>
-                        <input type="text" class="form-control" value="{{ old('nama', $layakHamil->nama ?? '') }}"
-                            name="nama" placeholder="Masukkan nama lengkap">
+                        <label>1. Pasien</label>
+                        <select class="form-control form-select select2" id="pasien" name="pasien">
+                            <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
+                            @foreach ($pasien as $item)
+                                <option 
+                                    value="{{ $item->id }}" 
+                                    data-no_hp="{{ $item->phone }}" 
+                                    data-nik="{{ $item->nik }}" 
+                                    data-dob="{{ $item->dob }}"
+                                    data-alamat="{{ $item->address }}"
+                                    {{ old('pasien', $layakHamil->pasien ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }} - {{ $item->nik }}
+                                </option>   
+                            @endforeach
+                        </select>
+                        @error('pasien') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
+                
+                
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>2. No HP</label>
-                        <input type="number" class="form-control" value="{{ old('no_hp', $layakHamil->no_hp ?? '') }}"
-                            name="no_hp" placeholder="Masukkan nomor HP">
+                        <input type="number" class="form-control" readonly value="{{ old('no_hp', $layakHamil->no_hp ?? '') }}"
+                           id="no_hp" name="no_hp" placeholder="Masukkan nomor HP">
                     </div>
                 </div>
             </div>
@@ -57,8 +91,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>3. NIK</label>
-                        <input type="text" class="form-control" value="{{ old('nik', $layakHamil->nik ?? '') }}"
-                            name="nik" placeholder="Masukkan NIK">
+                        <input type="text" readonly class="form-control" value="{{ old('nik', $layakHamil->nik ?? '') }}"
+                          id="nik"  name="nik" placeholder="Masukkan NIK">
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -87,13 +121,13 @@
                         <label>5. Nama Suami/Calon Suami</label>
                         <input type="text" class="form-control" name="nama_suami"
                             value="{{ old('nama_suami', $layakHamil->nama_suami ?? '') }}"
-                            placeholder="Masukkan nama suami/calon suami">
+                            placeholder="Masukkan no_hp suami/calon suami">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>6. Alamat Domisili</label>
-                        <input type="text" class="form-control" name="alamat"
+                        <input readonly type="text" class="form-control" name="alamat" id="alamat"
                             value="{{ old('alamat', $layakHamil->alamat ?? '') }}" placeholder="Masukkan alamat domisili">
                     </div>
                 </div>
@@ -120,7 +154,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>8. Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir"
+                        <input type="date" class="form-control" readonly name="tanggal_lahir" id="tanggal_lahir"
                             value="{{ old('tanggal_lahir', $layakHamil->tanggal_lahir ?? '') }}">
                     </div>
                 </div>
@@ -544,3 +578,33 @@
         </div>
     </form>
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Inisialisasi Select2
+    $('.select2').select2({
+        placeholder: "Pilih pasien",
+        allowClear: true    
+    });
+
+    // Event listener saat pasien dipilih
+    $('#pasien').on('change', function() {
+        var selectedOption = $(this).find(':selected');
+
+        // Ambil data dari atribut data-*
+        var no_hp = selectedOption.data('no_hp');
+        var nik = selectedOption.data('nik');
+        var dob = selectedOption.data('dob');
+        var alamat = selectedOption.data('alamat');
+
+        // Isi input dengan data yang diambil
+        $('#no_hp').val(no_hp);
+        $('#nik').val(nik);
+        $('#tanggal_lahir').val(dob);
+        $('#alamat').val(alamat);
+    });
+    $('#pasien').trigger('change');
+});
+
+</script>
