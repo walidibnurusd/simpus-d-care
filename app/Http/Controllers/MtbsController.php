@@ -23,10 +23,10 @@ class MtbsController extends Controller
     {
         // Definisikan aturan validasi
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
+            // 'tanggal_lahir' => 'required|date',
+            // 'jenis_kelamin' => 'required|string|max:10',
+            // 'alamat' => 'required|string|max:500',
             'berusaha_baik' => 'nullable',
             'gelisah' => 'nullable',
             'sakit' => 'nullable',

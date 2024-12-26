@@ -31,7 +31,7 @@
             display: flex;
             align-items: center;
         }
-        </style>
+    </style>
         
     <!-- Validation Errors Alert -->
     @if ($errors->any())

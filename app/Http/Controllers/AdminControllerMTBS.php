@@ -8,6 +8,7 @@ use App\Models\GangguanJiwaRemaja;
 use App\Models\Merokok;
 use App\Models\Napza;
 use App\Models\Obesitas;
+use App\Models\Patients;
 use App\Models\TesDayaDengar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,12 +18,14 @@ class AdminControllerMTBS extends Controller
     public function viewGangguanJiwaAnak()
     {
         $gangguanJiwaAnak =  GangguanJiwaAnak::all();
-        return view('mtbs.table.gangguan_jiwa_anak', compact('gangguanJiwaAnak'));
+        $pasien = Patients::all();
+        return view('mtbs.table.gangguan_jiwa_anak', compact('gangguanJiwaAnak','pasien'));
     }
     public function editGangguanJiwaAnak($id)
     {
         $gangguanJiwaAnak = GangguanJiwaAnak::findOrFail($id);
-        return view('mtbs.gangguan_jiwa_anak', compact('gangguanJiwaAnak'));
+        $pasien = Patients::all();
+        return view('mtbs.gangguan_jiwa_anak', compact('gangguanJiwaAnak','pasien'));
     }
     public function deleteGangguanJiwaAnak($id)
     {
@@ -42,10 +45,10 @@ class AdminControllerMTBS extends Controller
 
         // Definisikan aturan validasi
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
+            // 'tanggal_lahir' => 'required|date',
+            // 'jenis_kelamin' => 'required|string|max:10',
+            // 'alamat' => 'required|string|max:500',
             'berusaha_baik' => 'required',
             'gelisah' => 'required',
             'sakit' => 'required',
