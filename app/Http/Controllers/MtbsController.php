@@ -7,6 +7,7 @@ use App\Models\GangguanJiwaRemaja;
 use App\Models\Merokok;
 use App\Models\Napza;
 use App\Models\Obesitas;
+use App\Models\Patients;
 use App\Models\TesDayaDengar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,7 +16,8 @@ class MtbsController extends Controller
 {
     public function showSdqAnak()
     {
-        return view('mtbs.gangguan_jiwa_anak');
+        $pasien = Patients::all();
+        return view('mtbs.gangguan_jiwa_anak',compact('pasien'));
     }
     public function storeSdqAnak(Request $request)
     {
