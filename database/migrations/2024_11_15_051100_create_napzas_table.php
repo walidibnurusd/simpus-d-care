@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('napza', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_pasien');
+            $table->unsignedBigInteger('pasien');
             $table->string('nama_dokter');
             $table->string('klinik')->nullable();
             $table->longText('pertanyaan1')->nullable();
@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->integer('klaster');
             $table->string('poli');
             $table->timestamps();
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
         });
     }
 

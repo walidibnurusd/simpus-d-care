@@ -99,12 +99,14 @@ class AdminControllerMTBS extends Controller
     public function viewGangguanJiwaRemaja()
     {
         $gangguanJiwaRemaja =  GangguanJiwaRemaja::all();
-        return view('mtbs.table.gangguan_jiwa_remaja', compact('gangguanJiwaRemaja'));
+        $pasien = Patients::all();
+        return view('mtbs.table.gangguan_jiwa_remaja', compact('gangguanJiwaRemaja','pasien'));
     }
     public function editGangguanJiwaRemaja($id)
     {
         $gangguanJiwaRemaja = GangguanJiwaRemaja::findOrFail($id);
-        return view('mtbs.gangguan_jiwa_remaja', compact('gangguanJiwaRemaja'));
+        $pasien = Patients::all();
+        return view('mtbs.gangguan_jiwa_remaja', compact('gangguanJiwaRemaja','pasien'));
     }
     public function deleteGangguanJiwaRemaja($id)
     {
@@ -124,10 +126,10 @@ class AdminControllerMTBS extends Controller
 
         // Definisikan aturan validasi
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
+            // 'tanggal_lahir' => 'required|date',
+            // 'jenis_kelamin' => 'required|string|max:10',
+            // 'alamat' => 'required|string|max:500',
             'peduli_perasaan' => 'required',
             'gelisah' => 'required',
             'sakit' => 'required',
@@ -240,12 +242,14 @@ class AdminControllerMTBS extends Controller
     public function viewTestPendengaran()
     {
         $testPendengaran =  TesDayaDengar::all();
-        return view('mtbs.table.tes_pendengaran', compact('testPendengaran'));
+        $pasien = Patients::all();
+        return view('mtbs.table.tes_pendengaran', compact('testPendengaran','pasien'));
     }
     public function editTestPendengaran($id)
     {
         $testPendengaran = TesDayaDengar::findOrFail($id);
-        return view('mtbs.tes_pendengaran', compact('testPendengaran'));
+        $pasien = Patients::all();
+        return view('mtbs.tes_pendengaran', compact('testPendengaran','pasien'));
     }
     public function deleteTestPendengaran($id)
     {
@@ -265,9 +269,9 @@ class AdminControllerMTBS extends Controller
 
     // Validate input
     $validator = Validator::make($request->all(), [
-        'nama' => 'required|string|max:255',
-        'tanggal' => 'required|date',
-        'jenis_kelamin' => 'nullable|string|max:10',
+        'pasien' => 'required',
+        // 'tanggal' => 'required|date',
+        // 'jenis_kelamin' => 'nullable|string|max:10',
         'usia' => 'required|string|max:50',
     ]);
 
@@ -281,9 +285,9 @@ class AdminControllerMTBS extends Controller
 
     // Update the record
     $testPendengaran->update([
-        'nama' => $request->input('nama'),
-        'tanggal' => $request->input('tanggal'),
-        'jenis_kelamin' => $request->input('jenis_kelamin'),
+        'pasien' => $request->input('pasien'),
+        // 'tanggal' => $request->input('tanggal'),
+        // 'jenis_kelamin' => $request->input('jenis_kelamin'),
         'usia' => $request->input('usia'),
         'ekspresif' => $request->input('ekspresif', []), // Default to empty array if not provided
         'reseptif' => $request->input('reseptif', []), // Default to empty array if not provided
@@ -299,12 +303,14 @@ class AdminControllerMTBS extends Controller
     public function viewMerokok()
     {
         $merokok =  Merokok::all();
-        return view('mtbs.table.merokok', compact('merokok'));
+        $pasien = Patients::all();
+        return view('mtbs.table.merokok', compact('merokok','pasien'));
     }
     public function editMerokok($id)
     {
         $merokok = Merokok::findOrFail($id);
-        return view('mtbs.merokok', compact('merokok'));
+        $pasien = Patients::all();
+        return view('mtbs.merokok', compact('merokok','pasien'));
     }
     public function deleteMerokok($id)
     {
@@ -326,11 +332,11 @@ class AdminControllerMTBS extends Controller
         'provinsi' => 'nullable|string|max:255',
         'puskesmas' => 'nullable|string|max:255',
         'petugas' => 'nullable|string|max:255',
-        'name_responden' => 'required|string|max:255',
-        'nik' => 'required|string|max:16',
-        'tanggal_lahir' => 'required|date',
+        'pasien' => 'required',
+        // 'nik' => 'required|string|max:16',
+        // 'tanggal_lahir' => 'required|date',
         'umur' => 'required|integer',
-        'jenis_kelamin' => 'required|string',
+        // 'jenis_kelamin' => 'required|string',
         'merokok' => 'nullable',
         'jenis_rokok' => 'nullable',
         'jenis_rokok_lainnya' => 'nullable',
@@ -393,12 +399,14 @@ class AdminControllerMTBS extends Controller
 public function viewNapza()
 {
     $napza =  Napza::all();
-    return view('mtbs.table.Napza', compact('napza'));
+    $pasien = Patients::all();
+    return view('mtbs.table.Napza', compact('napza','pasien'));
 }
 public function editNapza($id)
 {
     $napza = Napza::findOrFail($id);
-    return view('mtbs.Napza', compact('napza'));
+    $pasien = Patients::all();
+    return view('mtbs.Napza', compact('napza','pasien'));
 }
 public function deleteNapza($id)
 {
@@ -415,11 +423,11 @@ public function updateNapza(Request $request, $id)
 {
     // Validasi input
     $validator = Validator::make($request->all(), [
-        'nama_pasien' => 'required|string|max:255',
+        'pasien' => 'required',
         'nama_dokter' => 'required|string|max:255',
         'klinik' => 'nullable|string|max:255',
         'pertanyaan1' => 'nullable',
-        'nama_zat_lain' => 'nullable',
+        // 'nama_zat_lain' => 'nullable',
         'pertanyaan2' => 'nullable',
         'pertanyaan3' => 'nullable',
         'pertanyaan4' => 'nullable',

@@ -12,10 +12,11 @@ return new class extends Migration {
     {
         Schema::create('puma', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
+            $table->unsignedBigInteger('pasien');
+            // $table->string('nama');
             $table->string('puskesmas');
             $table->string('petugas')->nullable();
-            $table->string('jenis_kelamin')->nullable();
+            // $table->string('jenis_kelamin')->nullable();
             $table->integer('usia')->default(0);
             $table->boolean('merokok')->default(0);
             $table->integer('jumlah_rokok')->default(0);
@@ -28,6 +29,7 @@ return new class extends Migration {
             $table->integer('klaster');
             $table->string('poli');
             $table->timestamps();
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
         });
     }
 

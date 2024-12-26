@@ -69,9 +69,9 @@
                                     @foreach ($tbc as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->nama }}</td>
+                                        <td>{{ $item->listPasien->name }}</td>
                                         
-                                        <td>{{ $item->alamat_domisili }}</td>
+                                        <td>{{ $item->listPasien->address }}</td>
                                         
                                       
                                         <td>
