@@ -160,7 +160,8 @@ class KiaController extends Controller
     }
     public function showKecacingan()
     {
-        return view('kia.kecacingan');
+         $pasien = Patients::all();
+        return view('kia.kecacingan',compact('pasien'));
     }
 
     public function storeKecacingan(Request $request)
