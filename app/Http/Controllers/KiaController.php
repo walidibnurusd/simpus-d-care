@@ -24,7 +24,7 @@ class KiaController extends Controller
     public function showLayakHamil()
     {
         $pasien = Patients::all();
-        return view('kia.layak_hamil',compact('pasien'));
+        return view('kia.layak_hamil', compact('pasien'));
     }
     public function storeLayakHamil(Request $request)
     {
@@ -64,7 +64,7 @@ class KiaController extends Controller
     public function showHipertensi()
     {
         $pasien = Patients::all();
-        return view('kia.hipertensi',compact('pasien'));
+        return view('kia.hipertensi', compact('pasien'));
     }
     public function storeHipertensi(Request $request)
     {
@@ -160,18 +160,15 @@ class KiaController extends Controller
     }
     public function showKecacingan()
     {
-         $pasien = Patients::all();
-        return view('kia.kecacingan',compact('pasien'));
+        $pasien = Patients::all();
+        return view('kia.kecacingan', compact('pasien'));
     }
 
     public function storeKecacingan(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string|max:500',
-            'jenis_kelamin' => 'required|string',
+            'pasien' => 'required',
             'sakit_perut' => 'required|boolean',
             'diare' => 'required|boolean',
             'bab_darah' => 'required|boolean',

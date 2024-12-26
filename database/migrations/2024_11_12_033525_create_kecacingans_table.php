@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('kecacingan', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->boolean('sakit_perut')->default(false);
             $table->boolean('diare')->default(false);
             $table->boolean('bab_darah')->default(false);
