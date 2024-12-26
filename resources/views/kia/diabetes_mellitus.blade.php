@@ -41,26 +41,41 @@
                 <h3>Identitas</h3>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label>Nama</label>
-                        <input type="text" class="form-control" name="nama" placeholder="Masukkan nama lengkap"
-                            value="{{ old('nama', $diabetesMellitus->nama ?? '') }}">
+                        <div class="form-group">
+                            <label>Pasien</label>
+                            <select class="form-control form-select select2" id="pasien" name="pasien">
+                                <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
+                                @foreach ($pasien as $item)
+                                    <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
+                                        data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
+                                        data-alamat="{{ $item->address }}" data-pob="{{ $item->place_birth }}"
+                                        data-jenis_kelamin="{{ $item->genderName->name }}"
+                                        {{ old('pasien', $diabetesMellitus->pasien ?? '') == $item->id ? 'selected' : '' }}>
+                                        {{ $item->name }} - {{ $item->nik }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('pasien')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Tempat Lahir</label>
                         <input type="text" class="form-control" name="tempat_lahir" placeholder="Masukkan tempat lahir"
-                            value="{{ old('tempat_lahir', $diabetesMellitus->tempat_lahir ?? '') }}">
+                            id="tempat_lahir" value="{{ old('tempat_lahir', $diabetesMellitus->tempat_lahir ?? '') }}">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir"
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
                             value="{{ old('tanggal_lahir', $diabetesMellitus->tanggal_lahir ?? '') }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Alamat Lengkap</label>
                         <input type="text" class="form-control" name="alamat" placeholder="Masukkan alamat lengkap"
-                            value="{{ old('alamat', $diabetesMellitus->alamat ?? '') }}">
+                            id="alamat" value="{{ old('alamat', $diabetesMellitus->alamat ?? '') }}">
                     </div>
                 </div>
             </div>
@@ -123,8 +138,8 @@
                     <li><strong>Bila telah diperoleh hasilnya, cocokkan dengan tabel di bawah ini</strong></li>
                 </ul>
                 <div class="text-center">
-                    <img src="{{ asset('assets/images/tabel_gula_darah.png') }}" alt="Tabel Gula Darah" class="img-fluid"
-                        style="max-width: 100%; height: auto;">
+                    <img src="{{ asset('assets/images/tabel_gula_darah.png') }}" alt="Tabel Gula Darah"
+                        class="img-fluid" style="max-width: 100%; height: auto;">
                 </div>
                 <div class="col-sm-12">
                     <label>Hasil pemeriksaan</label>
@@ -139,13 +154,47 @@
             <!-- Tombol -->
             <div class="text-right mt-4">
                 @if (isset($diabetesMellitus))
-                <a href="{{ route('diabetes.mellitus.admin') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-            @else
-                <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-            @endif
+                    <a href="{{ route('diabetes.mellitus.admin') }}" type="button" class="btn btn-secondary mr-2"
+                        style="font-size: 20px">Kembali</a>
+                @else
+                    <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
+                        style="font-size: 20px">Kembali</a>
+                @endif
                 <button type="submit" class="btn btn-primary" style="font-size: 16px;">Kirim</button>
             </div>
         </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script>
+        $(document).ready(function() {
+
+            $('.select2').select2({
+                placeholder: "Pilih pasien",
+                allowClear: true
+            });
+
+            $('#pasien').on('change', function() {
+                var selectedOption = $(this).find(':selected');
+
+                var dob = selectedOption.data('dob');
+                var alamat = selectedOption.data('alamat');
+                var jk = selectedOption.data('jenis_kelamin');
+                var pob = selectedOption.data('pob');
+
+
+
+                $('#tanggal_lahir').val(dob);
+                $('#tempat_lahir').val(pob);
+                $('#alamat').val(alamat);
+                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
+                if (jk === 'Laki-Laki') {
+                    $('#jk_laki').prop('checked', true);
+                } else if (jk === 'Perempuan') {
+                    $('#jk_perempuan').prop('checked', true);
+                }
+            });
+            $('#pasien').trigger('change');
+        });
+    </script>
 @endsection

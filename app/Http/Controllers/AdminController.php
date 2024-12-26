@@ -161,13 +161,14 @@ class AdminController extends Controller
     }
     public function viewGangguanAutis()
     {
-        $gangguanAutis = GangguanAutis::all();
+        $gangguanAutis = GangguanAutis::with('listPasien')->get();
         return view('kia.table.gangguan_autis', compact('gangguanAutis'));
     }
     public function editGangguanAutis($id)
     {
         $gangguanAutis = GangguanAutis::findOrFail($id);
-        return view('kia.gangguan_autis', compact('gangguanAutis'));
+        $pasien = Patients::all();
+        return view('kia.gangguan_autis', compact('gangguanAutis', 'pasien'));
     }
     public function deleteGangguanAutis($id)
     {
@@ -190,10 +191,7 @@ class AdminController extends Controller
 
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required',
-            'jenis_kelamin' => 'required',
-            'alamat' => 'nullable|string|max:500',
+            'pasien' => 'required|string|max:255',
             'lihat_objek' => 'nullable|boolean',
             'tuli' => 'nullable|boolean',
             'main_pura_pura' => 'nullable|boolean',
@@ -234,13 +232,14 @@ class AdminController extends Controller
     }
     public function viewAnemia()
     {
-        $anemia = Anemia::all();
+        $anemia = Anemia::with('listPasien')->get();
         return view('kia.table.anemia', compact('anemia'));
     }
     public function editAnemia($id)
     {
         $anemia = Anemia::findOrFail($id);
-        return view('kia.anemia', compact('anemia'));
+        $pasien = Patients::all();
+        return view('kia.anemia', compact('anemia', 'pasien'));
     }
     public function deleteAnemia($id)
     {
@@ -255,16 +254,12 @@ class AdminController extends Controller
     }
     public function updateAnemia(Request $request, $id)
     {
-        // Find the anemia record by its ID
         $anemia = Anemia::findOrFail($id);
 
         // Define validation rules
         // dd($request->all())
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string', // Assuming "L" for male, "P" for female
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
             'keluhan_5l' => 'required|boolean',
             'mudah_mengantuk' => 'required|boolean',
             'sulit_konsentrasi' => 'required|boolean',
@@ -304,22 +299,20 @@ class AdminController extends Controller
 
     public function viewHepatitis()
     {
-        $hepatitis = Hepatitis::all();
+        $hepatitis = Hepatitis::with('listPasien')->get();
         return view('kia.table.hepatitis', compact('hepatitis'));
     }
     public function editHepatitis($id)
     {
         $hepatitis = Hepatitis::findOrFail($id);
-        return view('kia.hepatitis', compact('hepatitis'));
+        $pasien = Patients::all();
+        return view('kia.hepatitis', compact('hepatitis', 'pasien'));
     }
     public function updateHepatitis(Request $request, $id)
     {
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string|max:500',
-            'jenis_kelamin' => 'required|string',
+            'pasien' => 'required',
             'sudah_periksa_hepatitis' => 'required|boolean',
             'keluhan' => 'required|array',
             'demam' => 'required|boolean',
@@ -372,13 +365,14 @@ class AdminController extends Controller
     }
     public function viewTalasemia()
     {
-        $talasemia = Talasemia::all();
+        $talasemia = Talasemia::with('listPasien')->get();
         return view('kia.table.talasemia', compact('talasemia'));
     }
     public function editTalasemia($id)
     {
         $talasemia = Talasemia::findOrFail($id);
-        return view('kia.talasemia', compact('talasemia'));
+        $pasien = Patients::all();
+        return view('kia.talasemia', compact('talasemia', 'pasien'));
     }
     public function deleteTalasemia($id)
     {
@@ -395,9 +389,7 @@ class AdminController extends Controller
     {
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
             'terima_darah' => 'required|boolean',
             'saudara_talasemia' => 'required|boolean',
             'keluarga_transfusi' => 'required|boolean',
@@ -435,13 +427,15 @@ class AdminController extends Controller
     }
     public function viewHiv()
     {
-        $hiv = Hiv::all();
+        $hiv = Hiv::with('listPasien')->get();
+
         return view('kia.table.hiv', compact('hiv'));
     }
     public function editHiv($id)
     {
         $hiv = Hiv::findOrFail($id);
-        return view('kia.hiv', compact('hiv'));
+        $pasien = Patients::all();
+        return view('kia.hiv', compact('hiv', 'pasien'));
     }
     public function deleteHiv($id)
     {
@@ -560,13 +554,14 @@ class AdminController extends Controller
     }
     public function viewDiabetesMellitus()
     {
-        $diabetesMellitus = DiabetesMellitus::all();
+        $diabetesMellitus = DiabetesMellitus::with('listPasien')->get();
         return view('kia.table.diabetes_mellitus', compact('diabetesMellitus'));
     }
     public function editDiabetesMellitus($id)
     {
         $diabetesMellitus = DiabetesMellitus::findOrFail($id);
-        return view('kia.diabetes_mellitus', compact('diabetesMellitus'));
+        $pasien = Patients::all();
+        return view('kia.diabetes_mellitus', compact('diabetesMellitus', 'pasien'));
     }
     public function deleteDiabetesMellitus($id)
     {
@@ -586,13 +581,7 @@ class AdminController extends Controller
 
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'tempat_lahir' => 'required|string|max:255',
-            'alamat' => 'required|string|max:500',
-            'penyakit_dulu' => 'nullable|string|max:500',
-            'penyakit_sekarang' => 'nullable|string|max:500',
-            'penyakit_keluarga' => 'nullable|string|max:500',
+            'pasien' => 'required',
             'tinggi_badan' => 'required|numeric',
             'berat_badan' => 'required|numeric',
             'lingkar_perut' => 'required|numeric',
@@ -764,13 +753,14 @@ class AdminController extends Controller
 
     public function viewKekerasanAnak()
     {
-        $kekerasanAnak = KekerasanAnak::all();
+        $kekerasanAnak = KekerasanAnak::with('listPasien')->get();
         return view('kia.table.kekerasan_anak', compact('kekerasanAnak'));
     }
     public function editKekerasanAnak($id)
     {
         $kekerasanAnak = KekerasanAnak::findOrFail($id);
-        return view('kia.kekerasan_anak', compact('kekerasanAnak'));
+        $pasien = Patients::all();
+        return view('kia.kekerasan_anak', compact('kekerasanAnak', 'pasien'));
     }
     public function deleteKekerasanAnak($id)
     {
@@ -791,11 +781,7 @@ class AdminController extends Controller
 
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tempat_lahir' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string|max:500',
-            'jenis_kelamin' => 'required|string',
+            'pasien' => 'required',
             'diperoleh_dari' => 'required|string|max:255',
             'hubungan_pasien' => 'required',
             'kekerasan' => 'required',

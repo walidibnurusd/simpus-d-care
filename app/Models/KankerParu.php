@@ -12,11 +12,7 @@ class KankerParu extends Model
     protected $table = 'kanker_paru';
 
     protected $fillable = [
-        'nama', 
-        'tanggal', 
-        'jenis_kelamin', 
-        'usia', 
-        'kanker', 
+        'pasien', 
         'keluarga_kanker', 
         'merokok', 
         'riwayat_tempat_kerja', 
@@ -26,5 +22,9 @@ class KankerParu extends Model
         'klaster', 
         'poli'
     ];
+       public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 
 }

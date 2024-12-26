@@ -12,10 +12,8 @@ return new class extends Migration {
     {
         Schema::create('diabetes_mellitus', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('tempat_lahir');
-            $table->date('tanggal_lahir');
-            $table->string('alamat');
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->longText('penyakit_dulu')->nullable();
             $table->longText('penyakit_sekarang')->nullable();
             $table->longText('penyakit_keluarga')->nullable();

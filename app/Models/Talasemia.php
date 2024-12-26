@@ -10,5 +10,10 @@ class Talasemia extends Model
     use HasFactory;
     protected $table = 'talasemia';
 
-    protected $fillable = ['nama', 'tanggal_lahir', 'alamat', 'terima_darah', 'saudara_talasemia', 'keluarga_transfusi', 'keluarga_transfusi', 'pubertas_telat', 'anemia', 'ikterus', 'faices_cooley', 'perut_buncit', 'gizi_buruk', 'tubuh_pendek', 'hipergimentasi_kulit', 'klaster','poli'];
+    protected $fillable = ['pasien', 'terima_darah', 'saudara_talasemia', 'keluarga_transfusi', 'keluarga_transfusi', 'pubertas_telat', 'anemia', 'ikterus', 'faices_cooley', 'perut_buncit', 'gizi_buruk', 'tubuh_pendek', 'hipergimentasi_kulit', 'klaster','poli'];
+
+        public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }

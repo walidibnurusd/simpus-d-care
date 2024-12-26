@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,10 +12,8 @@ return new class extends Migration
     {
         Schema::create('kanker_paru', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal');
-            $table->string('jenis_kelamin')->nullable();
-            $table->string('usia');
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->integer('kanker')->nullable();
             $table->integer('keluarga_kanker')->nullable();
             $table->integer('merokok')->nullable();

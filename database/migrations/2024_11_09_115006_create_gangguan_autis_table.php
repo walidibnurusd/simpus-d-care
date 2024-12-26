@@ -12,10 +12,8 @@ return new class extends Migration {
     {
         Schema::create('gangguan_autis', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal_lahir');
-            $table->string('jenis_kelamin');
-            $table->string('alamat');
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->boolean('lihat_objek')->default(false);
             $table->boolean('tuli')->default(false);
             $table->boolean('main_pura_pura')->default(false);

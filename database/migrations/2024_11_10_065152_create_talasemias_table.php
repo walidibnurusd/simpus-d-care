@@ -12,9 +12,8 @@ return new class extends Migration {
     {
         Schema::create('talasemia', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal_lahir');
-            $table->string('alamat');
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->boolean('terima_darah')->default(false);
             $table->boolean('saudara_talasemia')->default(false);
             $table->boolean('keluarga_transfusi')->default(false);

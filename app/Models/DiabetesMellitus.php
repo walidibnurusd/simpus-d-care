@@ -10,6 +10,10 @@ class DiabetesMellitus extends Model
     use HasFactory;
      protected $table = 'diabetes_mellitus';
 
-    protected $fillable = ['nama', 'tanggal_lahir', 'tempat_lahir','alamat','penyakit_dulu','penyakit_sekarang','penyakit_keluarga','tinggi_badan','berat_badan','lingkar_perut','tekanan_darah_sistol','tekanan_darah_diastol', 'klaster', 'poli'];
+    protected $fillable = ['pasien','hasil','tinggi_badan','berat_badan','lingkar_perut','tekanan_darah_sistol','tekanan_darah_diastol', 'klaster', 'poli'];
    
+      public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }

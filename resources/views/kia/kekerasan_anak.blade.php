@@ -1,4 +1,4 @@
-@extends('layouts.skrining.master')
+\@extends('layouts.skrining.master')
 @section('title', 'Skrining Kekerasan Pada Anak')
 @section('content')
     <!-- Success Alert -->
@@ -41,15 +41,29 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Nama</label>
-                        <input type="text" class="form-control" name="nama" placeholder="Masukkan nama lengkap"
-                            value="{{ isset($kekerasanAnak) ? $kekerasanAnak->nama : old('nama') }}">
+                        <label>Pasien</label>
+                        <select class="form-control form-select select2" id="pasien" name="pasien">
+                            <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
+                            @foreach ($pasien as $item)
+                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
+                                    data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
+                                    data-alamat="{{ $item->address }}" data-jenis_kelamin="{{ $item->genderName->name }}"
+                                    data-pob="{{ $item->place_birth }}"
+                                    {{ old('pasien', $kekerasanAnak->pasien ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }} - {{ $item->nik }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('pasien')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tempat Lahir</label>
                         <input type="text" class="form-control" name="tempat_lahir" placeholder="Masukkan tempat lahir"
+                            id="tempat_lahir"
                             value="{{ isset($kekerasanAnak) ? $kekerasanAnak->tempat_lahir : old('tempat_lahir') }}">
                     </div>
                 </div>
@@ -59,7 +73,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir"
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
                             value="{{ isset($kekerasanAnak) ? $kekerasanAnak->tanggal_lahir : old('tanggal_lahir') }}">
                     </div>
                 </div>
@@ -67,7 +81,7 @@
                     <div class="form-group">
                         <label>Alamat Lengkap</label>
                         <input type="text" class="form-control" name="alamat" placeholder="Masukkan alamat lengkap"
-                            value="{{ isset($kekerasanAnak) ? $kekerasanAnak->alamat : old('alamat') }}">
+                            id="alamat" value="{{ isset($kekerasanAnak) ? $kekerasanAnak->alamat : old('alamat') }}">
                     </div>
                 </div>
             </div>
@@ -78,15 +92,15 @@
                         <label>Jenis Kelamin</label>
                         <div class="d-flex">
                             <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki"
-                                    id="laki-laki"
-                                    {{ isset($kekerasanAnak) && $kekerasanAnak->jenis_kelamin == 'laki-laki' ? 'checked' : '' }}>
+                                <input type="radio" class="form-check-input" name="jenis_kelamin_kecacingan"
+                                    value="laki-laki" id="jk_laki"
+                                    {{ old('jenis_kelamin', $kekerasanAnak->jenis_kelamin ?? '') == 'laki-laki' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan"
-                                    id="perempuan"
-                                    {{ isset($kekerasanAnak) && $kekerasanAnak->jenis_kelamin == 'perempuan' ? 'checked' : '' }}>
+                                    id="jk_perempuan"
+                                    {{ old('jenis_kelamin', $kekerasanAnak->jenis_kelamin ?? '') == 'perempuan' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perempuan">Perempuan</label>
                             </div>
                         </div>
@@ -371,29 +385,33 @@
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
                                 <!-- Check if the checkbox was checked (either from DB or old input) -->
-                                <input type="checkbox" class="form-check-input" name="tanda_kekerasan_check[]" value="memar" 
-                                style="margin-right: 10px;" 
-                                {{ 
-                                    (isset($kekerasanAnak->tanda_kekerasan_check) && in_array('memar', $kekerasanAnak->tanda_kekerasan_check)) || 
-                                    old('tanda_kekerasan_check') ? 'checked' : '' 
-                                }}>
+                                <input type="checkbox" class="form-check-input" name="tanda_kekerasan_check[]"
+                                    value="memar" style="margin-right: 10px;"
+                                    {{ (isset($kekerasanAnak->tanda_kekerasan_check) &&
+                                        is_array($kekerasanAnak->tanda_kekerasan_check) &&
+                                        in_array('memar', $kekerasanAnak->tanda_kekerasan_check)) ||
+                                    (is_array(old('tanda_kekerasan_check')) && in_array('memar', old('tanda_kekerasan_check')))
+                                        ? 'checked'
+                                        : '' }}>
                                 <label style="width: 250px;">Terdapat memar di</label>
-                        
+
                                 <!-- Use old input value for the text field, or value from DB if available -->
                                 <input type="text" class="form-control" name="tanda_kekerasan[]"
                                     placeholder="Masukkan lokasi memar"
-                                    value="{{ old('tanda_kekerasan', isset($kekerasanAnak->tanda_kekerasan[0]) ? $kekerasanAnak->tanda_kekerasan[0] : '') }}"
+                                    value="{{ old('tanda_kekerasan.0', isset($kekerasanAnak->tanda_kekerasan[0]) ? $kekerasanAnak->tanda_kekerasan[0] : '') }}"
                                     style="width: calc(60% - 160px); display: inline-block;">
                             </div>
                         </div>
-                        
+
+
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" class="form-check-input" name="tanda_kekerasan_check[]" value="robek" style="margin-right: 10px;"
-                                {{ 
-                                    (isset($kekerasanAnak->tanda_kekerasan_check) && in_array('robek', $kekerasanAnak->tanda_kekerasan_check)) || 
-                                    old('tanda_kekerasan_check') ? 'checked' : '' 
-                                }}>
+                                <input type="checkbox" class="form-check-input" name="tanda_kekerasan_check[]"
+                                    value="robek" style="margin-right: 10px;"
+                                    {{ (isset($kekerasanAnak->tanda_kekerasan_check) && in_array('robek', $kekerasanAnak->tanda_kekerasan_check)) ||
+                                    old('tanda_kekerasan_check')
+                                        ? 'checked'
+                                        : '' }}>
                                 <label style="width: 250px;">Luka lecet dan luka robek di</label>
                                 <input type="text" class="form-control" name="tanda_kekerasan[]"
                                     placeholder="Masukkan lokasi luka lecet dan luka robek"
@@ -403,58 +421,65 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" class="form-check-input" style="margin-right: 10px;" name="tanda_kekerasan_check[]" value="patah"
-                                {{ 
-                                    (isset($kekerasanAnak->tanda_kekerasan_check) && in_array('patah', $kekerasanAnak->tanda_kekerasan_check)) || 
-                                    old('tanda_kekerasan_check') ? 'checked' : '' 
-                                }}>
+                                <input type="checkbox" class="form-check-input" style="margin-right: 10px;"
+                                    name="tanda_kekerasan_check[]" value="patah"
+                                    {{ (isset($kekerasanAnak->tanda_kekerasan_check) && in_array('patah', $kekerasanAnak->tanda_kekerasan_check)) ||
+                                    old('tanda_kekerasan_check')
+                                        ? 'checked'
+                                        : '' }}>
                                 <label style="width: 250px;">Patah tulang baru / lama di</label>
                                 <input type="text" class="form-control" name="tanda_kekerasan[]"
                                     placeholder="Masukkan lokasi patah tulang baru/lama"
-                                                 value="{{ old('tanda_kekerasan', isset($kekerasanAnak->tanda_kekerasan[2]) ? $kekerasanAnak->tanda_kekerasan[2] : '') }}"
+                                    value="{{ old('tanda_kekerasan', isset($kekerasanAnak->tanda_kekerasan[2]) ? $kekerasanAnak->tanda_kekerasan[2] : '') }}"
                                     style="width: calc(60% - 160px); display: inline-block;">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" class="form-check-input" style="margin-right: 10px;" name="tanda_kekerasan_check[]" value="gigi_patah"
-                                {{ 
-                                    (isset($kekerasanAnak->tanda_kekerasan_check) && in_array('gigi_patah', $kekerasanAnak->tanda_kekerasan_check)) || 
-                                    old('tanda_kekerasan_check') ? 'checked' : '' 
-                                }}>
+                                <input type="checkbox" class="form-check-input" style="margin-right: 10px;"
+                                    name="tanda_kekerasan_check[]" value="gigi_patah"
+                                    {{ (isset($kekerasanAnak->tanda_kekerasan_check) &&
+                                        in_array('gigi_patah', $kekerasanAnak->tanda_kekerasan_check)) ||
+                                    old('tanda_kekerasan_check')
+                                        ? 'checked'
+                                        : '' }}>
                                 <label style="width: 250px;">Gigi Patah / Berdarah</label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" class="form-check-input" style="margin-right: 10px;" name="tanda_kekerasan_check[]" value="luka_bakar"
-                                {{ 
-                                    (isset($kekerasanAnak->tanda_kekerasan_check) && in_array('luka_bakar', $kekerasanAnak->tanda_kekerasan_check)) || 
-                                    old('tanda_kekerasan_check') ? 'checked' : '' 
-                                }}>
+                                <input type="checkbox" class="form-check-input" style="margin-right: 10px;"
+                                    name="tanda_kekerasan_check[]" value="luka_bakar"
+                                    {{ (isset($kekerasanAnak->tanda_kekerasan_check) &&
+                                        in_array('luka_bakar', $kekerasanAnak->tanda_kekerasan_check)) ||
+                                    old('tanda_kekerasan_check')
+                                        ? 'checked'
+                                        : '' }}>
                                 <label style="width: 250px;">Terdapat luka bakar di lokasi</label>
                                 <input type="text" class="form-control" name="tanda_kekerasan[]"
                                     placeholder="Masukkan lokasi luka bakar"
-                                      value="{{ old('tanda_kekerasan', isset($kekerasanAnak->tanda_kekerasan[3]) ? $kekerasanAnak->tanda_kekerasan[3] : '') }}"
+                                    value="{{ old('tanda_kekerasan', isset($kekerasanAnak->tanda_kekerasan[3]) ? $kekerasanAnak->tanda_kekerasan[3] : '') }}"
                                     style="width: calc(40% - 160px); display: inline-block;">
                                 <label style="margin-left: 10px;">derajat</label>
                                 <input type="text" class="form-control" name="derajat_luka_bakar"
-                                 value="{{ old('derajat_luka_bakar', isset($kekerasanAnak->derajat_luka_bakar) ? $kekerasanAnak->derajat_luka_bakar : '') }}"
+                                    value="{{ old('derajat_luka_bakar', isset($kekerasanAnak->derajat_luka_bakar) ? $kekerasanAnak->derajat_luka_bakar : '') }}"
                                     placeholder="Derajat" style="width: 100px; display: inline-block; margin-left: 10px;">
                                 <label style="margin-left: 5px;">%</label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" class="form-check-input" style="margin-right: 10px;" name="tanda_kekerasan_check[]" value="cedera"
-                                {{ 
-                                    (isset($kekerasanAnak->tanda_kekerasan_check) && in_array('cedera', $kekerasanAnak->tanda_kekerasan_check)) || 
-                                    old('tanda_kekerasan_check') ? 'checked' : '' 
-                                }}>
+                                <input type="checkbox" class="form-check-input" style="margin-right: 10px;"
+                                    name="tanda_kekerasan_check[]" value="cedera"
+                                    {{ (isset($kekerasanAnak->tanda_kekerasan_check) &&
+                                        in_array('cedera', $kekerasanAnak->tanda_kekerasan_check)) ||
+                                    old('tanda_kekerasan_check')
+                                        ? 'checked'
+                                        : '' }}>
                                 <label style="width: 250px;">Cedera kepala di daerah</label>
                                 <input type="text" class="form-control" name="tanda_kekerasan[]"
                                     placeholder="Masukkan lokasi cedera kepala"
-                                                                          value="{{ old('tanda_kekerasan', isset($kekerasanAnak->tanda_kekerasan[4]) ? $kekerasanAnak->tanda_kekerasan[4] : '') }}"
+                                    value="{{ old('tanda_kekerasan', isset($kekerasanAnak->tanda_kekerasan[4]) ? $kekerasanAnak->tanda_kekerasan[4] : '') }}"
                                     style="width: calc(60% - 160px); display: inline-block;">
                             </div>
                         </div>
@@ -584,10 +609,12 @@
 
             <div class="text-right mt-4">
                 @if (isset($kekerasanAnak))
-                <a href="{{ route('kekerasan.anak.admin') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-            @else
-                <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-            @endif
+                    <a href="{{ route('kekerasan.anak.admin') }}" type="button" class="btn btn-secondary mr-2"
+                        style="font-size: 20px">Kembali</a>
+                @else
+                    <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
+                        style="font-size: 20px">Kembali</a>
+                @endif
                 <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
             </div>
     </form>
@@ -603,5 +630,38 @@
                 textInput.style.display = 'none';
             }
         }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            $('.select2').select2({
+                placeholder: "Pilih pasien",
+                allowClear: true
+            });
+
+            $('#pasien').on('change', function() {
+                var selectedOption = $(this).find(':selected');
+
+                var dob = selectedOption.data('dob');
+                var alamat = selectedOption.data('alamat');
+                var jk = selectedOption.data('jenis_kelamin');
+                var pob = selectedOption.data('pob');
+
+
+
+                $('#tanggal_lahir').val(dob);
+                $('#alamat').val(alamat);
+                $('#tempat_lahir').val(pob);
+                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
+                if (jk === 'Laki-Laki') {
+                    $('#jk_laki').prop('checked', true);
+                } else if (jk === 'Perempuan') {
+                    $('#jk_perempuan').prop('checked', true);
+                }
+            });
+            $('#pasien').trigger('change');
+        });
     </script>
 @endsection

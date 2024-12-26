@@ -12,10 +12,8 @@ return new class extends Migration {
     {
         Schema::create('hiv', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal_lahir');
-            $table->string('jenis_kelamin');
-            $table->string('alamat');
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->boolean('tes_hiv')->default(false);
             $table->date('tanggal_tes_terakhir')->nullable();
             $table->boolean('penurunan_berat')->default(false);

@@ -20,7 +20,7 @@
                 <img src="{{ 'assets/assets/img/logo-mks.png' }}" alt="Healthcare Workers" class="header-logo" />
             </div>
             <div class="col-auto">
-                <div class="header-text">Puskesmas Makassar</div>
+                <div class="header-text">Puskesmas Tamangapa</div>
             </div>
         </div>
 
@@ -30,7 +30,8 @@
                     <div class="col-lg-6 d-none d-lg-flex pe-0 text-center justify-content-center flex-column">
                         <div
                             class="position-relative h-100 m-3 border-radius-lg d-flex flex-column justify-content-center overflow-hidden">
-                            <img src="{{ 'assets/assets/img/login-img.png' }}" alt="Healthcare Workers" class="img-fluid" />
+                            <img src="{{ 'assets/assets/img/login-img.png' }}" alt="Healthcare Workers"
+                                class="img-fluid" />
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
