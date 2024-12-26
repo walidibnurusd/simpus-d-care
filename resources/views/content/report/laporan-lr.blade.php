@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,50 +10,65 @@
             font-family: "Times New Roman", Times, serif;
             font-size: 12px;
         }
+
         .header {
             text-align: center;
         }
+
         .header img {
             width: 80px;
             height: auto;
         }
-        .header h1, .header h2, .header p {
+
+        .header h1,
+        .header h2,
+        .header p {
             margin: 0;
             line-height: 1.2;
         }
+
         .table-container {
             margin-top: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        table th, table td {
+
+        table th,
+        table td {
             border: 1px solid #000;
             padding: 5px;
             text-align: center;
         }
+
         table th {
             background-color: #f0f0f0;
         }
+
         @media print {
             @page {
-                size: legal; /* Ukuran kertas Letter */
-                margin: 20px; /* Margin */
+                size: legal;
+                /* Ukuran kertas Letter */
+                margin: 20px;
+                /* Margin */
             }
 
             body {
-                transform: scale(1); /* Skala untuk mengecilkan */
+                transform: scale(1);
+                /* Skala untuk mengecilkan */
                 /* Titik asal transformasi */
             }
-}
-.left-align {
-            text-align: left;
         }
 
+        .left-align {
+            text-align: left;
+        }
     </style>
-    
+
 </head>
+
 <body>
     <div class="header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -60,19 +76,19 @@
             <div>
                 <h1>PEMERINTAH KOTA MAKASSAR</h1>
                 <h2 style="margin: 0px">DINAS KESEHATAN</h2>
-                <h3 style="margin:0px">UPT Puskesmas Makassar</h3>
+                <h3 style="margin:0px">UPT Puskesmas Tamangapa</h3>
                 <p>Jl. xx yy No.264 Kode Pos : 90235 Makassar</p>
                 <p>Telp. 0411-494014 Call Center : 081245194368</p>
                 <p>Email: pkmmakassar@gmail.com | Situs: puskesmasmakassar.or.id</p>
             </div>
             <img src="../assets/assets/img/logo-puskesmas.png" alt="Logo Right">
         </div>
-    <hr>
+        <hr>
         <h3 style="margin-top: 20px;">LAPORAN RUJUKAN</h3>
-       
-  
+
+
     </div>
-    
+
     <div class="table-container">
         <table border="1">
             <thead>
@@ -80,27 +96,27 @@
                     <th rowspan="2" style="width: 5%">No.</th>
                     <th rowspan="2">ICD X </th>
                     <th rowspan="2">JENIS PENYAKIT</th>
-                 
-                    <th  colspan="3">Jenis Kelamin </th>
-                    <th  colspan="6">Jenis Pembayaran</th>
-                    <th  rowspan="2">Rumah sakit 1</th>
-                    <th  rowspan="2">Rumah sakit 2</th>
-                
-                   
+
+                    <th colspan="3">Jenis Kelamin </th>
+                    <th colspan="6">Jenis Pembayaran</th>
+                    <th rowspan="2">Rumah sakit 1</th>
+                    <th rowspan="2">Rumah sakit 2</th>
+
+
                 </tr>
-               <tr>
-                
-                <th>L</th>
-                <th>P</th>
-                <th>JML</th>
-                <th>Umum</th>
-                <th>ASK</th>
-                <th>JKM</th>
-                <th>JKD</th>
-                <th>BPJS Mandiri</th>
-                <th>JML</th>
-               </tr>
-            
+                <tr>
+
+                    <th>L</th>
+                    <th>P</th>
+                    <th>JML</th>
+                    <th>Umum</th>
+                    <th>ASK</th>
+                    <th>JKM</th>
+                    <th>JKD</th>
+                    <th>BPJS Mandiri</th>
+                    <th>JML</th>
+                </tr>
+
             </thead>
             <tbody>
                 <tr>
@@ -118,11 +134,11 @@
                     <td>2</td>
                     <td>3</td>
                     <td>2</td>
-                   
+
                 </tr>
             </tbody>
         </table>
-       
+
         <div style="margin-top: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px;">
                 <!-- Bagian Kiri -->
@@ -132,7 +148,7 @@
                     <br><br><br>
                     <p><strong>(___________________)</strong></p>
                 </div>
-        
+
                 <!-- Bagian Kanan -->
                 <div style="text-align: left; width: 40%; padding-left: 50%;">
                     <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
@@ -143,8 +159,9 @@
                 </div>
             </div>
         </div>
-        
-        
+
+
     </div>
 </body>
+
 </html>
