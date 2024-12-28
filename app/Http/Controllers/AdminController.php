@@ -93,7 +93,7 @@ class AdminController extends Controller
     }
     public function viewHipertensi()
     {
-        $hipertensi = Hipertensi::all();
+        $hipertensi = Hipertensi::with('listPasien')->where('poli','kia')->all();
         return view('kia.table.hipertensi', compact('hipertensi'));
     }
     public function editHipertensi($id)
@@ -232,7 +232,7 @@ class AdminController extends Controller
     }
     public function viewAnemia()
     {
-        $anemia = Anemia::with('listPasien')->get();
+        $anemia = Anemia::with('listPasien')->where('poli','kia')->get();
         return view('kia.table.anemia', compact('anemia'));
     }
     public function editAnemia($id)
@@ -495,7 +495,7 @@ class AdminController extends Controller
     }
     public function viewKecacingan()
     {
-        $kecacingan = Kecacingan::with('listPasien')->get();
+        $kecacingan = Kecacingan::with('listPasien')->where('poli','kia')->get();
         return view('kia.table.kecacingan', compact('kecacingan'));
     }
     public function editKecacingan($id)
@@ -611,7 +611,7 @@ class AdminController extends Controller
     }
     public function viewTbc(){
         $pasien = Patients::all();
-        $tbc =  Tbc::all();
+        $tbc =  Tbc::with('listPasien')->where('poli','kia')->get();
         return view('kia.table.tbc',compact('tbc','pasien'));
     }
     public function editTbc($id)

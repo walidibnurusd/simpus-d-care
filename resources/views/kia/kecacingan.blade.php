@@ -50,6 +50,16 @@
         @if (isset($kecacingan))
             @method('PUT')
         @endif
+        @if ($routeName === 'kecacingan.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="kia">
+        @elseif($routeName === 'kecacingan.mtbs.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="mtbs">
+        @elseif($routeName === 'kecacingan.lansia.view')
+            <input type="hidden" name="klaster" value="3">
+            <input type="hidden" name="poli" value="lansia">
+        @endif
         <div class="form-section">
             <h3>Identitas</h3>
             <div class="row">
@@ -142,7 +152,8 @@
                             <label class="form-check-label" for="ya_diare">Ya</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="diare" value="0" id="tidak_diare"
+                            <input type="radio" class="form-check-input" name="diare" value="0"
+                                id="tidak_diare"
                                 {{ isset($kecacingan->diare) && $kecacingan->diare == 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="tidak_diare">Tidak</label>
                         </div>

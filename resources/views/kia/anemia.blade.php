@@ -32,6 +32,17 @@
         @if (isset($anemia))
             @method('PUT')
         @endif
+        @if ($routeName === 'anemia.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="kia">
+        @elseif($routeName === 'anemia.mtbs.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="mtbs">
+        @elseif($routeName === 'anemia.lansia.view')
+            <input type="hidden" name="klaster" value="3">
+            <input type="hidden" name="poli" value="lansia">
+        @endif
+
         <div class="form-section">
             <h3>Identitas</h3>
             <div class="row">

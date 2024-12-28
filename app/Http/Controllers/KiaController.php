@@ -18,6 +18,7 @@ use App\Models\Talasemia;
 use App\Models\TripleEliminasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class KiaController extends Controller
 {
@@ -61,19 +62,17 @@ class KiaController extends Controller
         return redirect()->route('layakHamil.view')->with('success', 'Data saved successfully');
     }
 
-    public function showHipertensi()
+    public function showHipertensi(Request $request)
     {
         $pasien = Patients::all();
-        return view('kia.hipertensi', compact('pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.hipertensi', compact('pasien', 'routeName'));
     }
     public function storeHipertensi(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
             'pasien' => 'required',
-            // 'tanggal_lahir' => 'required|date',
-            // 'jenis_kelamin' => 'required|string|max:10',
-            // 'alamat' => 'required|string|max:255',
             'ortu_hipertensi' => 'required|boolean',
             'saudara_hipertensi' => 'required|boolean',
             'tubuh_gemuk' => 'required|boolean',
@@ -89,10 +88,8 @@ class KiaController extends Controller
             'rutin_olahraga' => 'required|boolean',
             'makan_sayur' => 'required|boolean',
             'makan_buah' => 'required|boolean',
-            // 'jmlh_rokok' => ''??0,
         ]);
 
-        // Check validation
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->with('error', 'Validation errors occurred.')->withInput();
         }
@@ -100,8 +97,8 @@ class KiaController extends Controller
         // Store data with default values for 'klaster' and 'poli' if not provided
         $hipertensi = Hipertensi::create(
             array_merge($validator->validated(), [
-                'klaster' => 2,
-                'poli' => 'kia',
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
             ]),
         );
 
@@ -140,7 +137,6 @@ class KiaController extends Controller
             'suka_bergerak' => 'nullable|boolean',
         ]);
 
-        // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
         }
@@ -156,10 +152,11 @@ class KiaController extends Controller
         // Redirect with a success message
         return redirect()->route('gangguan.autis.view')->with('success', 'Data Gangguan Autis created successfully!');
     }
-    public function showKecacingan()
+    public function showKecacingan(Request $request)
     {
         $pasien = Patients::all();
-        return view('kia.kecacingan', compact('pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.kecacingan', compact('pasien', 'routeName'));
     }
 
     public function storeKecacingan(Request $request)
@@ -187,8 +184,8 @@ class KiaController extends Controller
             array_merge(
                 $validator->validated(), // Only uses validated data
                 [
-                    'klaster' => 2, // Adding 'klaster' field with a specific value
-                    'poli' => 'kia', // Adding 'poli' field with a specific value
+                    'klaster' => $request->klaster,
+                    'poli' => $request->poli, // Adding 'poli' field with a specific value
                 ],
             ),
         );
@@ -241,14 +238,16 @@ class KiaController extends Controller
         return redirect()->route('hiv.view')->with('success', 'Data HIV created successfully!');
     }
 
-    public function showAnemia()
+    public function showAnemia(Request $request)
     {
         $pasien = Patients::all();
-        return view('kia.anemia', compact('pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.anemia', compact('pasien', 'routeName'));
     }
+
     public function storeAnemia(Request $request)
     {
-        // Define validation rules
+        // Validasi input
         $validator = Validator::make($request->all(), [
             'pasien' => 'required',
             'keluhan_5l' => 'required|boolean',
@@ -264,29 +263,20 @@ class KiaController extends Controller
             'kadar_hemoglobin' => 'required',
         ]);
 
-        // Check if validation fails
         if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator) // Sends validation error messages
-                ->with('error', 'There were validation errors.') // Custom error message
-                ->withInput(); // Retains input data for repopulating the form
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Create and store the new Anemia record
         $anemia = Anemia::create(
-            array_merge(
-                $validator->validated(), // Only uses validated data
-                [
-                    'klaster' => 2,
-                    'poli' => 'kia',
-                ],
-            ),
+            array_merge($validator->validated(), [
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
+            ]),
         );
 
-        // Redirect with a success message
         return redirect()->route('anemia.view')->with('success', 'Data Anemia created successfully!');
     }
+
     public function showTalasemia()
     {
         $pasien = Patients::all();
@@ -484,9 +474,11 @@ class KiaController extends Controller
         // Redirect with a success message
         return redirect()->route('diabetes.mellitus.view')->with('success', 'Data Diabetes Mellitus created successfully!');
     }
-    public function showTbc()
-    { $pasien = Patients::all();
-        return view('kia.tbc',compact('pasien'));
+    public function showTbc(Request $request)
+    {
+        $pasien = Patients::all();
+        $routeName = $request->route()->getName();
+        return view('kia.tbc', compact('pasien', 'routeName'));
     }
     public function storeTbc(Request $request)
     {
@@ -494,15 +486,6 @@ class KiaController extends Controller
         $validator = Validator::make($request->all(), [
             'pasien' => 'required',
             'tempat_skrining' => 'required|string|max:255',
-            // 'tanggal_lahir' => 'required|date',
-            // 'alamat_domisili' => 'required|string|max:500',
-            // 'alamat_ktp' => 'nullable|string|max:500',
-            // 'nik' => 'required',
-            // 'pekerjaan' => 'nullable|string|max:255',
-            // 'imt' => ''??0,
-            'usia' => 'nullable',
-            // 'jenis_kelamin' => 'required|string',
-            // 'no_hp' => 'required',
             'tinggi_badan' => 'required|numeric',
             'berat_badan' => 'required|numeric',
             'status_gizi' => 'nullable|string|max:255',
@@ -541,8 +524,8 @@ class KiaController extends Controller
         // Store validated data with additional fields
         Tbc::create(
             array_merge($validator->validated(), [
-                'klaster' => 2, // Assign a default value for klaster
-                'poli' => 'kia', // Assign a default value for poli
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
             ]),
         );
 

@@ -18,11 +18,11 @@
             border-radius: .25rem;
             padding: .375rem .75rem;
         }
-        
+
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             line-height: calc(1.5em + .75rem);
         }
-        
+
         .select2-container .select2-selection--single {
             display: flex;
             align-items: center;
@@ -50,6 +50,16 @@
         @if (isset($tbc))
             @method('PUT')
         @endif
+        @if ($routeName === 'tbc.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="kia">
+        @elseif($routeName === 'tbc.mtbs.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="mtbs">
+        @elseif($routeName === 'tbc.lansia.view')
+            <input type="hidden" name="klaster" value="3">
+            <input type="hidden" name="poli" value="lansia">
+        @endif
         <div class="form-section">
             <h3>Identitas</h3>
             <div class="row">
@@ -59,20 +69,18 @@
                         <select class="form-control form-select select2" id="pasien" name="pasien">
                             <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
                             @foreach ($pasien as $item)
-                                <option 
-                                    value="{{ $item->id }}" 
-                                    data-no_hp="{{ $item->phone }}" 
-                                    data-nik="{{ $item->nik }}" 
-                                    data-pekerjaan="{{ $item->occupations->name }}" 
-                                    data-jenis_kelamin="{{ $item->genderName->name }}"
-                                    data-dob="{{ $item->dob }}"
+                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
+                                    data-nik="{{ $item->nik }}" data-pekerjaan="{{ $item->occupations->name }}"
+                                    data-jenis_kelamin="{{ $item->genderName->name }}" data-dob="{{ $item->dob }}"
                                     data-alamat="{{ $item->address }}"
                                     {{ old('pasien', $tbc->pasien ?? '') == $item->id ? 'selected' : '' }}>
                                     {{ $item->name }} - {{ $item->nik }}
-                                </option>   
+                                </option>
                             @endforeach
                         </select>
-                        @error('pasien') <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('pasien')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -88,8 +96,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Alamat KTP</label>
-                        <input type="text" class="form-control" name="alamat_ktp" placeholder="Masukkan alamat KTP" id="alamat"
-                            value="{{ $tbc->alamat_ktp ?? '' }}">
+                        <input type="text" class="form-control" name="alamat_ktp" placeholder="Masukkan alamat KTP"
+                            id="alamat" value="{{ $tbc->alamat_ktp ?? '' }}">
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -112,8 +120,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Pekerjaan</label>
-                        <input type="text" class="form-control" name="pekerjaan" placeholder="Masukkan pekerjaan" id="pekerjaan"
-                            value="{{ $tbc->pekerjaan ?? '' }}">
+                        <input type="text" class="form-control" name="pekerjaan" placeholder="Masukkan pekerjaan"
+                            id="pekerjaan" value="{{ $tbc->pekerjaan ?? '' }}">
                     </div>
                 </div>
             </div>
@@ -130,7 +138,7 @@
                     <div class="form-group">
                         <label>Usia</label>
                         <input type="number" class="form-control" name="usia" value="{{ $tbc->usia ?? '' }}"
-                            id="usiaInput">
+                            id="usiaInput" readonly>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -138,14 +146,14 @@
                         <label>Jenis Kelamin</label>
                         <div class="d-flex">
                             <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki" id="jk_laki"
-                                    id="laki-laki"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki"
+                                    id="jk_laki" id="laki-laki"
                                     {{ isset($tbc) && $tbc->jenis_kelamin == 'laki-laki' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan" id="jk_perempuan"
-                                    id="perempuan"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan"
+                                    id="jk_perempuan" id="perempuan"
                                     {{ isset($tbc) && $tbc->jenis_kelamin == 'perempuan' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perempuan">Perempuan</label>
                             </div>
@@ -157,8 +165,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>No HP</label>
-                        <input type="number" class="form-control" name="no_hp" placeholder="Masukkan no HP" id="no_hp"
-                            value="{{ $tbc->no_hp ?? '' }}">
+                        <input type="number" class="form-control" name="no_hp" placeholder="Masukkan no HP"
+                            id="no_hp" value="{{ $tbc->no_hp ?? '' }}">
                     </div>
                 </div>
             </div>
@@ -802,6 +810,60 @@
             <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
         </div>
     </form>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Select2
+            $('.select2').select2({
+                placeholder: "Pilih pasien",
+                allowClear: true
+            });
+
+            // Event listener saat pasien dipilih
+            $('#pasien').on('change', function() {
+                var selectedOption = $(this).find(':selected');
+
+                // Ambil data dari atribut data-*
+                var no_hp = selectedOption.data('no_hp');
+                var nik = selectedOption.data('nik');
+                var dob = selectedOption.data('dob');
+                var alamat = selectedOption.data('alamat');
+                var pekerjaan = selectedOption.data('pekerjaan');
+                var jk = selectedOption.data('jenis_kelamin');
+
+
+                // Isi input dengan data yang diambil
+                $('#no_hp').val(no_hp);
+                $('#nik').val(nik);
+                $('#tanggal_lahir').val(dob);
+                $('#pekerjaan').val(pekerjaan);
+                $('#alamat').val(alamat);
+                $('#alamatd').val(alamat);
+                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
+                if (jk === 'Laki-Laki') {
+                    $('#jk_laki').prop('checked', true);
+                } else if (jk === 'Perempuan') {
+                    $('#jk_perempuan').prop('checked', true);
+                }
+                if (dob) {
+                    var today = new Date();
+                    var birthDate = new Date(dob);
+                    var age = today.getFullYear() - birthDate.getFullYear();
+                    var monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    $('#usiaInput').val(age); // Set usia pada input
+                    console.log("Usia yang diisi: " + $('#usiaInput').val()); // Log usia untuk debug
+                }
+
+            });
+            $('#pasien').trigger('change');
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const usiaInput = document.getElementById('usiaInput');
@@ -980,47 +1042,5 @@
 
             }
         }
-    </script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $(document).ready(function() {
-        // Inisialisasi Select2
-        $('.select2').select2({
-            placeholder: "Pilih pasien",
-            allowClear: true    
-        });
-    
-        // Event listener saat pasien dipilih
-        $('#pasien').on('change', function() {
-            var selectedOption = $(this).find(':selected');
-    
-            // Ambil data dari atribut data-*
-            var no_hp = selectedOption.data('no_hp');
-            var nik = selectedOption.data('nik');
-            var dob = selectedOption.data('dob');
-            var alamat = selectedOption.data('alamat');
-            var pekerjaan = selectedOption.data('pekerjaan');
-            var jk = selectedOption.data('jenis_kelamin');
-            console.log(jk);
-            
-            // Isi input dengan data yang diambil
-            $('#no_hp').val(no_hp);
-            $('#nik').val(nik);
-            $('#tanggal_lahir').val(dob);
-            $('#pekerjaan').val(pekerjaan);
-            $('#alamat').val(alamat);
-            $('#alamatd').val(alamat);
-            $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
-            if (jk === 'Laki-Laki') {
-                $('#jk_laki').prop('checked', true);
-            } else if (jk === 'Perempuan') {
-                $('#jk_perempuan').prop('checked', true);
-            }
-                });
-        $('#pasien').trigger('change');
-    });
-    
     </script>
 @endsection

@@ -97,16 +97,15 @@ class LansiaController extends Controller
     }
     public function showKankerKolorektal()
     {
-        $pasien = Patients::all();
-        return view('lansia.kanker_kolorektal',compact('pasien'));
+        return view('lansia.kanker_kolorektal');
     }
     public function storeKankerKolorektal(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'pasien' => 'required',
-            // 'tanggal' => 'required|date',
-            // 'jenis_kelamin' => 'required|integer|in:0,1',
+            'nama' => 'required|string|max:255',
+            'tanggal' => 'required|date',
+            'jenis_kelamin' => 'required|integer|in:0,1',
             'usia' => 'required|integer|min:0',
             'riwayat_kanker' => 'nullable',
             'merokok' => 'nullable',
@@ -138,21 +137,20 @@ class LansiaController extends Controller
     }
     public function showKankerPayudara()
     {
-        $pasien = Patients::all();
-        return view('lansia.kanker_payudara',compact('pasien'));
+        return view('lansia.kanker_payudara');
     }
     public function storeKankerPayudara(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
             'nomor_klien' => 'required|string|max:255',
-            'pasien' => 'required',
+            'nama' => 'required|string|max:255',
             'umur' => 'required|integer|min:1',
             'suku_bangsa' => 'nullable|string|max:255',
             'agama' => 'nullable|string|max:255',
             'berat_badan' => 'nullable|numeric|min:1',
             'tinggi_badan' => 'nullable|numeric|min:1',
-            // 'alamat' => 'nullable|string|max:500',
+            'alamat' => 'nullable|string|max:500',
             'perkawinan_pasangan' => 'nullable',
             'klien' => 'nullable',
             'pekerjaan_klien' => 'nullable',

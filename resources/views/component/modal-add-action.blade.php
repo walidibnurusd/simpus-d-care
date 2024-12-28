@@ -621,6 +621,11 @@
                             </select>
                         </div>
                         <div class="col-md-4">
+                            <label for="icd10" style="color: rgb(19, 11, 241);">ICD 10</label>
+                            <input type="text" class="form-control" id="icd10" name="icd10"
+                                placeholder="ICD 10" required>
+                        </div>
+                        <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                             <select class="form-control" id="tindakan" name="tindakan">
                                 <option value="" disabled selected>pilih</option>

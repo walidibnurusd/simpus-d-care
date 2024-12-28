@@ -39,7 +39,7 @@ class Patients extends Model
         return $this->belongsTo(Occupation::class, 'occupation', 'id');
     }
     public function villages()
-    {
-        return $this->belongsTo(Village::class, '	indonesia_village_id', 'id');
-    }
+{
+    return $this->belongsTo(Village::class, 'indonesia_village_id', 'id');
+}
 }

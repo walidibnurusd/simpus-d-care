@@ -262,46 +262,25 @@ Route::middleware('auth')->group(function () {
             Route::put('/test-pendengaran/{id}', [App\Http\Controllers\AdminControllerMTBS::class, 'updateTestPendengaran'])->name('testPendengaran.mtbs.update');
             Route::delete('/test-pendengaran/{id}', [App\Http\Controllers\AdminControllerMTBS::class, 'deleteTestPendengaran'])->name('testPendengaran.mtbs.delete');
 
-            Route::get('hipertensi', [App\Http\Controllers\AdminController::class, 'viewHipertensi'])->name('hipertensi.admin.mtbs');
-            // Route::get('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'editHipertensi'])->name('hipertensi.edit');
-            // Route::put('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'updateHipertensi'])->name('hipertensi.update');
-            // Route::delete('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'deleteHipertensi'])->name('hipertensi.delete');
+            Route::get('hipertensi', [App\Http\Controllers\AdminControllerMTBS::class, 'viewHipertensi'])->name('hipertensi.admin.mtbs');
 
-            Route::get('tbc', [App\Http\Controllers\AdminController::class, 'viewTbc'])->name('tbc.admin.mtbs');
-            // Route::get('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'editTbc'])->name('tbc.edit');
-            // Route::put('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'updateTbc'])->name('tbc.update');
-            // Route::delete('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'deleteTbc'])->name('tbc.delete');
+            Route::get('tbc', [App\Http\Controllers\AdminControllerMTBS::class, 'viewTbc'])->name('tbc.admin.mtbs');
+    
 
             Route::get('talasemia', [App\Http\Controllers\AdminController::class, 'viewTalasemia'])->name('talasemia.admin.mtbs');
-            // Route::get('/talasemia/{id}', [App\Http\Controllers\AdminController::class, 'editTalasemia'])->name('talasemia.edit');
-            // Route::put('/talasemia/{id}', [App\Http\Controllers\AdminController::class, 'updateTalasemia'])->name('talasemia.update');
-            // Route::delete('/talasemia/{id}', [App\Http\Controllers\AdminController::class, 'deleteTalasemia'])->name('talasemia.delete');
-
+    
             
-            Route::get('anemia', [App\Http\Controllers\AdminController::class, 'viewAnemia'])->name('anemia.admin.mtbs');
-            // Route::get('/anemia/{id}', [App\Http\Controllers\AdminController::class, 'editAnemia'])->name('anemia.edit');
-            // Route::put('/anemia/{id}', [App\Http\Controllers\AdminController::class, 'updateAnemia'])->name('anemia.update');
-            // Route::delete('/anemia/{id}', [App\Http\Controllers\AdminController::class, 'deleteAnemia'])->name('anemia.delete');
-
+            Route::get('anemia', [App\Http\Controllers\AdminControllerMTBS::class, 'viewAnemia'])->name('anemia.admin.mtbs');
+      
             Route::get('kekerasan-perempuan', [App\Http\Controllers\AdminController::class, 'viewKekerasanPerempuan'])->name('kekerasan.perempuan.admin.mtbs');
-            // Route::get('/kekerasan-perempuan/{id}', [App\Http\Controllers\AdminController::class, 'editKekerasanPerempuan'])->name('kekerasan.perempuan.edit');
-            // Route::put('/kekerasan-perempuan/{id}', [App\Http\Controllers\AdminController::class, 'updateKekerasanPerempuan'])->name('kekerasan.perempuan.update');
-            // Route::delete('/kekerasan-perempuan/{id}', [App\Http\Controllers\AdminController::class, 'deleteKekerasanPerempuan'])->name('kekerasan.perempuan.delete');
+         
 
             Route::get('kekerasan-anak', [App\Http\Controllers\AdminController::class, 'viewKekerasanAnak'])->name('kekerasan.anak.admin.mtbs');
-            // Route::get('/kekerasan-anak/{id}', [App\Http\Controllers\AdminController::class, 'editKekerasanAnak'])->name('kekerasan.anak.edit');
-            // Route::put('/kekerasan-anak/{id}', [App\Http\Controllers\AdminController::class, 'updateKekerasanAnak'])->name('kekerasan.anak.update');
-            // Route::delete('/kekerasan-anak/{id}', [App\Http\Controllers\AdminController::class, 'deleteKekerasanAnak'])->name('kekerasan.anak.delete');
 
             Route::get('diabetes-mellitus', [App\Http\Controllers\AdminController::class, 'viewDiabetesMellitus'])->name('diabetes.mellitus.admin.mtbs');
-            // Route::get('/diabetes-mellitus/{id}', [App\Http\Controllers\AdminController::class, 'editDiabetesMellitus'])->name('diabetes.mellitus.edit');
-            // Route::put('/diabetes-mellitus/{id}', [App\Http\Controllers\AdminController::class, 'updateDiabetesMellitus'])->name('diabetes.mellitus.update');
-            // Route::delete('/diabetes-mellitus/{id}', [App\Http\Controllers\AdminController::class, 'deleteDiabetesMellitus'])->name('diabetes.mellitus.delete');
-            
-            Route::get('kecacingan', [App\Http\Controllers\AdminController::class, 'viewKecacingan'])->name('kecacingan.admin.mtbs');
-            // Route::get('/kecacingan/{id}', [App\Http\Controllers\AdminController::class, 'editKecacingan'])->name('kecacingan.edit');
-            // Route::put('/kecacingan/{id}', [App\Http\Controllers\AdminController::class, 'updateKecacingan'])->name('kecacingan.update');
-            // Route::delete('/kecacingan/{id}', [App\Http\Controllers\AdminController::class, 'deleteKecacingan'])->name('kecacingan.delete');
+
+            Route::get('kecacingan', [App\Http\Controllers\AdminControllerMTBS::class, 'viewKecacingan'])->name('kecacingan.admin.mtbs');
+           
 
         });
         Route::prefix('lansia')->group(function () {
@@ -331,30 +310,14 @@ Route::middleware('auth')->group(function () {
             Route::delete('/kanker-kolorektal/{id}', [App\Http\Controllers\AdminLansiaController::class, 'deleteKankerKolorektal'])->name('kankerKolorektal.lansia.delete');
 
             Route::get('layak-hamil', [App\Http\Controllers\AdminController::class, 'viewLayakHamil'])->name('layakHamil.admin.lansia');
-            // Route::get('/layak-hamil/{id}', [App\Http\Controllers\AdminController::class, 'editLayakHamil'])->name('layak_hamil.edit');
-            // Route::put('/layak-hamil/{id}', [App\Http\Controllers\AdminController::class, 'updateLayakHamil'])->name('layak_hamil.update');
-            // Route::delete('/layak-hamil/{id}', [App\Http\Controllers\AdminController::class, 'deleteLayakHamil'])->name('layak_hamil.delete');
 
-            Route::get('hipertensi', [App\Http\Controllers\AdminController::class, 'viewHipertensi'])->name('hipertensi.admin.lansia');
-            // Route::get('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'editHipertensi'])->name('hipertensi.edit');
-            // Route::put('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'updateHipertensi'])->name('hipertensi.update');
-            // Route::delete('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'deleteHipertensi'])->name('hipertensi.delete');
+            Route::get('hipertensi', [App\Http\Controllers\AdminLansiaController::class, 'viewHipertensi'])->name('hipertensi.admin.lansia');
 
-            Route::get('tbc', [App\Http\Controllers\AdminController::class, 'viewTbc'])->name('tbc.admin.lansia');
-            // Route::get('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'editTbc'])->name('tbc.edit');
-            // Route::put('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'updateTbc'])->name('tbc.update');
-            // Route::delete('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'deleteTbc'])->name('tbc.delete');
+            Route::get('tbc', [App\Http\Controllers\AdminLansiaController::class, 'viewTbc'])->name('tbc.admin.lansia');
 
             Route::get('talasemia', [App\Http\Controllers\AdminController::class, 'viewTalasemia'])->name('talasemia.admin.lansia');
-            // Route::get('/talasemia/{id}', [App\Http\Controllers\AdminController::class, 'editTalasemia'])->name('talasemia.edit');
-            // Route::put('/talasemia/{id}', [App\Http\Controllers\AdminController::class, 'updateTalasemia'])->name('talasemia.update');
-            // Route::delete('/talasemia/{id}', [App\Http\Controllers\AdminController::class, 'deleteTalasemia'])->name('talasemia.delete');
-
             
-            Route::get('anemia', [App\Http\Controllers\AdminController::class, 'viewAnemia'])->name('anemia.admin.lansia');
-            // Route::get('/anemia/{id}', [App\Http\Controllers\AdminController::class, 'editAnemia'])->name('anemia.edit');
-            // Route::put('/anemia/{id}', [App\Http\Controllers\AdminController::class, 'updateAnemia'])->name('anemia.update');
-            // Route::delete('/anemia/{id}', [App\Http\Controllers\AdminController::class, 'deleteAnemia'])->name('anemia.delete');
+            Route::get('anemia', [App\Http\Controllers\AdminLansiaController::class, 'viewAnemia'])->name('anemia.admin.lansia');
         });
     });
 });

@@ -76,7 +76,7 @@
 <body>
 
     <div class="header">
-        <h1>SKRINING ILP</h1>
+        <h1>SKRINING ILP Puskesmas Tamangapa</h1>
     </div>
 
     <div class="section-title">

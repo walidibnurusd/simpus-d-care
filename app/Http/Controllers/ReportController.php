@@ -10,6 +10,7 @@ use App\Models\Action;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 class ReportController extends Controller
 {
     public function index()
@@ -18,7 +19,15 @@ class ReportController extends Controller
     }
     public function printTifoid()
     {
-        return view('content.report.print-tifoid');
+        $tifoid = Action::with('patient.villages')
+            ->whereIn('diagnosa', [265, 39])
+            ->orWhere(function ($query) {
+                $query->whereJsonContains('diagnosa', '265')->orWhereJsonContains('diagnosa', '39');
+            })
+            ->get();
+        $tifoid->load('patient.villages');
+
+        return view('content.report.print-tifoid', compact('tifoid'));
     }
     public function printDiare()
     {
@@ -95,7 +104,46 @@ class ReportController extends Controller
     }
     public function reportRRT()
     {
-        return view('content.report.laporan-rrt');
+        $rujukan = Action::select('rujuk_rs', DB::raw('COUNT(*) as count'))->where('rujuk_rs', '!=', '1')->groupBy('rujuk_rs')->orderBy('count', 'desc')->take(10)->get();
+        $actions = Action::select('diagnosa', 'icd10')->get();
+
+        $diagnosisData = [];
+
+        foreach ($actions as $action) {
+            $diagnosisIds = [];
+            if (is_array($action->diagnosa)) {
+                $diagnosisIds = $action->diagnosa;
+            } elseif (is_string($action->diagnosa)) {
+                $decoded = json_decode($action->diagnosa, true);
+                if (is_array($decoded)) {
+                    $diagnosisIds = $decoded;
+                }
+            }
+
+            if (empty($diagnosisIds)) {
+                continue;
+            }
+
+            foreach ($diagnosisIds as $diagnosisId) {
+                $key = $diagnosisId . '-' . ($action->icd10 ?? 'Unknown');
+
+                if (!isset($diagnosisData[$key])) {
+                    $diagnosisData[$key] = [
+                        'name' => Diagnosis::find($diagnosisId)?->name ?? 'Unknown',
+                        'icd10' => $action->icd10,
+                        'count' => 0,
+                    ];
+                }
+
+                $diagnosisData[$key]['count']++;
+            }
+        }
+
+        usort($diagnosisData, fn($a, $b) => $b['count'] - $a['count']);
+
+        $topDiagnoses = array_slice($diagnosisData, 0, 10);
+
+        return view('content.report.laporan-rrt', compact('rujukan', 'diagnosisData'));
     }
     public function reportLL()
     {

@@ -8,6 +8,10 @@ use App\Models\KankerParu;
 use App\Models\KankerPayudara;
 use App\Models\Patients;
 use App\Models\Puma;
+use App\Models\Anemia;
+use App\Models\Tbc;
+use App\Models\Kecacingan;
+use App\Models\Hipertensi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -388,5 +392,26 @@ class AdminLansiaController extends Controller
             \Log::error('Update Error:', ['message' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Gagal memperbarui data. Silakan coba lagi.')->withInput();
         }
+    }
+   public function viewAnemia()
+    {
+        $anemia = Anemia::with('listPasien')->where('poli', 'lansia')->get();
+        return view('kia.table.anemia', compact('anemia'));
+    }
+    public function viewTbc()
+    {
+        $pasien = Patients::all();
+        $tbc = Tbc::with('listPasien')->where('poli', 'lansia')->get();
+        return view('kia.table.tbc', compact('tbc', 'pasien'));
+    }
+    public function viewKecacingan()
+    {
+        $kecacingan = Kecacingan::with('listPasien')->where('poli','lansia')->get();
+        return view('kia.table.kecacingan', compact('kecacingan'));
+    }
+    public function viewHipertensi()
+    {
+        $hipertensi= Hipertensi::with('listPasien')->where('poli','lansia')->get();
+        return view('kia.table.hipertensi', compact('hipertensi'));
     }
 }
