@@ -8,7 +8,6 @@ use App\Models\KankerParu;
 use App\Models\KankerPayudara;
 use App\Models\Patients;
 use App\Models\Puma;
-use App\Models\Patients;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

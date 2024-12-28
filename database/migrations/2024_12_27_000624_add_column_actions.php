@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tbc', function (Blueprint $table) {
-            $table->integer('imt')->after('berat_badan')->default(0);
+        Schema::table('actions', function (Blueprint $table) {
+            $table->string('icd10')->after('diagnosa')->nullable();
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tbc', function (Blueprint $table) {
+        Schema::table('actions', function (Blueprint $table) {
             //
         });
     }

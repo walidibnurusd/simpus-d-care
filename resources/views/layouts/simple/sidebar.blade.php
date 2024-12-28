@@ -79,6 +79,18 @@
                                 </svg>
                                 <svg class="fill-icon">
                                     <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
+                                </svg><span>Skrining</span></a>
+                            <ul class="sidebar-submenu">
+                                <li><a href="{{ route('skrining.ilp') }}" target="_blank">Skrining Ilp</a></li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                                href="#">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
                                 </svg><span>KIA</span></a>
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('layakHamil.admin') }}">Layak Hamil</a></li>
@@ -93,7 +105,8 @@
                                 <li><a href="{{ route('tbc.admin') }}">TBC</a></li>
                                 <li><a href="{{ route('triple.eliminasi.admin') }}">Triple Eliminasi Bumil</a></li>
                                 <li><a href="{{ route('kekerasan.anak.admin') }}">Kekerasan Terhadap Anak</a></li>
-                                <li><a href="{{ route('kekerasan.perempuan.admin') }}">Kekerasan Terhadap Perempuan</a>
+                                <li><a href="{{ route('kekerasan.perempuan.admin') }}">Kekerasan Terhadap
+                                        Perempuan</a>
                                 </li>
 
                             </ul>
@@ -114,13 +127,16 @@
                                 <li><a href="{{ route('sdq.remaja.mtbs.admin') }}">Keswa SDQ Remaja</a></li>
                                 <li><a href="{{ route('napza.mtbs.admin') }}">Napza</a></li>
                                 <li><a href="{{ route('obesitas.mtbs.admin') }}">Obesitas</a></li>
-                                <li><a href="{{ route('gangguan.autis.admin') }}">Gangguan Autis</a></li>
-                                <li><a href="{{ route('kecacingan.admin') }}">Kecacingan</a></li>
-                                <li><a href="{{ route('diabetes.mellitus.admin') }}">Diabetes Mellitus</a></li>
-                                <li><a href="{{ route('tbc.admin') }}">TBC</a></li>
-                                <li><a href="{{ route('kekerasan.anak.admin') }}">Kekerasan Terhadap Anak</a></li>
-                                <li><a href="{{ route('kekerasan.perempuan.admin') }}">Kekerasan Terhadap
+                                <li><a href="{{ route('kecacingan.admin.mtbs') }}">Kecacingan</a></li>
+                                <li><a href="{{ route('diabetes.mellitus.admin.mtbs') }}">Diabetes Mellitus</a></li>
+                                <li><a href="{{ route('tbc.admin.mtbs') }}">TBC</a></li>
+                                <li><a href="{{ route('kekerasan.anak.admin.mtbs') }}">Kekerasan Terhadap Anak</a>
+                                </li>
+                                <li><a href="{{ route('kekerasan.perempuan.admin.mtbs') }}">Kekerasan Terhadap
                                         Perempuan</a></li>
+                                <li><a href="{{ route('talasemia.admin.mtbs') }}"> Talasemia</a></li>
+                                <li><a href="{{ route('anemia.admin.mtbs') }}">Anemia</a></li>
+                                <li><a href="{{ route('hipertensi.admin.mtbs') }}">Hipertensi</a></li>
 
                             </ul>
                         </li>
@@ -139,14 +155,11 @@
                                 <li><a href="{{ route('kankerParu.lansia.admin') }}">Kanker Paru</a></li>
                                 <li><a href="{{ route('kankerPayudara.lansia.admin') }}">Kanker Payudara</a></li>
                                 <li><a href="{{ route('kankerKolorektal.lansia.admin') }}">Kanker Kolorektal</a></li>
-                                <li><a href="{{ route('obesitas.mtbs.admin') }}">Obesitas</a></li>
-                                <li><a href="{{ route('gangguan.autis.admin') }}">Gangguan Autis</a></li>
-                                <li><a href="{{ route('kecacingan.admin') }}">Kecacingan</a></li>
-                                <li><a href="{{ route('diabetes.mellitus.admin') }}">Diabetes Mellitus</a></li>
-                                <li><a href="{{ route('tbc.admin') }}">TBC</a></li>
-                                <li><a href="{{ route('kekerasan.anak.admin') }}">Kekerasan Terhadap Anak</a></li>
-                                <li><a href="{{ route('kekerasan.perempuan.admin') }}">Kekerasan Terhadap
-                                        Perempuan</a></li>
+                                <li><a href="{{ route('layakHamil.admin.lansia') }}">Layak Hamil</a></li>
+                                <li><a href="{{ route('hipertensi.admin.lansia') }}">Hipertensi</a></li>
+                                <li><a href="{{ route('tbc.admin.lansia') }}">TBC</a></li>
+                                <li><a href="{{ route('talasemia.admin.lansia') }}"> Talasemia</a></li>
+                                <li><a href="{{ route('anemia.admin.lansia') }}">Anemia</a></li>
 
                             </ul>
                         </li>

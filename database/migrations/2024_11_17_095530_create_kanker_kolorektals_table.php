@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('kanker_kolorektal', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal');
-            $table->integer('jenis_kelamin')->nullable();
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
+            // $table->string('nama');
+            // $table->date('tanggal');
+            // $table->integer('jenis_kelamin')->nullable();
             $table->integer('usia')->nullable();
             $table->integer('riwayat_kanker')->nullable();
             $table->integer('merokok')->nullable();

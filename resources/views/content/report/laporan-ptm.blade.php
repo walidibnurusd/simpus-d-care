@@ -17,7 +17,7 @@
 
         .header {
             text-align: center;
-           
+
         }
 
         .header h1 {
@@ -33,7 +33,7 @@
         .table {
             width: 100%;
             border-collapse: collapse;
-        
+
         }
 
         .table th,
@@ -68,8 +68,9 @@
 
 <body>
     <h1 style="text-align: center">
-        <span class="badge bg-primary">JUMLAH KASUS DAN KEMATIAN PENYAKIT TIDAK MENULAR MENURUT JENIS KELAMIN DAN UMUR</span>
-  
+        <span class="badge bg-primary">JUMLAH KASUS DAN KEMATIAN PENYAKIT TIDAK MENULAR MENURUT JENIS KELAMIN DAN
+            UMUR</span>
+
     </h1>
 
     <div class="header" style="align-content: left">
@@ -77,30 +78,31 @@
             <tbody style="border: none;">
                 <tr style="border: none;">
                     <th style="text-align: left; border: none;width: 100%;">Dinas Kesehatan Kota Makassar</th>
-                    
-                   
+
+
                 </tr>
                 <tr style="border: none;">
-                    <th style="text-align: left; border: none;width: 100%;">Bulan/Tahun : MARET/2024</th>                
+                    <th style="text-align: left; border: none;width: 100%;">Bulan/Tahun : MARET/2024</th>
                 </tr>
             </tbody>
         </table>
     </div>
     <table>
         <tr style="border: none;">
-            <th style="text-align: left; border: none;width: 100%;">Jumlah kasus baru (Kunjungan pertama dan belum tercatat di RS/Fasilitas Kesehatan Lainnya)</th>
+            <th style="text-align: left; border: none;width: 100%;">Jumlah kasus baru (Kunjungan pertama dan belum
+                tercatat di RS/Fasilitas Kesehatan Lainnya)</th>
         </tr>
     </table>
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th rowspan="3">No</th>
-                <th rowspan="3">Penyakit Menular</th>
+                <th rowspan="3">Penyakit Tidak Menular</th>
                 <th colspan="16">Jenis Kelamin dan Umur (Th)</th>
                 <th rowspan="3">Total</th>
             </tr>
             <tr>
-                <th colspan="8" >Laki-Laki (L)</th>
+                <th colspan="8">Laki-Laki (L)</th>
                 <th colspan="8">Perempuan (P)</th>
             </tr>
             <tr>
@@ -112,7 +114,7 @@
                 <th>65-74</th>
                 <th>75 ></th>
                 <th>Jumlah</th>
-             
+
                 <th>18-24</th>
                 <th>25-34</th>
                 <th>35-44</th>
@@ -121,8 +123,8 @@
                 <th>65-74</th>
                 <th>75 ></th>
                 <th>Jumlah</th>
-             
-               
+
+
             </tr>
         </thead>
         <tbody>
@@ -146,7 +148,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>2</td>
@@ -168,7 +170,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>3</td>
@@ -190,7 +192,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>4</td>
@@ -212,7 +214,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>5</td>
@@ -234,7 +236,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>6</td>
@@ -256,7 +258,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>7</td>
@@ -278,7 +280,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>8</td>
@@ -300,7 +302,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>9</td>
@@ -322,7 +324,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>10</td>
@@ -344,7 +346,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>11</td>
@@ -366,7 +368,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>12</td>
@@ -388,7 +390,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>13</td>
@@ -410,7 +412,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>14</td>
@@ -432,7 +434,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>15</td>
@@ -454,7 +456,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>16</td>
@@ -476,7 +478,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>17</td>
@@ -498,7 +500,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>18</td>
@@ -520,11 +522,11 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <th colspan="2">Jumlah</th>
-                
+
                 <th>2</th>
                 <th>3</th>
                 <th>3</th>
@@ -542,9 +544,9 @@
                 <th>15</th>
                 <th>35</th>
                 <th>35</th>
-                
+
             </tr>
-  
+
         </tbody>
     </table>
     <table style="margin-top:10px">
@@ -561,7 +563,7 @@
                 <th rowspan="3">Total</th>
             </tr>
             <tr>
-                <th colspan="8" >Laki-Laki (L)</th>
+                <th colspan="8">Laki-Laki (L)</th>
                 <th colspan="8">Perempuan (P)</th>
             </tr>
             <tr>
@@ -573,7 +575,7 @@
                 <th>65-74</th>
                 <th>75 ></th>
                 <th>Jumlah</th>
-             
+
                 <th>18-24</th>
                 <th>25-34</th>
                 <th>35-44</th>
@@ -582,8 +584,8 @@
                 <th>65-74</th>
                 <th>75 ></th>
                 <th>Jumlah</th>
-             
-               
+
+
             </tr>
         </thead>
         <tbody>
@@ -607,7 +609,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>2</td>
@@ -629,7 +631,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>3</td>
@@ -651,7 +653,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>4</td>
@@ -673,7 +675,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>5</td>
@@ -695,7 +697,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>6</td>
@@ -717,7 +719,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>7</td>
@@ -739,7 +741,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>8</td>
@@ -761,7 +763,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>9</td>
@@ -783,7 +785,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>10</td>
@@ -805,7 +807,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>11</td>
@@ -827,7 +829,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>12</td>
@@ -849,7 +851,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>13</td>
@@ -871,7 +873,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>14</td>
@@ -893,7 +895,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>15</td>
@@ -915,7 +917,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>16</td>
@@ -937,7 +939,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>17</td>
@@ -959,7 +961,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>18</td>
@@ -981,11 +983,11 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <th colspan="2">Jumlah</th>
-                
+
                 <th>2</th>
                 <th>3</th>
                 <th>3</th>
@@ -1003,9 +1005,9 @@
                 <th>15</th>
                 <th>35</th>
                 <th>35</th>
-                
+
             </tr>
-  
+
         </tbody>
     </table>
     <table style="margin-top:10px">
@@ -1022,7 +1024,7 @@
                 <th rowspan="3">Total</th>
             </tr>
             <tr>
-                <th colspan="8" >Laki-Laki (L)</th>
+                <th colspan="8">Laki-Laki (L)</th>
                 <th colspan="8">Perempuan (P)</th>
             </tr>
             <tr>
@@ -1034,7 +1036,7 @@
                 <th>65-74</th>
                 <th>75 ></th>
                 <th>Jumlah</th>
-             
+
                 <th>18-24</th>
                 <th>25-34</th>
                 <th>35-44</th>
@@ -1043,8 +1045,8 @@
                 <th>65-74</th>
                 <th>75 ></th>
                 <th>Jumlah</th>
-             
-               
+
+
             </tr>
         </thead>
         <tbody>
@@ -1068,7 +1070,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>2</td>
@@ -1090,7 +1092,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>3</td>
@@ -1112,7 +1114,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>4</td>
@@ -1134,7 +1136,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>5</td>
@@ -1156,7 +1158,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>6</td>
@@ -1178,7 +1180,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>7</td>
@@ -1200,7 +1202,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>8</td>
@@ -1222,7 +1224,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>9</td>
@@ -1244,7 +1246,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>10</td>
@@ -1266,7 +1268,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>11</td>
@@ -1288,7 +1290,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>12</td>
@@ -1310,7 +1312,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>13</td>
@@ -1332,7 +1334,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>14</td>
@@ -1354,7 +1356,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>15</td>
@@ -1376,7 +1378,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>16</td>
@@ -1398,7 +1400,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>17</td>
@@ -1420,7 +1422,7 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <td>18</td>
@@ -1442,11 +1444,11 @@
                 <td>15</td>
                 <td>35</td>
                 <td>35</td>
-                
+
             </tr>
             <tr>
                 <th colspan="2">Jumlah</th>
-                
+
                 <th>2</th>
                 <th>3</th>
                 <th>3</th>
@@ -1464,9 +1466,9 @@
                 <th>15</th>
                 <th>35</th>
                 <th>35</th>
-                
+
             </tr>
-  
+
         </tbody>
     </table>
     <div style="margin-top: 30px;">
@@ -1478,7 +1480,7 @@
                 <br><br><br>
                 <p><strong>(___________________)</strong></p>
             </div>
-    
+
             <!-- Bagian Kanan -->
             <div style="text-align: left; width: 40%; padding-left: 50%;">
                 <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
@@ -1489,7 +1491,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- Bootstrap JS (including Popper.js) -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

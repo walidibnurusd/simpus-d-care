@@ -8,7 +8,10 @@ use App\Models\KankerParu;
 use App\Models\KankerPayudara;
 use App\Models\Patients;
 use App\Models\Puma;
-use App\Models\Patients;
+use App\Models\Anemia;
+use App\Models\Tbc;
+use App\Models\Kecacingan;
+use App\Models\Hipertensi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -140,13 +143,15 @@ class AdminLansiaController extends Controller
     }
     public function viewKankerKolorektal()
     {
+        $pasien = Patients::all();
         $kankerKolorektal = KankerKolorektal::all();
-        return view('lansia.table.kanker_kolorektal', compact('kankerKolorektal'));
+        return view('lansia.table.kanker_kolorektal', compact('kankerKolorektal','pasien'));
     }
     public function editKankerKolorektal($id)
     {
+        $pasien = Patients::all();
         $kankerKolorektal = KankerKolorektal::findOrFail($id);
-        return view('lansia.kanker_kolorektal', compact('kankerKolorektal'));
+        return view('lansia.kanker_kolorektal', compact('kankerKolorektal','pasien'));
     }
     public function deleteKankerKolorektal($id)
     {
@@ -166,9 +171,9 @@ class AdminLansiaController extends Controller
 
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'jenis_kelamin' => 'required|integer|in:0,1',
+            'pasien' => 'required',
+            // 'tanggal' => 'required|date',
+            // 'jenis_kelamin' => 'required|integer|in:0,1',
             'usia' => 'required|integer|min:0',
             'riwayat_kanker' => 'nullable',
             'merokok' => 'nullable',
@@ -207,7 +212,8 @@ class AdminLansiaController extends Controller
     public function editKankerPayudara($id)
     {
         $kankerPayudara = KankerPayudara::findOrFail($id);
-        return view('lansia.kanker_payudara', compact('kankerPayudara'));
+        $pasien = Patients::all();
+        return view('lansia.kanker_payudara', compact('kankerPayudara','pasien'));
     }
     public function deleteKankerPayudara($id)
     {
@@ -225,20 +231,20 @@ class AdminLansiaController extends Controller
         // Validasi input
         $validator = Validator::make($request->all(), [
             'nomor_klien' => 'required|string|max:255',
-            'nama' => 'required|string|max:255',
+            'pasien' => 'required',
             'umur' => 'required|integer|min:1',
             'suku_bangsa' => 'nullable|string|max:255',
             'agama' => 'nullable|string|max:255',
             'berat_badan' => 'nullable|numeric|min:1',
             'tinggi_badan' => 'nullable|numeric|min:1',
-            'alamat' => 'nullable|string|max:500',
+            // 'alamat' => 'nullable|string|max:500',
             'perkawinan_pasangan' => 'nullable',
             'klien' => 'nullable',
-            'pekerjaan_klien' => 'nullable',
+            // 'pekerjaan_klien' => 'nullable',
             'pekerjaan_suami' => 'nullable',
-            'pendidikan_terakhir' => 'nullable',
+            // 'pendidikan_terakhir' => 'nullable',
             'jmlh_anak_kandung' => 'nullable|integer|min:0',
-            'rt_rw' => 'nullable',
+            // 'rt_rw' => 'nullable',
             'kelurahan_desa' => 'nullable',
             'menstruasi' => 'nullable',
             'usia_seks' => 'nullable|integer|min:0',
@@ -386,5 +392,26 @@ class AdminLansiaController extends Controller
             \Log::error('Update Error:', ['message' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Gagal memperbarui data. Silakan coba lagi.')->withInput();
         }
+    }
+   public function viewAnemia()
+    {
+        $anemia = Anemia::with('listPasien')->where('poli', 'lansia')->get();
+        return view('kia.table.anemia', compact('anemia'));
+    }
+    public function viewTbc()
+    {
+        $pasien = Patients::all();
+        $tbc = Tbc::with('listPasien')->where('poli', 'lansia')->get();
+        return view('kia.table.tbc', compact('tbc', 'pasien'));
+    }
+    public function viewKecacingan()
+    {
+        $kecacingan = Kecacingan::with('listPasien')->where('poli','lansia')->get();
+        return view('kia.table.kecacingan', compact('kecacingan'));
+    }
+    public function viewHipertensi()
+    {
+        $hipertensi= Hipertensi::with('listPasien')->where('poli','lansia')->get();
+        return view('kia.table.hipertensi', compact('hipertensi'));
     }
 }

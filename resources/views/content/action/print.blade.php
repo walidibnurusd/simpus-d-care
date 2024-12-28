@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,35 +10,46 @@
             font-family: "Times New Roman", Times, serif;
             font-size: 12px;
         }
+
         .header {
             text-align: center;
         }
+
         .header img {
             width: 80px;
             height: auto;
         }
-        .header h1, .header h2, .header p {
+
+        .header h1,
+        .header h2,
+        .header p {
             margin: 0;
             line-height: 1.2;
         }
+
         .table-container {
             margin-top: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        table th, table td {
+
+        table th,
+        table td {
             border: 1px solid #000;
             padding: 5px;
             text-align: center;
         }
+
         table th {
             background-color: #f0f0f0;
         }
     </style>
-    
+
 </head>
+
 <body>
     <div class="header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -45,7 +57,7 @@
             <div>
                 <h1>PEMERINTAH KOTA MAKASSAR</h1>
                 <h2 style="margin: 0px">DINAS KESEHATAN</h2>
-                <h3 style="margin:0px">UPT Puskesmas Makassar</h3>
+                <h3 style="margin:0px">UPT Puskesmas Tamangapa</h3>
                 <p>Jl. xx yy No.264 Kode Pos : 90235 Makassar</p>
                 <p>Telp. 0411-494014 Call Center : 081245194368</p>
                 <p>Email: pkmmakassar@gmail.com | Situs: puskesmasmakassar.or.id</p>
@@ -92,7 +104,7 @@
                         <td>{{ $actions->patient->nik }}</td>
                         <td>{{ $actions->patient->name }}<br>{{ $actions->place_birth }}</td>
                         <td>{{ $actions->patient->dob }}</td>
-                        <td>{{ $actions->kartu}}</td>
+                        <td>{{ $actions->kartu }}</td>
                         <td>{{ $actions->patient->address }}</td>
                         <td>{{ $actions->patient->genderName->name }}</td>
                         <td>{{ $actions->tinggiBadan }}</td>
@@ -102,21 +114,22 @@
                         <td>{{ $actions->kunjungan }}</td>
                         <td>{{ $actions->keluhan }}</td>
                         @php
-                        // Assuming $actions->diagnosa is an array of Diagnosis IDs
-                        $diagnosaIds = $actions->diagnosa; // This should be an array of IDs.
-                        $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get(); // Fetch the diagnoses by IDs
-                    @endphp
-                    
-                    <td>
-                        {{ implode(', ', $diagnosa->pluck('name')->toArray()) }}  <!-- Join diagnosis names into a comma-separated string -->
-                    </td>
-                    
+                            // Assuming $actions->diagnosa is an array of Diagnosis IDs
+                            $diagnosaIds = $actions->diagnosa; // This should be an array of IDs.
+                            $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get(); // Fetch the diagnoses by IDs
+                        @endphp
+
+                        <td>
+                            {{ implode(', ', $diagnosa->pluck('name')->toArray()) }}
+                            <!-- Join diagnosis names into a comma-separated string -->
+                        </td>
+
                         {{-- <td>{{ $actions->marritalStatus->name }}</td>
                         <td>{{ $actions->educations->name }}</td>
                         <td>{{ $actions->occupations->name }}</td> --}}
                         <td>{{ $actions->tindakan }}</td>
                         <td>{{ $actions->hospitalReferral->name }}</td>
-                       
+
                         <td>{{ $actions->keterangan }}</td>
                         <td>{{ $actions->doctor }}</td>
                     </tr>
@@ -125,4 +138,5 @@
         </table>
     </div>
 </body>
+
 </html>

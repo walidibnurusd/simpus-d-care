@@ -22,7 +22,7 @@
 <!-- Select2 CSS -->
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/select2.css')}}">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
-    <title>Aplikasi Pelaporan BOK Puskesmas</title>
+    <title>Aplikasi Pelaporan Puskesmas</title>
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i&amp;display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900&amp;display=swap" rel="stylesheet">

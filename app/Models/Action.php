@@ -75,7 +75,8 @@ class Action extends Model
         'neurologis',
         'hasil_lab',
         'hamil',
-        'tipe'
+        'tipe',
+        'icd10'
     ];
 
     protected $casts = [
@@ -120,7 +121,7 @@ class Action extends Model
      */
     public function diagnosis()
     {
-        return $this->belongsTo(Diagnosis::class, 'diagnosa');
+        return $this->belongsToMany(Diagnosis::class, 'diagnosa');
     }
 
     /**

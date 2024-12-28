@@ -9,6 +9,7 @@ use App\Models\Napza;
 use App\Models\Obesitas;
 use App\Models\Patients;
 use App\Models\TesDayaDengar;
+use App\Models\Anemia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,7 +18,7 @@ class MtbsController extends Controller
     public function showSdqAnak()
     {
         $pasien = Patients::all();
-        return view('mtbs.gangguan_jiwa_anak',compact('pasien'));
+        return view('mtbs.gangguan_jiwa_anak', compact('pasien'));
     }
     public function storeSdqAnak(Request $request)
     {
@@ -51,34 +52,28 @@ class MtbsController extends Controller
             'mudah_berteman' => 'nullable',
             'takut' => 'nullable',
             'rajin' => 'nullable',
-          
         ]);
 
         // Periksa apakah validasi gagal
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Terdapat kesalahan validasi.')
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
         }
 
         // Menyimpan data ke dalam database
-        GangguanJiwaAnak::create(array_merge(
-            $validator->validated(),
-            [
+        GangguanJiwaAnak::create(
+            array_merge($validator->validated(), [
                 'klaster' => 2, // Ubah 'default_value' sesuai kebutuhan
-                'poli' => 'mtbs dan remaja',    // Ubah 'default_value' sesuai kebutuhan
-            ]
-        ));
+                'poli' => 'mtbs', // Ubah 'default_value' sesuai kebutuhan
+            ]),
+        );
 
         // Redirect dengan pesan sukses
-        return redirect()->route('sdq.mtbs.view')
-            ->with('success', 'Data Gangguan Jiwa Anak berhasil dibuat!');
+        return redirect()->route('sdq.mtbs.view')->with('success', 'Data Gangguan Jiwa Anak berhasil dibuat!');
     }
     public function showSdqRemaja()
     {
         $pasien = Patients::all();
-        return view('mtbs.gangguan_jiwa_remaja',compact('pasien'));
+        return view('mtbs.gangguan_jiwa_remaja', compact('pasien'));
     }
     public function storeSdqRemaja(Request $request)
     {
@@ -112,29 +107,23 @@ class MtbsController extends Controller
             'mudah_berteman' => 'nullable',
             'takut' => 'nullable',
             'rajin' => 'nullable',
-          
         ]);
 
         // Periksa apakah validasi gagal
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Terdapat kesalahan validasi.')
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
         }
 
         // Menyimpan data ke dalam database
-        GangguanJiwaRemaja::create(array_merge(
-            $validator->validated(),
-            [
+        GangguanJiwaRemaja::create(
+            array_merge($validator->validated(), [
                 'klaster' => 2, // Ubah 'default_value' sesuai kebutuhan
-                'poli' => 'mtbs dan remaja',    // Ubah 'default_value' sesuai kebutuhan
-            ]
-        ));
+                'poli' => 'mtbs', // Ubah 'default_value' sesuai kebutuhan
+            ]),
+        );
 
         // Redirect dengan pesan sukses
-        return redirect()->route('sdq.remaja.mtbs.view')
-            ->with('success', 'Data Gangguan Jiwa Remaja berhasil dibuat!');
+        return redirect()->route('sdq.remaja.mtbs.view')->with('success', 'Data Gangguan Jiwa Remaja berhasil dibuat!');
     }
     public function showObesitas()
     {
@@ -156,68 +145,61 @@ class MtbsController extends Controller
 
         // Periksa apakah validasi gagal
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Terdapat kesalahan validasi.')
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
         }
 
         // Simpan data ke database dengan nilai tambahan menggunakan array_merge
-        Obesitas::create(array_merge(
-            $validator->validated(),
-            [
+        Obesitas::create(
+            array_merge($validator->validated(), [
                 'klaster' => 2, // Ubah 'default_value' sesuai kebutuhan
-                'poli' => 'mtbs dan remaja',         // Nilai default poli
-            ]
-        ));
+                'poli' => 'mtbs', // Nilai default poli
+            ]),
+        );
 
         // Redirect dengan pesan sukses
-        return redirect()->route('obesitas.mtbs.view')
-            ->with('success', 'Data Obesitas berhasil disimpan!');
+        return redirect()->route('obesitas.mtbs.view')->with('success', 'Data Obesitas berhasil disimpan!');
     }
     public function showNapza()
-    {  $pasien = Patients::all();
-        return view('mtbs.napza',compact('pasien'));
+    {
+        $pasien = Patients::all();
+        return view('mtbs.napza', compact('pasien'));
     }
     public function storeNapza(Request $request)
-{
-    // Validasi input
-    $validator = Validator::make($request->all(), [
-        'pasien' => 'required',
-        'nama_dokter' => 'required|string|max:255',
-        'klinik' => 'nullable|string|max:255',
-        'pertanyaan1' => 'nullable',
-        // 'nama_zat_lain' => 'nullable',
-        'pertanyaan2' => 'nullable',
-        'pertanyaan3' => 'nullable',
-        'pertanyaan4' => 'nullable',
-        'pertanyaan5' => 'nullable',
-        'pertanyaan6' => 'nullable',
-        'pertanyaan7' => 'nullable',
-        'pertanyaan8' => 'nullable',
-    ]);
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'pasien' => 'required',
+            'nama_dokter' => 'required|string|max:255',
+            'klinik' => 'nullable|string|max:255',
+            'pertanyaan1' => 'nullable',
+            // 'nama_zat_lain' => 'nullable',
+            'pertanyaan2' => 'nullable',
+            'pertanyaan3' => 'nullable',
+            'pertanyaan4' => 'nullable',
+            'pertanyaan5' => 'nullable',
+            'pertanyaan6' => 'nullable',
+            'pertanyaan7' => 'nullable',
+            'pertanyaan8' => 'nullable',
+        ]);
 
-    // Periksa apakah validasi gagal
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->with('error', 'Terdapat kesalahan validasi.')
-            ->withInput();
+        // Periksa apakah validasi gagal
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
+        }
+
+        // Simpan data ke database dengan nilai tambahan
+        Napza::create(
+            array_merge($validator->validated(), [
+                'klaster' => 2, // Nilai default klaster
+                'poli' => 'mtbs', // Nilai default poli
+            ]),
+        );
+
+        // Redirect dengan pesan sukses
+        return redirect()
+            ->route('napza.mtbs.view') // Ganti dengan rute yang sesuai
+            ->with('success', 'Data Napza berhasil disimpan!');
     }
-
-    // Simpan data ke database dengan nilai tambahan
-    Napza::create(array_merge(
-        $validator->validated(),
-        [
-            'klaster' => 2, // Nilai default klaster
-            'poli' => 'mtbs dan remaja', // Nilai default poli
-        ]
-    ));
-
-    // Redirect dengan pesan sukses
-    return redirect()->route('napza.mtbs.view') // Ganti dengan rute yang sesuai
-        ->with('success', 'Data Napza berhasil disimpan!');
-}
 
     public function showMerokok()
     {
@@ -225,71 +207,66 @@ class MtbsController extends Controller
         return view('mtbs.merokok', compact('pasien'));
     }
     public function storeMerokok(Request $request)
-{
-    // Validasi input
-    $validator = Validator::make($request->all(), [
-        'no_kuesioner' => 'required|string|max:255',
-        'sekolah' => 'nullable|string|max:255',
-        'provinsi' => 'nullable|string|max:255',
-        'puskesmas' => 'nullable|string|max:255',
-        'petugas' => 'nullable|string|max:255',
-        'pasien' => 'required',
-        // 'nik' => 'required|string|max:16',
-        // 'tanggal_lahir' => 'required',
-        'umur' => 'required|integer',
-        // 'jenis_kelamin' => 'required|string',
-        'merokok' => 'nullable',
-        'jenis_rokok' => 'nullable',
-        'jenis_rokok_lainnya' => 'nullable',
-        'usia_merokok' => 'nullable|integer',
-        'alasan_merokok' => 'nullable',
-        'alasan_merokok_lainnya' => 'nullable',
-        'batang_per_hari' => 'nullable|integer',
-        'batang_per_minggu' => 'nullable|integer',
-        'lama_merokok_minggu' => 'nullable|integer',
-        'lama_merokok_bulan' => 'nullable|integer',
-        'lama_merokok_tahun' => 'nullable|integer',
-        'dapat_rokok' => 'nullable',
-        'dapat_rokok_lainnya' => 'nullable',
-        'berhenti_merokok' => 'nullable',
-        'alasan_berhenti_merokok' => 'nullable',
-        'alasan_berhenti_merokok_lainnya' => 'nullable',
-        'tau_bahaya_rokok' => 'nullable',
-        'melihat_orang_merokok' => 'nullable',
-        'orang_merokok' => 'nullable',
-        'orang_merokok_lainnya' => 'nullable',
-        'anggota_keluarga_merokok' => 'nullable',
-        'teman_merokok' => 'nullable',
-        'periksa_co2' => 'nullable',
-        'kadar_co2' => 'nullable',
-    ]);
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'no_kuesioner' => 'required|string|max:255',
+            'sekolah' => 'nullable|string|max:255',
+            'provinsi' => 'nullable|string|max:255',
+            'puskesmas' => 'nullable|string|max:255',
+            'petugas' => 'nullable|string|max:255',
+            'pasien' => 'required',
+            // 'nik' => 'required|string|max:16',
+            // 'tanggal_lahir' => 'required',
+            'umur' => 'required|integer',
+            // 'jenis_kelamin' => 'required|string',
+            'merokok' => 'nullable',
+            'jenis_rokok' => 'nullable',
+            'jenis_rokok_lainnya' => 'nullable',
+            'usia_merokok' => 'nullable|integer',
+            'alasan_merokok' => 'nullable',
+            'alasan_merokok_lainnya' => 'nullable',
+            'batang_per_hari' => 'nullable|integer',
+            'batang_per_minggu' => 'nullable|integer',
+            'lama_merokok_minggu' => 'nullable|integer',
+            'lama_merokok_bulan' => 'nullable|integer',
+            'lama_merokok_tahun' => 'nullable|integer',
+            'dapat_rokok' => 'nullable',
+            'dapat_rokok_lainnya' => 'nullable',
+            'berhenti_merokok' => 'nullable',
+            'alasan_berhenti_merokok' => 'nullable',
+            'alasan_berhenti_merokok_lainnya' => 'nullable',
+            'tau_bahaya_rokok' => 'nullable',
+            'melihat_orang_merokok' => 'nullable',
+            'orang_merokok' => 'nullable',
+            'orang_merokok_lainnya' => 'nullable',
+            'anggota_keluarga_merokok' => 'nullable',
+            'teman_merokok' => 'nullable',
+            'periksa_co2' => 'nullable',
+            'kadar_co2' => 'nullable',
+        ]);
 
-    // Periksa apakah validasi gagal
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->with('error', 'Terdapat kesalahan validasi.')
-            ->withInput();
+        // Periksa apakah validasi gagal
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
+        }
+
+        // Simpan data ke database dengan nilai tambahan menggunakan array_merge
+        Merokok::create(
+            array_merge($validator->validated(), [
+                'klaster' => 2, // Nilai default klaster (ubah sesuai kebutuhan)
+                'poli' => 'mtbs', // Nilai default poli (ubah sesuai kebutuhan)
+            ]),
+        );
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('merokok.mtbs.view')->with('success', 'Data Merokok berhasil disimpan!');
     }
-
-    // Simpan data ke database dengan nilai tambahan menggunakan array_merge
-    Merokok::create(array_merge(
-        $validator->validated(),
-        [
-            'klaster' => 2, // Nilai default klaster (ubah sesuai kebutuhan)
-            'poli' => 'mtbs dan remaja', // Nilai default poli (ubah sesuai kebutuhan)
-        ]
-    ));
-
-    // Redirect dengan pesan sukses
-    return redirect()->route('merokok.mtbs.view')
-        ->with('success', 'Data Merokok berhasil disimpan!');
-}
 
     public function showTestPendengaran()
     {
         $pasien = Patients::all();
-        return view('mtbs.tes_pendengaran',compact('pasien'));
+        return view('mtbs.tes_pendengaran', compact('pasien'));
     }
     public function storeTestPendengaran(Request $request)
     {
@@ -312,10 +289,7 @@ class MtbsController extends Controller
 
         // Check if validation fails
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Terdapat kesalahan validasi.')
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->with('error', 'Terdapat kesalahan validasi.')->withInput();
         }
 
         // Save the data to the TesDayaDengar model
@@ -328,13 +302,12 @@ class MtbsController extends Controller
             'reseptif' => $request->input('reseptif', []), // Default to empty array if not provided
             'visual' => $request->input('visual', []), // Default to empty array if not provided
             'klaster' => 2, // Default to empty array if not provided
-            'poli' => 'mtbs dan remaja' // Default to empty array if not provided
+            'poli' => 'mtbs', // Default to empty array if not provided
         ]);
 
         // Redirect with success message
-        return redirect()->route('testPendengaran.mtbs.view') // Adjust route as needed
+        return redirect()
+            ->route('testPendengaran.mtbs.view') // Adjust route as needed
             ->with('success', 'Data Tes Daya Dengar berhasil disimpan!');
     }
-    
-    
 }

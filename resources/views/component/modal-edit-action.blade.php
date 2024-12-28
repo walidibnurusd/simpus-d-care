@@ -879,6 +879,11 @@
                             </select>
                         </div>
                         <div class="col-md-4">
+                            <label for="icd10" style="color: rgb(19, 11, 241);">ICD 10</label>
+                            <input type="text" class="form-control" id="icd10" name="icd10"
+                                placeholder="ICD 10" value="{{ old('icd10', $action->icd10 ?? '') }}" required>
+                        </div>
+                        <div class="col-md-4">
                             <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                             <select class="form-control" id="tindakanEdit" name="tindakan">
                                 <option value="" {{ empty($action->tindakan) ? 'selected' : '' }} disabled

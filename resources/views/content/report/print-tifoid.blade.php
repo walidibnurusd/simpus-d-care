@@ -70,8 +70,8 @@
     <h1 style="text-align: center">
         <span class="badge bg-primary">REGISTER HARIAN TIFOID</span>
     </h1>
-    
-  
+
+
     <div class="header" style="align-content: left">
         <table style="width: 40%; margin-left: 0; border: none; border-radius: 10px; overflow: hidden;">
             <tbody style="border: none;">
@@ -89,7 +89,8 @@
                 </tr>
                 <tr style="border: none;">
                     <th style="text-align: left; border: none;">Tahun</th>
-                    <th style="border: none;text-align: left;"><span class="badge bg-warning text-dark">:2024</span></th>
+                    <th style="border: none;text-align: left;"><span class="badge bg-warning text-dark">:2024</span>
+                    </th>
                 </tr>
             </tbody>
         </table>
@@ -99,14 +100,16 @@
         <thead>
             <tr>
                 <td style="border: none"></td>
-                <td style="border: none;color:red" colspan="2">Note: Penambahan BARIS bisa dilakukan sebelum baris warna orange (No. 2500)</td>
+                <td style="border: none;color:red" colspan="2">Note: Penambahan BARIS bisa dilakukan sebelum baris
+                    warna orange (No. 2500)</td>
                 <td style="border: none"></td>
-                <td style="border: none;color:red" colspan="2">usia < 1 TAHUN TULIS DALAM "BULAN"</td>
+                <td style="border: none;color:red" colspan="2">usia < 1 TAHUN TULIS DALAM "BULAN" </td>
                 <td style="border: none"></td>
                 <td style="border: none"></td>
                 <td style="border: none"></td>
-                <td style="border: none"></td>  
-                <td style="border: none;color:red" colspan="2">APABILA DUA-DUANYA POSITIF TULIS YANG PEMERIKSAAN LAB SAJA POSITIF</td>
+                <td style="border: none"></td>
+                <td style="border: none;color:red" colspan="2">APABILA DUA-DUANYA POSITIF TULIS YANG PEMERIKSAAN LAB
+                    SAJA POSITIF</td>
             </tr>
             <tr>
                 <th rowspan="2">No</th>
@@ -130,48 +133,62 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>1234567890</td>
-                <td>John Doe</td>
-                <td>Feb</td>
-                <td>10-Feb-24</td>
-                <td>30</td>
-                <td>30</td>
-                <td>Laki-laki</td>
-                <td>Kelurahan A</td>
-                <td>Jl. Merdeka No. 10, Makassar</td>
-                <td>Demam, Batuk</td>
-                <td>Positif</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>2345678901</td>
-                <td>Jane Smith</td>
-                <td>Mar</td>
-                <td>15-Mar-24</td>
-                <td>25</td>
-                <td>25</td>
-                <td>Perempuan</td>
-                <td>Kelurahan B</td>
-                <td>Jl. Pahlawan No. 20, Makassar</td>
-                <td>Mual, Pusing</td>
-                <td>Negatif</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>3456789012</td>
-                <td>Mike Johnson</td>
-                <td>Apr</td>
-                <td>22-Apr-24</td>
-                <td>40</td>
-                <td>40</td>
-                <td>Laki-laki</td>
-                <td>Kelurahan C</td>
-                <td>Jl. Raya No. 30, Makassar</td>
-                <td>Sakit Kepala, Pusing</td>
-                <td>Positif</td>
-            </tr>
+            @foreach ($tifoid as $index => $data)
+                @php
+                    $bulanIndo = [
+                        '01' => 'Jan',
+                        '02' => 'Feb',
+                        '03' => 'Mar',
+                        '04' => 'Apr',
+                        '05' => 'Mei',
+                        '06' => 'Jun',
+                        '07' => 'Jul',
+                        '08' => 'Agu',
+                        '09' => 'Sep',
+                        '10' => 'Okt',
+                        '11' => 'Nov',
+                        '12' => 'Des',
+                    ];
+                    $dob = \Carbon\Carbon::parse($data->patient->dob);
+                    $ageInYears = $dob->age;
+                    $ageInMonths = $dob->diffInMonths(\Carbon\Carbon::now());
+                    if ($ageInYears < 1) {
+                        $age = $ageInMonts;
+                        $ageUnit = 'Bulan';
+                    } else {
+                        $age = $ageInYears;
+                        $ageUnit = 'Tahun';
+                    }
+                    $genderId = $data->gender;
+                    if ($genderId == 1) {
+                        $gender = 'P';
+                    } else {
+                        $gender = 'L';
+                    }
+
+                @endphp
+
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $data->patient->nik }}</td>
+                    <td>{{ ucwords(strtolower($data->patient->name)) }}</td>
+                    <td>{{ $bulanIndo[\Carbon\Carbon::parse($data->tanggal)->format('m')] }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
+                    <td>
+                        {{ $age }}
+                    </td>
+                    <td>
+                        {{ $ageUnit }}
+                    </td>
+                    <td>{{ $gender }}
+                    </td>
+                    <td>{{ $data->patient->villages ? ucwords(strtolower($data->patient->villages->name)) : 'Tidak Diketahui' }}
+                    </td>
+                    <td>{{ ucwords(strtolower($data->patient->address)) }}</td>
+                    <td>Positif</td>
+                    <td>Positif</td> 
+                </tr>
+            @endforeach
         </tbody>
     </table>
 
