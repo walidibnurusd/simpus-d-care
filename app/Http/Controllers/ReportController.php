@@ -11,6 +11,13 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+
 class ReportController extends Controller
 {
     public function index()
@@ -55,7 +62,141 @@ class ReportController extends Controller
     }
     public function reportC1()
     {
-        return view('content.report.laporan-c1');
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Judul laporan
+        $sheet->mergeCells('A1:U1');
+        $sheet->setCellValue('A1', 'FORMAT : C-1');
+        $sheet
+            ->getStyle('A1')
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(12);
+
+        $sheet->mergeCells('A2:U2');
+        $sheet->setCellValue('A2', 'LAPORAN KASUS CAMPAK');
+        $sheet
+            ->getStyle('A2')
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
+
+        $sheet->mergeCells('A3:U3');
+        $sheet->setCellValue('A3', 'Bulan/Tahun : September / 2024');
+        $sheet
+            ->getStyle('A3')
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A3')->getFont()->setSize(10);
+
+        // Informasi puskesmas
+        $sheet->setCellValue('A5', 'Puskesmas : Tamangapa');
+        $sheet->setCellValue('A6', 'Kecamatan : Manggala');
+        $sheet->setCellValue('A7', 'Propinsi : Sulawesi Selatan');
+
+        // Header tabel
+        $headers = [['No Epid Kasus/ KLB', 'Nama Anak', 'Nama Org Tua', 'Alamat Lengkap (Desa/RT/RW)', 'Umur/Sex', '', 'Vaksin campak sebelum sakit', '', 'Tgl Timbul', '', 'Tgl Diambil Spesimen', '', 'Hasil Spesimen', '', 'Diberi Vit. A (Y/T)', 'Keadaan Akhir (H/M)', 'Klasifikasi Final*', '', '', '', ''], ['', '', '', '', 'L', 'P', 'Brp Kali', 'Tidak/Tdk Tahu', 'Demam', 'Rash', 'Darah', 'Urin', 'Darah', 'Urin', '', '', 'Lab (+)', 'Epid', 'Klinis', 'Rubella Lab (+)', 'Bukan Camp/Rub']];
+        $sheet->fromArray($headers, null, 'A9');
+
+        // Merge header sesuai format
+        $sheet->mergeCells('A9:A10'); // No Epid Kasus/ KLB
+        $sheet->mergeCells('B9:B10'); // Nama Anak
+        $sheet->mergeCells('C9:C10'); // Nama Org Tua
+        $sheet->mergeCells('D9:D10'); // Alamat Lengkap
+        $sheet->mergeCells('E9:F9'); // Umur/Sex
+        $sheet->mergeCells('G9:H9'); // Vaksin campak sebelum sakit
+        $sheet->mergeCells('I9:J9'); // Tgl Timbul
+        $sheet->mergeCells('K9:L9'); // Tgl Diambil Spesimen
+        $sheet->mergeCells('M9:N9'); // Hasil Spesimen
+        $sheet->mergeCells('O9:O10'); // Diberi Vit. A (Y/T)
+        $sheet->mergeCells('P9:P10'); // Keadaan Akhir (H/M)
+        $sheet->mergeCells('Q9:U9'); // Klasifikasi Final*
+
+        // Style header
+        $sheet->getStyle('A9:U10')->getFont()->setBold(true)->setSize(10);
+        $sheet
+            ->getStyle('A9:U10')
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet
+            ->getStyle('A9:U10')
+            ->getAlignment()
+            ->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A9:U10')->getAlignment()->setWrapText(true);
+        $sheet
+            ->getStyle('A9:U10')
+            ->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->getStartColor()
+            ->setARGB('FFC0CB');
+        // Footer Penjelasan
+        $sheet->setCellValue('A16', 'Periode KLB : Tgl...........s/d..............');
+        $sheet->mergeCells('A17:G17');
+        $sheet->setCellValue('A17', 'Penjelasan : Kolom 16: Pemberian Vit.A saat sakit campak');
+        $sheet->mergeCells('A18:G18');
+        $sheet->setCellValue('A18', ': Kolom 17: H = Hidup, M = Mati');
+        $sheet->mergeCells('A19:G19');
+        $sheet->setCellValue('A19', ': *Klasifikasi final diisi oleh Kabupaten');
+
+        // Footer Tanda Tangan
+        $sheet->setCellValue('R16', 'Makassar, Tgl 04 Oktober 2024');
+        $sheet->mergeCells('R17:U17');
+        $sheet->setCellValue('R17', 'Plt.Kepala UPT Puskesmas Tamangapa');
+        $sheet->mergeCells('R20:U20');
+        $sheet->setCellValue('R20', 'dr.Fatimah, M.Kes');
+        $sheet->mergeCells('R21:U21');
+        $sheet->setCellValue('R21', 'NIP. 19851125 201101 2 009');
+
+        // Style Footer
+        $sheet->getStyle('A16:A19')->getFont()->setSize(9); // Font ukuran 9
+        $sheet->getStyle('R16:R21')->getFont()->setSize(9); // Font ukuran 9
+        $sheet
+            ->getStyle('A16:A19')
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_LEFT);
+        $sheet
+            ->getStyle('R16:R21')
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        // Data tabel
+        $data = [['C-200124083', 'Arisa Safia Khansa', 'Idris', 'Jl. Tamangapa Raya Rw.1, Rt.1', '3thn', '', '2x', '', '9/19/2024', '9/23/2024', '9/24/2024', '', '', '', '√', 'Y', 'H', '', '', '', '', ''], ['C-200124084', 'Aryazaky', 'Habibi Udin', 'Jl. Tamangapa Raya Rw.1, Rt.1', '11bln', '', '1x', '', '9/22/2024', '9/24/2024', '9/24/2024', '', '', '', '√', 'Y', 'M', '', '', '', '', ''], ['C-200124085', 'Aina Maharani', 'Ansar', 'Jl. Tamangapa Raya Rw.4, Rt.1', '10thn', '', '2x', '', '9/29/2024', '9/29/2024', '9/30/2024', '', '', '', '√', 'T', 'H', '', '', '', '', '']];
+        $sheet->fromArray($data, null, 'A11');
+
+        // Penyesuaian lebar kolom secara spesifik
+        $columnWidths = [15, 20, 20, 30, 5, 5, 10, 15, 10, 10, 10, 10, 10, 10, 5, 10, 10, 10, 10, 10, 15];
+        foreach (range('A', 'U') as $index => $columnID) {
+            $sheet->getColumnDimension($columnID)->setWidth($columnWidths[$index]);
+        }
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => '000000'], // Warna hitam
+                ],
+            ],
+        ];
+
+        // Terapkan border ke seluruh tabel, dari header hingga data terakhir
+        $sheet->getStyle('A9:U13')->applyFromArray($styleArray);
+
+        // Pengaturan kertas dan skala untuk A4
+        $sheet
+            ->getPageSetup()
+            ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE)
+            ->setPaperSize(PageSetup::PAPERSIZE_A4)
+            ->setFitToWidth(1) // Skala agar tabel muat di lebar halaman
+            ->setFitToHeight(0);
+
+        // Menyimpan file
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'Laporan_Kasus_Campak.xlsx';
+        $filePath = storage_path('app/public/' . $fileName);
+
+        $writer->save($filePath);
+
+        return response()->download($filePath)->deleteFileAfterSend(true);
     }
     public function reportRJP()
     {
