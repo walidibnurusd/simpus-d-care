@@ -48,7 +48,7 @@
         }
         @media print {
             @page {
-                size: A4 landscape;
+                size: Legal landscape;
                 margin: 1cm;
             }
         }
