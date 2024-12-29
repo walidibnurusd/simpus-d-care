@@ -194,7 +194,9 @@ class ReportController extends Controller
         $fileName = 'Laporan_Kasus_Campak.xlsx';
         $filePath = storage_path('app/public/' . $fileName);
 
+
         $writer->save($filePath);
+        //
 
         return response()->download($filePath)->deleteFileAfterSend(true);
     }
