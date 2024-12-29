@@ -139,8 +139,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
     Route::get('/report/tifoid', [ReportController::class, 'printTifoid'])->name('report.tifoid');
-    Route::get('/report/diare', [ReportController::class, 'printDiare'])->name('report.diare');
-    Route::get('/report-poli-umum/diare', [ReportController::class, 'reportDiare'])->name('report.poli.diare');
+    // Route::get('/report/diare', [ReportController::class, 'printDiare'])->name('report.diare');
+    Route::get('/report/diare', [ReportController::class, 'reportDiare'])->name('report.poli.diare');
     Route::get('/report/stp', [ReportController::class, 'reportSTP'])->name('report.stp');
     Route::get('/report/ptm', [ReportController::class, 'reportPTM'])->name('report.ptm');
     Route::get('/report/afp', [ReportController::class, 'reportAFP'])->name('report.afp');

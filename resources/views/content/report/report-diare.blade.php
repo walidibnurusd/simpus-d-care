@@ -46,6 +46,12 @@
         table th {
             background-color: #f0f0f0;
         }
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
+            }
+        }
     </style>
 
 </head>
@@ -73,96 +79,75 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>NO</th>
-                    <th>TANGGAL</th>
-                    <th>NO.RM</th>
-                    <th>NIK</th>
-                    <th>NAMA PASIEN</th>
-                    <th>TGL.LAHIR</th>
-                    <th>KEPESERTAAN</th>
-                    <th>ALAMAT</th>
-                    <th>JENIS KELAMIN</th>
-                    <th>TD</th>
-                    <th>TB</th>
-                    <th>BB</th>
-                    <th>LP</th>
-                    <th>KUNJ</th>
-                    <th>KELUHAN</th>
-                    <th>DIAGNOSA</th>
-                    <th>TINDAKAN</th>
-                    <th>RUJUKAN</th>
-                    <th>KETERANGAN</th>
-                    <th>DOKTER</th>
+                    <th rowspan="2">NO</th>
+                    <th rowspan="2">NO.RM</th>
+                    <th rowspan="2">NIK</th>
+                    <th rowspan="2">NAMA PASIEN</th>
+                    <th rowspan="2">TGL.LAHIR</th>
+                    <th rowspan="2">KEPESERTAAN</th>
+                    <th colspan="2">ALAMAT</th>
+                    <th rowspan="2">JENIS KELAMIN</th>
+                    <th rowspan="2">TD</th>
+                    <th rowspan="2">TB</th>
+                    <th rowspan="2">BB</th>
+                    <th rowspan="2">LP</th>
+                    <th rowspan="2">TANGGAL KUNJUNGAN</th>
+                    <th rowspan="2">TANGGAL MULAI SAKIT</th>
+                    <th rowspan="2">KELUHAN</th>
+                    <th rowspan="2">DIAGNOSIS DIARE</th>
+                    <th rowspan="2">DERAJAT DEHIDRASI</th>
+                    <th colspan="3">JUMLAH PEMBERIAN</th>
+                    <th rowspan="2">Penggunaan Antibiotik Terapi Diare (Ya/ Tidak)</th>
+                    <th rowspan="2">Status Kematian Pasien (Meninggal/ Hidup)</th>
+                    <th rowspan="2">KONSELING</th>
+                    <th  rowspan="2">TINDAKAN</th>
+                    <th  rowspan="2">RUJUKAN</th>
+                    <th  rowspan="2">KETERANGAN</th>
+                    <th  rowspan="2">DOKTER</th>
+                </tr>
+                <tr>
+                    <th>Desa/Kelurahan</th>
+                    <th>Alamat Lengkap</th>
+                    <th>Oralit (bungkus)</th>
+                    <th>Zinc (tablet)</th>
+                    <th>RL (botol)</th>
                 </tr>
             </thead>
             <tbody>
+                @for ($i = 1; $i <= 10; $i++)
                 <tr>
-                    <td>1</td>
-                    <td>2024-12-21</td>
-                    <td>RM001</td>
-                    <td>1234567890123456</td>
-                    <td>Ahmad Fauzi</td>
-                    <td>1990-02-15</td>
+                    <td>{{ $i }}</td>
+                    <td>RM{{ str_pad($i, 4, '0', STR_PAD_LEFT) }}</td>
+                    <td>123456789{{ $i }}</td>
+                    <td>Pasien {{ $i }}</td>
+                    <td>{{ date('d-m-Y', strtotime('-'.$i.' years')) }}</td>
                     <td>BPJS</td>
-                    <td>Jl. Merdeka No. 10</td>
-                    <td>Laki-laki</td>
+                    <td>Kelurahan {{ $i }}</td>
+                    <td>Alamat Lengkap {{ $i }}</td>
+                    <td>{{ $i % 2 == 0 ? 'Laki-laki' : 'Perempuan' }}</td>
                     <td>120/80</td>
-                    <td>170 cm</td>
-                    <td>70 kg</td>
-                    <td>85 cm</td>
-                    <td>Rawat Jalan</td>
-                    <td>Demam Tinggi</td>
-                    <td>Diare Akut</td>
-                    <td>Pemberian Obat</td>
+                    <td>165</td>
+                    <td>60</td>
+                    <td>85</td>
+                    <td>{{ date('d-m-Y') }}</td>
+                    <td>{{ date('d-m-Y', strtotime('-'.$i.' days')) }}</td>
+                    <td>Keluhan {{ $i }}</td>
+                    <td>Ya</td>
+                    <td>Ringan</td>
+                    <td>{{ rand(1, 5) }}</td>
+                    <td>{{ rand(1, 10) }}</td>
+                    <td>{{ rand(1, 3) }}</td>
                     <td>Tidak</td>
-                    <td>-</td>
-                    <td>Dr. Surya</td>
+                    <td>Hidup</td>
+                    <td>Konseling {{ $i }}</td>
+                    <td>Tindakan {{ $i }}</td>
+                    <td>Rujukan {{ $i }}</td>
+                    <td>Keterangan {{ $i }}</td>
+                    <td>Dokter {{ $i }}</td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>2024-12-21</td>
-                    <td>RM002</td>
-                    <td>2345678901234567</td>
-                    <td>Siti Aminah</td>
-                    <td>1995-06-10</td>
-                    <td>Umum</td>
-                    <td>Jl. Pahlawan No. 20</td>
-                    <td>Perempuan</td>
-                    <td>110/70</td>
-                    <td>160 cm</td>
-                    <td>55 kg</td>
-                    <td>75 cm</td>
-                    <td>Rawat Jalan</td>
-                    <td>Sakit Kepala</td>
-                    <td>Hipertensi</td>
-                    <td>Konseling</td>
-                    <td>Tidak</td>
-                    <td>-</td>
-                    <td>Dr. Budi</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>2024-12-21</td>
-                    <td>RM003</td>
-                    <td>3456789012345678</td>
-                    <td>Joko Susanto</td>
-                    <td>1988-03-25</td>
-                    <td>BPJS</td>
-                    <td>Jl. Raya No. 30</td>
-                    <td>Laki-laki</td>
-                    <td>130/85</td>
-                    <td>180 cm</td>
-                    <td>80 kg</td>
-                    <td>90 cm</td>
-                    <td>Rawat Inap</td>
-                    <td>Nyeri Perut</td>
-                    <td>Maag Kronis</td>
-                    <td>Pemberian Cairan</td>
-                    <td>Tidak</td>
-                    <td>-</td>
-                    <td>Dr. Sari</td>
-                </tr>
+                @endfor
             </tbody>
+          
         </table>
 
     </div>
