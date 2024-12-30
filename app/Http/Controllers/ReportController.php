@@ -42,8 +42,48 @@ class ReportController extends Controller
     }
     public function reportDiare()
     {
-        return view('content.report.report-diare');
+        $diare = Action::with(['patient.villages', 'hospitalReferral'])
+            ->whereIn('diagnosa', [38, 77, 578, 596, 597])
+            ->orWhere(function ($query) {
+                $query->whereJsonContains('diagnosa', '578')->orWhereJsonContains('diagnosa', '596')->orWhereJsonContains('diagnosa', '597')->orWhereJsonContains('diagnosa', '38')->orWhereJsonContains('diagnosa', '77');
+            })
+            ->get();
+
+        $diagnosaMap = [
+            38 => 'Diare & gastroenteritis oleh penyebab infeksi tertentu (coalitis infeksi)',
+            77 => 'Diare disentri (Diamhoea dysentarie)',
+            578 => 'Diare dengan dehidrasi berat',
+            596 => 'Diare Tanpa Dehidrasi',
+            597 => 'Diare dengan dehidrasi ringan-sedang',
+        ];
+
+        $dehidrasiMap = [
+            38 => 'Tanpa Dehidrasi',
+            77 => 'Tanpa Dehidrasi',
+            578 => 'Berat',
+            596 => 'Tanpa Dehidrasi',
+            597 => 'Ringan-Sedang',
+        ];
+
+        foreach ($diare as $data) {
+            if (is_array($data->diagnosa)) {
+                $data->diagnosa_names = array_map(function ($id) use ($diagnosaMap) {
+                    return $diagnosaMap[$id] ?? 'Tidak Diketahui';
+                }, $data->diagnosa);
+
+                $dehidrasiList = array_map(function ($id) use ($dehidrasiMap) {
+                    return $dehidrasiMap[$id] ?? 'Tidak Diketahui';
+                }, $data->diagnosa);
+                $data->dehidrasi = implode(', ', array_unique($dehidrasiList));
+            } else {
+                $data->diagnosa_names = [$diagnosaMap[$data->diagnosa] ?? 'Tidak Diketahui'];
+                $data->dehidrasi = $dehidrasiMap[$data->diagnosa] ?? 'Tidak Diketahui';
+            }
+        }
+
+        return view('content.report.report-diare', compact('diare'));
     }
+
     public function reportSTP()
     {
         return view('content.report.laporan-stp');
@@ -330,16 +370,8 @@ class ReportController extends Controller
         $sheet->setCellValue('A3', 'Bulan/Tahun : MARET/2024');
         $sheet->setCellValue('A4', 'Jumlah kasus baru (Kunjungan pertama dan belum tercatat di RS/Fasilitas Kesehatan Lainnya)');
 
-        $headers = [
-            ['JUMLAH KASUS DAN KEMATIAN PENYAKIT TIDAK MENULAR MENURUT JENIS KELAMIN DAN UMUR'],
-            ['Dinas Kesehatan Kota Makassar'],
-            ['Bulan/Tahun : MARET/2024'],
-            ['Jumlah kasus baru (Kunjungan pertama dan belum tercatat di RS/Fasilitas Kesehatan Lainnya)'],
-            ['NO', 'PENYAKIT TIDAK MENULAR', 'Jenis Kelamin dan Umur (Th)', '', '', '', '', '', '', '', 'Jenis Kelamin dan Umur (Th)', '', '', '', '', '', '', '', 'Total'],
-            ['', '', 'Laki-Laki (L)', '', '', '', '', '', '', '', 'Perempuan (P)', '', '', '', '', '', '', '', ''],
-            ['', '', '18-24', '25-34', '35-44', '45-54', '55-64', '65-74', '≥ 75', 'Jumlah', '18-24', '25-34', '35-44', '45-54', '55-64', '65-74', '≥ 75', 'Jumlah', '']
-        ];
-        
+        $headers = [['JUMLAH KASUS DAN KEMATIAN PENYAKIT TIDAK MENULAR MENURUT JENIS KELAMIN DAN UMUR'], ['Dinas Kesehatan Kota Makassar'], ['Bulan/Tahun : MARET/2024'], ['Jumlah kasus baru (Kunjungan pertama dan belum tercatat di RS/Fasilitas Kesehatan Lainnya)'], ['NO', 'PENYAKIT TIDAK MENULAR', 'Jenis Kelamin dan Umur (Th)', '', '', '', '', '', '', '', 'Jenis Kelamin dan Umur (Th)', '', '', '', '', '', '', '', 'Total'], ['', '', 'Laki-Laki (L)', '', '', '', '', '', '', '', 'Perempuan (P)', '', '', '', '', '', '', '', ''], ['', '', '18-24', '25-34', '35-44', '45-54', '55-64', '65-74', '≥ 75', 'Jumlah', '18-24', '25-34', '35-44', '45-54', '55-64', '65-74', '≥ 75', 'Jumlah', '']];
+
         // Data penyakit berdasarkan gambar
         $data = [
             ['1', 'Hipertensi', 1, 4, 3, 5, 6, 7, 21, 47, 13, 23, 25, 31, 27, 17, 113, 182],
@@ -360,19 +392,18 @@ class ReportController extends Controller
             ['16', 'Tumor Genitalia Eksterna Perempuan', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ['17', 'Serviks', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ['18', ' Tumor Genitalia Interna Perempuan (Kecuali Serviks)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['', ' Jumlah', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ['', ' Jumlah', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ];
-        
+
         // Memasukkan header
         foreach ($headers as $rowIndex => $headerRow) {
             $sheet->fromArray($headerRow, null, 'A' . (1 + $rowIndex));
         }
-        
+
         // Memasukkan data penyakit
         $startRow = count($headers) + 1;
         $sheet->fromArray($data, null, 'A' . $startRow);
-        
-        
+
         // Merge kolom header
         $sheet->mergeCells('A5:A7'); // NO
         $sheet->mergeCells('B5:B7'); // PENYAKIT TIDAK MENULAR
@@ -381,14 +412,17 @@ class ReportController extends Controller
         $sheet->mergeCells('S5:S7'); // Total
         $sheet->mergeCells('C6:J6'); // Sub-header Laki-Laki
         $sheet->mergeCells('K6:R6'); // Sub-header Perempuan
-        
+
         // Style header
         $sheet->getStyle('A1:S7')->getFont()->setBold(true);
-        $sheet->getStyle('A1:S7')
+        $sheet
+            ->getStyle('A1:S7')
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER)
             ->setVertical(Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A5:S7')->getFill()
+        $sheet
+            ->getStyle('A5:S7')
+            ->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()
             ->setARGB('90EE90'); // Hijau muda
