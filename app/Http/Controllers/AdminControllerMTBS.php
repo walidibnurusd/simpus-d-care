@@ -14,6 +14,8 @@ use App\Models\Tbc;
 use App\Models\Anemia;
 use App\Models\Kecacingan;
 use App\Models\Hipertensi;
+use App\Models\Talasemia;
+use App\Models\DiabetesMellitus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -437,25 +439,42 @@ class AdminControllerMTBS extends Controller
             ->with('success', 'Data Napza berhasil diperbarui!');
     }
 
-    public function viewAnemia()
+    public function viewAnemia(Request $request)
     {
         $anemia = Anemia::with('listPasien')->where('poli', 'mtbs')->get();
-        return view('kia.table.anemia', compact('anemia'));
+        $routeName = $request->route()->getName();
+        return view('kia.table.anemia', compact('anemia', 'routeName'));
     }
-    public function viewTbc()
+    public function viewTalasemia(Request $request)
+    {
+        $talasemia = Talasemia::with('listPasien')->where('poli', 'mtbs')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.talasemia', compact('talasemia', 'routeName'));
+    }
+    public function viewTbc(Request $request)
     {
         $pasien = Patients::all();
         $tbc = Tbc::with('listPasien')->where('poli', 'mtbs')->get();
-        return view('kia.table.tbc', compact('tbc', 'pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.table.tbc', compact('tbc', 'pasien','routeName'));
     }
-    public function viewKecacingan()
+    public function viewKecacingan(Request $request)
     {
         $kecacingan = Kecacingan::with('listPasien')->where('poli', 'mtbs')->get();
-        return view('kia.table.kecacingan', compact('kecacingan'));
+        $routeName = $request->route()->getName();
+        return view('kia.table.kecacingan', compact('kecacingan', 'routeName'));
     }
-    public function viewHipertensi()
+
+    public function viewHipertensi(Request $request)
     {
         $hipertensi = Hipertensi::with('listPasien')->where('poli', 'mtbs')->get();
+        $routeName = $request->route()->getName();
         return view('kia.table.hipertensi', compact('hipertensi'));
+    }
+    public function viewDiabetesMellitus(Request $request)
+    {
+        $diabetesMellitus = DiabetesMellitus::with('listPasien')->where('poli', 'mtbs')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.diabetes_mellitus', compact('diabetesMellitus', 'routeName'));
     }
 }

@@ -34,6 +34,16 @@
         @if (isset($talasemia))
             @method('PUT')
         @endif
+        @if ($routeName === 'talasemia.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="kia">
+        @elseif($routeName === 'talasemia.mtbs.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="mtbs">
+        @elseif($routeName === 'talasemia.lansia.view')
+            <input type="hidden" name="klaster" value="3">
+            <input type="hidden" name="poli" value="lansia">
+        @endif
         <div class="form-section">
             <h3>Identitas</h3>
             <div class="row">
