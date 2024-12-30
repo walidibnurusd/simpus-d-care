@@ -558,7 +558,7 @@
         <thead>
             <tr>
                 <th rowspan="3">No</th>
-                <th rowspan="3">Penyakit Menular</th>
+                <th rowspan="3">Penyakit Tidak Menular</th>
                 <th colspan="16">Jenis Kelamin dan Umur (Th)</th>
                 <th rowspan="3">Total</th>
             </tr>
@@ -1019,7 +1019,7 @@
         <thead>
             <tr>
                 <th rowspan="3">No</th>
-                <th rowspan="3">Penyakit Menular</th>
+                <th rowspan="3">Penyakit Tidak Menular</th>
                 <th colspan="16">Jenis Kelamin dan Umur (Th)</th>
                 <th rowspan="3">Total</th>
             </tr>
