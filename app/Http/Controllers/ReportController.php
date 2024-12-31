@@ -373,28 +373,28 @@ class ReportController extends Controller
         $headers = [['JUMLAH KASUS DAN KEMATIAN PENYAKIT TIDAK MENULAR MENURUT JENIS KELAMIN DAN UMUR'], ['Dinas Kesehatan Kota Makassar'], ['Bulan/Tahun : MARET/2024'], ['Jumlah kasus baru (Kunjungan pertama dan belum tercatat di RS/Fasilitas Kesehatan Lainnya)'], ['NO', 'PENYAKIT TIDAK MENULAR', 'Jenis Kelamin dan Umur (Th)', '', '', '', '', '', '', '', 'Jenis Kelamin dan Umur (Th)', '', '', '', '', '', '', '', 'Total'], ['', '', 'Laki-Laki (L)', '', '', '', '', '', '', '', 'Perempuan (P)', '', '', '', '', '', '', '', ''], ['', '', '18-24', '25-34', '35-44', '45-54', '55-64', '65-74', '≥ 75', 'Jumlah', '18-24', '25-34', '35-44', '45-54', '55-64', '65-74', '≥ 75', 'Jumlah', '']];
 
         // Data penyakit berdasarkan gambar
-        $data = [
-            ['1', 'Hipertensi', 1, 4, 3, 5, 6, 7, 21, 47, 13, 23, 25, 31, 27, 17, 113, 182],
-            ['2', 'Diabetes Melitus', 0, 1, 0, 2, 3, 4, 7, 17, 2, 5, 10, 11, 9, 5, 33, 50],
-            ['3', 'Obesitas', 9, 6, 5, 4, 3, 2, 16, 45, 19, 16, 21, 26, 25, 25, 102, 189],
-            ['4', 'Struma', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['5', 'Tiroksikosis', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['6', 'Stroke', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['7', 'Asma', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['8', 'PPOK', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['9', 'Osteoporosis', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['10', 'Penyakit Ginjal Kronik', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['11', 'Kecelakaan Lalu Lintas Jalan', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['12', 'Tumor Payudara', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['13', 'Tumor pada Retina Mata', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['14', 'Tumor pada Bibir, Rongga Mulut', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['15', 'Tumor Genitalia Eksterna Pria', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['16', 'Tumor Genitalia Eksterna Perempuan', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['17', 'Serviks', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['18', ' Tumor Genitalia Interna Perempuan (Kecuali Serviks)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ['', ' Jumlah', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        ];
-
+        // $data = [
+        //     ['1', 'Hipertensi', 1, 4, 3, 5, 6, 7, 21, 47, 13, 23, 25, 31, 27, 17, 113, 182],
+        //     ['2', 'Diabetes Melitus', 0, 1, 0, 2, 3, 4, 7, 17, 2, 5, 10, 11, 9, 5, 33, 50],
+        //     ['3', 'Obesitas', 9, 6, 5, 4, 3, 2, 16, 45, 19, 16, 21, 26, 25, 25, 102, 189],
+        //     ['4', 'Struma', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['5', 'Thyrotoksikosis', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['6', 'Stroke', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['7', 'Asma', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['8', 'PPOK', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['9', 'Osteoporosis', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['10', 'Penyakit Ginjal Kronik', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['11', 'Kecelakaan Lalu Lintas Jalan', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['12', 'Tumor Payudara', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['13', 'Tumor pada Retina Mata', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['14', 'Tumor pada Bibir, Rongga Mulut', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['15', 'Tumor Genitalia Eksterna Pria', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['16', 'Tumor Genitalia Eksterna Perempuan', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['17', 'Serviks', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['18', ' Tumor Genitalia Interna Perempuan (Kecuali Serviks)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     ['', ' Jumlah', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        // ];
+        
         // Memasukkan header
         foreach ($headers as $rowIndex => $headerRow) {
             $sheet->fromArray($headerRow, null, 'A' . (1 + $rowIndex));
@@ -402,8 +402,9 @@ class ReportController extends Controller
 
         // Memasukkan data penyakit
         $startRow = count($headers) + 1;
-        $sheet->fromArray($data, null, 'A' . $startRow);
-
+        // $sheet->fromArray($data, null, 'A' . $startRow);
+        
+        
         // Merge kolom header
         $sheet->mergeCells('A5:A7'); // NO
         $sheet->mergeCells('B5:B7'); // PENYAKIT TIDAK MENULAR
@@ -455,54 +456,151 @@ class ReportController extends Controller
             ->getStyle('R30:R35')
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
-        $actions = Action::select('*') // Pilih semua kolom
-            ->where(function ($query) {
-                $query
-                    ->where('diagnosa', 'like', '%"97"%') // Jika `diagnosa` disimpan dalam format JSON
-                    ->orWhere('diagnosa', '97'); // Jika `diagnosa` disimpan sebagai string
-            })
-            ->get();
-
-        $diagnosisData = [];
-        $data = []; // Inisialisasi array data untuk tabel
-
-        foreach ($actions as $action) {
-            $diagnosisIds = [];
-            if (is_array($action->diagnosa)) {
-                $diagnosisIds = $action->diagnosa;
-            } elseif (is_string($action->diagnosa)) {
-                $decoded = json_decode($action->diagnosa, true);
-                if (is_array($decoded)) {
-                    $diagnosisIds = $decoded;
+            $dataPenyakit = [
+                'Hipertensi' => ['134', '186', '291'],
+                'Diabetes Melitus' => ['362', '363', '364'],
+                'Obesitas' => ['264', '269'],
+                'Struma' => [],
+                'Thyrotoksikosis' => [],
+                'Stroke' => [],
+                'Asma' => [],
+                'PPOK' => [],
+                'Osteoporosis' => [],
+                'Penyakit Ginjal Kronik' => [],
+                'Kecelakaan Lalu Lintas Jalan' => [],
+                'Tumor Payudara' => [],
+                'Tumor pada Retina Mata' => [],
+                'Tumor pada Bibir, Rongga Mulut' => [],
+                'Tumor Genitalia Eksterna Pria' => [],
+                'Tumor Genitalia Eksterna Perempuan' => [],
+                'Serviks' => [],
+                'Tumor Genitalia Interna Perempuan (Kecuali Serviks)' => []
+            ];
+            
+            $ageGroups = [
+                '18-24' => [18, 24],
+                '25-34' => [25, 34],
+                '35-44' => [35, 44],
+                '45-54' => [45, 54],
+                '55-64' => [55, 64],
+                '65-74' => [65, 74],
+                '>=75'  => [75, PHP_INT_MAX],
+                'Unknown' => [0, 17] // Ensure the Unknown group is defined
+            ];
+            
+            $result = []; // For storing results
+            $actions = Action::with('patient.villages');
+            
+            // Fetch actions where 'diagnosa' contains IDs from $dataPenyakit
+            foreach ($dataPenyakit as $penyakit => $diagnosisIds) {
+                // Skip empty diagnosis categories (though still need to include them in the result)
+                foreach ($diagnosisIds as $diagnosisId) {
+                    $actions->orWhereJsonContains('diagnosa', $diagnosisId);
                 }
             }
-
-            if (empty($diagnosisIds)) {
-                continue;
-            }
-
-            foreach ($diagnosisIds as $diagnosisId) {
-                if ($diagnosisId != 97) {
-                    // Pastikan hanya mengambil data dengan diagnosa ID 97
-                    continue;
+            
+            // Get the results
+            $actions = $actions->get();
+            
+            // Process each action
+            foreach ($actions as $action) {
+                // Skip if the patient is 17 years old or younger
+                $age = calculateAgePTM($action->patient->dob);
+                // dd($age);
+                if ($age <= 17) {
+                    continue; // Skip processing if the patient is 17 or younger
                 }
-
-                $key = $diagnosisId . '-' . ($action->icd10 ?? 'Unknown');
-
-                if (!isset($diagnosisData[$key])) {
-                    $diagnosisData[$key] = [
-                        'name' => Diagnosis::find($diagnosisId)?->name ?? 'Unknown',
+            
+                // Loop through diagnosis categories in $dataPenyakit
+                foreach ($dataPenyakit as $penyakit => $diagnosisIds) {
+                    foreach ($diagnosisIds as $diagnosisId) {
+                        // Check if this diagnosisId is part of the action's diagnosa
+                        if (!in_array($diagnosisId, $action->diagnosa)) {
+                            continue;
+                        }
+            
+                        // Use the disease name from the key (penyakit)
+                        $diagnosisName = $penyakit; // This will be the disease name from the array key
+            
+                        // Determine gender
+                        $gender = strtolower($action->patient->genderName->name) === 'male' ? 'L' : 'P';
+            
+                        // Calculate age and determine the age group
+                        $ageGroup = 'Unknown'; // Default age group is 'Unknown'
+            
+                        // Ensure proper array access (key => [min, max])
+                        foreach ($ageGroups as $group => $range) {
+                            // $range should be an array like [min, max]
+                            $min = $range[0];
+                            $max = $range[1];
+            
+                            if ($age >= $min && $age <= $max) {
+                                $ageGroup = $group;
+                                break;
+                            }
+                        }
+            
+                        // Initialize the result array if it doesn't exist yet
+                        if (!isset($result[$diagnosisName])) {
+                            $result[$diagnosisName] = [
+                                'L' => array_fill_keys(array_keys($ageGroups), 0),
+                                'P' => array_fill_keys(array_keys($ageGroups), 0),
+                            ];
+                        }
+            
+                        // Increment the count for gender and age group
+                        $result[$diagnosisName][$gender][$ageGroup]++;
+                    }
+                }
+            }
+            
+            // Ensure all diseases (even those with no data) are represented in the final result
+            foreach ($dataPenyakit as $penyakit => $diagnosisIds) {
+                // If the disease is not in the result, initialize it with zeros
+                if (!isset($result[$penyakit])) {
+                    $result[$penyakit] = [
+                        'L' => array_fill_keys(array_keys($ageGroups), 0),
+                        'P' => array_fill_keys(array_keys($ageGroups), 0),
                     ];
                 }
-
-                // Data tabel
-                $data[] = ['', $action->patient->name ? ucwords(strtolower($action->patient->name)) : 'Unknown', '', $action->patient->address ?? 'Unknown', $action->patient->dob && calculateAgeUnit($action->patient->dob) == 'months' ? calculateAge($action->patient->dob) . ' bln' : null, $action->patient->dob && calculateAgeUnit($action->patient->dob) == 'years' ? calculateAge($action->patient->dob) . 'thn' : null, $action->visits ?? '0x', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
             }
-        }
-        $sheet->fromArray($data, null, 'A11');
-
-        // Penyesuaian lebar kolom secara spesifik
+            
+            // Prepare the data for the table
+            $data = [];
+            $no = 1;
+            
+            foreach ($result as $diagnosis => $genderData) {
+                $row = [
+                    'no' => $no++,
+                    'diagnosis' => $diagnosis,
+                    'L_total' => 0,
+                    'P_total' => 0,
+                    'Total' => 0,
+                ];
+            
+                // Populate the age group counts for both genders
+                foreach (array_keys($ageGroups) as $group) {
+                    $row["L_$group"] = $genderData['L'][$group] ?? 0;
+                    $row["P_$group"] = $genderData['P'][$group] ?? 0;
+            
+                    // Accumulate totals for each gender and the overall total
+                    $row['L_total'] += $row["L_$group"];
+                    $row['P_total'] += $row["P_$group"];
+                }
+            
+                // Calculate the overall total
+                $row['Total'] = $row['L_total'] + $row['P_total'];
+            
+                // Add the row to the data array
+                $data[] = $row;
+            }
+            
+            // Write to the sheet (make sure the sheet instance is available)
+            $sheet->fromArray($data, null, 'A8');
+            
+            
+            
+                    // Penyesuaian lebar kolom secara spesifik
         $columnWidths = [5, 50, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 15];
         foreach (range('A', 'S') as $index => $columnID) {
             $sheet->getColumnDimension($columnID)->setWidth($columnWidths[$index]);
