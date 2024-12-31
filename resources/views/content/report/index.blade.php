@@ -46,7 +46,6 @@
                 <div class="col-md-4 mb-3">
 
                     <button class="btn btn-danger btn-block w-100 mb-2">Rekap Kunjungan</button>
-                    <button class="btn btn-dark btn-block w-100 mb-2">Kesehatan Jiwa</button>
                     <button class="btn btn-dark btn-block w-100 mb-2">Laporan Berdasarkan Kasus</button>
                     <a href="{{ route('report.up') }}" class="btn btn-danger btn-block w-100 mb-2" target="_blank">Pasien
                         Produktif Baru (15-59THN)</a>
@@ -82,7 +81,8 @@
 
                 <!-- Kolom 3 -->
                 <div class="col-md-4 mb-3">
-                    <button class="btn btn-success btn-block w-100 mb-2">Rekap Pesakitan Formulir 11</button>
+                    <a href="{{ route('report.formulir11') }}" class="btn btn-success btn-block w-100 mb-2"
+                        target="_blank">Rekap Pesakitan Formulir 11</a>
                     <button class="btn btn-danger btn-block w-100 mb-2">Rekap Kunjungan Umur</button>
                     <a href="{{ route('report.lkrj') }}" class="btn btn-info btn-block w-100 mb-2"
                         target="_blank">Kunjungan
