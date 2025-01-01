@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Action;
 use App\Models\Patients;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -18,6 +20,18 @@ class PatientsController extends Controller
     // Return data in the format required by DataTables
     return response()->json(['data' => $patients]);
 }
+
+public function getPatientsDokter(Request $request)
+{
+    // Ambil data Action yang dibuat hari ini
+    $patients = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')
+        ->whereDate('tanggal', Carbon::today())
+        ->get();
+
+    // Return data dalam format yang dibutuhkan oleh DataTables
+    return response()->json(['data' => $patients]);
+}
+
     public function index()
     {
         $patients = Patients::all();

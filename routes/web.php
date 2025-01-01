@@ -132,8 +132,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/patients', [PatientsController::class, 'patientReport'])->name('patient.report');
 
     Route::get('/action', [ActionController::class, 'index'])->name('action.index');
+    Route::get('/action/dokter', [ActionController::class, 'indexDokter'])->name('action.dokter.index');
     Route::post('/action', [ActionController::class, 'store'])->name('action.store');
     Route::POST('/action/{id}', [ActionController::class, 'update'])->name('action.update');
+    Route::POST('/action-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
     Route::delete('/action/{id}', [ActionController::class, 'destroy'])->name('action.destroy');
     Route::get('/report/action', [ActionController::class, 'actionReport'])->name('action.report');
 
@@ -332,6 +334,7 @@ Route::get('cities/{provinceId}', [DependentDropdownController::class, 'citiesDa
 Route::get('districts/{cityId}', [DependentDropdownController::class, 'districtsData'])->name('districts');
 Route::get('villages/{districtId}', [DependentDropdownController::class, 'villagesData'])->name('villages');
 Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('get-patients');
+Route::get('/get-patients-dokter', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
 
 //Language Change
 Route::get('lang/{locale}', function ($locale) {
