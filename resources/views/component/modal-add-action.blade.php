@@ -4,9 +4,9 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                @if (Auth::user()->role == 'admin-poli-umum')
+                @if ($routeName === 'action.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
-                @elseif(Auth::user()->role == 'admin-poli-gigi')
+                @elseif($routeName === 'action.index.gigi')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
@@ -194,7 +194,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (Auth::user()->role == 'admin-poli-umum')
+                            @if ($routeName === 'action.index')
                                 <div class="container">
                                     <div class="row g-2">
                                         <div class="col-md-2 ">
@@ -560,7 +560,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @elseif(Auth::user()->role == 'admin-poli-gigi')
+                            @elseif($routeName === 'action.index.gigi')
                                 <div class="container">
                                     <div class="row g-2">
                                         <div class="col-md-2 ">
@@ -576,7 +576,7 @@
                             @endif
                         </div>
                     </div>
-                    @if (Auth::user()->role == 'admin-poli-umum')
+                    @if ($routeName === 'action.index')
                         <div class="row mt-3">
                             <div class="col-md-4">
                                 <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular
@@ -603,15 +603,15 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
                                 <input type="text" class="form-control" id="keluhan" name="keluhan"
                                     placeholder="Kosongkan Bila sehat">
-                            </div>
+                            </div> --}}
                         </div>
                     @endif
                     <div class="row mt-3">
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                             <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
 
@@ -619,20 +619,20 @@
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                        <div class="col-md-4">
+                        </div> --}}
+                        {{-- <div class="col-md-4">
                             <label for="icd10" style="color: rgb(19, 11, 241);">ICD 10</label>
                             <input type="text" class="form-control" id="icd10" name="icd10"
                                 placeholder="ICD 10" required>
-                        </div>
+                        </div> --}}
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                             <select class="form-control" id="tindakan" name="tindakan">
                                 <option value="" disabled selected>pilih</option>
-                                @if (Auth::user()->role == 'admin-poli-umum')
+                                @if ($routeName === 'action.index')
                                     <option value="Diberikan Obat">Diberikan Obat</option>
                                     <option value="Tidak">Tidak</option>
-                                @elseif(Auth::user()->role == 'admin-poli-gigi')
+                                @elseif($routeName === 'action.index.gigi')
                                     <option value="Gigi Sulung Tumpatan Sementara">Gigi Sulung Tumpatan Sementara
                                     </option>
                                     <option value="Gigi Tetap Tumpatan Sementara">Gigi Tetap Tumpatan Sementara
@@ -697,7 +697,11 @@
                                 @endif
                             </select>
                         </div>
-                        <div class="col-md-4">
+
+
+                    </div>
+                    <div class="row mt-3">
+                        {{-- <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">RUJUK RS</label>
                             <select class="form-control" id="alkohol" name="rujuk_rs">
                                 <option value="" disabled selected>pilih</option>
@@ -706,10 +710,7 @@
                                 @endforeach
 
                             </select>
-                        </div>
-
-                    </div>
-                    <div class="row mt-3">
+                        </div> --}}
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">KETERANGAN</label>
                             <input type="text" class="form-control" id="keterangan" name="keterangan"

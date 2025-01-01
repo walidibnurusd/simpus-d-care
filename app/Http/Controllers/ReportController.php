@@ -20,9 +20,10 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('content.report.index');
+        $routeName = $request->route()->getName();
+        return view('content.report.index', compact('routeName'));
     }
     public function printTifoid()
     {
@@ -601,7 +602,6 @@ class ReportController extends Controller
             'Tumor Genitalia Eksterna Perempuan' => [],
             'Serviks' => [],
             'Tumor Genitalia Interna Perempuan (Kecuali Serviks)' => [],
-       
         ];
 
         $ageGroups = [
@@ -641,20 +641,20 @@ class ReportController extends Controller
             if ($age <= 17) {
                 continue;
             }
-        
-            $gender = $action->patient->gender ==2  ? 'L' : 'P';
-        
+
+            $gender = $action->patient->gender == 2 ? 'L' : 'P';
+
             foreach ($dataPenyakit as $penyakit => $diagnosisIds) {
                 if (!array_intersect($diagnosisIds, $action->diagnosa)) {
                     continue;
                 }
-        
+
                 // Pastikan pasien belum diproses untuk penyakit ini
                 if (isset($processedPatients[$action->patient->id][$penyakit])) {
                     continue;
                 }
                 $processedPatients[$action->patient->id][$penyakit] = true;
-        
+
                 $ageGroup = 'Unknown';
                 foreach ($ageGroups as $group => $range) {
                     if ($age >= $range[0] && $age <= $range[1]) {
@@ -663,131 +663,130 @@ class ReportController extends Controller
                         break;
                     }
                 }
-        
+
                 $result[$penyakit][$gender][$ageGroup]++;
             }
         }
-        
+
         // Siapkan data untuk tabel
-$data = [];
-$no = 1;
+        $data = [];
+        $no = 1;
 
-// Inisialisasi total untuk setiap kolom
-$totalRow = [
-    'no' => '', // Kolom ini kosong untuk baris total
-    'diagnosis' => 'Jumlah', // Nama diagnosis untuk total
-];
+        // Inisialisasi total untuk setiap kolom
+        $totalRow = [
+            'no' => '', // Kolom ini kosong untuk baris total
+            'diagnosis' => 'Jumlah', // Nama diagnosis untuk total
+        ];
 
-// Inisialisasi total untuk setiap kolom kelompok usia dan total gender
-foreach (array_keys($ageGroups) as $group) {
-    if ($group !== 'Unknown') {
-        $totalRow["L_$group"] = 0;
-        $totalRow["P_$group"] = 0;
-    }
-}
-$totalRow["L_>=75"] = 0;
-$totalRow['L_total'] = 0;
-$totalRow['P_total'] = 0;
-$totalRow['Total'] = 0;
-foreach ($result as $diagnosis => $genderData) {
-    // Initialize the row with the diagnosis and the counter
-    $row = [
-        'no' => $no++, // Assuming $no is a counter for each row
-        'diagnosis' => $diagnosis,
-    ];
-
-    // Add the L values for each age group first
-    foreach (array_keys($ageGroups) as $group) {
-        // Add the L value for the group (do not include L_Unknown)
-        if ($group !== 'Unknown') {
-            $row["L_$group"] = isset($genderData['L'][$group]) ? $genderData['L'][$group] : 0;
-            $totalRow["L_$group"] += $row["L_$group"]; // Tambahkan ke total
+        // Inisialisasi total untuk setiap kolom kelompok usia dan total gender
+        foreach (array_keys($ageGroups) as $group) {
+            if ($group !== 'Unknown') {
+                $totalRow["L_$group"] = 0;
+                $totalRow["P_$group"] = 0;
+            }
         }
-    }
+        $totalRow['L_>=75'] = 0;
+        $totalRow['L_total'] = 0;
+        $totalRow['P_total'] = 0;
+        $totalRow['Total'] = 0;
+        foreach ($result as $diagnosis => $genderData) {
+            // Initialize the row with the diagnosis and the counter
+            $row = [
+                'no' => $no++, // Assuming $no is a counter for each row
+                'diagnosis' => $diagnosis,
+            ];
 
-    // Add L_>=75 before L_total
-    $row["L_>=75"] = isset($genderData['L']['>=75']) ? $genderData['L']['>=75'] : 0;
-    $totalRow["L_>=75"] += $row["L_>=75"]; // Tambahkan ke total
+            // Add the L values for each age group first
+            foreach (array_keys($ageGroups) as $group) {
+                // Add the L value for the group (do not include L_Unknown)
+                if ($group !== 'Unknown') {
+                    $row["L_$group"] = isset($genderData['L'][$group]) ? $genderData['L'][$group] : 0;
+                    $totalRow["L_$group"] += $row["L_$group"]; // Tambahkan ke total
+                }
+            }
 
-    // Now add the L_total (after L_>=75)
-    $row['L_total'] = 0; // Initialize L_total
-    foreach (array_keys($ageGroups) as $group) {
-        if ($group !== 'Unknown') {
-            $row['L_total'] += isset($row["L_$group"]) ? $row["L_$group"] : 0;
+            // Add L_>=75 before L_total
+            $row['L_>=75'] = isset($genderData['L']['>=75']) ? $genderData['L']['>=75'] : 0;
+            $totalRow['L_>=75'] += $row['L_>=75']; // Tambahkan ke total
+
+            // Now add the L_total (after L_>=75)
+            $row['L_total'] = 0; // Initialize L_total
+            foreach (array_keys($ageGroups) as $group) {
+                if ($group !== 'Unknown') {
+                    $row['L_total'] += isset($row["L_$group"]) ? $row["L_$group"] : 0;
+                }
+            }
+            $totalRow['L_total'] += $row['L_total']; // Tambahkan ke total
+
+            // Add the P values for each age group after the L values
+            foreach (array_keys($ageGroups) as $group) {
+                // Add the P value for the group (do not include P_Unknown)
+                if ($group !== 'Unknown') {
+                    $row["P_$group"] = isset($genderData['P'][$group]) ? $genderData['P'][$group] : 0;
+                    $totalRow["P_$group"] += $row["P_$group"]; // Tambahkan ke total
+                }
+            }
+
+            // Initialize P_total before accumulation
+            $row['P_total'] = 0; // Initialize P_total
+            foreach (array_keys($ageGroups) as $group) {
+                if ($group !== 'Unknown') {
+                    $row['P_total'] += isset($row["P_$group"]) ? $row["P_$group"] : 0;
+                }
+            }
+            $totalRow['P_total'] += $row['P_total']; // Tambahkan ke total
+
+            // Calculate the overall total
+            $row['Total'] = $row['L_total'] + $row['P_total'];
+            $totalRow['Total'] += $row['Total']; // Tambahkan ke total keseluruhan
+
+            // Add this row to the data array
+            $data[] = $row; // The row is correctly added to the data array here
         }
-    }
-    $totalRow['L_total'] += $row['L_total']; // Tambahkan ke total
 
-    // Add the P values for each age group after the L values
-    foreach (array_keys($ageGroups) as $group) {
-        // Add the P value for the group (do not include P_Unknown)
-        if ($group !== 'Unknown') {
-            $row["P_$group"] = isset($genderData['P'][$group]) ? $genderData['P'][$group] : 0;
-            $totalRow["P_$group"] += $row["P_$group"]; // Tambahkan ke total
+        // Susun ulang urutan totalRow agar sama dengan urutan baris di atas
+        $totalRowOrdered = [
+            'no' => 'Total', // 'no' diisi dengan label "Total"
+            'diagnosis' => '', // Kosongkan diagnosis untuk total
+        ];
+
+        // Tambahkan total untuk setiap kolom L
+        foreach (array_keys($ageGroups) as $group) {
+            if ($group !== 'Unknown') {
+                $totalRowOrdered["L_$group"] = $totalRow["L_$group"];
+            }
         }
-    }
 
-    // Initialize P_total before accumulation
-    $row['P_total'] = 0; // Initialize P_total
-    foreach (array_keys($ageGroups) as $group) {
-        if ($group !== 'Unknown') {
-            $row['P_total'] += isset($row["P_$group"]) ? $row["P_$group"] : 0;
+        // Tambahkan total untuk L_>=75
+        $totalRowOrdered['L_>=75'] = $totalRow['L_>=75'];
+
+        // Tambahkan total untuk L_total
+        $totalRowOrdered['L_total'] = $totalRow['L_total'];
+
+        // Tambahkan total untuk setiap kolom P
+        foreach (array_keys($ageGroups) as $group) {
+            if ($group !== 'Unknown') {
+                $totalRowOrdered["P_$group"] = $totalRow["P_$group"];
+            }
         }
-    }
-    $totalRow['P_total'] += $row['P_total']; // Tambahkan ke total
 
-    // Calculate the overall total
-    $row['Total'] = $row['L_total'] + $row['P_total'];
-    $totalRow['Total'] += $row['Total']; // Tambahkan ke total keseluruhan
+        // Tambahkan total untuk P_total
+        $totalRowOrdered['P_total'] = $totalRow['P_total'];
 
-    // Add this row to the data array
-    $data[] = $row; // The row is correctly added to the data array here
-}
+        // Tambahkan total keseluruhan
+        $totalRowOrdered['Total'] = $totalRow['Total'];
+        $totalRowOrdered['no'] = '';
+        $totalRowOrdered['diagnosis'] = 'Jumlah';
+        // Tambahkan baris total ke akhir data
+        $data[] = $totalRowOrdered;
 
-// Susun ulang urutan totalRow agar sama dengan urutan baris di atas
-$totalRowOrdered = [
-    'no' => 'Total', // 'no' diisi dengan label "Total"
-    'diagnosis' => '', // Kosongkan diagnosis untuk total
-];
-
-// Tambahkan total untuk setiap kolom L
-foreach (array_keys($ageGroups) as $group) {
-    if ($group !== 'Unknown') {
-        $totalRowOrdered["L_$group"] = $totalRow["L_$group"];
-    }
-}
-
-// Tambahkan total untuk L_>=75
-$totalRowOrdered["L_>=75"] = $totalRow["L_>=75"];
-
-// Tambahkan total untuk L_total
-$totalRowOrdered['L_total'] = $totalRow['L_total'];
-
-// Tambahkan total untuk setiap kolom P
-foreach (array_keys($ageGroups) as $group) {
-    if ($group !== 'Unknown') {
-        $totalRowOrdered["P_$group"] = $totalRow["P_$group"];
-    }
-}
-
-// Tambahkan total untuk P_total
-$totalRowOrdered['P_total'] = $totalRow['P_total'];
-
-// Tambahkan total keseluruhan
-$totalRowOrdered['Total'] = $totalRow['Total'];
-$totalRowOrdered['no'] = ''; 
-$totalRowOrdered['diagnosis'] = 'Jumlah'; 
-// Tambahkan baris total ke akhir data
-$data[] = $totalRowOrdered;
-
-
-// return $data;
+        // return $data;
 
         // Tulis data ke sheet (mulai dari cell A8)
         Log::info('Populating sheet with data starting at A8.', ['data' => $data]);
         $sheet->fromArray($data, null, 'A8');
         // Penyesuaian lebar kolom secara spesifik
-        $columnWidths = [5, 50, 10,10,10,10,10,10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 15];
+        $columnWidths = [5, 50, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 15];
         foreach (range('A', 'S') as $index => $columnID) {
             $sheet->getColumnDimension($columnID)->setWidth($columnWidths[$index]);
         }
@@ -821,7 +820,6 @@ $data[] = $totalRowOrdered;
 
         return response()->download($filePath)->deleteFileAfterSend(true);
     }
-
 
     public function reportRJP()
     {

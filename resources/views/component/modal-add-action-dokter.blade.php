@@ -41,7 +41,8 @@
                                         <div class="form-group">
                                             <label for="nik">Cari Pasien</label>
                                             <div class="input-group">
-                                                <input type="text" hidden  id="idAction" name="idAction" value="">
+                                                <input type="text" hidden id="idAction" name="idAction"
+                                                    value="">
                                                 <input readonly type="text" class="form-control" id="nik"
                                                     name="nik" placeholder="NIK" required>
                                                 <div class="input-group-append">
@@ -621,16 +622,16 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <label for="icd10" style="color: rgb(19, 11, 241);">ICD 10</label>
                             <input type="text" class="form-control" id="icd10" name="icd10"
-                                placeholder="ICD 10" >
-                        </div>
+                                placeholder="ICD 10">
+                        </div> --}}
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                             <select class="form-control" id="tindakan" name="tindakan">
                                 <option value="" disabled selected>pilih</option>
-                                @if (Auth::user()->role == 'admin-poli-umum' || Auth::user()->role == 'dokter')
+                                @if ($routeName === 'action.dokter.index')
                                     <option value="Diberikan Obat">Diberikan Obat</option>
                                     <option value="Tidak">Tidak</option>
                                 @elseif(Auth::user()->role == 'admin-poli-gigi')
@@ -697,6 +698,10 @@
                                     <option value="Tampon/Off Tampon">Tampon/Off Tampon</option>
                                 @endif
                             </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
+                            <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                         </div>
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">RUJUK RS</label>

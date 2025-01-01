@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ActionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $response = Http::withHeaders([
             'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
@@ -26,23 +26,18 @@ class ActionController extends Controller
         } else {
             $dokter = [];
         }
-        if (Auth::user()->role == 'admin-poli-umum') {
-            $actions = Action::where('tipe', 'poli-umum')->get();
-            $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
-        } elseif (Auth::user()->role == 'admin-poli-gigi') {
-            $actions = Action::where('tipe', 'poli-gigi')->get();
-            $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
-        } else {
-            $actions = Action::where('tipe', 'ruang-tindakan')->get();
-            $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
-        }
+
+        $actions = Action::where('tipe', 'poli-umum')->get();
+        $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
 
-        return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa'));
+        $routeName = $request->route()->getName();
+
+        return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
-    public function indexDokter()
+    public function indexPoliGigi(Request $request)
     {
         $response = Http::withHeaders([
             'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
@@ -53,21 +48,59 @@ class ActionController extends Controller
         } else {
             $dokter = [];
         }
-        if (Auth::user()->role == 'dokter') {
-            $actions = Action::where('tipe', 'poli-umum')->get();
-            $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
-        } elseif (Auth::user()->role == 'admin-poli-gigi') {
-            $actions = Action::where('tipe', 'poli-gigi')->get();
-            $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
-        } else {
-            $actions = Action::where('tipe', 'ruang-tindakan')->get();
-            $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
-        }
+
+        $actions = Action::where('tipe', 'poli-gigi')->get();
+        $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
 
-        return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa'));
+        $routeName = $request->route()->getName();
+
+        return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+    public function indexUgd(Request $request)
+    {
+        $response = Http::withHeaders([
+            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
+        ])->get('https://simpusdignityspace.cloud/api/master/docters');
+
+        if ($response->successful()) {
+            $dokter = $response->json()['data'];
+        } else {
+            $dokter = [];
+        }
+
+        $actions = Action::where('tipe', 'ruang-tindakan')->get();
+        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+
+        $routeName = $request->route()->getName();
+
+        return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+    public function indexDokter(Request $request)
+    {
+        $response = Http::withHeaders([
+            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
+        ])->get('https://simpusdignityspace.cloud/api/master/docters');
+
+        if ($response->successful()) {
+            $dokter = $response->json()['data'];
+        } else {
+            $dokter = [];
+        }
+
+        $actions = Action::where('tipe', 'poli-umum')->get();
+        $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
+
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+
+        $routeName = $request->route()->getName();
+        return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
 
     public function actionReport(Request $request)
@@ -291,28 +324,26 @@ class ActionController extends Controller
                 'icd10' => 'nullable|string|max:255',
                 'neurologis' => 'nullable|string|max:255',
                 'hasil_lab' => 'nullable|string|max:255',
+                'obat' => 'nullable',
             ]);
 
             // Update the action with the validated data
             $action->update($validated);
-            if (Auth::user()->role=='dokter') {
+            if (Auth::user()->role == 'dokter') {
                 return redirect()->route('action.dokter.index')->with('success', 'Action has been successfully updated.');
-              } else {
+            } else {
                 return redirect()->route('action.index')->with('success', 'Action has been successfully updated.');
-              }
-
+            }
         } catch (\Exception $e) {
             return redirect()
                 ->back()
                 ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
-            ->withInput();
+                ->withInput();
         }
     }
     public function updateDokter(Request $request, $id)
     {
-       
         try {
-           
             $action = Action::find($id);
             if (!$action) {
                 return redirect()->back()->with('error', 'Action not found');
@@ -327,7 +358,6 @@ class ActionController extends Controller
                     ->withInput();
             }
 
-   
             // Merge the request with the formatted tanggal and id_patient
             $request->merge([
                 'tanggal' => $request->tanggal,
@@ -401,6 +431,7 @@ class ActionController extends Controller
                 'turgor' => 'nullable|string|max:255',
                 'neurologis' => 'nullable|string|max:255',
                 'hasil_lab' => 'nullable|string|max:255',
+                'obat' => 'nullable',
             ]);
 
             // Update the action with the validated data
@@ -421,11 +452,10 @@ class ActionController extends Controller
         $action = Action::findOrFail($id);
         $action->delete();
 
-      if (Auth::user()->role=='dokter') {
-        return redirect()->route('action.dokter.index')->with('success', 'Action has been successfully deleted.');
-      } else {
-        return redirect()->route('action.index')->with('success', 'Action has been successfully deleted.');
-      }
-      
+        if (Auth::user()->role == 'dokter') {
+            return redirect()->route('action.dokter.index')->with('success', 'Action has been successfully deleted.');
+        } else {
+            return redirect()->route('action.index')->with('success', 'Action has been successfully deleted.');
+        }
     }
 }

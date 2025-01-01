@@ -4,9 +4,9 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                @if (Auth::user()->role == 'admin-poli-umum')
+                @if ($routeName === 'action.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
-                @elseif(Auth::user()->role == 'admin-poli-gigi')
+                @elseif ($routeName === 'action.index.gigi')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
@@ -878,11 +878,11 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <label for="icd10" style="color: rgb(19, 11, 241);">ICD 10</label>
                             <input type="text" class="form-control" id="icd10" name="icd10"
                                 placeholder="ICD 10" value="{{ old('icd10', $action->icd10 ?? '') }}" required>
-                        </div>
+                        </div> --}}
                         <div class="col-md-4">
                             <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                             <select class="form-control" id="tindakanEdit" name="tindakan">
@@ -1019,6 +1019,16 @@
                             </select>
                         </div>
                         <div class="col-md-4">
+                            <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
+                            <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4">
                             <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
                             <select class="form-control" id="rujuk_rs" name="rujuk_rs">
                                 <option value="" disabled selected>pilih</option>
@@ -1030,14 +1040,11 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-
-                    <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
                             <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                value="{{ old('keterangan', $action->keterangan ?? '') }}"
-                                placeholder="Keterangan jenis Obatnya" required>
+                                value="{{ old('keterangan', $action->keterangan ?? '') }}" placeholder="Keterangan"
+                                required>
                         </div>
                     </div>
 
