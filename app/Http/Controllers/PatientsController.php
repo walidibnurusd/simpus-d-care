@@ -24,9 +24,11 @@ class PatientsController extends Controller
 public function getPatientsDokter(Request $request)
 {
     // Ambil data Action yang dibuat hari ini
+    // dd(Carbon::today());
     $patients = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')
         ->whereDate('tanggal', Carbon::today())
         ->get();
+      
 
     // Return data dalam format yang dibutuhkan oleh DataTables
     return response()->json(['data' => $patients]);

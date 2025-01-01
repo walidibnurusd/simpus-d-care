@@ -35,12 +35,14 @@
 @section('content')
 
     <div class="container my-4">
-        @if (Auth::user()->role == 'admin-poli-umum')
+        @if ($routeName === 'report.index')
             <h4 class="mb-3">Laporan Poli Umum</h4>
-        @else
+        @elseif($routeName === 'report.index.gigi')
             <h4 class="mb-3">Laporan Poli Gigi</h4>
+        @else
+            <h4 class="mb-3">UGD</h4>
         @endif
-        @if (Auth::user()->role == 'admin-poli-umum')
+        @if ($routeName === 'report.index')
             <div class="row">
                 <!-- Kolom 1 -->
                 <div class="col-md-4 mb-3">
@@ -99,7 +101,7 @@
 
                 </div>
             </div>
-        @elseif(Auth::user()->role == 'admin-poli-gigi')
+        @elseif($routeName === 'report.index.gigi')
             <div class="row">
                 <!-- Kolom 1 -->
                 <div class="col-md-6 mb-3">

@@ -58,118 +58,150 @@
                             </svg>
                             <svg class="fill-icon">
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
-                                @if (Auth::user()->role == 'admin-poli-umum')
+
                             </svg><span>Poli Umum</span></a>
-                    @elseif (Auth::user()->role == 'admin-poli-gigi')
-                        </svg><span>Poli Gigi</span></a>
-                    @else
-                        </svg><span>UGD</span></a>
-                        @endif
+
+                        {{-- </svg><span>Poli Gigi</span></a>
+                 
+                        </svg><span>UGD</span></a> --}}
+
                         <ul class="sidebar-submenu">
-                           @if (Auth::user()->role=='dokter')
-                           <li><a href="{{ route('action.dokter.index') }}">Tindakan</a></li>
-                           <li><a href="{{ route('report.index') }}">Laporan</a></li>
-
-                           @else
-                           <li><a href="{{ route('action.index') }}">Tindakan</a></li>
-                           <li><a href="{{ route('report.index') }}">Laporan</a></li>
-
-                           @endif
+                            @if (Auth::user()->role == 'dokter')
+                                <li><a href="{{ route('action.dokter.index') }}">Tindakan</a></li>
+                                <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                            @else
+                                <li><a href="{{ route('action.index') }}">Tindakan</a></li>
+                                <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                            @endif
                         </ul>
                     </li>
-                    @if (Auth::user()->role == 'admin-poli-umum')
-                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                                href="#">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
-                                </svg><span>Skrining</span></a>
-                            <ul class="sidebar-submenu">
-                                <li><a href="{{ route('skrining.ilp') }}" target="_blank">Skrining Ilp</a></li>
-                            </ul>
-                        </li>
-                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                                href="#">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
-                                </svg><span>KIA</span></a>
-                            <ul class="sidebar-submenu">
-                                <li><a href="{{ route('layakHamil.admin') }}">Layak Hamil</a></li>
-                                <li><a href="{{ route('hipertensi.admin') }}">Hipertensi</a></li>
-                                <li><a href="{{ route('gangguan.autis.admin') }}">Gangguan Autis</a></li>
-                                <li><a href="{{ route('anemia.admin') }}">Anemia</a></li>
-                                <li><a href="{{ route('hiv.admin') }}">HIV & IMS</a></li>
-                                <li><a href="{{ route('hepatitis.admin') }}">Hepatitis</a></li>
-                                <li><a href="{{ route('talasemia.admin') }}">Talasemia</a></li>
-                                <li><a href="{{ route('kecacingan.admin') }}">Kecacingan</a></li>
-                                <li><a href="{{ route('diabetes.mellitus.admin') }}">Diabetes Mellitus</a></li>
-                                <li><a href="{{ route('tbc.admin') }}">TBC</a></li>
-                                <li><a href="{{ route('triple.eliminasi.admin') }}">Triple Eliminasi Bumil</a></li>
-                                <li><a href="{{ route('kekerasan.anak.admin') }}">Kekerasan Terhadap Anak</a></li>
-                                <li><a href="{{ route('kekerasan.perempuan.admin') }}">Kekerasan Terhadap
-                                        Perempuan</a>
-                                </li>
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                            href="#">
+                            <svg class="stroke-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                            </svg>
+                            <svg class="fill-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
 
-                            </ul>
-                        </li>
-                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                                href="#">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
-                                </svg><span>MTBS</span></a>
-                            <ul class="sidebar-submenu">
-                                <li><a href="{{ route('testPendengaran.mtbs.admin') }}">Tes Daya Dengar</a></li>
-                                <li><a href="{{ route('merokok.mtbs.admin') }}"> Merokok Bagi Anak Usia Sekolah</a>
-                                </li>
-                                <li><a href="{{ route('sdq.mtbs.admin') }}">Keswa SDQ</a></li>
-                                <li><a href="{{ route('sdq.remaja.mtbs.admin') }}">Keswa SDQ Remaja</a></li>
-                                <li><a href="{{ route('napza.mtbs.admin') }}">Napza</a></li>
-                                <li><a href="{{ route('obesitas.mtbs.admin') }}">Obesitas</a></li>
-                                <li><a href="{{ route('kecacingan.admin.mtbs') }}">Kecacingan</a></li>
-                                <li><a href="{{ route('diabetes.mellitus.admin.mtbs') }}">Diabetes Mellitus</a></li>
-                                <li><a href="{{ route('tbc.admin.mtbs') }}">TBC</a></li>
-                                <li><a href="{{ route('kekerasan.anak.admin.mtbs') }}">Kekerasan Terhadap Anak</a>
-                                </li>
-                                <li><a href="{{ route('kekerasan.perempuan.admin.mtbs') }}">Kekerasan Terhadap
-                                        Perempuan</a></li>
-                                <li><a href="{{ route('talasemia.admin.mtbs') }}"> Talasemia</a></li>
-                                <li><a href="{{ route('anemia.admin.mtbs') }}">Anemia</a></li>
-                                <li><a href="{{ route('hipertensi.admin.mtbs') }}">Hipertensi</a></li>
+                            </svg><span>Poli Gigi</span></a>
 
-                            </ul>
-                        </li>
-                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                                class="sidebar-link sidebar-title" href="#">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
-                                </svg><span>Lansia</span></a>
-                            <ul class="sidebar-submenu">
+                        <ul class="sidebar-submenu">
 
-                                <li><a href="{{ route('puma.lansia.admin') }}">Puma</a></li>
-                                <li><a href="{{ route('geriatri.lansia.admin') }}">Geriatri</a></li>
-                                <li><a href="{{ route('kankerParu.lansia.admin') }}">Kanker Paru</a></li>
-                                <li><a href="{{ route('kankerPayudara.lansia.admin') }}">Kanker Payudara</a></li>
-                                <li><a href="{{ route('kankerKolorektal.lansia.admin') }}">Kanker Kolorektal</a></li>
-                                <li><a href="{{ route('layakHamil.admin.lansia') }}">Layak Hamil</a></li>
-                                <li><a href="{{ route('hipertensi.admin.lansia') }}">Hipertensi</a></li>
-                                <li><a href="{{ route('tbc.admin.lansia') }}">TBC</a></li>
-                                <li><a href="{{ route('talasemia.admin.lansia') }}"> Talasemia</a></li>
-                                <li><a href="{{ route('anemia.admin.lansia') }}">Anemia</a></li>
+                            <li><a href="{{ route('action.index.gigi') }}">Tindakan</a></li>
+                            <li><a href="{{ route('report.index.gigi') }}">Laporan</a></li>
 
-                            </ul>
-                        </li>
-                    @endif
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                            href="#">
+                            <svg class="stroke-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                            </svg>
+                            <svg class="fill-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+
+                            </svg><span>UGD</span></a>
+
+                        <ul class="sidebar-submenu">
+
+                            <li><a href="{{ route('action.index.ugd') }}">Tindakan</a></li>
+                            <li><a href="{{ route('report.index.ugd') }}">Laporan</a></li>
+
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                            href="#">
+                            <svg class="stroke-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
+                            </svg>
+                            <svg class="fill-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
+                            </svg><span>Skrining</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ route('skrining.ilp') }}" target="_blank">Skrining Ilp</a></li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                            href="#">
+                            <svg class="stroke-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
+                            </svg>
+                            <svg class="fill-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
+                            </svg><span>KIA</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ route('layakHamil.admin') }}">Layak Hamil</a></li>
+                            <li><a href="{{ route('hipertensi.admin') }}">Hipertensi</a></li>
+                            <li><a href="{{ route('gangguan.autis.admin') }}">Gangguan Autis</a></li>
+                            <li><a href="{{ route('anemia.admin') }}">Anemia</a></li>
+                            <li><a href="{{ route('hiv.admin') }}">HIV & IMS</a></li>
+                            <li><a href="{{ route('hepatitis.admin') }}">Hepatitis</a></li>
+                            <li><a href="{{ route('talasemia.admin') }}">Talasemia</a></li>
+                            <li><a href="{{ route('kecacingan.admin') }}">Kecacingan</a></li>
+                            <li><a href="{{ route('diabetes.mellitus.admin') }}">Diabetes Mellitus</a></li>
+                            <li><a href="{{ route('tbc.admin') }}">TBC</a></li>
+                            <li><a href="{{ route('triple.eliminasi.admin') }}">Triple Eliminasi Bumil</a></li>
+                            <li><a href="{{ route('kekerasan.anak.admin') }}">Kekerasan Terhadap Anak</a></li>
+                            <li><a href="{{ route('kekerasan.perempuan.admin') }}">Kekerasan Terhadap
+                                    Perempuan</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                            href="#">
+                            <svg class="stroke-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
+                            </svg>
+                            <svg class="fill-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
+                            </svg><span>MTBS</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ route('testPendengaran.mtbs.admin') }}">Tes Daya Dengar</a></li>
+                            <li><a href="{{ route('merokok.mtbs.admin') }}"> Merokok Bagi Anak Usia Sekolah</a>
+                            </li>
+                            <li><a href="{{ route('sdq.mtbs.admin') }}">Keswa SDQ</a></li>
+                            <li><a href="{{ route('sdq.remaja.mtbs.admin') }}">Keswa SDQ Remaja</a></li>
+                            <li><a href="{{ route('napza.mtbs.admin') }}">Napza</a></li>
+                            <li><a href="{{ route('obesitas.mtbs.admin') }}">Obesitas</a></li>
+                            <li><a href="{{ route('kecacingan.admin.mtbs') }}">Kecacingan</a></li>
+                            <li><a href="{{ route('diabetes.mellitus.admin.mtbs') }}">Diabetes Mellitus</a></li>
+                            <li><a href="{{ route('tbc.admin.mtbs') }}">TBC</a></li>
+                            <li><a href="{{ route('kekerasan.anak.admin.mtbs') }}">Kekerasan Terhadap Anak</a>
+                            </li>
+                            <li><a href="{{ route('kekerasan.perempuan.admin.mtbs') }}">Kekerasan Terhadap
+                                    Perempuan</a></li>
+                            <li><a href="{{ route('talasemia.admin.mtbs') }}"> Talasemia</a></li>
+                            <li><a href="{{ route('anemia.admin.mtbs') }}">Anemia</a></li>
+                            <li><a href="{{ route('hipertensi.admin.mtbs') }}">Hipertensi</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                            href="#">
+                            <svg class="stroke-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
+                            </svg>
+                            <svg class="fill-icon">
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
+                            </svg><span>Lansia</span></a>
+                        <ul class="sidebar-submenu">
+
+                            <li><a href="{{ route('puma.lansia.admin') }}">Puma</a></li>
+                            <li><a href="{{ route('geriatri.lansia.admin') }}">Geriatri</a></li>
+                            <li><a href="{{ route('kankerParu.lansia.admin') }}">Kanker Paru</a></li>
+                            <li><a href="{{ route('kankerPayudara.lansia.admin') }}">Kanker Payudara</a></li>
+                            <li><a href="{{ route('kankerKolorektal.lansia.admin') }}">Kanker Kolorektal</a></li>
+                            <li><a href="{{ route('layakHamil.admin.lansia') }}">Layak Hamil</a></li>
+                            <li><a href="{{ route('hipertensi.admin.lansia') }}">Hipertensi</a></li>
+                            <li><a href="{{ route('tbc.admin.lansia') }}">TBC</a></li>
+                            <li><a href="{{ route('talasemia.admin.lansia') }}"> Talasemia</a></li>
+                            <li><a href="{{ route('anemia.admin.lansia') }}">Anemia</a></li>
+
+                        </ul>
+                    </li>
 
                 </ul>
             </div>

@@ -78,7 +78,8 @@ class Action extends Model
         'tipe',
         'icd10',
         'oralit',
-        'zinc'
+        'zinc',
+        'obat'
     ];
 
     protected $casts = [
