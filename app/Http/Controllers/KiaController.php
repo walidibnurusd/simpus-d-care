@@ -274,13 +274,14 @@ class KiaController extends Controller
             ]),
         );
 
-        return redirect()->route('anemia.view')->with('success', 'Data Anemia created successfully!');
+        return redirect()->back()->with('success', 'Data Anemia created successfully!');
     }
 
-    public function showTalasemia()
+    public function showTalasemia(Request $request)
     {
         $pasien = Patients::all();
-        return view('kia.talasemia', compact('pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.talasemia', compact('pasien', 'routeName'));
     }
     public function storeTalasemia(Request $request)
     {
@@ -316,7 +317,7 @@ class KiaController extends Controller
             ),
         );
         // Redirect with a success message
-        return redirect()->route('talasemia.view')->with('success', 'Data Talasemia created successfully!');
+        return redirect()->back()->with('success', 'Data Talasemia created successfully!');
     }
     public function showHepatitis()
     {
@@ -358,7 +359,7 @@ class KiaController extends Controller
         );
 
         // Redirect with a success message
-        return redirect()->route('hepatitis.view')->with('success', 'Data Hepatitis created successfully!');
+        return redirect()->back()->with('success', 'Data Hepatitis created successfully!');
     }
 
     public function showKekerasanAnak()
@@ -399,7 +400,7 @@ class KiaController extends Controller
         );
 
         // Redirect with success message
-        return redirect()->route('kekerasan.anak.view')->with('success', 'Data Kekerasan Anak created successfully!');
+        return redirect()->back()->with('success', 'Data Kekerasan Anak created successfully!');
     }
 
     public function showKekerasanPerempuan()
@@ -435,13 +436,14 @@ class KiaController extends Controller
         );
 
         // Redirect with success message
-        return redirect()->route('kekerasan.perempuan.view')->with('success', 'Data Kekerasan Perempuan created successfully!');
+        return redirect()->back()->with('success', 'Data Kekerasan Perempuan created successfully!');
     }
 
-    public function showDiabetesMellitus()
+    public function showDiabetesMellitus(Request $request)
     {
         $pasien = Patients::all();
-        return view('kia.diabetes_mellitus', compact('pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.diabetes_mellitus', compact('pasien', 'routeName'));
     }
     public function storeDiabetesMellitus(Request $request)
     {
@@ -461,18 +463,15 @@ class KiaController extends Controller
             return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
         }
 
-        DiabetesMellitus::create(
-            array_merge(
-                $validator->validated(), // Only uses validated data
-                [
-                    'klaster' => 2, // Adding 'klaster' field with value 2
-                    'poli' => 'kia', // Adding 'poli' field with value 'kia'
-                ],
-            ),
+        $diabetes = DiabetesMellitus::create(
+            array_merge($validator->validated(), [
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
+            ]),
         );
 
         // Redirect with a success message
-        return redirect()->route('diabetes.mellitus.view')->with('success', 'Data Diabetes Mellitus created successfully!');
+        return redirect()->back()->with('success', 'Data Diabetes Mellitus created successfully!');
     }
     public function showTbc(Request $request)
     {
@@ -530,7 +529,7 @@ class KiaController extends Controller
         );
 
         // Redirect with success message
-        return redirect()->route('tbc.view')->with('success', 'Data TBC created successfully!');
+        return redirect()->back()->with('success', 'Data TBC created successfully!');
     }
     public function showTripleEliminasi()
     {
@@ -605,6 +604,6 @@ class KiaController extends Controller
         );
 
         // Redirect with success message
-        return redirect()->route('triple.eliminasi.view')->with('success', 'Data Triple Eliminasi created successfully!');
+        return redirect()->back()->with('success', 'Data Triple Eliminasi created successfully!');
     }
 }

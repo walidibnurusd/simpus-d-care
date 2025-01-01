@@ -74,9 +74,14 @@
 
                                             <td>
                                                 <ul class="action">
-                                                    <li class="edit"> <a
-                                                            href="{{ route('diabetes.mellitus.edit', $item->id) }}"><i
-                                                                class="icon-pencil-alt"></i></a>
+                                                    <li class="edit">
+                                                        @if ($routeName === 'diabetes.mellitus.admin')
+                                                            <a href="{{ route('diabetes.mellitus.edit', $item->id) }}"><i
+                                                                    class="icon-pencil-alt"></i></a>
+                                                        @else
+                                                            <a href="{{ route('diabetes.mellitus.mtbs.edit', $item->id) }}"><i
+                                                                    class="icon-pencil-alt"></i></a>
+                                                        @endif
                                                     </li>
                                                     <li class="delete">
                                                         <a href="javascript:void(0)"

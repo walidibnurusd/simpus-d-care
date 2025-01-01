@@ -76,7 +76,9 @@ class Action extends Model
         'hasil_lab',
         'hamil',
         'tipe',
-        'icd10'
+        'icd10',
+        'oralit',
+        'zinc'
     ];
 
     protected $casts = [

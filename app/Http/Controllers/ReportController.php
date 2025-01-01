@@ -42,16 +42,183 @@ class ReportController extends Controller
     }
     public function reportDiare()
     {
-        return view('content.report.report-diare');
+        $diare = Action::with(['patient.villages', 'hospitalReferral'])
+            ->whereIn('diagnosa', [38, 77, 578, 596, 597])
+            ->orWhere(function ($query) {
+                $query->whereJsonContains('diagnosa', '578')->orWhereJsonContains('diagnosa', '596')->orWhereJsonContains('diagnosa', '597')->orWhereJsonContains('diagnosa', '38')->orWhereJsonContains('diagnosa', '77');
+            })
+            ->get();
+
+        $diagnosaMap = [
+            38 => 'Diare & gastroenteritis oleh penyebab infeksi tertentu (coalitis infeksi)',
+            77 => 'Diare disentri (Diamhoea dysentarie)',
+            578 => 'Diare dengan dehidrasi berat',
+            596 => 'Diare Tanpa Dehidrasi',
+            597 => 'Diare dengan dehidrasi ringan-sedang',
+        ];
+
+        $dehidrasiMap = [
+            38 => 'Tanpa Dehidrasi',
+            77 => 'Tanpa Dehidrasi',
+            578 => 'Berat',
+            596 => 'Tanpa Dehidrasi',
+            597 => 'Ringan-Sedang',
+        ];
+
+        foreach ($diare as $data) {
+            if (is_array($data->diagnosa)) {
+                $data->diagnosa_names = array_map(function ($id) use ($diagnosaMap) {
+                    return $diagnosaMap[$id] ?? 'Tidak Diketahui';
+                }, $data->diagnosa);
+
+                $dehidrasiList = array_map(function ($id) use ($dehidrasiMap) {
+                    return $dehidrasiMap[$id] ?? 'Tidak Diketahui';
+                }, $data->diagnosa);
+                $data->dehidrasi = implode(', ', array_unique($dehidrasiList));
+            } else {
+                $data->diagnosa_names = [$diagnosaMap[$data->diagnosa] ?? 'Tidak Diketahui'];
+                $data->dehidrasi = $dehidrasiMap[$data->diagnosa] ?? 'Tidak Diketahui';
+            }
+        }
+
+        return view('content.report.report-diare', compact('diare'));
     }
+
     public function reportSTP()
     {
-        return view('content.report.laporan-stp');
+        $diagnosaNames = [
+            37 => 'Kolera',
+            38 => 'Diare',
+            578 => 'Diare',
+            596 => 'Diare',
+            597 => 'Diare',
+            77 => 'Diare Berdarah',
+            256 => 'Tifus Perut Klinis',
+            39 => 'Tifus Perut Klinis',
+            396 => 'TBC Paru BTA (+)',
+            'unknown_1' => 'Tersangka TBC Paru',
+            'unknown_2' => 'Kusta PB',
+            'unknown_3' => 'Kusta MB',
+            97 => 'Campak',
+            89 => 'Difteria',
+            90 => 'Batuk Rejan',
+            91 => 'Tetanus',
+            92 => 'Tetanus',
+            204 => 'Tetanus',
+            581 => 'Hepatitis Klinis',
+            105 => 'Malaria Klinis',
+            329 => 'Malaria Vivax',
+            331 => 'Malaria Falciparum',
+            'unknown_4' => 'Malaria Mix',
+            101 => 'Demam Berdarah Dengue',
+            390 => 'Demam Dengue',
+            25 => 'Pneumonia',
+            26 => 'Pneumonia',
+            572 => 'Gonorhoe',
+            109 => 'Frambusia',
+            110 => 'Filariasis',
+            142 => 'Influensa',
+        ];
+
+        // Ambil data dengan diagnosa yang valid berdasarkan diagnosaNames
+        $stp = Action::with(['patient'])
+            ->whereIn('diagnosa', array_keys($diagnosaNames))
+            ->orWhere(function ($query) use ($diagnosaNames) {
+                foreach (array_keys($diagnosaNames) as $id) {
+                    $query->orWhereJsonContains('diagnosa', (string) $id);
+                }
+            })
+            ->get()
+            ->map(function ($action) {
+                if (!empty($action->patient) && !empty($action->patient->dob)) {
+                    $dob = Carbon::parse($action->patient->dob);
+                    $now = Carbon::now();
+                    $action->ageInDays = $dob->diffInDays($now);
+                    $action->age = $dob->age;
+                    $action->gender = $action->patient->gender ?? 'unknown';
+                } else {
+                    $action->ageInDays = 0;
+                    $action->age = 0;
+                    $action->gender = 'unknown';
+                }
+                return $action;
+            });
+
+        // Kelompokkan data berdasarkan rentang usia
+        $groupedData = $stp->groupBy(function ($action) {
+            $ageInDays = $action->ageInDays;
+            $age = $action->age;
+
+            if ($ageInDays <= 7) {
+                return '0-7 hr';
+            } elseif ($ageInDays <= 28) {
+                return '8-28 hr';
+            } elseif ($age < 1) {
+                return '0-1 tahun';
+            } elseif ($age <= 4) {
+                return '1-4 tahun';
+            } elseif ($age <= 9) {
+                return '5-9 tahun';
+            } elseif ($age <= 14) {
+                return '10-14 tahun';
+            } elseif ($age <= 19) {
+                return '15-19 tahun';
+            } elseif ($age <= 44) {
+                return '20-44 tahun';
+            } elseif ($age <= 54) {
+                return '45-54 tahun';
+            } elseif ($age <= 59) {
+                return '55-59 tahun';
+            } elseif ($age <= 69) {
+                return '60-69 tahun';
+            } else {
+                return '70+ tahun';
+            }
+        });
+
+        // Siapkan laporan awal dengan semua nilai nol
+        $ageGroups = ['0-7 hr', '8-28 hr', '0-1 tahun', '1-4 tahun', '5-9 tahun', '10-14 tahun', '15-19 tahun', '20-44 tahun', '45-54 tahun', '55-59 tahun', '60-69 tahun', '70+ tahun'];
+        $report = [];
+        foreach ($diagnosaNames as $diagnosaName) {
+            foreach ($ageGroups as $ageGroup) {
+                $report[$diagnosaName][$ageGroup] = [
+                    'total' => 0,
+                    'male' => 0,
+                    'female' => 0,
+                ];
+            }
+        }
+
+        // Isi laporan berdasarkan data yang dikelompokkan
+        foreach ($groupedData as $ageGroup => $actions) {
+            foreach ($actions->groupBy('diagnosa') as $diagnosaId => $cases) {
+                if (!isset($diagnosaNames[$diagnosaId])) {
+                    \Log::warning("Unknown diagnosa ID: {$diagnosaId}");
+                    continue;
+                }
+                $diagnosaName = $diagnosaNames[$diagnosaId];
+                $maleCount = $cases
+                    ->filter(function ($case) {
+                        return $case->patient->gender === 1;
+                    })
+                    ->count();
+
+                $femaleCount = $cases
+                    ->filter(function ($case) {
+                        return $case->patient->gender === 2;
+                    })
+                    ->count();
+
+                $report[$diagnosaName][$ageGroup]['total'] += $cases->count();
+                $report[$diagnosaName][$ageGroup]['male'] += $maleCount;
+                $report[$diagnosaName][$ageGroup]['female'] += $femaleCount;
+            }
+        }
+
+        // Kirim data ke tampilan
+        return view('content.report.laporan-stp', compact('report', 'ageGroups'));
     }
-    // public function reportPTM()
-    // {
-    //     return view('content.report.laporan-ptm');
-    // }
+
     public function reportAFP()
     {
         return view('content.report.laporan-afp');
@@ -654,6 +821,7 @@ $data[] = $totalRowOrdered;
 
         return response()->download($filePath)->deleteFileAfterSend(true);
     }
+
 
     public function reportRJP()
     {
