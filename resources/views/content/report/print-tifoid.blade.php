@@ -186,7 +186,7 @@
                     </td>
                     <td>{{ ucwords(strtolower($data->patient->address)) }}</td>
                     <td>Positif</td>
-                    <td>Positif</td> 
+                    <td>Positif</td>
                 </tr>
             @endforeach
         </tbody>

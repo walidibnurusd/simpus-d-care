@@ -91,7 +91,7 @@ Route::prefix('mtbs')->group(function () {
 
     Route::get('napza', [App\Http\Controllers\MtbsController::class, 'showNapza'])->name('napza.mtbs.view');
     Route::post('napza', [App\Http\Controllers\MtbsController::class, 'storeNapza'])->name('napza.mtbs.store');
-    
+
     Route::get('merokok', [App\Http\Controllers\MtbsController::class, 'showMerokok'])->name('merokok.mtbs.view');
     Route::post('merokok', [App\Http\Controllers\MtbsController::class, 'storeMerokok'])->name('merokok.mtbs.store');
 
@@ -132,8 +132,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/patients', [PatientsController::class, 'patientReport'])->name('patient.report');
 
     Route::get('/action', [ActionController::class, 'index'])->name('action.index');
+    Route::get('/action/dokter', [ActionController::class, 'indexDokter'])->name('action.dokter.index');
     Route::post('/action', [ActionController::class, 'store'])->name('action.store');
     Route::POST('/action/{id}', [ActionController::class, 'update'])->name('action.update');
+    Route::POST('/action-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
     Route::delete('/action/{id}', [ActionController::class, 'destroy'])->name('action.destroy');
     Route::get('/report/action', [ActionController::class, 'actionReport'])->name('action.report');
 
@@ -161,10 +163,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/formulir12', [ReportController::class, 'reportFormulir12'])->name('report.formulir12');
     Route::get('/report/lr', [ReportController::class, 'reportLR'])->name('report.lr');
     Route::get('/report/up', [ReportController::class, 'reportUP'])->name('report.up');
-    
+
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
-     Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->group(function () {
         Route::prefix('kia')->group(function () {
             Route::get('layak-hamil', [App\Http\Controllers\AdminController::class, 'viewLayakHamil'])->name('layakHamil.admin');
             Route::get('/layak-hamil/{id}', [App\Http\Controllers\AdminController::class, 'editLayakHamil'])->name('layak_hamil.edit');
@@ -263,25 +265,26 @@ Route::middleware('auth')->group(function () {
             Route::delete('/test-pendengaran/{id}', [App\Http\Controllers\AdminControllerMTBS::class, 'deleteTestPendengaran'])->name('testPendengaran.mtbs.delete');
 
             Route::get('hipertensi', [App\Http\Controllers\AdminControllerMTBS::class, 'viewHipertensi'])->name('hipertensi.admin.mtbs');
+            Route::get('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'editHipertensi'])->name('hipertensi.mtbs.edit');
 
             Route::get('tbc', [App\Http\Controllers\AdminControllerMTBS::class, 'viewTbc'])->name('tbc.admin.mtbs');
-    
+            Route::get('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'editTbc'])->name('tbc.mtbs.edit');
 
-            Route::get('talasemia', [App\Http\Controllers\AdminController::class, 'viewTalasemia'])->name('talasemia.admin.mtbs');
-    
-            
+            Route::get('talasemia', [App\Http\Controllers\AdminControllerMTBS::class, 'viewTalasemia'])->name('talasemia.admin.mtbs');
+            Route::get('/talasemia/{id}', [App\Http\Controllers\AdminController::class, 'editTalasemia'])->name('talasemia.mtbs.edit');
+
             Route::get('anemia', [App\Http\Controllers\AdminControllerMTBS::class, 'viewAnemia'])->name('anemia.admin.mtbs');
-      
+            Route::get('/anemia/{id}', [App\Http\Controllers\AdminController::class, 'editAnemia'])->name('anemia.mtbs.edit');
+
             Route::get('kekerasan-perempuan', [App\Http\Controllers\AdminController::class, 'viewKekerasanPerempuan'])->name('kekerasan.perempuan.admin.mtbs');
-         
 
             Route::get('kekerasan-anak', [App\Http\Controllers\AdminController::class, 'viewKekerasanAnak'])->name('kekerasan.anak.admin.mtbs');
 
-            Route::get('diabetes-mellitus', [App\Http\Controllers\AdminController::class, 'viewDiabetesMellitus'])->name('diabetes.mellitus.admin.mtbs');
+            Route::get('diabetes-mellitus', [App\Http\Controllers\AdminControllerMTBS::class, 'viewDiabetesMellitus'])->name('diabetes.mellitus.admin.mtbs');
+            Route::get('/diabetes-mellitus/{id}', [App\Http\Controllers\AdminController::class, 'editDiabetesMellitus'])->name('diabetes.mellitus.mtbs.edit');
 
             Route::get('kecacingan', [App\Http\Controllers\AdminControllerMTBS::class, 'viewKecacingan'])->name('kecacingan.admin.mtbs');
-           
-
+            Route::get('/kecacingan/{id}', [App\Http\Controllers\AdminController::class, 'editKecacingan'])->name('kecacingan.mtbs.edit');
         });
         Route::prefix('lansia')->group(function () {
             Route::get('puma', [App\Http\Controllers\AdminLansiaController::class, 'viewPuma'])->name('puma.lansia.admin');
@@ -312,12 +315,16 @@ Route::middleware('auth')->group(function () {
             Route::get('layak-hamil', [App\Http\Controllers\AdminController::class, 'viewLayakHamil'])->name('layakHamil.admin.lansia');
 
             Route::get('hipertensi', [App\Http\Controllers\AdminLansiaController::class, 'viewHipertensi'])->name('hipertensi.admin.lansia');
+            Route::get('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'editHipertensi'])->name('hipertensi.lansia.edit');
 
             Route::get('tbc', [App\Http\Controllers\AdminLansiaController::class, 'viewTbc'])->name('tbc.admin.lansia');
+            Route::get('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'editTbc'])->name('tbc.lansia.edit');
 
-            Route::get('talasemia', [App\Http\Controllers\AdminController::class, 'viewTalasemia'])->name('talasemia.admin.lansia');
-            
+            Route::get('talasemia', [App\Http\Controllers\AdminLansiaController::class, 'viewTalasemia'])->name('talasemia.admin.lansia');
+            Route::get('/talasemia/{id}', [App\Http\Controllers\AdminController::class, 'editTalasemia'])->name('talasemia.lansia.edit');
+
             Route::get('anemia', [App\Http\Controllers\AdminLansiaController::class, 'viewAnemia'])->name('anemia.admin.lansia');
+            Route::get('/anemia/{id}', [App\Http\Controllers\AdminController::class, 'editAnemia'])->name('anemia.lansia.edit');
         });
     });
 });
@@ -327,6 +334,7 @@ Route::get('cities/{provinceId}', [DependentDropdownController::class, 'citiesDa
 Route::get('districts/{cityId}', [DependentDropdownController::class, 'districtsData'])->name('districts');
 Route::get('villages/{districtId}', [DependentDropdownController::class, 'villagesData'])->name('villages');
 Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('get-patients');
+Route::get('/get-patients-dokter', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
 
 //Language Change
 Route::get('lang/{locale}', function ($locale) {

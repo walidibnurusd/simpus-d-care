@@ -75,9 +75,17 @@
 
                                             <td>
                                                 <ul class="action">
-                                                    <li class="edit"> <a
-                                                            href="{{ route('talasemia.edit', $item->id) }}"><i
-                                                                class="icon-pencil-alt"></i></a>
+                                                    <li class="edit">
+                                                        @if ($routeName === 'talasemia.admin')
+                                                            <a href="{{ route('talasemia.edit', $item->id) }}"><i
+                                                                    class="icon-pencil-alt"></i></a>
+                                                        @elseif($routeName === 'talasemia.admin.mtbs')
+                                                            <a href="{{ route('talasemia.mtbs.edit', $item->id) }}"><i
+                                                                    class="icon-pencil-alt"></i></a>
+                                                        @else
+                                                            <a href="{{ route('talasemia.lansia.edit', $item->id) }}"><i
+                                                                    class="icon-pencil-alt"></i></a>
+                                                        @endif
                                                     </li>
                                                     <li class="delete">
                                                         <a href="javascript:void(0)"

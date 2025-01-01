@@ -35,7 +35,13 @@
             @if (isset($diabetesMellitus))
                 @method('PUT')
             @endif
-
+            @if ($routeName === 'diabetes.mellitus.view')
+                <input type="hidden" name="klaster" value="2">
+                <input type="hidden" name="poli" value="kia">
+            @elseif($routeName === 'diabetes.mellitus.mtbs.view')
+                <input type="hidden" name="klaster" value="2">
+                <input type="hidden" name="poli" value="mtbs">
+            @endif
             <!-- Identitas -->
             <div class="form-section">
                 <h3>Identitas</h3>
@@ -120,7 +126,8 @@
                             <input type="number" class="form-control" name="tekanan_darah_sistol" placeholder="Sistol"
                                 value="{{ old('tekanan_darah_sistol', $diabetesMellitus->tekanan_darah_sistol ?? '') }}">
                             <span class="input-group-text">/</span>
-                            <input type="number" class="form-control" name="tekanan_darah_diastol" placeholder="Diastol"
+                            <input type="number" class="form-control" name="tekanan_darah_diastol"
+                                placeholder="Diastol"
                                 value="{{ old('tekanan_darah_diastol', $diabetesMellitus->tekanan_darah_diastol ?? '') }}">
                             <div class="input-group-append">
                                 <span class="input-group-text">mmHg</span>

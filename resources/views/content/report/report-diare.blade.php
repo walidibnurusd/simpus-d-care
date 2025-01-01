@@ -46,9 +46,10 @@
         table th {
             background-color: #f0f0f0;
         }
+
         @media print {
             @page {
-                size: A4 landscape;
+                size: Legal landscape;
                 margin: 1cm;
             }
         }
@@ -100,10 +101,10 @@
                     <th rowspan="2">Penggunaan Antibiotik Terapi Diare (Ya/ Tidak)</th>
                     <th rowspan="2">Status Kematian Pasien (Meninggal/ Hidup)</th>
                     <th rowspan="2">KONSELING</th>
-                    <th  rowspan="2">TINDAKAN</th>
-                    <th  rowspan="2">RUJUKAN</th>
-                    <th  rowspan="2">KETERANGAN</th>
-                    <th  rowspan="2">DOKTER</th>
+                    <th rowspan="2">TINDAKAN</th>
+                    <th rowspan="2">RUJUKAN</th>
+                    <th rowspan="2">KETERANGAN</th>
+                    <th rowspan="2">DOKTER</th>
                 </tr>
                 <tr>
                     <th>Desa/Kelurahan</th>
@@ -113,41 +114,87 @@
                     <th>RL (botol)</th>
                 </tr>
             </thead>
-            <tbody>
-                @for ($i = 1; $i <= 10; $i++)
+            @foreach ($diare as $index => $data)
+                @php
+                    $bulanIndo = [
+                        '01' => 'Jan',
+                        '02' => 'Feb',
+                        '03' => 'Mar',
+                        '04' => 'Apr',
+                        '05' => 'Mei',
+                        '06' => 'Jun',
+                        '07' => 'Jul',
+                        '08' => 'Agu',
+                        '09' => 'Sep',
+                        '10' => 'Okt',
+                        '11' => 'Nov',
+                        '12' => 'Des',
+                    ];
+                    $dob = \Carbon\Carbon::parse($data->patient->dob);
+                    $ageInYears = $dob->age;
+                    $ageInMonths = $dob->diffInMonths(\Carbon\Carbon::now());
+                    if ($ageInYears < 1) {
+                        $age = $ageInMonts;
+                        $ageUnit = 'Bulan';
+                    } else {
+                        $age = $ageInYears;
+                        $ageUnit = 'Tahun';
+                    }
+
+                @endphp
+
                 <tr>
-                    <td>{{ $i }}</td>
-                    <td>RM{{ str_pad($i, 4, '0', STR_PAD_LEFT) }}</td>
-                    <td>123456789{{ $i }}</td>
-                    <td>Pasien {{ $i }}</td>
-                    <td>{{ date('d-m-Y', strtotime('-'.$i.' years')) }}</td>
-                    <td>BPJS</td>
-                    <td>Kelurahan {{ $i }}</td>
-                    <td>Alamat Lengkap {{ $i }}</td>
-                    <td>{{ $i % 2 == 0 ? 'Laki-laki' : 'Perempuan' }}</td>
-                    <td>120/80</td>
-                    <td>165</td>
-                    <td>60</td>
-                    <td>85</td>
-                    <td>{{ date('d-m-Y') }}</td>
-                    <td>{{ date('d-m-Y', strtotime('-'.$i.' days')) }}</td>
-                    <td>Keluhan {{ $i }}</td>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $data->patient->no_rm }}</td>
+                    <td>{{ $data->patient->nik }}</td>
+                    <td>{{ ucwords(strtolower($data->patient->name)) }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->patient->dob)->format('d-m-Y') }}</td>
+                    <td>{{ ucwords(strtolower($data->kartu)) }}<br>{{ $data->nomor }}</td>
+                    <td>{{ $data->patient->villages ? ucwords(strtolower($data->patient->villages->name)) : 'Tidak Diketahui' }}
+                    </td>
+                    <td>{{ ucwords(strtolower($data->patient->address)) }}</td>
+                    <td>{{ $data->patient->genderName->name }}</td>
+                    <td>{{ $data->sistol }}<br>{{ $data->diastol }}</td>
+                    <td>{{ $data->tinggiBadan }}</td>
+                    <td>{{ $data->beratBadan }}</td>
+                    <td>{{ $data->lingkarPinggang }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
+                    <td>{{ ucwords(strtolower($data->keluhan)) }}</td>
+                    <td>
+                        @if (!empty($data->diagnosa_names))
+                            {{ implode(', ', $data->diagnosa_names) }}
+                        @else
+                            Tidak Ada Diagnosa Diare
+                        @endif
+                    </td>
+                    <td>{{ $data->dehidrasi }}</td>
+                    <td>
+                        @if ($data->oralit == 'ya')
+                            6
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td>
+                        @if ($data->zinc == 'tidak')
+                            10
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td>0</td>
                     <td>Ya</td>
-                    <td>Ringan</td>
-                    <td>{{ rand(1, 5) }}</td>
-                    <td>{{ rand(1, 10) }}</td>
-                    <td>{{ rand(1, 3) }}</td>
-                    <td>Tidak</td>
                     <td>Hidup</td>
-                    <td>Konseling {{ $i }}</td>
-                    <td>Tindakan {{ $i }}</td>
-                    <td>Rujukan {{ $i }}</td>
-                    <td>Keterangan {{ $i }}</td>
-                    <td>Dokter {{ $i }}</td>
+                    <td>Ya</td>
+                    <td>{{ ucwords(strtolower($data->keterangan)) }}</td>
+                    <td>{{ $data->hospitalReferral->name }}</td>
+                    <td>{{ $data->tindakan }}</td>
+                    <td>{{ $data->doctor }}</td>
+
                 </tr>
-                @endfor
-            </tbody>
-          
+            @endforeach
+
         </table>
 
     </div>

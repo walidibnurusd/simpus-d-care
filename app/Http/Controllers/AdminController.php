@@ -91,16 +91,18 @@ class AdminController extends Controller
 
         return redirect()->route('layakHamil.admin')->with('success', 'Data deleted successfully.');
     }
-    public function viewHipertensi()
+    public function viewHipertensi(Request $request)
     {
-        $hipertensi = Hipertensi::with('listPasien')->where('poli','kia')->all();
-        return view('kia.table.hipertensi', compact('hipertensi'));
+        $hipertensi = Hipertensi::with('listPasien')->where('poli', 'kia')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.hipertensi', compact('hipertensi', 'routeName'));
     }
-    public function editHipertensi($id)
+    public function editHipertensi(Request $request, $id)
     {
         $pasien = Patients::all();
         $hipertensi = Hipertensi::findOrFail($id);
-        return view('kia.hipertensi', compact('hipertensi', 'pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.hipertensi', compact('hipertensi', 'pasien', 'routeName'));
     }
     public function updateHipertensi(Request $request, $id)
     {
@@ -230,16 +232,18 @@ class AdminController extends Controller
         // Redirect with a success message
         return redirect()->route('gangguan.autis.admin')->with('success', 'Data Gangguan Autis updated successfully!');
     }
-    public function viewAnemia()
+    public function viewAnemia(Request $request)
     {
-        $anemia = Anemia::with('listPasien')->where('poli','kia')->get();
-        return view('kia.table.anemia', compact('anemia'));
+        $anemia = Anemia::with('listPasien')->where('poli', 'kia')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.anemia', compact('anemia', 'routeName'));
     }
-    public function editAnemia($id)
+    public function editAnemia(Request $request, $id)
     {
         $anemia = Anemia::findOrFail($id);
         $pasien = Patients::all();
-        return view('kia.anemia', compact('anemia', 'pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.anemia', compact('anemia', 'pasien', 'routeName'));
     }
     public function deleteAnemia($id)
     {
@@ -363,16 +367,18 @@ class AdminController extends Controller
         // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
         return redirect()->route('hepatitis.admin')->with('success', 'Data hepatitis berhasil dihapus.');
     }
-    public function viewTalasemia()
+    public function viewTalasemia(Request $request)
     {
-        $talasemia = Talasemia::with('listPasien')->get();
-        return view('kia.table.talasemia', compact('talasemia'));
+        $talasemia = Talasemia::with('listPasien')->where('poli', 'kia')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.talasemia', compact('talasemia', 'routeName'));
     }
-    public function editTalasemia($id)
+    public function editTalasemia(Request $request, $id)
     {
         $talasemia = Talasemia::findOrFail($id);
         $pasien = Patients::all();
-        return view('kia.talasemia', compact('talasemia', 'pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.talasemia', compact('talasemia', 'pasien', 'routeName'));
     }
     public function deleteTalasemia($id)
     {
@@ -493,16 +499,18 @@ class AdminController extends Controller
         // Redirect with a success message
         return redirect()->route('hiv.admin')->with('success', 'Data HIV updated successfully!');
     }
-    public function viewKecacingan()
+    public function viewKecacingan(Request $request)
     {
-        $kecacingan = Kecacingan::with('listPasien')->where('poli','kia')->get();
-        return view('kia.table.kecacingan', compact('kecacingan'));
+        $kecacingan = Kecacingan::with('listPasien')->where('poli', 'kia')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.kecacingan', compact('kecacingan', 'routeName'));
     }
-    public function editKecacingan($id)
+    public function editKecacingan(Request $request, $id)
     {
         $pasien = Patients::all();
         $kecacingan = Kecacingan::findOrFail($id);
-        return view('kia.kecacingan', compact('kecacingan', 'pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.kecacingan', compact('kecacingan', 'pasien', 'routeName'));
     }
     public function deleteKecacingan($id)
     {
@@ -552,16 +560,18 @@ class AdminController extends Controller
         // Redirect with a success message
         return redirect()->route('kecacingan.admin')->with('success', 'Data Kecacingan updated successfully!');
     }
-    public function viewDiabetesMellitus()
+    public function viewDiabetesMellitus(Request $request)
     {
-        $diabetesMellitus = DiabetesMellitus::with('listPasien')->get();
-        return view('kia.table.diabetes_mellitus', compact('diabetesMellitus'));
+        $diabetesMellitus = DiabetesMellitus::with('listPasien')->where('poli', 'kia')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.diabetes_mellitus', compact('diabetesMellitus', 'routeName'));
     }
-    public function editDiabetesMellitus($id)
+    public function editDiabetesMellitus(Request $request, $id)
     {
         $diabetesMellitus = DiabetesMellitus::findOrFail($id);
         $pasien = Patients::all();
-        return view('kia.diabetes_mellitus', compact('diabetesMellitus', 'pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.diabetes_mellitus', compact('diabetesMellitus', 'pasien', 'routeName'));
     }
     public function deleteDiabetesMellitus($id)
     {
@@ -609,16 +619,18 @@ class AdminController extends Controller
         // Redirect with a success message
         return redirect()->route('diabetes.mellitus.admin')->with('success', 'Data Diabetes Mellitus updated successfully!');
     }
-    public function viewTbc(){
-        $pasien = Patients::all();
-        $tbc =  Tbc::with('listPasien')->where('poli','kia')->get();
-        return view('kia.table.tbc',compact('tbc','pasien'));
+    public function viewTbc(Request $request)
+    {
+        $tbc = Tbc::with('listPasien')->where('poli', 'kia')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.tbc', compact('tbc', 'routeName'));
     }
-    public function editTbc($id)
+    public function editTbc(Request $request, $id)
     {
         $pasien = Patients::all();
         $tbc = Tbc::findOrFail($id);
-        return view('kia.tbc', compact('tbc','pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.tbc', compact('tbc', 'pasien', 'routeName'));
     }
     public function deleteTbc($id)
     {
@@ -636,48 +648,48 @@ class AdminController extends Controller
         // Find the existing Tbc record by ID
         $tbc = Tbc::findOrFail($id);
 
-    // Define validation rules
-    $validator = FacadesValidator::make($request->all(), [
-        'pasien' => 'required',
-        'tempat_skrining' => 'required|string|max:255',
-        // 'tanggal_lahir' => 'required|date',
-        // 'alamat_domisili' => 'required|string|max:500',
-        // 'alamat_ktp' => 'nullable|string|max:500',
-        // 'nik' => 'required',
-        // 'imt' => 'nullable',
-        'usia' => 'nullable',
-        // 'pekerjaan' => 'nullable|string|max:255',
-        // 'jenis_kelamin' => 'required|string',
-        // 'no_hp' => 'required',
-        'tinggi_badan' => 'required|numeric',
-        'berat_badan' => 'required|numeric',
-        'status_gizi' => 'nullable',
-        'kontak_dengan_pasien' => '',
-        'kontak_tbc' => 'boolean',
-        'jenis_tbc' => 'nullable|string|max:255',
-        'pernah_berobat_tbc' => 'required|boolean',
-        'kapan' => 'nullable|date',
-        'pernah_berobat_tbc_tdk_tuntas' => 'required|boolean',
-        'kurang_gizi' => 'required|boolean',
-        'merokok' => 'required|boolean',
-        'perokok_pasif' => 'required|boolean',
-        'kencing_manis' => 'required',
-        'odhiv' => '',
-        'lansia' => 'required|boolean',
-        'ibu_hamil' => 'required|boolean',
-        'tinggal_wilayah_kumuh' => 'required|boolean',
-        'batuk' => 'required|boolean',
-        'durasi' => 'nullable|string|max:255',
-        'batuk_darah' => 'required|boolean',
-        'bb_turun' => 'required|boolean',
-        'demam' => 'required|boolean',
-        'lesu' => 'required|boolean',
-        'pembesaran_kelenjar' => 'required',
-        'sudah_rontgen' => 'required|boolean',
-        'hasil_rontgen' => 'nullable|string|max:255',
-        'terduga_tbc' => 'required|boolean',
-        'periksa_tbc_laten' => 'required|boolean',
-    ]);
+        // Define validation rules
+        $validator = FacadesValidator::make($request->all(), [
+            'pasien' => 'required',
+            'tempat_skrining' => 'required|string|max:255',
+            // 'tanggal_lahir' => 'required|date',
+            // 'alamat_domisili' => 'required|string|max:500',
+            // 'alamat_ktp' => 'nullable|string|max:500',
+            // 'nik' => 'required',
+            // 'imt' => 'nullable',
+            'usia' => 'nullable',
+            // 'pekerjaan' => 'nullable|string|max:255',
+            // 'jenis_kelamin' => 'required|string',
+            // 'no_hp' => 'required',
+            'tinggi_badan' => 'required|numeric',
+            'berat_badan' => 'required|numeric',
+            'status_gizi' => 'nullable',
+            'kontak_dengan_pasien' => '',
+            'kontak_tbc' => 'boolean',
+            'jenis_tbc' => 'nullable|string|max:255',
+            'pernah_berobat_tbc' => 'required|boolean',
+            'kapan' => 'nullable|date',
+            'pernah_berobat_tbc_tdk_tuntas' => 'required|boolean',
+            'kurang_gizi' => 'required|boolean',
+            'merokok' => 'required|boolean',
+            'perokok_pasif' => 'required|boolean',
+            'kencing_manis' => 'required',
+            'odhiv' => '',
+            'lansia' => 'required|boolean',
+            'ibu_hamil' => 'required|boolean',
+            'tinggal_wilayah_kumuh' => 'required|boolean',
+            'batuk' => 'required|boolean',
+            'durasi' => 'nullable|string|max:255',
+            'batuk_darah' => 'required|boolean',
+            'bb_turun' => 'required|boolean',
+            'demam' => 'required|boolean',
+            'lesu' => 'required|boolean',
+            'pembesaran_kelenjar' => 'required',
+            'sudah_rontgen' => 'required|boolean',
+            'hasil_rontgen' => 'nullable|string|max:255',
+            'terduga_tbc' => 'required|boolean',
+            'periksa_tbc_laten' => 'required|boolean',
+        ]);
 
         // Check if validation fails
         if ($validator->fails()) {
@@ -823,7 +835,7 @@ class AdminController extends Controller
     {
         $triple = TripleEliminasi::findOrFail($id);
         $pasien = Patients::all();
-        return view('kia.triple_eliminasi', compact('triple','pasien'));
+        return view('kia.triple_eliminasi', compact('triple', 'pasien'));
     }
     public function deleteTripleEliminasi($id)
     {

@@ -66,9 +66,15 @@
                         </svg><span>UGD</span></a>
                         @endif
                         <ul class="sidebar-submenu">
-                            <li><a href="{{ route('action.index') }}">Tindakan</a></li>
-                            <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                           @if (Auth::user()->role=='dokter')
+                           <li><a href="{{ route('action.dokter.index') }}">Tindakan</a></li>
+                           <li><a href="{{ route('report.index') }}">Laporan</a></li>
 
+                           @else
+                           <li><a href="{{ route('action.index') }}">Tindakan</a></li>
+                           <li><a href="{{ route('report.index') }}">Laporan</a></li>
+
+                           @endif
                         </ul>
                     </li>
                     @if (Auth::user()->role == 'admin-poli-umum')

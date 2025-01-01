@@ -1,0 +1,831 @@
+<!-- Modal Add Action -->
+<div class="modal fade" style="z-index: 1050;" id="addActionModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                @if (Auth::user()->role == 'admin-poli-umum' || Auth::user()->role == 'dokter')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
+                @elseif(Auth::user()->role == 'admin-poli-gigi')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
+                @else
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
+                @endif
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="addPatientForm" action="" method="POST" class="px-3">
+                    @csrf
+                    <div class="row">
+                        <div class="col-4">
+                            <h5>Detail Pasien</h5>
+                            <div id="patientDetails"
+                                style="display:none; margin-top: 10px; padding: 10px; border-radius: 5px;">
+                                <p><strong>N I K</strong> : <span id="displayNIK"></span></p>
+                                <p><strong>Nama Pasien</strong> : <span id="displayName"></span></p>
+                                {{-- <p><strong>J.Kelamin</strong> : <span id="displayGender"></span></p> --}}
+                                <p><strong>Umur</strong> : <span id="displayAge"></span></p>
+                                <p><strong>Telepon/WA</strong> : <span id="displayPhone"></span></p>
+                                <p><strong>Alamat</strong> : <span id="displayAddress"></span></p>
+                                <p><strong>Darah</strong> : <span id="displayBlood"></span></p>
+                                {{-- <p><strong>Pendidikan</strong> : <span id="displayEducation"></span></p> --}}
+                                {{-- <p><strong>Pekerjaan</strong> : <span id="displayJob"></span></p> --}}
+                                <p><strong>Nomor RM</strong> : <span id="displayRmNumber"></span></p>
+                            </div>
+                        </div>
+                        <div class="row col-8">
+                            <div class="col-12">
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="nik">Cari Pasien</label>
+                                            <div class="input-group">
+                                                <input type="text" hidden  id="idAction" name="idAction" value="">
+                                                <input readonly type="text" class="form-control" id="nik"
+                                                    name="nik" placeholder="NIK" required>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button" id="btnCariNIK"
+                                                        data-bs-toggle="modal" data-bs-target="#modalPasien">
+                                                        Cari
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="tanggal">Tanggal</label>
+                                            <input type="text" class="form-control flatpickr-input" id="tanggal"
+                                                name="tanggal" placeholder="Pilih Tanggal" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="doctor">Dokter</label>
+                                            <select class="form-control" id="doctor" name="doctor" required>
+                                                <option value="" disabled selected>Pilih Dokter</option>
+                                                @foreach ($dokter as $item)
+                                                    <option value="{{ $item['name'] }}">{{ $item['name'] }}</option>
+                                                @endforeach
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="kunjungan">Kunjungan</label>
+                                            <select class="form-control" id="kunjungan" name="kunjungan" required>
+                                                <option value="" disabled selected>Pilih Jenis Kunjungan</option>
+                                                <option value="baru">Baru </option>
+                                                <option value="lama">Lama </option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="row g-2">
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="kartu">Kartu</label>
+                                            <select class="form-control" id="kartu" name="kartu" required>
+                                                <option value="" disabled selected>Pilih Jenis Kartu</option>
+                                                <option value="umum">Umum</option>
+                                                <option value="akses">AKSES</option>
+                                                <option value="bpjs">BPJS-KIS_JKM</option>
+                                                <option value="gratis_jkd">Gratis-JKD</option>
+                                                <option value="bpjs_mandiri">BPJS-Mandiri</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="nomor">Nomor Kartu</label>
+                                            <input type="text" class="form-control" id="nomor" name="nomor"
+                                                placeholder="Masukkan Nomor" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="wilayah_faskes">Wilayah Faskes</label>
+                                            <select class="form-control" id="wilayah_faskes" name="faskes" required>
+                                                <option value="" disabled selected>Pilih Wilayah Faskes</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; text-align: center;">
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan</span>
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                            </div>
+
+                            <div class="col-12">
+                                <div class="row g-2">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="sistol">Sistol</label>
+                                            <input type="text" class="form-control" id="sistol" name="sistol"
+                                                placeholder="Masukkan Sistol" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="diastol">Diastol</label>
+                                            <input type="text" class="form-control" id="diastol" name="diastol"
+                                                placeholder="Masukkan Diastol" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="berat_badan">Berat Badan</label>
+                                            <input type="text" class="form-control" id="berat_badan"
+                                                name="beratBadan" placeholder="Masukkan Berat Badan" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="tinggi_badan">Tinggi Badan</label>
+                                            <input type="text" class="form-control" id="tinggi_badan"
+                                                name="tinggiBadan" placeholder="Masukkan Tinggi Badan" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="ling_pinggang">Ling. Pinggang</label>
+                                            <input type="text" class="form-control" id="ling_pinggang"
+                                                name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="gula">Gula</label>
+                                            <input type="text" class="form-control" id="gula" name="gula"
+                                                placeholder="Masukkan Gula" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="nadi">Nadi</label>
+                                            <input type="text" class="form-control" id="nadi" name="nadi"
+                                                placeholder="Masukkan Nadi" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="nafas">Pernafasan</label>
+                                            <input type="text" class="form-control" id="nafas" name="nafas"
+                                                placeholder="Masukkan Nafas" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="suhu">Suhu</label>
+                                            <input type="text" class="form-control" id="suhu" name="suhu"
+                                                placeholder="Masukkan Suhu" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Auth::user()->role == 'admin-poli-umum' || Auth::user()->role == 'dokter')
+                                <div class="container">
+                                    <div class="row g-2">
+                                        <div class="col-md-2 ">
+                                            <label for="merokok" style="color: green;">Merokok</label>
+                                            <select class="form-control" id="merokok" name="merokok">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="aktivitas_fisik" style="color: green;">Aktivitas Fisik</label>
+                                            <select class="form-control" id="aktivitas_fisik" name="fisik">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="aktif">Aktif</option>
+                                                <option value="tidak_aktif">Tidak Aktif</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="gula" style="color: green;">Gula Berlebih</label>
+                                            <select class="form-control" id="gula_lebih" name="gula_lebih">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="lemak" style="color: green;">Lemak Berlebih</label>
+                                            <select class="form-control" id="lemak" name="lemak">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="garam" style="color: green;">Garam Berlebih</label>
+                                            <select class="form-control" id="garam" name="garam">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="buah_sayur" style="color: green;">Mkn Buah/Sayur</label>
+                                            <select class="form-control" id="buah_sayur" name="buah_sayur">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="cukup">Cukup</option>
+                                                <option value="kurang">Kurang</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container mb-4">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-2 ">
+                                            <label for="alkohol" style="color: green;">Minum Alkohol</label>
+                                            <select class="form-control" id="alkohol" name="alkohol">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="kondisi_hidup" style="color: green;">Kondisi Hidup</label>
+                                            <select class="form-control" id="kondisi_hidup" name="hidup">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="container">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-3 ">
+                                            <label for="alkohol" style="color: rgb(128, 87, 0);">Hasil IVA</label>
+                                            <select class="form-control" id="hasil_iva" name="hasil_iva">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="positif">Positif</option>
+                                                <option value="negatif">Negatif</option>
+                                                <option value="kanker">Curiga Kanker</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 ">
+                                            <label for="kondisi_hidup" style="color: rgb(128, 87, 0);">Tindak Lanjut
+                                                IVA</label>
+                                            <select class="form-control" id="tindak_iva" name="tindak_iva">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="krioterapi">KRIOTERAPI</option>
+                                                <option value="rujuk">RUJUK</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 ">
+                                            <label for="kondisi_hidup" style="color: rgb(128, 87, 0);">HASIL
+                                                SADANIS</label>
+                                            <select class="form-control" id="hasil_sadanis" name="hasil_sadanis">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="benjolan">Benjolan</option>
+                                                <option value="tidak">Tidak ada Benjolan</option>
+                                                <option value="kanker">Curiga Kanker</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 ">
+                                            <label for="kondisi_hidup" style="color: rgb(128, 87, 0);">Tindak Lanjut
+                                                SADANIS</label>
+                                            <select class="form-control" id="tindak_sadanis" name="tindak_sadanis">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="rujuk">RUJUK</option>
+
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-3 ">
+                                            <label for="alkohol" style="color: green;">Konseling</label>
+                                            <select class="form-control" id="konseling" name="konseling">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="konseling1">Konseling1</option>
+                                                <option value="konseling2">Konseling2</option>
+                                                <option value="konseling3">Konseling3</option>
+                                                <option value="konseling4">Konseling4</option>
+                                                <option value="konseling5">Konseling5</option>
+                                                <option value="konseling6">Konseling6</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 ">
+                                            <label for="kondisi_hidup" style="color: green;">CAR</label>
+                                            <select class="form-control" id="car" name="car">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="car3">CAR3</option>
+                                                <option value="car6">CAR6</option>
+                                                <option value="car9">CAR9</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 ">
+                                            <label for="kondisi_hidup" style="color: green;">RUJUK UBM</label>
+                                            <select class="form-control" id="rujuk_ubm" name="rujuk_ubm">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 ">
+                                            <label for="kondisi_hidup" style="color: green;">KONDISI</label>
+                                            <select class="form-control" id="kondisi" name="kondisi">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="sukses">Sukses</option>
+                                                <option value="kambuh">Kambuh</option>
+                                                <option value="do">DO</option>
+
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-3 ">
+                                            <label for="alkohol" style="color: rgb(22, 24, 22);">Konseling Edukasi
+                                                Kesehatan</label>
+                                            <select class="form-control" id="edukasi" name="edukasi">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="konseling1">Konseling1</option>
+                                                <option value="konseling2">Konseling2</option>
+                                                <option value="konseling3">Konseling3</option>
+                                                <option value="konseling4">Konseling4</option>
+                                                <option value="konseling5">Konseling5</option>
+                                                <option value="konseling6">Konseling6</option>
+
+                                            </select>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; text-align: center;">
+                                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                    <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Fisik</span>
+                                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                </div>
+                                <div class="container">
+                                    <div class="row g-2">
+                                        <div class="col-md-2 ">
+                                            <label for="mata_anemia" style="color: green;">Mata-Anemia</label>
+                                            <select class="form-control" id="mata_anemia" name="mata_anemia">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="pupil" style="color: green;">Mata-Pupil</label>
+                                            <select class="form-control" id="pupil" name="pupil">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="isokor">Isokor</option>
+                                                <option value="anisokor">Anisokor</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="ikterus" style="color: green;">Mata-Ikterus</label>
+                                            <select class="form-control" id="ikterus" name="ikterus">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="udem_palpebral" style="color: green;">Mata-Udem
+                                                Palpebral</label>
+                                            <select class="form-control" id="udem_palpebral" name="udem_palpebral">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="nyeri_tekan" style="color: green;">Abdomen-Nyeri Tekan</label>
+                                            <select class="form-control" id="nyeri_tekan" name="nyeri_tekan">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="peristaltik" style="color: green;">Abdomen-Peristaltik</label>
+                                            <select class="form-control" id="peristaltik" name="peristaltik">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="normal">Normal</option>
+                                                <option value="meningkat">Meningkat</option>
+                                                <option value="menurun">Menurun</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="ascites" style="color: green;">Abdomen-Ascites</label>
+                                            <select class="form-control" id="ascites" name="ascites">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="lokasi_abdomen" style="color: green;">Abdomen-Lokasi</label>
+                                            <input type="text" class="form-control" id="lokasi_abdomen"
+                                                name="lokasi_abdomen" placeholder="Lokasi Abdomen">
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="thorax" style="color: green;">Thorax</label>
+                                            <select class="form-control" id="thorax" name="thorax">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="simetris">Simetris</option>
+                                                <option value="asimetris">Asimetris</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="thorax_bj" style="color: green;">Thorax-BJ I/II</label>
+                                            <select class="form-control" id="thorax_bj" name="thorax_bj">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="regular">Regular</option>
+                                                <option value="irregular">Irregular</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="paru" style="color: green;">Thorax-Paru</label>
+                                            <input type="text" class="form-control" id="paru" name="paru"
+                                                placeholder="Paru">
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="suara_nafas" style="color: green;">Thorax-Suara Nafas</label>
+                                            <input type="text" class="form-control" id="suara_nafas"
+                                                name="suara_nafas" placeholder="Suara Nafas">
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="ronchi" style="color: green;">Thorax-Ronchi</label>
+                                            <select class="form-control" id="ronchi" name="ronchi">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="wheezing" style="color: green;">Thorax-Wheezing</label>
+                                            <select class="form-control" id="wheezing" name="wheezing">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="ekstremitas" style="color: green;">Ekstremitas</label>
+                                            <select class="form-control" id="ekstremitas" name="ekstremitas">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="hangat">Hangat</option>
+                                                <option value="dingin">Dingin</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="edema" style="color: green;">Ekstremitas-Edema</label>
+                                            <select class="form-control" id="edema" name="edema">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                                <option value="lainnya">Lainnya</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="tonsil" style="color: green;">THT-Tonsil</label>
+                                            <input type="text" class="form-control" id="tonsil" name="tonsil"
+                                                placeholder="Tonsil">
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="fharing" style="color: green;">THT-Fharing</label>
+                                            <input type="text" class="form-control" id="fharing" name="fharing"
+                                                placeholder="Fharing">
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="kelenjar" style="color: green;">Leher-Pembesaran
+                                                Kelenjar</label>
+                                            <input type="text" class="form-control" id="kelenjar"
+                                                name="kelenjar" placeholder="Pembesaran Kelenjar">
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="genetalia" style="color: green;">Genetalia</label>
+                                            <input type="text" class="form-control" id="genetalia"
+                                                name="genetalia" placeholder="Genetalia Jika Diperlukan">
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="warna_kulit" style="color: green;">Kulit-Warna</label>
+                                            <input type="text" class="form-control" id="warna_kulit"
+                                                name="warna_kulit" placeholder="Warna Kulit">
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="turgor" style="color: green;">Kulit-Turgor</label>
+                                            <input type="text" class="form-control" id="turgor" name="turgor"
+                                                placeholder="Turgor Kulit">
+                                        </div>
+                                        <div class="col-md-2 ">
+                                            <label for="neurologis" style="color: green;">Pemeriksaan
+                                                Neurologis</label>
+                                            <input type="text" class="form-control" id="neurologis"
+                                                name="neurologis"
+                                                placeholder="Pemeriksaan Neurologis Jika Diperlukan">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; text-align: center;">
+                                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                    <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Penunjang</span>
+                                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                </div>
+                                <div class="container">
+                                    <div class="row g-2">
+                                        <div class="col-md-12 ">
+                                            <label for="hasil_lab" style="color: green;">Hasil Laboratorium</label>
+                                            <input type="text" class="form-control" id="hasil_lab"
+                                                name="hasil_lab" placeholder="Hasil Laboratorium">
+                                        </div>
+                                    </div>
+                                </div>
+                            @elseif(Auth::user()->role == 'admin-poli-gigi')
+                                <div class="container">
+                                    <div class="row g-2">
+                                        <div class="col-md-2 ">
+                                            <label for="hamil" style="color: green;">Hamil</label>
+                                            <select class="form-control" id="hamil" name="hamil">
+                                                <option value="" disabled selected>pilih</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    @if (Auth::user()->role == 'admin-poli-umum' || Auth::user()->role == 'dokter')
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular
+                                    Pada
+                                    Keluarga</label>
+                                <select class="form-control =" id="riwayat_penyakit_keluarga"
+                                    name="riwayat_penyakit_keluarga[]" multiple>
+
+                                    @foreach ($penyakit as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                            <div class="col-md-4">
+                                <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular
+                                    Pada
+                                    Sendiri</label>
+                                <select class="form-control" id="riwayat_penyakit_tidak_menular"
+                                    name="riwayat_penyakit_tidak_menular[]" multiple>
+                                    =
+                                    @foreach ($penyakit as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
+                                <input type="text" class="form-control" id="keluhan" name="keluhan"
+                                    placeholder="Kosongkan Bila sehat">
+                            </div>
+                        </div>
+                    @endif
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                            <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
+
+                                @foreach ($diagnosa as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="icd10" style="color: rgb(19, 11, 241);">ICD 10</label>
+                            <input type="text" class="form-control" id="icd10" name="icd10"
+                                placeholder="ICD 10" >
+                        </div>
+                        <div class="col-md-4">
+                            <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                            <select class="form-control" id="tindakan" name="tindakan">
+                                <option value="" disabled selected>pilih</option>
+                                @if (Auth::user()->role == 'admin-poli-umum' || Auth::user()->role == 'dokter')
+                                    <option value="Diberikan Obat">Diberikan Obat</option>
+                                    <option value="Tidak">Tidak</option>
+                                @elseif(Auth::user()->role == 'admin-poli-gigi')
+                                    <option value="Gigi Sulung Tumpatan Sementara">Gigi Sulung Tumpatan Sementara
+                                    </option>
+                                    <option value="Gigi Tetap Tumpatan Sementara">Gigi Tetap Tumpatan Sementara
+                                    </option>
+                                    <option value="Gigi Tetap Tumpatan Tetap">Gigi Tetap Tumpatan Tetap
+                                    </option>
+                                    <option value="Gigi Sulung Tumpatan Tetap">Gigi Sulung Tumpatan Tetap
+                                    </option>
+                                    <option value="Perawatan Saluran Akar">Perawatan Saluran Akar
+                                    </option>
+                                    <option value="Gigi Sulung Pencabutan">Gigi Sulung Pencabutan
+                                    </option>
+                                    <option value="Gigi Tetap Pencabutan">Gigi Tetap Pencabutan
+                                    </option>
+                                    <option value="Pembersihan Karang Gigi">Pembersihan Karang Gigi
+                                    </option>
+                                    <option value="Odontectomy">Odontectomy
+                                    </option>
+                                    <option value="Sebagian Prothesa">Sebagian Prothesa
+                                    </option>
+                                    <option value="Penuh Prothesa">Penuh Prothesa
+                                    </option>
+                                    <option value="Reparasi Prothesa">Reparasi Prothesa
+                                    </option>
+                                    <option value="Premedikasi/Pengobatan">Premedikasi/Pengobatan
+                                    </option>
+                                    </option>
+                                    <option value="Tindakan Lain">Tindakan Lain
+                                    </option>
+                                    <option value="Incici Abses Gigi">Incici Abses Gigi</option>
+                                @else
+                                    <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan Invasif
+                                    </option>
+                                    <option value="Observasi Dengan Tindakan Invasif">Observasi Dengan Tindakan Invasif
+                                    </option>
+                                    <option value="Tidak Ada">Tidak Ada
+                                    </option>
+                                    <option value="Corpus Alineum">Corpus Alineum
+                                    </option>
+                                    <option value="Ekstraksi Kuku">Ekstraksi Kuku
+                                    </option>
+                                    <option value="Sircumsisi (Bedah Ringan)">Sircumsisi (Bedah Ringan)
+                                    </option>
+                                    <option value="Incisi Abses">Incisi Abses
+                                    </option>
+                                    <option value="Rawat Luka">Rawat Luka
+                                    </option>
+                                    <option value="Ganti Verban">Ganti Verban
+                                    </option>
+                                    <option value="Spooling">Spooling
+                                    </option>
+                                    <option value="Toilet Telinga">Toilet Telinga
+                                    </option>
+                                    <option value="Tetes Telinga">Tetes Telinga
+                                    </option>
+                                    <option value="Aff Hecting">Aff Hecting
+                                    </option>
+                                    </option>
+                                    <option value="Hecting (Jahit Luka)">Hecting (Jahit Luka)
+                                    </option>
+                                    <option value="Tampon/Off Tampon">Tampon/Off Tampon</option>
+                                @endif
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="alkohol" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                            <select class="form-control" id="rujuk_rs" name="rujuk_rs">
+                                <option value="" disabled selected>pilih</option>
+                                @foreach ($rs as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="alkohol" style="color: rgb(19, 11, 241);">KETERANGAN</label>
+                            <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                placeholder="Keterangan" required>
+                        </div>
+
+
+                    </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        <button type="submit" class="btn btn-primary">Simpan Data</button>
+        </form>
+    </div>
+</div>
+
+
+@include('component.modal-table-pasien-dokter')
+
+
+<script>
+    $(document).ready(function() {
+        $('#riwayat_penyakit_keluarga').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#riwayat_penyakit_tidak_menular').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#diagnosa').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#tindakan').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+</script>
+<style>
+    .select2-dropdown {
+        z-index: 9999 !important;
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        // Set z-index for modalPasien to be higher than addActionModal
+        // $('#modalPasien').on('show.bs.modal', function() {
+        //     $(this).css('z-index', '2000'); // set a high z-index for modalPasien
+        // });
+
+        // // Remove backdrop when modalPasien is closed
+        // $('#modalPasien').on('hidden.bs.modal', function() {
+        //     $('.modal-backdrop').not('.modal-stack').remove();
+        // });
+    });
+</script>
+
+<script>
+    // Initialize Flatpickr for the date picker
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr('#tanggal', {
+            dateFormat: 'd-m-Y', // Format tanggal
+            defaultDate: new Date(), // Optional: default to today's date
+            locale: {
+                firstDayOfWeek: 0 // Optional: Sunday as the first day of the week
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Display success message if session has a success
+        @if (session('success'))
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        @endif
+
+        // Display error message if validation errors exist
+        @if ($errors->any())
+            Swal.fire({
+                title: 'Error!',
+                html: '<ul>' +
+                    '@foreach ($errors->all() as $error)' +
+                    '<li>{{ $error }}</li>' +
+                    '@endforeach' +
+                    '</ul>',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        @endif
+    });
+</script>
+
+<!-- Flatpickr CSS -->
+<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
