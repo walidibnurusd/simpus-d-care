@@ -280,9 +280,11 @@ Route::middleware('auth')->group(function () {
             Route::get('anemia', [App\Http\Controllers\AdminControllerMTBS::class, 'viewAnemia'])->name('anemia.admin.mtbs');
             Route::get('/anemia/{id}', [App\Http\Controllers\AdminController::class, 'editAnemia'])->name('anemia.mtbs.edit');
 
-            Route::get('kekerasan-perempuan', [App\Http\Controllers\AdminController::class, 'viewKekerasanPerempuan'])->name('kekerasan.perempuan.admin.mtbs');
+            Route::get('kekerasan-perempuan', [App\Http\Controllers\AdminControllerMTBS::class, 'viewKekerasanPerempuan'])->name('kekerasan.perempuan.admin.mtbs');
+            Route::get('/kekerasan-perempuan/{id}', [App\Http\Controllers\AdminController::class, 'editKekerasanPerempuan'])->name('kekerasan.perempuan.mtbs.edit');
 
-            Route::get('kekerasan-anak', [App\Http\Controllers\AdminController::class, 'viewKekerasanAnak'])->name('kekerasan.anak.admin.mtbs');
+            Route::get('kekerasan-anak', [App\Http\Controllers\AdminControllerMTBS::class, 'viewKekerasanAnak'])->name('kekerasan.anak.admin.mtbs');
+            Route::get('/kekerasan-anak/{id}', [App\Http\Controllers\AdminController::class, 'editKekerasanAnak'])->name('kekerasan.anak.mtbs.edit');
 
             Route::get('diabetes-mellitus', [App\Http\Controllers\AdminControllerMTBS::class, 'viewDiabetesMellitus'])->name('diabetes.mellitus.admin.mtbs');
             Route::get('/diabetes-mellitus/{id}', [App\Http\Controllers\AdminController::class, 'editDiabetesMellitus'])->name('diabetes.mellitus.mtbs.edit');
@@ -338,6 +340,7 @@ Route::get('cities/{provinceId}', [DependentDropdownController::class, 'citiesDa
 Route::get('districts/{cityId}', [DependentDropdownController::class, 'districtsData'])->name('districts');
 Route::get('villages/{districtId}', [DependentDropdownController::class, 'villagesData'])->name('villages');
 Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('get-patients');
+Route::get('/get-skrining/{id}', [PatientsController::class, 'getSkriningPatient'])->name('get-skrining-patient');
 Route::get('/get-patients-dokter', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
 
 //Language Change

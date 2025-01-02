@@ -21,8 +21,6 @@
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
-
-
                             <div id="patientDetailsEdit" style=" margin-top: 10px; padding: 10px; border-radius: 5px;">
                                 <p><strong>N I K</strong> : <span id="NIK">{{ $action->patient->nik }}</span></p>
                                 <p><strong>Nama Pasien</strong> : <span
@@ -878,11 +876,12 @@
                                 @endforeach
                             </select>
                         </div>
-                        {{-- <div class="col-md-4">
-                            <label for="icd10" style="color: rgb(19, 11, 241);">ICD 10</label>
-                            <input type="text" class="form-control" id="icd10" name="icd10"
-                                placeholder="ICD 10" value="{{ old('icd10', $action->icd10 ?? '') }}" required>
-                        </div> --}}
+                        <div class="col-md-4">
+                            <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
+                                Penunjang</label>
+                            <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
+                                placeholder="Pemeriksaan penunjang">{{ old('pemeriksaan_penunjang', $action->pemeriksaan_penunjang ?? '') }}</textarea>
+                        </div>
                         <div class="col-md-4">
                             <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                             <select class="form-control" id="tindakanEdit" name="tindakan">
@@ -892,9 +891,9 @@
                                     <option value="Diberikan Obat"
                                         {{ old('tindakan', $action->tindakan ?? '') == 'Diberikan Obat' ? 'selected' : '' }}>
                                         Diberikan Obat</option>
-                                    <option value="Tidak"
-                                        {{ old('tindakan', $action->tindakan ?? '') == 'Tidak' ? 'selected' : '' }}>
-                                        Tidak
+                                    <option value="Dirujuk"
+                                        {{ old('tindakan', $action->tindakan ?? '') == 'Dirujuk' ? 'selected' : '' }}>
+                                        Dirujuk
                                     </option>
                                 @elseif($action->tipe == 'poli-gigi')
                                     <option value="Gigi Sulung Tumpatan Sementara"
@@ -1018,16 +1017,13 @@
                                 @endif
                             </select>
                         </div>
+                    </div>
+
+                    <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                             <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
                         </div>
-
-
-
-                    </div>
-
-                    <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
                             <select class="form-control" id="rujuk_rs" name="rujuk_rs">

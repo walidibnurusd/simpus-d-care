@@ -489,9 +489,8 @@ class AdminController extends Controller
             array_merge(
                 $validator->validated(), // Only use validated data
                 [
-                    // Optional: you can leave klaster and poli out if you don't want to update them
-                    'klaster' => $hiv->klaster, // Keep the existing klaster value
-                    'poli' => $hiv->poli, // Keep the existing poli value
+                    'klaster' => $hiv->klaster,
+                    'poli' => $hiv->poli,
                 ],
             ),
         );
@@ -551,8 +550,8 @@ class AdminController extends Controller
             array_merge(
                 $validator->validated(), // Only uses validated data
                 [
-                    'klaster' => 2, // You can change this value if necessary
-                    'poli' => 'kia', // You can change this value if necessary
+                    'klaster' => $kecacingan->klaster,
+                    'poli' => $kecacingan->poli,
                 ],
             ),
         );
@@ -610,8 +609,8 @@ class AdminController extends Controller
             array_merge(
                 $validator->validated(), // Only uses validated data
                 [
-                    'klaster' => 2, // You can change this value if needed
-                    'poli' => 'kia', // You can change this value if needed
+                    'klaster' => $diabetesMellitus->klaster,
+                    'poli' => $diabetesMellitus->poli,
                 ],
             ),
         );
@@ -699,8 +698,8 @@ class AdminController extends Controller
         // Update the Tbc record with the validated data and additional fields
         $tbc->update(
             array_merge($validator->validated(), [
-                'klaster' => 2, // Ensure klaster remains the same or update as needed
-                'poli' => 'kia', // Ensure poli remains the same or update as needed
+                'klaster' => $tbc->klaster,
+                'poli' => $tbc->poli,
             ]),
         );
 
@@ -708,15 +707,18 @@ class AdminController extends Controller
         return redirect()->route('tbc.admin')->with('success', 'Data TBC updated successfully!');
     }
 
-    public function viewKekerasanPerempuan()
+    public function viewKekerasanPerempuan(Request $request)
     {
-        $kekerasanPerempuan = KekerasanPerempuan::all();
-        return view('kia.table.kekerasan_perempuan', compact('kekerasanPerempuan'));
+        $kekerasanPerempuan = KekerasanPerempuan::with('listPasien')->where('poli', 'kia')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.kekerasan_perempuan', compact('kekerasanPerempuan', 'routeName'));
     }
-    public function editKekerasanPerempuan($id)
+    public function editKekerasanPerempuan(Request $request, $id)
     {
+        $pasien = Patients::all();
         $kekerasanPerempuan = KekerasanPerempuan::findOrFail($id);
-        return view('kia.kekerasan_perempuan', compact('kekerasanPerempuan'));
+        $routeName = $request->route()->getName();
+        return view('kia.kekerasan_perempuan', compact('kekerasanPerempuan', 'routeName', 'pasien'));
     }
     public function deleteKekerasanPerempuan($id)
     {
@@ -755,8 +757,8 @@ class AdminController extends Controller
         // Update the record with validated data and additional fields
         $kekerasanPerempuan->update(
             array_merge($validator->validated(), [
-                'klaster' => 2, // Assign or update the default value for klaster
-                'poli' => 'kia', // Assign or update the default value for poli
+                'klaster' => $kekerasanPerempuan->klaster,
+                'poli' => $kekerasanPerempuan->poli,
             ]),
         );
 
@@ -764,16 +766,18 @@ class AdminController extends Controller
         return redirect()->route('kekerasan.perempuan.admin')->with('success', 'Data Kekerasan Perempuan updated successfully!');
     }
 
-    public function viewKekerasanAnak()
+    public function viewKekerasanAnak(Request $request)
     {
-        $kekerasanAnak = KekerasanAnak::with('listPasien')->get();
-        return view('kia.table.kekerasan_anak', compact('kekerasanAnak'));
+        $kekerasanAnak = KekerasanAnak::with('listPasien')->where('poli', 'kia')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.kekerasan_anak', compact('kekerasanAnak', 'routeName'));
     }
-    public function editKekerasanAnak($id)
+    public function editKekerasanAnak(Request $request, $id)
     {
         $kekerasanAnak = KekerasanAnak::findOrFail($id);
         $pasien = Patients::all();
-        return view('kia.kekerasan_anak', compact('kekerasanAnak', 'pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.kekerasan_anak', compact('kekerasanAnak', 'pasien', 'routeName'));
     }
     public function deleteKekerasanAnak($id)
     {
@@ -797,15 +801,15 @@ class AdminController extends Controller
             'pasien' => 'required',
             'diperoleh_dari' => 'required|string|max:255',
             'hubungan_pasien' => 'required',
-            'kekerasan' => 'required',
+            'kekerasan' => 'nullable',
             'tempat' => 'nullable',
             'dampak_pasien' => 'nullable',
             'dampak_pada_anak' => 'nullable',
-            'penelantaran_fisik' => 'required',
+            'penelantaran_fisik' => 'nullable',
             'tanda_kekerasan_check' => 'nullable',
             'derajat_luka_bakar' => 'nullable',
             'tanda_kekerasan' => 'nullable',
-            'kekerasan_seksual' => 'required',
+            'kekerasan_seksual' => 'nullable',
             'dampak_kekerasan' => 'nullable',
         ]);
 
@@ -817,8 +821,8 @@ class AdminController extends Controller
         // Update the record with validated data and additional fields
         $kekerasanAnak->update(
             array_merge($validator->validated(), [
-                'klaster' => 2, // Default value for klaster
-                'poli' => 'kia', // Default value for poli
+                'klaster' => $kekerasanAnak->klaster,
+                'poli' => $kekerasanAnak->poli,
             ]),
         );
 

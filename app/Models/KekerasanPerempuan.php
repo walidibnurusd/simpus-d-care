@@ -10,6 +10,9 @@ class KekerasanPerempuan extends Model
     use HasFactory;
     protected $table = 'kekerasan_perempuan';
 
-    protected $fillable = ['no_responden', 'umur', 'tempat_wawancara', 'hubungan_dengan_pasangan', 'mengatasi_pertengkaran_mulur', 'akibat_pertengkaran_mulut', 'pasangan_memukul', 'ketakutan', 'dibatasi', 'klaster', 'poli'];
-   
+    protected $fillable = ['no_responden', 'pasien', 'tempat_wawancara', 'hubungan_dengan_pasangan', 'mengatasi_pertengkaran_mulur', 'akibat_pertengkaran_mulut', 'pasangan_memukul', 'ketakutan', 'dibatasi', 'klaster', 'poli'];
+    public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
 }

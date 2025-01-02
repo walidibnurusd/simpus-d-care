@@ -9,23 +9,21 @@
     $defaultProvinceId = $provinces->firstWhere('name', 'SULAWESI SELATAN')->id; // Assuming this gets the correct ID
     $cities = $master->citiesData($defaultProvinceId);
     $defaultCityId = $cities->firstWhere('name', 'KOTA MAKASSAR')->id;
-    $districts = $master->districtsData($defaultCityId);
-    $defaultDistrictId = $districts->firstWhere('name', 'MANGGALA')->id;
-    $villages = $master->villagesData($defaultDistrictId);
+
 @endphp
 
 <div class="modal fade" style="z-index: 9999;" id="addPatientModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-xl"> <!-- Using modal-lg for a moderate width -->
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data</h5> <!-- Updated the title -->
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addPatientForm" action="{{ route('patient.store') }}" method="POST" class="px-3">
                     @csrf
-                    <div class="row g-2"> <!-- Reduced gutter space between columns -->
+                    <div class="row g-2">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nik">NIK</label>
@@ -124,6 +122,29 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="kartu">Jenis Kartu</label>
+                                <select class="form-control" id="jenis_kartu" name="jenis_kartu" required>
+                                    <option value="" disabled selected>Pilih Jenis Kartu</option>
+                                    <option value="pbi">PBI (KIS)</option>
+                                    <option value="askes">AKSES</option>
+                                    <option value="jkn_mandiri">JKN Mandiri</option>
+                                    <option value="umum">Umum</option>
+                                    <option value="jkd">JKD</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nomor">Nomor Kartu</label>
+                                <input type="text" class="form-control" id="nomor_kartu" name="nomor_kartu"
+                                    placeholder="Masukkan Nomor" required>
+                            </div>
+                        </div>
+
+                    </div>
 
                     <div class="row g-2">
                         <div class="col-md-6">
@@ -176,14 +197,11 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="district">Kecamatan</label>
-                                <select class="form-control" id="district" name="district" required>
-                                    <option value=""></option>
-                                    @foreach ($districts as $district)
-                                        <option value="{{ $district->id }}"
-                                            {{ old('district', $defaultDistrictId) == $district->id ? 'selected' : '' }}>
-                                            {{ $district->name }}
-                                        </option>
-                                    @endforeach
+                                <select class="form-control" id="district" name="district" required
+                                    onchange="updateVillage()">
+                                    <option value="Manggala">Manggala</option>
+                                    <option value="Luar Wilayah">Luar Wilayah</option>
+
                                 </select>
                             </div>
                         </div>
@@ -191,28 +209,25 @@
                             <div class="form-group">
                                 <label for="village">Kelurahan/Desa</label>
                                 <select class="form-control" id="village" name="village" required>
-                                    <option value="">Pilih</option>
-                                    @foreach ($villages as $village)
-                                        <option value="{{ $village->id }}"
-                                            {{ old('village', $village->id) == $village->id ? 'selected' : '' }}>
-                                            {{ $village->name }}
-                                        </option>
-                                    @endforeach
+                                    <option value="Tamangapa">Tamangapa</option>
+                                    <option value="Luar Wilayah">Luar Wilayah</option>
+
                                 </select>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="row g-2">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="rw">RW</label>
-                                <select class="form-control" id="rw" name="rw" required>
+                                <select class="form-control" id="rw" name="rw">
                                     <option value="">Pilih</option>
-                                    @for ($i = 1; $i <= 10; $i++)
+                                    @for ($i = 1; $i <= 7; $i++)
                                         <option value="{{ $i }}">{{ $i }}</option>
                                     @endfor
+                                    <option value="4A">4A</option>
+                                    <option value="4B">4B (TPA)</option>
                                 </select>
                             </div>
                         </div>
@@ -245,7 +260,18 @@
     </div>
 </div>
 <script>
+    function updateVillage() {
+        const district = document.getElementById('district').value;
+        const village = document.getElementById('village');
+
+        if (district === 'Luar Wilayah') {
+            village.value = 'Luar Wilayah';
+        } else if (district === 'Manggala') {
+            village.value = 'Tamangapa';
+        }
+    }
     $(document).ready(function() {
+
         $('#province').change(function() {
             var provinceId = $(this).val();
             var citySelect = $('#city');
@@ -336,29 +362,29 @@
     });
 </script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      // Check for success message
-      @if (session('success'))
-          Swal.fire({
-              title: 'Success!',
-              text: "{{ session('success') }}",
-              icon: 'success',
-              confirmButtonText: 'OK'
-          });
-      @endif
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check for success message
+        @if (session('success'))
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        @endif
 
-      // Check for validation errors
-      @if ($errors->any())
-          Swal.fire({
-              title: 'Error!',
-              html: '<ul>' +
+        // Check for validation errors
+        @if ($errors->any())
+            Swal.fire({
+                title: 'Error!',
+                html: '<ul>' +
                     '@foreach ($errors->all() as $error)' +
                     '<li>{{ $error }}</li>' +
                     '@endforeach' +
                     '</ul>',
-              icon: 'error',
-              confirmButtonText: 'OK'
-          });
-      @endif
-  });
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        @endif
+    });
 </script>
