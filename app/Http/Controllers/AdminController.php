@@ -708,15 +708,18 @@ class AdminController extends Controller
         return redirect()->route('tbc.admin')->with('success', 'Data TBC updated successfully!');
     }
 
-    public function viewKekerasanPerempuan()
+    public function viewKekerasanPerempuan(Request $request)
     {
-        $kekerasanPerempuan = KekerasanPerempuan::all();
-        return view('kia.table.kekerasan_perempuan', compact('kekerasanPerempuan'));
+        $kekerasanPerempuan = KekerasanPerempuan::with('listPasien')->where('poli', 'kia')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.kekerasan_perempuan', compact('kekerasanPerempuan', 'routeName'));
     }
-    public function editKekerasanPerempuan($id)
+    public function editKekerasanPerempuan(Request $request, $id)
     {
+        $pasien = Patients::all();
         $kekerasanPerempuan = KekerasanPerempuan::findOrFail($id);
-        return view('kia.kekerasan_perempuan', compact('kekerasanPerempuan'));
+        $routeName = $request->route()->getName();
+        return view('kia.kekerasan_perempuan', compact('kekerasanPerempuan', 'routeName', 'pasien'));
     }
     public function deleteKekerasanPerempuan($id)
     {

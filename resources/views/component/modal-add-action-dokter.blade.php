@@ -616,24 +616,40 @@
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                             <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
-
                                 @foreach ($diagnosa as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        {{-- <div class="col-md-4">
-                            <label for="icd10" style="color: rgb(19, 11, 241);">ICD 10</label>
-                            <input type="text" class="form-control" id="icd10" name="icd10"
-                                placeholder="ICD 10">
-                        </div> --}}
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="skrining" class="form-label">Hasil Skrining</label>
+                                <button class="btn btn-primary w-100 mt-2" type="button" id="btnCariskrining"
+                                    data-bs-toggle="modal" data-bs-target="#modalSkrining">
+                                    Hasil Skrining
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
+                                Penunjang</label>
+                            <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
+                                placeholder="Pemeriksaan Penunjang"></textarea>
+                        </div>
+
+
+
+
+
+                    </div>
+                    <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                             <select class="form-control" id="tindakan" name="tindakan">
                                 <option value="" disabled selected>pilih</option>
                                 @if ($routeName === 'action.dokter.index')
                                     <option value="Diberikan Obat">Diberikan Obat</option>
-                                    <option value="Tidak">Tidak</option>
+                                    <option value="Dirujuk">Dirujuk</option>
                                 @elseif(Auth::user()->role == 'admin-poli-gigi')
                                     <option value="Gigi Sulung Tumpatan Sementara">Gigi Sulung Tumpatan Sementara
                                     </option>
@@ -713,9 +729,6 @@
 
                             </select>
                         </div>
-
-                    </div>
-                    <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">KETERANGAN</label>
                             <input type="text" class="form-control" id="keterangan" name="keterangan"
@@ -737,6 +750,7 @@
 
 
 @include('component.modal-table-pasien-dokter')
+@include('component.modal-skrining')
 
 
 <script>

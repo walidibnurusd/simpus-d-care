@@ -12,10 +12,8 @@ return new class extends Migration {
     {
         Schema::create('obesitas', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->date('tanggal_lahir');
-            $table->string('tempat_lahir')->nullable();
-            $table->string('alamat')->nullable();
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->decimal('tinggi_badan')->default(0);
             $table->decimal('berat_badan')->default(0);
             $table->decimal('lingkar_peru')->default(0);

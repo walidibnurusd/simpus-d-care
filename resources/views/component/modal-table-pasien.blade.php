@@ -16,7 +16,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                       
+
                     </tbody>
                 </table>
             </div>
@@ -29,38 +29,46 @@
 
 
 <script>
- $(document).ready(function () {
-   
-    let table; // Deklarasi variabel DataTable
+    $(document).ready(function() {
 
-    // Fungsi untuk menginisialisasi DataTable
-    function initializeTable() {
-        // if ($.fn.DataTable.isDataTable('#pasien')) {
-        //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
-        // }
+        let table; // Deklarasi variabel DataTable
 
-        table = $('#pasien').DataTable({
-            ajax: {
-                url: '/get-patients', // Endpoint untuk mengambil data
-                type: 'GET',
-                dataSrc: function (json) {
-                    return json.data; // Pastikan data dalam key 'data'
+        // Fungsi untuk menginisialisasi DataTable
+        function initializeTable() {
+            // if ($.fn.DataTable.isDataTable('#pasien')) {
+            //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
+            // }
+
+            table = $('#pasien').DataTable({
+                ajax: {
+                    url: '/get-patients', // Endpoint untuk mengambil data
+                    type: 'GET',
+                    dataSrc: function(json) {
+                        return json.data; // Pastikan data dalam key 'data'
+                    },
+                    error: function(xhr, error, code) {
+                        console.error('Error fetching data:', error);
+                        alert('Error fetching patient data!');
+                    }
                 },
-                error: function (xhr, error, code) {
-                    console.error('Error fetching data:', error);
-                    alert('Error fetching patient data!');
-                }
-            },
-            columns: [
-                { data: 'nik', name: 'nik' },
-                { data: 'name', name: 'name' },
-                { data: 'address', name: 'address' },
-                {
-                    data: null,
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row) {
-                        return `
+                columns: [{
+                        data: 'nik',
+                        name: 'nik'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `
                             <button class="btn btn-success btnPilihPasien" 
                                 data-id="${row.id}" 
                                 data-nik="${row.nik}" 
@@ -76,62 +84,62 @@
                                 Pilih
                             </button>
                         `;
+                        },
                     },
-                },
-            ],
-            destroy: true, // Mengizinkan inisialisasi ulang
-            processing: true,
-            serverSide: true,
+                ],
+                destroy: true, // Mengizinkan inisialisasi ulang
+                processing: true,
+                serverSide: true,
+            });
+        }
+
+        // Handle tombol "Pilih" diklik
+        $(document).on('click', '.btnPilihPasien', function() {
+
+            const data = $(this).data();
+            // Assuming 'data.dob' contains the date of birth, e.g., "1990-01-01"
+            var dob = data.age; // data.dob should be in the format 'YYYY-MM-DD'
+
+            // Function to calculate age from dob
+            function calculateAge(dob) {
+                var birthDate = new Date(dob);
+                var ageDifMs = Date.now() - birthDate.getTime(); // Difference in milliseconds
+                var ageDate = new Date(ageDifMs); // Convert ms to date object
+                return Math.abs(ageDate.getUTCFullYear() - 1970); // Get the age in years
+            }
+
+            // Get the age
+            var age = calculateAge(dob);
+            // Tampilkan data pasien di elemen luar modal
+            $('#displayNIK').text(data.nik);
+            $('#idPatient').text(data.id);
+            $('#displayName').text(data.name);
+            $('#displayGender').text(data.gender);
+            $('#displayAge').text(age);
+            $('#displayPhone').text(data.phone);
+            $('#displayAddress').text(data.address);
+            $('#displayBlood').text(data.blood);
+            $('#displayEducation').text(data.education);
+            $('#displayJob').text(data.job);
+            $('#displayRmNumber').text(data.rm);
+
+            // Set nilai ID ke input form
+            $('#nik').val(data.nik);
+            console.log
+
+
+            $('#patientDetails').show();
+            console.log($('#patientDetails').show());
+
+
+
+            // Tutup modal
+            $('#modalPasien').modal('hide');
         });
-    }
 
-    // Handle tombol "Pilih" diklik
-    $(document).on('click', '.btnPilihPasien', function () {
-        
-        const data = $(this).data();
-        // Assuming 'data.dob' contains the date of birth, e.g., "1990-01-01"
-  var dob = data.age;  // data.dob should be in the format 'YYYY-MM-DD'
-
-// Function to calculate age from dob
-function calculateAge(dob) {
-  var birthDate = new Date(dob);
-  var ageDifMs = Date.now() - birthDate.getTime(); // Difference in milliseconds
-  var ageDate = new Date(ageDifMs); // Convert ms to date object
-  return Math.abs(ageDate.getUTCFullYear() - 1970); // Get the age in years
-}
-
-// Get the age
-var age = calculateAge(dob);
-        // Tampilkan data pasien di elemen luar modal
-        $('#displayNIK').text(data.nik);
-        $('#displayName').text(data.name);
-        $('#displayGender').text(data.gender);
-        $('#displayAge').text(age);
-        $('#displayPhone').text(data.phone);
-        $('#displayAddress').text(data.address);
-        $('#displayBlood').text(data.blood);
-        $('#displayEducation').text(data.education);
-        $('#displayJob').text(data.job);
-        $('#displayRmNumber').text(data.rm);
-
-        // Set nilai ID ke input form
-        $('#nik').val(data.nik);
-        console.log
-       
-
-        $('#patientDetails').show();
-        console.log( $('#patientDetails').show());
-        
-     
-
-        // Tutup modal
-        $('#modalPasien').modal('hide');
+        // Inisialisasi ulang DataTables saat modal ditampilkan
+        $('#modalPasien').on('shown.bs.modal', function() {
+            initializeTable();
+        });
     });
-
-    // Inisialisasi ulang DataTables saat modal ditampilkan
-    $('#modalPasien').on('shown.bs.modal', function () {
-        initializeTable();
-    });
-});
-
 </script>

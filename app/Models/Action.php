@@ -79,7 +79,8 @@ class Action extends Model
         'icd10',
         'oralit',
         'zinc',
-        'obat'
+        'obat',
+        'pemeriksaan_penunjang'
     ];
 
     protected $casts = [

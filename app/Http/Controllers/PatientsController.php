@@ -4,6 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Action;
 use App\Models\Patients;
+use App\Models\Hipertensi;
+use App\Models\GangguanAutis;
+use App\Models\Anemia;
+use App\Models\Talasemia;
+use App\Models\DiabetesMellitus;
+use App\Models\GangguanJiwaAnak;
+use App\Models\GangguanJiwaRemaja;
+use App\Models\Geriatri;
+use App\Models\Hepatitis;
+use App\Models\Hiv;
+use App\Models\KankerKolorektal;
+use App\Models\KankerParu;
+use App\Models\KankerPayudara;
+use App\Models\Kecacingan;
+use App\Models\KekerasanPerempuan;
+use App\Models\KekerasanAnak;
+use App\Models\LayakHamil;
+use App\Models\Merokok;
+use App\Models\Napza;
+use App\Models\Obesitas;
+use App\Models\Tbc;
+use App\Models\TesDayaDengar;
+use App\Models\TripleEliminasi;
+use App\Models\Puma;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -14,25 +38,93 @@ use Yajra\DataTables\DataTables;
 class PatientsController extends Controller
 {
     public function getPatients(Request $request)
-{
-    $patients = Patients::with('genderName','educations','occupations')->get();
+    {
+        $patients = Patients::with('genderName', 'educations', 'occupations')->get();
 
-    // Return data in the format required by DataTables
-    return response()->json(['data' => $patients]);
-}
+        return response()->json(['data' => $patients]);
+    }
+    public function getSkriningPatient($id)
+    {
+        // Ambil data pasien berdasarkan ID
+        $patient = Patients::findOrFail($id);
 
-public function getPatientsDokter(Request $request)
-{
-    // Ambil data Action yang dibuat hari ini
-    // dd(Carbon::today());
-    $patients = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')
-        ->whereDate('tanggal', Carbon::today())
-        ->get();
-      
+        if (!$patient) {
+            return response()->json(['error' => 'Patient not found'], 404);
+        }
 
-    // Return data dalam format yang dibutuhkan oleh DataTables
-    return response()->json(['data' => $patients]);
-}
+        $klaster = $patient->klaster;
+
+        $skriningData = [];
+
+        switch ($klaster) {
+            case 2:
+                $skrining = [
+                    'Hipertensi' => Hipertensi::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Gangguan Spektrum Autisme' => GangguanAutis::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Kecacingan' => Kecacingan::where('pasien', $id)->where('klaster', 2)->first(),
+                    'HIV & IMS' => Hiv::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Anemia' => Anemia::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Talasemia' => Talasemia::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Hepatitis' => Hepatitis::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Kekerasan terhadap Anak' => KekerasanAnak::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Kekerasan terhadap Perempuan' => KekerasanPerempuan::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Diabetes Mellitus' => DiabetesMellitus::where('pasien', $id)->where('klaster', 2)->first(),
+                    'TBC' => Tbc::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Triple Eliminasi Bumil' => TripleEliminasi::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Tes Pendengaran' => TesDayaDengar::where('pasien', $id)->where('klaster', 2)->first(),
+                    'SDQ (4-11 Tahun)' => GangguanJiwaAnak::where('pasien', $id)->where('klaster', 2)->first(),
+                    'SDQ (11-18 Tahun)' => GangguanJiwaRemaja::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Kekerasan terhadap Anak' => KekerasanAnak::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Kekerasan terhadap Perempuan' => KekerasanPerempuan::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Obesitas' => Obesitas::where('pasien', $id)->where('klaster', 2)->first(),
+                    'NAPZA' => Napza::where('pasien', $id)->where('klaster', 2)->first(),
+                    'Perilaku Merokok bagi Anak Sekolah' => Merokok::where('pasien', $id)->where('klaster', 2)->first(),
+                ];
+                break;
+
+            case 3:
+                $skrining = [
+                    'Kanker Paru' => KankerParu::where('pasien', $id)->where('klaster', 3)->first(),
+                    'Kanker Kolorektal' => KankerKolorektal::where('pasien', $id)->where('klaster', 3)->first(),
+                    'PPOK (PUMA)' => Puma::where('pasien', $id)->where('klaster', 3)->first(),
+                    'Geriatri' => Geriatri::where('pasien', $id)->where('klaster', 3)->first(),
+                    'Kanker Leher Rahim dan Kanker Payudara' => KankerPayudara::where('pasien', $id)->where('klaster', 3)->first(),
+                    'Hipertensi' => Hipertensi::where('pasien', $id)->get(),
+                    'TBC' => Tbc::where('pasien', $id)->where('klaster', 3)->first(),
+                    'Layak Hamil' => LayakHamil::where('pasien', $id)->where('klaster', 3)->first(),
+                    'Anemia' => Anemia::where('pasien', $id)->where('klaster', 3)->first(),
+                    'Talasemia' => Talasemia::where('pasien', $id)->where('klaster', 3)->first(),
+                ];
+                break;
+
+            default:
+                $skrining = [];
+                break;
+        }
+
+        foreach ($skrining as $jenis => $data) {
+            $skriningData[] = [
+                'jenis_skrining' => $jenis,
+                'kesimpulan_skrining' => $data ? 'Tersedia' : 'Belum Tersedia',
+                'status_skrining' => $data ? 'Selesai' : 'Belum Selesai',
+            ];
+        }
+        return response()->json([
+            'patient' => $patient->name,
+            'klaster' => $klaster,
+            'skrining_data' => $skriningData,
+        ]);
+    }
+
+    public function getPatientsDokter(Request $request)
+    {
+        // Ambil data Action yang dibuat hari ini
+        // dd(Carbon::today());
+        $patients = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->whereDate('tanggal', Carbon::today())->get();
+
+        // Return data dalam format yang dibutuhkan oleh DataTables
+        return response()->json(['data' => $patients]);
+    }
 
     public function index()
     {
@@ -52,17 +144,19 @@ public function getPatientsDokter(Request $request)
                 'dob' => 'required|date',
                 'no_rm' => 'required|string|max:255',
                 'marriage_status' => 'required|integer',
-                'blood_type' => 'required|string|max:2',
+                'blood_type' => 'required|string',
                 'education' => 'required|integer',
                 'occupation' => 'required|integer',
                 'province' => 'required|integer',
                 'city' => 'required|integer',
-                'district' => 'required|integer',
-                'village' => 'required|integer',
-                'rw' => 'required|integer',
+                'district' => 'required',
+                'village' => 'nullable',
+                'rw' => 'nullable',
                 'address' => 'required|string|max:255',
+                'jenis_kartu' => 'required|string|max:255',
+                'nomor_kartu' => 'required|string|max:255',
             ]);
-    
+
             // Create a new patient record
             $patient = new Patients();
             $patient->nik = $validatedData['nik'];
@@ -78,25 +172,25 @@ public function getPatientsDokter(Request $request)
             $patient->occupation = $validatedData['occupation'];
             $patient->indonesia_province_id = $validatedData['province'];
             $patient->indonesia_city_id = $validatedData['city'];
-            $patient->indonesia_district_id = $validatedData['district'];
-            $patient->indonesia_village_id = $validatedData['village'];
-            $patient->rw = $validatedData['rw'];
+            $patient->indonesia_district = $validatedData['district'];
+            $patient->indonesia_village = $validatedData['village'] ?? null;
+            $patient->rw = $validatedData['rw'] ?? null;
             $patient->address = $validatedData['address'];
-    // dd($patient);
+            $patient->jenis_kartu = $validatedData['jenis_kartu'];
+            $patient->nomor_kartu = $validatedData['nomor_kartu'];
+            // dd($patient);
             $patient->save();
-    
+
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Patient data added successfully.');
-    
         } catch (Exception $e) {
             // Log the error
             Log::error('Error adding patient: ' . $e->getMessage());
-    
+
             // Redirect back with an error message
             return redirect()->back()->withErrors('An error occurred while adding the patient. Please try again.');
         }
     }
-    
 
     public function update(Request $request, $id)
     {
@@ -111,20 +205,22 @@ public function getPatientsDokter(Request $request)
                 'dob' => 'required|date',
                 'no_rm' => 'required|string|max:255',
                 'marriage_status' => 'required|integer',
-                'blood_type' => 'required|string|max:2',
+                'blood_type' => 'required|string',
                 'education' => 'required|integer',
                 'occupation' => 'required|integer',
                 'province' => 'required|integer',
                 'city' => 'required|integer',
-                'district' => 'required|integer',
-                'village' => 'required|integer',
-                'rw' => 'required|integer',
+                'district' => 'required',
+                'village' => 'nullable',
+                'rw' => 'nullable',
                 'address' => 'required|string|max:255',
+                'jenis_kartu' => 'required|string|max:255',
+                'nomor_kartu' => 'required|string|max:255',
             ]);
-    
+
             // Find the patient record by ID
             $patient = Patients::findOrFail($id);
-    
+
             // Update the patient record with validated data
             $patient->nik = $validatedData['nik'];
             $patient->name = $validatedData['name'];
@@ -139,43 +235,42 @@ public function getPatientsDokter(Request $request)
             $patient->occupation = $validatedData['occupation'];
             $patient->indonesia_province_id = $validatedData['province'];
             $patient->indonesia_city_id = $validatedData['city'];
-            $patient->indonesia_district_id = $validatedData['district'];
-            $patient->indonesia_village_id = $validatedData['village'];
-            $patient->rw = $validatedData['rw'];
+            $patient->indonesia_district = $validatedData['district'];
+            $patient->indonesia_village = $validatedData['village'] ?? null;
+            $patient->rw = $validatedData['rw'] ?? null;
             $patient->address = $validatedData['address'];
-    
+            $patient->jenis_kartu = $validatedData['jenis_kartu'];
+            $patient->nomor_kartu = $validatedData['nomor_kartu'];
+
             // Save the updated patient record
             $patient->save();
-    
+
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Patient data updated successfully.');
-    
         } catch (Exception $e) {
             // Log the error
             Log::error('Error updating patient: ' . $e->getMessage());
-    
+
             // Redirect back with an error message
             return redirect()->back()->withErrors('An error occurred while updating the patient. Please try again.');
         }
     }
-    
-// PatientController.php
-public function destroy($id)
-{
-    // Find the patient by ID or fail
-    $patient = Patients::findOrFail($id);
 
-    // Delete the patient
-    $patient->delete();
+    // PatientController.php
+    public function destroy($id)
+    {
+        // Find the patient by ID or fail
+        $patient = Patients::findOrFail($id);
 
-    // Redirect with a success message
-    return redirect()->route('patient.index')->with('success', 'Patient deleted successfully.');
-}
-public function patientReport()
-{
-    $patients = Patients::all(); // Ganti dengan query sesuai kebutuhan
-    return view('content.patients.print', compact('patients'));
-}
+        // Delete the patient
+        $patient->delete();
 
-
+        // Redirect with a success message
+        return redirect()->route('patient.index')->with('success', 'Patient deleted successfully.');
+    }
+    public function patientReport()
+    {
+        $patients = Patients::all(); // Ganti dengan query sesuai kebutuhan
+        return view('content.patients.print', compact('patients'));
+    }
 }

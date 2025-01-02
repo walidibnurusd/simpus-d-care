@@ -193,10 +193,11 @@
             $('#displayEducation').text(data.education);
             $('#displayJob').text(data.job);
             $('#displayRmNumber').text(data.rm);
-console.log(data.tindakan);
-const actionId = data.id;
-const actionUrl = "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__', actionId);
-    $('#addPatientForm').attr('action', actionUrl);
+            console.log(data.tindakan);
+            const actionId = data.id;
+            const actionUrl = "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__',
+                actionId);
+            $('#addPatientForm').attr('action', actionUrl);
             // Set nilai ID ke input form
             $('#nik').val(data.nik);
             $('#idAction').val(data.id);
@@ -249,13 +250,14 @@ const actionUrl = "{{ route('action.update.dokter', '__ID__') }}".replace('__ID_
             $('#kelenjar').val(data.kelenjar);
             $('#genetalia').val(data.genetalia);
             $('#warna_kulit').val(data.warnakulit);
-        $('#turgor').val(data.turgor);
+            $('#turgor').val(data.turgor);
             $('#neurologis').val(data.neurologis);
             $('#hasillab').val(data.hasillab);
             $('#riwayat_penyakit_keluarga').val(data.riwayatpenyakitkeluarga).trigger('change');
             console.log(data.riwayatpenyakittidakmenular);
-            
-$('#riwayat_penyakit_tidak_menular').val(data.riwayatpenyakittidakmenular).trigger('change');
+
+            $('#riwayat_penyakit_tidak_menular').val(data.riwayatpenyakittidakmenular).trigger(
+                'change');
 
             $('#keluhan').val(data.keluhan);
             $('#diagnosa').val(data.diagnosa).trigger('change');
@@ -266,8 +268,10 @@ $('#riwayat_penyakit_tidak_menular').val(data.riwayatpenyakittidakmenular).trigg
 
 
             $('#patientDetails').show();
+            const patientId = $(this).data('id-patient');
             // console.log($('#patientDetails').show());
-
+            $('#btnCariskrining').data('id', patientId);
+            console.log('id patient', patientId);
 
 
             // Tutup modal

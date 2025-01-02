@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('kekerasan_perempuan', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
+            $table->unsignedBigInteger('pasien');
+            $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->integer('no_responden');
-            $table->integer('umur');
             $table->string('tempat_wawancara');
             $table->integer('hubungan_dengan_pasangan');
             $table->integer('mengatasi_pertengkaran_mulur');

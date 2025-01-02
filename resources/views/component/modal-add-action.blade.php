@@ -22,6 +22,7 @@
                             <h5>Detail Pasien</h5>
                             <div id="patientDetails"
                                 style="display:none; margin-top: 10px; padding: 10px; border-radius: 5px;">
+                                <p><strong>ID</strong> : <span id="idPatient"></span></p>
                                 <p><strong>N I K</strong> : <span id="displayNIK"></span></p>
                                 <p><strong>Nama Pasien</strong> : <span id="displayName"></span></p>
                                 {{-- <p><strong>J.Kelamin</strong> : <span id="displayGender"></span></p> --}}
@@ -597,109 +598,18 @@
                                     Sendiri</label>
                                 <select class="form-control" id="riwayat_penyakit_tidak_menular"
                                     name="riwayat_penyakit_tidak_menular[]" multiple>
-                                    =
                                     @foreach ($penyakit as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            {{-- <div class="col-md-4">
+                            <div class="col-md-4">
                                 <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
-                                <input type="text" class="form-control" id="keluhan" name="keluhan"
-                                    placeholder="Kosongkan Bila sehat">
-                            </div> --}}
+                                <textarea class="form-control" id="keluhan" name="keluhan" placeholder="Keluhan"></textarea>
+                            </div>
                         </div>
                     @endif
-                    <div class="row mt-3">
-                        {{-- <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                            <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
 
-                                @foreach ($diagnosa as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-                        {{-- <div class="col-md-4">
-                            <label for="icd10" style="color: rgb(19, 11, 241);">ICD 10</label>
-                            <input type="text" class="form-control" id="icd10" name="icd10"
-                                placeholder="ICD 10" required>
-                        </div> --}}
-                        <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                            <select class="form-control" id="tindakan" name="tindakan">
-                                <option value="" disabled selected>pilih</option>
-                                @if ($routeName === 'action.index')
-                                    <option value="Diberikan Obat">Diberikan Obat</option>
-                                    <option value="Tidak">Tidak</option>
-                                @elseif($routeName === 'action.index.gigi')
-                                    <option value="Gigi Sulung Tumpatan Sementara">Gigi Sulung Tumpatan Sementara
-                                    </option>
-                                    <option value="Gigi Tetap Tumpatan Sementara">Gigi Tetap Tumpatan Sementara
-                                    </option>
-                                    <option value="Gigi Tetap Tumpatan Tetap">Gigi Tetap Tumpatan Tetap
-                                    </option>
-                                    <option value="Gigi Sulung Tumpatan Tetap">Gigi Sulung Tumpatan Tetap
-                                    </option>
-                                    <option value="Perawatan Saluran Akar">Perawatan Saluran Akar
-                                    </option>
-                                    <option value="Gigi Sulung Pencabutan">Gigi Sulung Pencabutan
-                                    </option>
-                                    <option value="Gigi Tetap Pencabutan">Gigi Tetap Pencabutan
-                                    </option>
-                                    <option value="Pembersihan Karang Gigi">Pembersihan Karang Gigi
-                                    </option>
-                                    <option value="Odontectomy">Odontectomy
-                                    </option>
-                                    <option value="Sebagian Prothesa">Sebagian Prothesa
-                                    </option>
-                                    <option value="Penuh Prothesa">Penuh Prothesa
-                                    </option>
-                                    <option value="Reparasi Prothesa">Reparasi Prothesa
-                                    </option>
-                                    <option value="Premedikasi/Pengobatan">Premedikasi/Pengobatan
-                                    </option>
-                                    </option>
-                                    <option value="Tindakan Lain">Tindakan Lain
-                                    </option>
-                                    <option value="Incici Abses Gigi">Incici Abses Gigi</option>
-                                @else
-                                    <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan Invasif
-                                    </option>
-                                    <option value="Observasi Dengan Tindakan Invasif">Observasi Dengan Tindakan Invasif
-                                    </option>
-                                    <option value="Tidak Ada">Tidak Ada
-                                    </option>
-                                    <option value="Corpus Alineum">Corpus Alineum
-                                    </option>
-                                    <option value="Ekstraksi Kuku">Ekstraksi Kuku
-                                    </option>
-                                    <option value="Sircumsisi (Bedah Ringan)">Sircumsisi (Bedah Ringan)
-                                    </option>
-                                    <option value="Incisi Abses">Incisi Abses
-                                    </option>
-                                    <option value="Rawat Luka">Rawat Luka
-                                    </option>
-                                    <option value="Ganti Verban">Ganti Verban
-                                    </option>
-                                    <option value="Spooling">Spooling
-                                    </option>
-                                    <option value="Toilet Telinga">Toilet Telinga
-                                    </option>
-                                    <option value="Tetes Telinga">Tetes Telinga
-                                    </option>
-                                    <option value="Aff Hecting">Aff Hecting
-                                    </option>
-                                    </option>
-                                    <option value="Hecting (Jahit Luka)">Hecting (Jahit Luka)
-                                    </option>
-                                    <option value="Tampon/Off Tampon">Tampon/Off Tampon</option>
-                                @endif
-                            </select>
-                        </div>
-
-
-                    </div>
                     <div class="row mt-3">
                         {{-- <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">RUJUK RS</label>

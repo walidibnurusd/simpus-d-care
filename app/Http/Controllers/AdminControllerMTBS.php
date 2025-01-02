@@ -13,6 +13,7 @@ use App\Models\TesDayaDengar;
 use App\Models\Tbc;
 use App\Models\Anemia;
 use App\Models\Kecacingan;
+use App\Models\KekerasanPerempuan;
 use App\Models\Hipertensi;
 use App\Models\Talasemia;
 use App\Models\DiabetesMellitus;
@@ -456,7 +457,7 @@ class AdminControllerMTBS extends Controller
         $pasien = Patients::all();
         $tbc = Tbc::with('listPasien')->where('poli', 'mtbs')->get();
         $routeName = $request->route()->getName();
-        return view('kia.table.tbc', compact('tbc', 'pasien','routeName'));
+        return view('kia.table.tbc', compact('tbc', 'pasien', 'routeName'));
     }
     public function viewKecacingan(Request $request)
     {
@@ -476,5 +477,11 @@ class AdminControllerMTBS extends Controller
         $diabetesMellitus = DiabetesMellitus::with('listPasien')->where('poli', 'mtbs')->get();
         $routeName = $request->route()->getName();
         return view('kia.table.diabetes_mellitus', compact('diabetesMellitus', 'routeName'));
+    }
+    public function viewKekerasanPerempuan(Request $request)
+    {
+        $kekerasanPerempuan = KekerasanPerempuan::with('listPasien')->where('poli', 'mtbs')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.kekerasan_perempuan', compact('kekerasanPerempuan', 'routeName'));
     }
 }
