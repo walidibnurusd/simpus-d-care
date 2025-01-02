@@ -26,43 +26,52 @@
 
 
 <script>
-    $('#modalSkrining').on('show.bs.modal', function() {
-        const patientId = $('#btnCariskrining').data('id'); // Ambil ID pasien dari tombol
+$(document).ready(function() {
+    $('#btnCariskrining').on('click', function() {
+        const patientId = $(this).data('id'); // Ambil ID pasien dari tombol
 
         if (patientId) {
             if ($.fn.DataTable.isDataTable('#skrining')) {
+                // Jika DataTable sudah ada, reload data
                 $('#skrining').DataTable().ajax.url(`/get-skrining/${patientId}`).load();
             } else {
+                // Jika DataTable belum ada, inisialisasi
                 $('#skrining').DataTable({
                     ajax: {
                         url: `/get-skrining/${patientId}`,
                         type: 'GET',
                         dataSrc: function(json) {
-                            console.log('Received data from server:',
-                                json); // Debugging data from server
-                            return json.data; // Pastikan `data` adalah array
+                            // Pastikan data berada di dalam 'skrining_data'
+                            console.log(json.skrining_data);
+                            return json.skrining_data; // Mengembalikan data yang sesuai
                         },
                         error: function(xhr, error) {
                             console.error('Error fetching data:', error);
                             alert('Error fetching skrining data!');
                         }
                     },
-                    columns: [{
-                            data: 'jenis',
-                            name: 'jenis'
+                    columns: [
+                        {
+                            data: 'jenis_skrining', // Sesuaikan dengan data yang diterima
+                            name: 'jenis_skrining',
+                            title: 'Jenis Skrining'
                         },
                         {
-                            data: 'kesimpulan',
-                            name: 'kesimpulan'
-                        },
+                            data: 'kesimpulan_skrining', // Sesuaikan dengan data yang diterima
+                            name: 'kesimpulan_skrining',
+                            title: 'Kesimpulan Skrining'
+                        }
                     ],
-                    destroy: true,
+                    destroy: true, // Mengizinkan inisialisasi ulang jika sudah ada DataTable
                     processing: true,
-                    serverSide: true,
+                    serverSide: true
                 });
             }
         } else {
             alert('Pilih pasien terlebih dahulu!');
         }
     });
+});
+
+
 </script>

@@ -109,6 +109,7 @@ class PatientsController extends Controller
                 'status_skrining' => $data ? 'Selesai' : 'Belum Selesai',
             ];
         }
+        // dd($skriningData);   
         return response()->json([
             'patient' => $patient->name,
             'klaster' => $klaster,
