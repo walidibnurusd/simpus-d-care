@@ -11,6 +11,7 @@
                         <tr>
                             <th>Jenis</th>
                             <th>Kesimpulan</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,52 +27,55 @@
 
 
 <script>
-$(document).ready(function() {
-    $('#btnCariskrining').on('click', function() {
+$(document).ready(function () {
+    $('#btnCariskrining').on('click', function () {
         const patientId = $(this).data('id'); // Ambil ID pasien dari tombol
 
         if (patientId) {
             if ($.fn.DataTable.isDataTable('#skrining')) {
-                // Jika DataTable sudah ada, reload data
+                // Jika DataTable sudah ada, perbarui URL dan reload data
                 $('#skrining').DataTable().ajax.url(`/get-skrining/${patientId}`).load();
             } else {
-                // Jika DataTable belum ada, inisialisasi
+                // Inisialisasi DataTable baru
                 $('#skrining').DataTable({
                     ajax: {
                         url: `/get-skrining/${patientId}`,
                         type: 'GET',
-                        dataSrc: function(json) {
-                            // Pastikan data berada di dalam 'skrining_data'
-                            console.log(json.skrining_data);
-                            return json.skrining_data; // Mengembalikan data yang sesuai
-                        },
-                        error: function(xhr, error) {
-                            console.error('Error fetching data:', error);
-                            alert('Error fetching skrining data!');
-                        }
                     },
                     columns: [
+                        { data: 'jenis_skrining', title: 'Jenis Skrining' },
+                        { data: 'kesimpulan_skrining', title: 'Kesimpulan Skrining' },
                         {
-                            data: 'jenis_skrining', // Sesuaikan dengan data yang diterima
-                            name: 'jenis_skrining',
-                            title: 'Jenis Skrining'
+                            data: null,
+                            title: 'Action',
+                            render: function (data, type, row) {
+                                return `<button class="btn btn-primary btn-sm" onclick="handleAction(${data.id})">Action</button>`;
+                            },
                         },
-                        {
-                            data: 'kesimpulan_skrining', // Sesuaikan dengan data yang diterima
-                            name: 'kesimpulan_skrining',
-                            title: 'Kesimpulan Skrining'
-                        }
                     ],
-                    destroy: true, // Mengizinkan inisialisasi ulang jika sudah ada DataTable
                     processing: true,
-                    serverSide: true
+                    serverSide: true,
+                    searching: true, // Pastikan pencarian diaktifkan
+                    destroy: true, // Mengizinkan tabel diinisialisasi ulang
                 });
             }
         } else {
             alert('Pilih pasien terlebih dahulu!');
         }
     });
+
+    // Tambahkan event handler ketika modal ditutup
+    $('#modalSkrining').on('hidden.bs.modal', function () {
+        console.log('Modal Skrining ditutup!');
+    });
 });
+
+// Contoh fungsi untuk menangani aksi di tombol Action
+function handleAction(id) {
+    alert(`Aksi untuk ID: ${id}`);
+}
+
+
 
 
 </script>

@@ -43,15 +43,7 @@
                 ajax: {
                     url: '/get-patients-dokter', // Endpoint untuk mengambil data
                     type: 'GET',
-                    dataSrc: function(json) {
-                        return json.data; // Pastikan data dalam key 'data'
-                        console.log(json.data.patient);
-
-                    },
-                    error: function(xhr, error, code) {
-                        console.error('Error fetching data:', error);
-                        alert('Error fetching patient data!');
-                    }
+              
                 },
                 columns: [{
                         data: 'patient.nik',

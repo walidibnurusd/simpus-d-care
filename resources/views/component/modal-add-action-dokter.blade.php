@@ -628,7 +628,7 @@
                                     data-bs-toggle="modal" data-bs-target="#modalSkrining">
                                     Hasil Skrining
                                 </button>
-                                @include('component.modal-skrining')
+                                
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -751,7 +751,7 @@
 
 
 @include('component.modal-table-pasien-dokter')
-
+@include('component.modal-skrining')
 
 
 <script>
