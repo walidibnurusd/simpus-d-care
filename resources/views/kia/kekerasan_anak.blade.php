@@ -35,7 +35,13 @@
         @if (isset($kekerasanAnak))
             @method('PUT')
         @endif
-
+        @if ($routeName === 'kekerasan.anak.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="kia">
+        @elseif($routeName === 'kekerasan.anak.mtbs.view')
+            <input type="hidden" name="klaster" value="2">
+            <input type="hidden" name="poli" value="mtbs">
+        @endif
         <div class="form-section">
             <h3>Identitas</h3>
             <div class="row">

@@ -362,10 +362,11 @@ class KiaController extends Controller
         return redirect()->back()->with('success', 'Data Hepatitis created successfully!');
     }
 
-    public function showKekerasanAnak()
+    public function showKekerasanAnak(Request $request)
     {
         $pasien = Patients::all();
-        return view('kia.kekerasan_anak', compact('pasien'));
+        $routeName = $request->route()->getName();
+        return view('kia.kekerasan_anak', compact('pasien', 'routeName'));
     }
     public function storeKekerasanAnak(Request $request)
     {
@@ -374,15 +375,15 @@ class KiaController extends Controller
             'pasien' => 'required',
             'diperoleh_dari' => 'required|string|max:255',
             'hubungan_pasien' => 'required',
-            'kekerasan' => 'required',
+            'kekerasan' => 'nullable',
             'tempat' => 'nullable',
             'dampak_pasien' => 'nullable',
             'dampak_pada_anak' => 'nullable',
-            'penelantaran_fisik' => 'required',
+            'penelantaran_fisik' => 'nullable',
             'tanda_kekerasan' => 'nullable',
             'tanda_kekerasan_check' => 'nullable',
             'derajat_luka_bakar' => 'nullable',
-            'kekerasan_seksual' => 'required',
+            'kekerasan_seksual' => 'nullable',
             'dampak_kekerasan' => 'nullable',
         ]);
 
@@ -394,8 +395,8 @@ class KiaController extends Controller
         // Store validated data with additional fields
         KekerasanAnak::create(
             array_merge($validator->validated(), [
-                'klaster' => 2, // Assign a default value for klaster
-                'poli' => 'kia', // Assign a default value for poli
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
             ]),
         );
 

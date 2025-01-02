@@ -14,6 +14,7 @@ use App\Models\Tbc;
 use App\Models\Anemia;
 use App\Models\Kecacingan;
 use App\Models\KekerasanPerempuan;
+use App\Models\KekerasanAnak;
 use App\Models\Hipertensi;
 use App\Models\Talasemia;
 use App\Models\DiabetesMellitus;
@@ -483,5 +484,11 @@ class AdminControllerMTBS extends Controller
         $kekerasanPerempuan = KekerasanPerempuan::with('listPasien')->where('poli', 'mtbs')->get();
         $routeName = $request->route()->getName();
         return view('kia.table.kekerasan_perempuan', compact('kekerasanPerempuan', 'routeName'));
+    }
+    public function viewKekerasanAnak(Request $request)
+    {
+        $kekerasanAnak = KekerasanAnak::with('listPasien')->where('poli', 'mtbs')->get();
+        $routeName = $request->route()->getName();
+        return view('kia.table.kekerasan_anak', compact('kekerasanAnak', 'routeName'));
     }
 }
