@@ -11,6 +11,7 @@
                         <tr>
                             <th>Jenis</th>
                             <th>Kesimpulan</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
