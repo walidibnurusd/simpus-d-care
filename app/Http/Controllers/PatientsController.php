@@ -39,11 +39,39 @@ class PatientsController extends Controller
 {
     public function getPatients(Request $request)
     {
-        $patients = Patients::with('genderName', 'educations', 'occupations')->get();
-
-        return response()->json(['data' => $patients]);
+        // Ambil parameter pagination dari DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+    
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = ($start / $length) + 1;
+    
+        // Query dengan relasi dan filter pencarian
+        $query = Patients::with('genderName', 'educations', 'occupations');
+    
+        if (!empty($searchValue)) {
+            $query->where('name', 'LIKE', "%{$searchValue}%")
+                ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                ->orWhereHas('genderName', function ($q) use ($searchValue) {
+                    $q->where('gender', 'LIKE', "%{$searchValue}%");
+                });
+        }
+    
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+    
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien
+        ]);
     }
-    public function getSkriningPatient($id)
+    
+    public function getSkriningPatient(Request $request, $id)
     {
         // Ambil data pasien berdasarkan ID
         $patient = Patients::findOrFail($id);
@@ -109,23 +137,79 @@ class PatientsController extends Controller
                 'status_skrining' => $data ? 'Selesai' : 'Belum Selesai',
             ];
         }
-        // dd($skriningData);   
+        
+        // Ambil parameter pencarian dari DataTables
+        $searchValue = $request->input('search.value', '');
+        
+        // Jika ada parameter pencarian, filter data
+        if (!empty($searchValue)) {
+            $skriningData = array_filter($skriningData, function ($row) use ($searchValue) {
+                return stripos($row['jenis_skrining'], $searchValue) !== false ||
+                       stripos($row['kesimpulan_skrining'], $searchValue) !== false ||
+                       stripos($row['status_skrining'], $searchValue) !== false;
+            });
+        }
+        
+        // DataTables pagination parameters
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        
+        $paginatedData = array_slice(array_values($skriningData), $start, $length);
+        
         return response()->json([
-            'patient' => $patient->name,
-            'klaster' => $klaster,
-            'skrining_data' => $skriningData,
+            'draw' => (int) $draw,
+            'recordsTotal' => count($skriningData),
+            'recordsFiltered' => count($skriningData),
+            'data' => $paginatedData,
         ]);
+        
     }
 
     public function getPatientsDokter(Request $request)
     {
-        // Ambil data Action yang dibuat hari ini
-        // dd(Carbon::today());
-        $patients = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->whereDate('tanggal', Carbon::today())->get();
-
-        // Return data dalam format yang dibutuhkan oleh DataTables
-        return response()->json(['data' => $patients]);
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+    
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = ($start / $length) + 1;
+    
+        // Query data Action yang dibuat hari ini dengan relasi
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')
+            ->whereDate('tanggal', Carbon::today());
+    
+        // Filter pencarian jika ada nilai pencarian
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                    ->orWhereHas('genderName', function ($q2) use ($searchValue) {
+                        $q2->where('gender', 'LIKE', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('educations', function ($q2) use ($searchValue) {
+                        $q2->where('education_name', 'LIKE', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('occupations', function ($q2) use ($searchValue) {
+                        $q2->where('occupation_name', 'LIKE', "%{$searchValue}%");
+                    });
+            });
+        }
+    
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+    
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
     }
+    
 
     public function index()
     {
