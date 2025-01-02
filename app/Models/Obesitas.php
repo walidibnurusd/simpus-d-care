@@ -10,7 +10,7 @@ class Obesitas extends Model
     use HasFactory;
     protected $table = 'obesitas';
 
-    protected $fillable = ['nama','hasil', 'tanggal_lahir', 'tempat_lahir', 'alamat', 'tinggi_badan', 'berat_badan', 'lingkar_peru', 'klaster', 'poli'];
+    protected $fillable = ['nama','hasil', 'tanggal_lahir', 'tempat_lahir', 'alamat', 'tinggi_badan', 'berat_badan', 'lingkar_peru', 'klaster', 'poli','kesimpulan'];
 
   
 }

@@ -16,7 +16,7 @@ class LansiaController extends Controller
     public function showPuma()
     {
         $pasien = Patients::all();
-        return view('lansia.puma',compact('pasien'));
+        return view('lansia.puma', compact('pasien'));
     }
     public function storePuma(Request $request)
     {
@@ -35,6 +35,7 @@ class LansiaController extends Controller
             'punya_dahak' => 'required|boolean',
             'batuk' => 'required|boolean',
             'periksa_paru' => 'required|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -73,6 +74,7 @@ class LansiaController extends Controller
             'tempat_tinggal' => 'nullable',
             'lingkungan_rumah' => 'nullable',
             'paru_kronik' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation failed
@@ -97,15 +99,14 @@ class LansiaController extends Controller
     }
     public function showKankerKolorektal()
     {
-        return view('lansia.kanker_kolorektal');
+        $pasien = Patients::all();
+        return view('lansia.kanker_kolorektal', compact('pasien'));
     }
     public function storeKankerKolorektal(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'jenis_kelamin' => 'required|integer|in:0,1',
+            'pasien' => 'required|string|max:255',
             'usia' => 'required|integer|min:0',
             'riwayat_kanker' => 'nullable',
             'merokok' => 'nullable',
@@ -114,6 +115,7 @@ class LansiaController extends Controller
             'bab_kambing' => 'nullable|string|max:255',
             'konstipasi_kronis' => 'nullable|string|max:255',
             'frekuensi_defekasi' => 'nullable|string|max:255',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -137,14 +139,15 @@ class LansiaController extends Controller
     }
     public function showKankerPayudara()
     {
-        return view('lansia.kanker_payudara');
+        $pasien = Patients::all();
+        return view('lansia.kanker_payudara', compact('pasien'));
     }
     public function storeKankerPayudara(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
             'nomor_klien' => 'required|string|max:255',
-            'nama' => 'required|string|max:255',
+            'pasien' => 'required|string|max:255',
             'umur' => 'required|integer|min:1',
             'suku_bangsa' => 'nullable|string|max:255',
             'agama' => 'nullable|string|max:255',
@@ -209,6 +212,7 @@ class LansiaController extends Controller
             'detail_diobati' => 'nullable',
             'dirujuk' => 'nullable',
             'rujukan' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -254,6 +258,7 @@ class LansiaController extends Controller
             'tes_bisik' => 'nullable|integer|min:0',
             'perasaan_sedih' => 'nullable|integer|min:0',
             'kesenangan' => 'nullable|integer|min:0',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal

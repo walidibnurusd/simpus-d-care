@@ -35,9 +35,13 @@
             } else {
                 $('#skrining').DataTable({
                     ajax: {
-                        url: `/get-skrining-patient/${patientId}`,
+                        url: `/get-skrining/${patientId}`,
                         type: 'GET',
-                        dataSrc: 'data',
+                        dataSrc: function(json) {
+                            console.log('Received data from server:',
+                                json); // Debugging data from server
+                            return json.data; // Pastikan `data` adalah array
+                        },
                         error: function(xhr, error) {
                             console.error('Error fetching data:', error);
                             alert('Error fetching skrining data!');

@@ -771,9 +771,15 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
-
+        <div class="form-group">
+            <div class="col-md-12">
+                <label for="kesimpulan" style="color: rgb(19, 11, 241);">Kesimpulan</label>
+                <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $tbc->kesimpulan ?? '') }}</textarea>
+            </div>
+        </div>
         <div class="form-section mt-4">
             <h3>Keterangan</h3>
             <p>

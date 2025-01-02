@@ -22,7 +22,8 @@ class TesDayaDengar extends Model
         'reseptif', 
         'visual',
         'poli',
-        'klaster'
+        'klaster',
+        'kesimpulan'
     ];
 
     // Cast the JSON columns to arrays

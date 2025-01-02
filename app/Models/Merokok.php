@@ -48,6 +48,7 @@ class Merokok extends Model
         'kadar_co2',
         'klaster',
         'poli',
+        'kesimpulan'
     ];
     protected $casts = [
         'jenis_rokok' => 'array',

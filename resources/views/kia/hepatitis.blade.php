@@ -351,6 +351,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label for="kesimpulan" style="color: rgb(19, 11, 241);">Kesimpulan</label>
+                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $hepatitis->kesimpulan ?? '') }}</textarea>
+                            </div>
+                        </div>
+
+
                     </div>
 
 

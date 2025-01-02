@@ -287,6 +287,13 @@
                             placeholder="Masukkan pemeriksaan kadar hemoglobin">{{ old('kadar_hemoglobin', $anemia->kadar_hemoglobin ?? '') }}</textarea>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label for="kesimpulan" style="color: rgb(19, 11, 241);">Kesimpulan</label>
+                        <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $anemia->kesimpulan ?? '') }}</textarea>
+                    </div>
+                </div>
+
             </div>
 
             <div class="text-right mt-4">

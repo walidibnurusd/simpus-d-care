@@ -46,6 +46,7 @@ class KiaController extends Controller
             'penyakit' => 'array',
             'penyakit_suami' => 'array',
             'kesehatan_jiwa' => 'array',
+            'kesimpulan' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -88,6 +89,7 @@ class KiaController extends Controller
             'rutin_olahraga' => 'required|boolean',
             'makan_sayur' => 'required|boolean',
             'makan_buah' => 'required|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -135,6 +137,7 @@ class KiaController extends Controller
             'mengerti' => 'nullable|boolean',
             'menatap_wajah' => 'nullable|boolean',
             'suka_bergerak' => 'nullable|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -172,6 +175,7 @@ class KiaController extends Controller
             'gatal' => 'required|boolean',
             'badan_lemah' => 'required|boolean',
             'kulit_pucat' => 'required|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -204,18 +208,19 @@ class KiaController extends Controller
         // Define validation rules
         $validator = Validator::make($request->all(), [
             'pasien' => 'required',
-            'tes_hiv' => 'required|boolean',
+            'tes_hiv' => 'nullable|boolean',
             'tanggal_tes_terakhir' => '',
-            'penurunan_berat' => 'required|boolean',
+            'penurunan_berat' => 'nullable|boolean',
             'jumlah_berat_badan_turun' => 'nullable|numeric|min:0',
-            'penyakit_kulit' => 'required|boolean',
-            'gejala_ispa' => 'required|boolean',
-            'gejala_sariawan' => 'required|boolean',
-            'riwayat_sesak' => 'required|boolean',
-            'riwayat_hepatitis' => 'required|boolean',
-            'riwayat_seks_bebas' => 'required|boolean',
-            'riwayat_narkoba' => 'required|boolean',
-            'riwayat_penyakit_menular' => 'required|boolean',
+            'penyakit_kulit' => 'nullable|boolean',
+            'gejala_ispa' => 'nullable|boolean',
+            'gejala_sariawan' => 'nullable|boolean',
+            'riwayat_sesak' => 'nullable|boolean',
+            'riwayat_hepatitis' => 'nullable|boolean',
+            'riwayat_seks_bebas' => 'nullable|boolean',
+            'riwayat_narkoba' => 'nullable|boolean',
+            'riwayat_penyakit_menular' => 'nullable|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -261,6 +266,7 @@ class KiaController extends Controller
             'kongjungtiva_pucat' => 'required|boolean',
             'pucat' => 'required|boolean',
             'kadar_hemoglobin' => 'required',
+            'kesimpulan' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -299,6 +305,7 @@ class KiaController extends Controller
             'gizi_buruk' => 'required|boolean',
             'tubuh_pendek' => 'required|boolean',
             'hiperpigmentasi_kulit' => 'required|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -340,6 +347,7 @@ class KiaController extends Controller
             'keluarga_hepatitis' => 'required|boolean',
             'menderita_penyakit_menular' => 'required|boolean',
             'hasil_hiv' => 'required|string|max:255',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -385,6 +393,7 @@ class KiaController extends Controller
             'derajat_luka_bakar' => 'nullable',
             'kekerasan_seksual' => 'nullable',
             'dampak_kekerasan' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -423,6 +432,7 @@ class KiaController extends Controller
             'pasangan_memukul' => 'nullable',
             'ketakutan' => 'nullable',
             'dibatasi' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -459,6 +469,7 @@ class KiaController extends Controller
             'hasil' => 'required',
             'tekanan_darah_sistol' => 'required|numeric',
             'tekanan_darah_diastol' => 'required|numeric',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -516,6 +527,7 @@ class KiaController extends Controller
             'hasil_rontgen' => 'nullable|string|max:255',
             'terduga_tbc' => 'required',
             'periksa_tbc_laten' => 'required',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -591,6 +603,7 @@ class KiaController extends Controller
             'kapan_arv' => 'nullable',
             'gejala_pms' => 'nullable|boolean',
             'kapan_pms' => 'nullable|date',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails

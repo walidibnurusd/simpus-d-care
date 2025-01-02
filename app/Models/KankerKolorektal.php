@@ -31,6 +31,7 @@ class KankerKolorektal extends Model
         'frekuensi_defekasi',
         'klaster',
         'poli',
+        'kesimpulan'
     ];
     public function listPasien()
     {

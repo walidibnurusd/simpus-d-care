@@ -10,7 +10,7 @@ class KekerasanAnak extends Model
     use HasFactory;
     protected $table = 'kekerasan_anak';
 
-    protected $fillable = ['pasien', 'diperoleh_dari', 'hubungan_pasien', 'kekerasan', 'tempat', 'dampak_pasien', 'dampak_pada_anak', 'penelantaran_fisik', 'tanda_kekerasan_check','tanda_kekerasan', 'kekerasan_seksual','derajat_luka_bakar' ,'dampak_kekerasan', 'klaster', 'poli'];
+    protected $fillable = ['pasien', 'diperoleh_dari', 'hubungan_pasien', 'kekerasan', 'tempat', 'dampak_pasien', 'dampak_pada_anak', 'penelantaran_fisik', 'tanda_kekerasan_check','tanda_kekerasan', 'kekerasan_seksual','derajat_luka_bakar' ,'dampak_kekerasan', 'klaster', 'poli','kesimpulan'];
     protected $casts = [
         'kekerasan' => 'array',
         'tempat' => 'array',

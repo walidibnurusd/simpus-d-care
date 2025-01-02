@@ -36,6 +36,7 @@ class Geriatri extends Model
         'kesenangan',
         'klaster',
         'poli',
+        'kesimpulan'
     ];
          public function listPasien()
     {

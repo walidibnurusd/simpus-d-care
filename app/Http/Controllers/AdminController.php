@@ -461,22 +461,19 @@ class AdminController extends Controller
 
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|string|max:10',
-            'alamat' => 'required|string|max:500',
-            'tes_hiv' => 'required|boolean',
+            'pasien' => 'required',
+            'tes_hiv' => 'nullable|boolean',
             'tanggal_tes_terakhir' => '',
-            'penurunan_berat' => 'required|boolean',
+            'penurunan_berat' => 'nullable|boolean',
             'jumlah_berat_badan_turun' => 'nullable|numeric|min:0',
-            'penyakit_kulit' => 'required|boolean',
-            'gejala_ispa' => 'required|boolean',
-            'gejala_sariawan' => 'required|boolean',
-            'riwayat_sesak' => 'required|boolean',
-            'riwayat_hepatitis' => 'required|boolean',
-            'riwayat_seks_bebas' => 'required|boolean',
-            'riwayat_narkoba' => 'required|boolean',
-            'riwayat_penyakit_menular' => 'required|boolean',
+            'penyakit_kulit' => 'nullable|boolean',
+            'gejala_ispa' => 'nullable|boolean',
+            'gejala_sariawan' => 'nullable|boolean',
+            'riwayat_sesak' => 'nullable|boolean',
+            'riwayat_hepatitis' => 'nullable|boolean',
+            'riwayat_seks_bebas' => 'nullable|boolean',
+            'riwayat_narkoba' => 'nullable|boolean',
+            'riwayat_penyakit_menular' => 'nullable|boolean',
         ]);
 
         // Check if validation fails

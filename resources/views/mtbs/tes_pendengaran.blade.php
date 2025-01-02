@@ -17,11 +17,11 @@
             border-radius: .25rem;
             padding: .375rem .75rem;
         }
-        
+
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             line-height: calc(1.5em + .75rem);
         }
-        
+
         .select2-container .select2-selection--single {
             display: flex;
             align-items: center;
@@ -59,19 +59,17 @@
                         <select class="form-control form-select select2" id="pasien" name="pasien">
                             <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
                             @foreach ($pasien as $item)
-                                <option 
-                                    value="{{ $item->id }}" 
-                                    data-no_hp="{{ $item->phone }}" 
-                                    data-nik="{{ $item->nik }}" 
-                                    data-dob="{{ $item->dob }}"
-                                    data-jenis_kelamin="{{ $item->genderName->name }}"
-                                    data-alamat="{{ $item->address }}"
+                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
+                                    data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
+                                    data-jenis_kelamin="{{ $item->genderName->name }}" data-alamat="{{ $item->address }}"
                                     {{ old('pasien', $testPendengaran->pasien ?? '') == $item->id ? 'selected' : '' }}>
                                     {{ $item->name }} - {{ $item->nik }}
-                                </option>   
+                                </option>
                             @endforeach
                         </select>
-                        @error('pasien') <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('pasien')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -89,14 +87,14 @@
                         <label>Jenis Kelamin</label>
                         <div class="d-flex">
                             <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki" id="jk_laki"
-                                    id="laki-laki"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki"
+                                    id="jk_laki" id="laki-laki"
                                     {{ old('jenis_kelamin', $testPendengaran->jenis_kelamin ?? '') == 'laki-laki' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan" id="jk_perempuan"
-                                    id="perempuan"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan"
+                                    id="jk_perempuan" id="perempuan"
                                     {{ old('jenis_kelamin', $testPendengaran->jenis_kelamin ?? '') == 'perempuan' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perempuan">Perempuan</label>
                             </div>
@@ -121,33 +119,39 @@
                                 <label class="form-check-label" for="usia50"> > 3 bulan dan < 6 Bulan </label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input" name="usia" value="2" id="ya"
+                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input"
+                                    name="usia" value="2" id="ya"
                                     {{ old('usia', $testPendengaran->usia ?? '') == 2 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="ya"> > 6 bulan dan < 12 Bulan </label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input" name="usia" value="3" id="ya"
+                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input"
+                                    name="usia" value="3" id="ya"
                                     {{ old('usia', $testPendengaran->usia ?? '') == 3 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="ya"> > 12 bulan dan < 18 Bulan </label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input" name="usia" value="4" id="ya"
+                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input"
+                                    name="usia" value="4" id="ya"
                                     {{ old('usia', $testPendengaran->usia ?? '') == 4 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="ya"> > 18 bulan dan < 24 Bulan </label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input" name="usia" value="5"
-                                    id="ya" {{ old('usia', $testPendengaran->usia ?? '') == 5 ? 'checked' : '' }}>
+                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input"
+                                    name="usia" value="5" id="ya"
+                                    {{ old('usia', $testPendengaran->usia ?? '') == 5 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="ya"> > 24 bulan dan < 30 Bulan </label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input" name="usia" value="6"
-                                    id="ya" {{ old('usia', $testPendengaran->usia ?? '') == 6 ? 'checked' : '' }}>
+                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input"
+                                    name="usia" value="6" id="ya"
+                                    {{ old('usia', $testPendengaran->usia ?? '') == 6 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="ya"> > 30 bulan dan < 36 Bulan </label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input" name="usia" value="7"
-                                    id="ya" {{ old('usia', $testPendengaran->usia ?? '') == 7 ? 'checked' : '' }}>
+                                <input type="radio" onclick="toggleSection(this.value)" class="form-check-input"
+                                    name="usia" value="7" id="ya"
+                                    {{ old('usia', $testPendengaran->usia ?? '') == 7 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="ya"> > 36 bulan dan < 6 Tahun </label>
                             </div>
                         </div>
@@ -305,7 +309,7 @@
 
 
             </div>
-         
+
             <div class="form-section mt-4" id="sectionTigaHinggaEnam" style="display: none;">
                 <h3>Umur lebih dari 3 bulan sampai 6 bulan</h3>
                 <h4>Kemampuan Ekspresif</h4>
@@ -416,7 +420,7 @@
                         </div>
                     </div>
                 </div>
-            
+
 
                 <div class="form-group">
                     <label>2. Apakah bayi berkedip bila pemeriksa melakukan gerakan menusuk mata, lalu berhenti sekitar 3 cm
@@ -447,7 +451,8 @@
                 <h4>Kemampuan Ekspresif</h4>
                 <div class="form-group">
                     <label>1. Apakah bayi dapat membuat suara berulang seperti “mamamama”, “babababa”?</label>
-                    <input type="hidden" name="ekspresif[question3]" value="1. Apakah bayi dapat membuat suara berulang seperti “mamamama”, “babababa”?">
+                    <input type="hidden" name="ekspresif[question3]"
+                        value="1. Apakah bayi dapat membuat suara berulang seperti “mamamama”, “babababa”?">
                     <div class="d-flex">
                         <div class="form-check mr-3">
                             <input type="radio" class="form-check-input" name="ekspresif[answer3]" value="1"
@@ -466,7 +471,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah bayi dapat memanggil mama atau papa, walaupun tidak untuk memanggil orang tuanya?</label>
+                    <label>2. Apakah bayi dapat memanggil mama atau papa, walaupun tidak untuk memanggil orang
+                        tuanya?</label>
                     <input type="hidden" name="ekspresif[question33]"
                         value="2. Apakah bayi dapat memanggil mama atau papa, walaupun tidak untuk memanggil orang tuanya?">
                     <div class="d-flex">
@@ -488,7 +494,8 @@
 
                 <h4>Kemampuan Reseptif</h4>
                 <div class="form-group">
-                    <label>1.Anak dapat menunjukkan paling sedikit 1 anggota badan, missal” mana hidungmu?”, “mana matamu?” tanpa diberi contoh</label>
+                    <label>1.Anak dapat menunjukkan paling sedikit 1 anggota badan, missal” mana hidungmu?”, “mana matamu?”
+                        tanpa diberi contoh</label>
                     <input type="hidden" name="reseptif[question3]"
                         value="1. Pemeriksa duduk menghadap bayi yang dipangku orang tuanya, bunyikan bel di samping bawah tanpa terlihat bayi,Apakah bayi langsung menoleh ke samping bawah?">
                     <div class="d-flex">
@@ -509,7 +516,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak mengikuti perintah tanpa dibantu gerakan badan, seperti “stop, berikan mainanmu”?</label>
+                    <label>2. Apakah anak mengikuti perintah tanpa dibantu gerakan badan, seperti “stop, berikan
+                        mainanmu”?</label>
                     <input type="hidden" name="reseptif[question33]"
                         value="2. Apakah anak mengikuti perintah tanpa dibantu gerakan badan, seperti “stop, berikan mainanmu”?">
                     <div class="d-flex">
@@ -529,7 +537,8 @@
                 </div>
                 <h4>Kemampuan Visual</h4>
                 <div class="form-group">
-                    <label>1. Apakah bayi mengikuti perintah dengan dibantu gerakan badan, seperti “stop, berikan mainanmu”?</label>
+                    <label>1. Apakah bayi mengikuti perintah dengan dibantu gerakan badan, seperti “stop, berikan
+                        mainanmu”?</label>
                     <input type="hidden" name="visual[question3]"
                         value="1. Apakah bayi mengikuti perintah dengan dibantu gerakan badan, seperti “stop, berikan mainanmu”?">
                     <div class="d-flex">
@@ -550,7 +559,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah bayi secara spontan memulai permainan dengan gerakan tubuh, seperti”po kame-ame” atau “cilukba”</label>
+                    <label>2. Apakah bayi secara spontan memulai permainan dengan gerakan tubuh, seperti”po kame-ame” atau
+                        “cilukba”</label>
                     <input type="hidden" name="visual[question33]"
                         value="2. Apakah bayi secara spontan memulai permainan dengan gerakan tubuh, seperti”po kame-ame” atau “cilukba”">
                     <div class="d-flex">
@@ -576,7 +586,8 @@
                 <h4>Kemampuan Ekspresif</h4>
                 <div class="form-group">
                     <label>1. Apakah anak dapat memanggil mama atau papa, hanya untuk memanggil orang tuanya?</label>
-                    <input type="hidden" name="ekspresif[question4]" value="1. Apakah anak dapat memanggil mama atau papa, hanya untuk memanggil orang tuanya?">
+                    <input type="hidden" name="ekspresif[question4]"
+                        value="1. Apakah anak dapat memanggil mama atau papa, hanya untuk memanggil orang tuanya?">
                     <div class="d-flex">
                         <div class="form-check mr-3">
                             <input type="radio" class="form-check-input" name="ekspresif[answer4]" value="1"
@@ -595,7 +606,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak memulai menggunakan kata-kata lain, selain kata mama, anggota keluarga lain & hewan peliharaan?</label>
+                    <label>2. Apakah anak memulai menggunakan kata-kata lain, selain kata mama, anggota keluarga lain &
+                        hewan peliharaan?</label>
                     <input type="hidden" name="ekspresif[question44]"
                         value="2. Apakah anak memulai menggunakan kata-kata lain, selain kata mama, anggota keluarga lain & hewan peliharaan?">
                     <div class="d-flex">
@@ -617,7 +629,8 @@
 
                 <h4>Kemampuan Reseptif</h4>
                 <div class="form-group">
-                    <label>1. Pemeriksa duduk menghadap bayi yang dipangku orang tuanya, bunyikan bel di samping bawah tanpa terlihat bayi,
+                    <label>1. Pemeriksa duduk menghadap bayi yang dipangku orang tuanya, bunyikan bel di samping bawah tanpa
+                        terlihat bayi,
                         Apakah bayi langsung menoleh ke samping bawah?</label>
                     <input type="hidden" name="reseptif[question4]"
                         value="1. Pemeriksa duduk menghadap bayi yang dipangku orang tuanya, bunyikan bel di samping bawah tanpa terlihat bayi, Apakah bayi langsung menoleh ke samping bawah?">
@@ -639,7 +652,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak mengikuti perintah tanpa dibantu gerakan badan, seperti”stop, berikan mainanmu”?</label>
+                    <label>2. Apakah anak mengikuti perintah tanpa dibantu gerakan badan, seperti”stop, berikan
+                        mainanmu”?</label>
                     <input type="hidden" name="reseptif[question44]"
                         value="2. Apakah anak mengikuti perintah tanpa dibantu gerakan badan, seperti”stop, berikan mainanmu”?">
                     <div class="d-flex">
@@ -659,7 +673,8 @@
                 </div>
                 <h4>Kemampuan Visual</h4>
                 <div class="form-group">
-                    <label>1. Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “pok kame-ame” atau “cilukba”?</label>
+                    <label>1. Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “pok kame-ame” atau
+                        “cilukba”?</label>
                     <input type="hidden" name="visual[question4]"
                         value="1. Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “pok kame-ame” atau “cilukba”?">
                     <div class="d-flex">
@@ -680,7 +695,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan degan cara memegang dengan semua jari?</label>
+                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan degan cara memegang
+                        dengan semua jari?</label>
                     <input type="hidden" name="visual[question44]"
                         value="2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan degan cara memegang dengan semua jari?">
                     <div class="d-flex">
@@ -705,8 +721,10 @@
                 <h3>Umur lebih dari 18 bulan sampai 24 bulan</h3>
                 <h4>Kemampuan Ekspresif</h4>
                 <div class="form-group">
-                    <label>1. Apakah anak dapat mengucapkan 2 atau lebih kata yang menunjukkan, seperti ”susu”, “Minum”, “lagi”?</label>
-                    <input type="hidden" name="ekspresif[question5]" value="1. Apakah anak dapat mengucapkan 2 atau lebih kata yang menunjukkan, seperti ”susu”, “Minum”, “lagi”?">
+                    <label>1. Apakah anak dapat mengucapkan 2 atau lebih kata yang menunjukkan, seperti ”susu”, “Minum”,
+                        “lagi”?</label>
+                    <input type="hidden" name="ekspresif[question5]"
+                        value="1. Apakah anak dapat mengucapkan 2 atau lebih kata yang menunjukkan, seperti ”susu”, “Minum”, “lagi”?">
                     <div class="d-flex">
                         <div class="form-check mr-3">
                             <input type="radio" class="form-check-input" name="ekspresif[answer5]" value="1"
@@ -725,7 +743,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak secara spontan mengatakan 2 kombinasi kata, seperti “mau bobo”, “lihat papa”?</label>
+                    <label>2. Apakah anak secara spontan mengatakan 2 kombinasi kata, seperti “mau bobo”, “lihat
+                        papa”?</label>
                     <input type="hidden" name="ekspresif[question55]"
                         value="2. Apakah anak secara spontan mengatakan 2 kombinasi kata, seperti “mau bobo”, “lihat papa”?">
                     <div class="d-flex">
@@ -747,7 +766,8 @@
 
                 <h4>Kemampuan Reseptif</h4>
                 <div class="form-group">
-                    <label>1. Anak dapat menunjukkan paling sedikit 1 anggota badan, missal” mana hidungmu?”, “mana matamu?” tanpa diberi contoh</label>
+                    <label>1. Anak dapat menunjukkan paling sedikit 1 anggota badan, missal” mana hidungmu?”, “mana matamu?”
+                        tanpa diberi contoh</label>
                     <input type="hidden" name="reseptif[question5]"
                         value="1. Anak dapat menunjukkan paling sedikit 1 anggota badan, missal” mana hidungmu?”, “mana matamu?” tanpa diberi contoh">
                     <div class="d-flex">
@@ -768,7 +788,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak dapat mengerjakan 2 macam perintah dalam 1 kalimat, seperti “ambil sepatumu dan taruh disini” tanpa diberi
+                    <label>2. Apakah anak dapat mengerjakan 2 macam perintah dalam 1 kalimat, seperti “ambil sepatumu dan
+                        taruh disini” tanpa diberi
                         contoh?</label>
                     <input type="hidden" name="reseptif[question55]"
                         value="2. Apakah anak dapat mengerjakan 2 macam perintah dalam 1 kalimat, seperti “ambil sepatumu dan taruh disini” tanpa diberi contoh?">
@@ -789,7 +810,8 @@
                 </div>
                 <h4>Kemampuan Visual</h4>
                 <div class="form-group">
-                    <label>1. Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “po kame-ame” atau “cilukba”</label>
+                    <label>1. Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “po kame-ame” atau
+                        “cilukba”</label>
                     <input type="hidden" name="visual[question5]"
                         value="1. Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “po kame-ame” atau “cilukba”">
                     <div class="d-flex">
@@ -810,7 +832,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang dengan semua jari?</label>
+                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang
+                        dengan semua jari?</label>
                     <input type="hidden" name="visual[question55]"
                         value="2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang dengan semua jari?">
                     <div class="d-flex">
@@ -834,8 +857,10 @@
                 <h3>Umur lebih dari 24 bulan sampai 30 bulan</h3>
                 <h4>Kemampuan Ekspresif</h4>
                 <div class="form-group">
-                    <label>1. Apakah anak mulai menggunakan kata-kata lain, selain kata mama, papa, anggota keluarga lain, dan hewan peliharaan?</label>
-                    <input type="hidden" name="ekspresif[question6]" value="1. Apakah anak mulai menggunakan kata-kata lain, selain kata mama, papa, anggota keluarga lain, dan hewan peliharaan?">
+                    <label>1. Apakah anak mulai menggunakan kata-kata lain, selain kata mama, papa, anggota keluarga lain,
+                        dan hewan peliharaan?</label>
+                    <input type="hidden" name="ekspresif[question6]"
+                        value="1. Apakah anak mulai menggunakan kata-kata lain, selain kata mama, papa, anggota keluarga lain, dan hewan peliharaan?">
                     <div class="d-flex">
                         <div class="form-check mr-3">
                             <input type="radio" class="form-check-input" name="ekspresif[answer6]" value="1"
@@ -876,7 +901,8 @@
 
                 <h4>Kemampuan Reseptif</h4>
                 <div class="form-group">
-                    <label>1.Apakah anak dapat mengerjakan 2 macam perintah dalam satu kalimat, seperti “Ambil sepatu dan taruh disini” tanpa diberi
+                    <label>1.Apakah anak dapat mengerjakan 2 macam perintah dalam satu kalimat, seperti “Ambil sepatu dan
+                        taruh disini” tanpa diberi
                         contoh?</label>
                     <input type="hidden" name="reseptif[question6]"
                         value="1. Apakah anak dapat mengerjakan 2 macam perintah dalam satu kalimat, seperti “Ambil sepatu dan taruh disini” tanpa diberi contoh?">
@@ -918,7 +944,8 @@
                 </div>
                 <h4>Kemampuan Visual</h4>
                 <div class="form-group">
-                    <label>1.Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “Pok Ame-ame” atau “cilukba”?</label>
+                    <label>1.Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “Pok Ame-ame” atau
+                        “cilukba”?</label>
                     <input type="hidden" name="visual[question6]"
                         value="1.Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “Pok Ame-ame” atau “cilukba”?">
                     <div class="d-flex">
@@ -939,7 +966,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang dengan semua jari?</label>
+                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang
+                        dengan semua jari?</label>
                     <input type="hidden" name="visual[question66]"
                         value="2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang dengan semua jari?">
                     <div class="d-flex">
@@ -962,9 +990,11 @@
                 <h3>Umur lebih dari 30 bulan sampai 36 bulan</h3>
                 <h4>Kemampuan Ekspresif</h4>
                 <div class="form-group">
-                    <label>1. Apakah anak dapat menyebutkan nama benda dan kegunaannya, seperti cangkir untuk minum, bola untuk dilempar, pensil
+                    <label>1. Apakah anak dapat menyebutkan nama benda dan kegunaannya, seperti cangkir untuk minum, bola
+                        untuk dilempar, pensil
                         warna untuk menggambar, sendok untuk makan?</label>
-                    <input type="hidden" name="ekspresif[question7]" value="1.Apakah anak dapat menyebutkan nama benda dan kegunaannya, seperti cangkir untuk minum, bola untuk dilempar, pensil warna untuk menggambar, sendok untuk makan?">
+                    <input type="hidden" name="ekspresif[question7]"
+                        value="1.Apakah anak dapat menyebutkan nama benda dan kegunaannya, seperti cangkir untuk minum, bola untuk dilempar, pensil warna untuk menggambar, sendok untuk makan?">
                     <div class="d-flex">
                         <div class="form-check mr-3">
                             <input type="radio" class="form-check-input" name="ekspresif[answer7]" value="1"
@@ -1005,7 +1035,8 @@
 
                 <h4>Kemampuan Reseptif</h4>
                 <div class="form-group">
-                    <label>1.Apakah anak dapat menunjukkan minimal 2 nama benda di depannya sesuai fungsinya (missal untuk minum: cangkir,
+                    <label>1.Apakah anak dapat menunjukkan minimal 2 nama benda di depannya sesuai fungsinya (missal untuk
+                        minum: cangkir,
                         untuk dilempar: bola, untuk makan: sendok, untuk menggambar: pensil warna)?</label>
                     <input type="hidden" name="reseptif[question7]"
                         value="1. Apakah anak dapat menunjukkan minimal 2 nama benda di depannya sesuai fungsinya (missal untuk minum: cangkir, untuk dilempar: bola, untuk makan: sendok, untuk menggambar: pensil warna)?">
@@ -1027,7 +1058,8 @@
 
 
                 <div class="form-group">
-                    <label>2.Apakah anak dapat mengerjakan perintah yang disertai kata depan? (missal: ‘Sekarang kubus itu di bawah meja, tolong
+                    <label>2.Apakah anak dapat mengerjakan perintah yang disertai kata depan? (missal: ‘Sekarang kubus itu
+                        di bawah meja, tolong
                         taruh di atas meja”?)</label>
                     <input type="hidden" name="reseptif[question77]"
                         value="2. Apakah anak dapat mengerjakan perintah yang disertai kata depan? (missal: ‘Sekarang kubus itu di bawah meja, tolong taruh di atas meja”?)">
@@ -1048,7 +1080,8 @@
                 </div>
                 <h4>Kemampuan Visual</h4>
                 <div class="form-group">
-                    <label>1.Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “Pok Ame-ame” atau “cilukba”?</label>
+                    <label>1.Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “Pok Ame-ame” atau
+                        “cilukba”?</label>
                     <input type="hidden" name="visual[question7]"
                         value="1.Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “Pok Ame-ame” atau “cilukba”?">
                     <div class="d-flex">
@@ -1069,7 +1102,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang dengan semua jari?</label>
+                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang
+                        dengan semua jari?</label>
                     <input type="hidden" name="visual[question77]"
                         value="2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang dengan semua jari?">
                     <div class="d-flex">
@@ -1092,9 +1126,11 @@
                 <h3>Umur lebih dari 36 bulan sampai 6 tahun</h3>
                 <h4>Kemampuan Ekspresif</h4>
                 <div class="form-group">
-                    <label>1. Apakah anak dapat menyebutkan nama benda dan kegunaannya, seperti cangkir untuk minum, bola untuk dilempar, pensil
+                    <label>1. Apakah anak dapat menyebutkan nama benda dan kegunaannya, seperti cangkir untuk minum, bola
+                        untuk dilempar, pensil
                         warna untuk menggambar, sendok untuk makan?</label>
-                    <input type="hidden" name="ekspresif[question8]" value="1.Apakah anak dapat menyebutkan nama benda dan kegunaannya, seperti cangkir untuk minum, bola untuk dilempar, pensil warna untuk menggambar, sendok untuk makan?">
+                    <input type="hidden" name="ekspresif[question8]"
+                        value="1.Apakah anak dapat menyebutkan nama benda dan kegunaannya, seperti cangkir untuk minum, bola untuk dilempar, pensil warna untuk menggambar, sendok untuk makan?">
                     <div class="d-flex">
                         <div class="form-check mr-3">
                             <input type="radio" class="form-check-input" name="ekspresif[answer8]" value="1"
@@ -1135,7 +1171,8 @@
 
                 <h4>Kemampuan Reseptif</h4>
                 <div class="form-group">
-                    <label>1.Apakah anak dapat menunjukkan minimal 2 nama benda di depannya sesuai fungsinya (missal untuk minum: cangkir,
+                    <label>1.Apakah anak dapat menunjukkan minimal 2 nama benda di depannya sesuai fungsinya (missal untuk
+                        minum: cangkir,
                         untuk dilempar: bola, untuk makan: sendok, untuk menggambar: pensil warna)?</label>
                     <input type="hidden" name="reseptif[question8]"
                         value="1. Apakah anak dapat menunjukkan minimal 2 nama benda di depannya sesuai fungsinya (missal untuk minum: cangkir, untuk dilempar: bola, untuk makan: sendok, untuk menggambar: pensil warna)?">
@@ -1156,7 +1193,8 @@
                 </div>
                 <h4>Kemampuan Visual</h4>
                 <div class="form-group">
-                    <label>1.Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “Pok Ame-ame” atau “cilukba”?</label>
+                    <label>1.Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “Pok Ame-ame” atau
+                        “cilukba”?</label>
                     <input type="hidden" name="visual[question8]"
                         value="1.Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti “Pok Ame-ame” atau “cilukba”?">
                     <div class="d-flex">
@@ -1177,7 +1215,8 @@
 
 
                 <div class="form-group">
-                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang dengan semua jari?</label>
+                    <label>2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang
+                        dengan semua jari?</label>
                     <input type="hidden" name="visual[question88]"
                         value="2. Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang dengan semua jari?">
                     <div class="d-flex">
@@ -1198,14 +1237,22 @@
             </div>
 
 
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="kesimpulan" style="color: rgb(19, 11, 241);">Kesimpulan</label>
+                    <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $tesPendengaran->kesimpulan ?? '') }}</textarea>
+                </div>
+            </div>
 
 
             <div class="text-right mt-4">
                 @if (isset($testPendengaran) && $testPendengaran)
-                <a href="{{ route('testPendengaran.mtbs.admin') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-            @else
-                <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-            @endif
+                    <a href="{{ route('testPendengaran.mtbs.admin') }}" type="button"
+                        class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
+                @else
+                    <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
+                        style="font-size: 20px">Kembali</a>
+                @endif
                 <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
             </div>
 
@@ -1213,89 +1260,87 @@
     </form>
     <script>
         // Function to toggle visibility of sections and disable hidden inputs
-function toggleSection(value) {
-    // Define section IDs
-    const sections = {
-        '0': 'sectionKurangDariTiga',
-        '1': 'sectionTigaHinggaEnam',
-        '2': 'sectionEnamSampaiDuabelas',
-        '3': 'sectionDuabelasSampaiDelapanBelas',
-        '4': 'section18Sampai24',
-        '5': 'section24Sampai30',
-        '6': 'section30Sampai36',
-        '7': 'section36Sampai6'
-    };
+        function toggleSection(value) {
+            // Define section IDs
+            const sections = {
+                '0': 'sectionKurangDariTiga',
+                '1': 'sectionTigaHinggaEnam',
+                '2': 'sectionEnamSampaiDuabelas',
+                '3': 'sectionDuabelasSampaiDelapanBelas',
+                '4': 'section18Sampai24',
+                '5': 'section24Sampai30',
+                '6': 'section30Sampai36',
+                '7': 'section36Sampai6'
+            };
 
-    // Hide all sections and disable hidden inputs within them
-    Object.values(sections).forEach(sectionId => {
-        const section = document.getElementById(sectionId);
-        console.log(section);
-        
-        const hiddenInputs = section ? section.querySelectorAll('input[type="hidden"]') : [];
+            // Hide all sections and disable hidden inputs within them
+            Object.values(sections).forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                console.log(section);
 
-        // Disable hidden inputs in the section
-        hiddenInputs.forEach(input => input.disabled = true);
-        
-        // Hide the section
-        if (section) section.style.display = 'none';
-    });
+                const hiddenInputs = section ? section.querySelectorAll('input[type="hidden"]') : [];
 
-    // Show the relevant section and enable hidden inputs if the section is selected
-    if (sections[value]) {
-        const sectionToShow = document.getElementById(sections[value]);
-        const hiddenInputsToEnable = sectionToShow ? sectionToShow.querySelectorAll('input[type="hidden"]') : [];
+                // Disable hidden inputs in the section
+                hiddenInputs.forEach(input => input.disabled = true);
 
-        // Enable hidden inputs in the selected section
-        hiddenInputsToEnable.forEach(input => input.disabled = false);
+                // Hide the section
+                if (section) section.style.display = 'none';
+            });
 
-        // Show the selected section
-        if (sectionToShow) sectionToShow.style.display = 'block';
-    }
-}
+            // Show the relevant section and enable hidden inputs if the section is selected
+            if (sections[value]) {
+                const sectionToShow = document.getElementById(sections[value]);
+                const hiddenInputsToEnable = sectionToShow ? sectionToShow.querySelectorAll('input[type="hidden"]') : [];
 
-// Ensure correct state on page load (for old data)
-document.addEventListener('DOMContentLoaded', () => {
-    const selectedValue = document.querySelector('input[name="usia"]:checked')?.value;
-    toggleSection(selectedValue);
-});
+                // Enable hidden inputs in the selected section
+                hiddenInputsToEnable.forEach(input => input.disabled = false);
 
-    </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $(document).ready(function() {
-        // Inisialisasi Select2
-        $('.select2').select2({
-            placeholder: "Pilih pasien",
-            allowClear: true    
-        });
-    
-        // Event listener saat pasien dipilih
-        $('#pasien').on('change', function() {
-            var selectedOption = $(this).find(':selected');
-    
-            // Ambil data dari atribut data-*
-            var no_hp = selectedOption.data('no_hp');
-            var nik = selectedOption.data('nik');
-            var dob = selectedOption.data('dob');
-            var alamat = selectedOption.data('alamat');
-            var jk = selectedOption.data('jenis_kelamin');
-            console.log(jk);
-            
-            // Isi input dengan data yang diambil
-            $('#no_hp').val(no_hp);
-            $('#nik').val(nik);
-            $('#tanggal_lahir').val(dob);
-            $('#alamat').val(alamat);
-            $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
-            if (jk === 'Laki-Laki') {
-                $('#jk_laki').prop('checked', true);
-            } else if (jk === 'Perempuan') {
-                $('#jk_perempuan').prop('checked', true);
+                // Show the selected section
+                if (sectionToShow) sectionToShow.style.display = 'block';
             }
-                });
-        $('#pasien').trigger('change');
-    });
-    
+        }
+
+        // Ensure correct state on page load (for old data)
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectedValue = document.querySelector('input[name="usia"]:checked')?.value;
+            toggleSection(selectedValue);
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Select2
+            $('.select2').select2({
+                placeholder: "Pilih pasien",
+                allowClear: true
+            });
+
+            // Event listener saat pasien dipilih
+            $('#pasien').on('change', function() {
+                var selectedOption = $(this).find(':selected');
+
+                // Ambil data dari atribut data-*
+                var no_hp = selectedOption.data('no_hp');
+                var nik = selectedOption.data('nik');
+                var dob = selectedOption.data('dob');
+                var alamat = selectedOption.data('alamat');
+                var jk = selectedOption.data('jenis_kelamin');
+                console.log(jk);
+
+                // Isi input dengan data yang diambil
+                $('#no_hp').val(no_hp);
+                $('#nik').val(nik);
+                $('#tanggal_lahir').val(dob);
+                $('#alamat').val(alamat);
+                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
+                if (jk === 'Laki-Laki') {
+                    $('#jk_laki').prop('checked', true);
+                } else if (jk === 'Perempuan') {
+                    $('#jk_perempuan').prop('checked', true);
+                }
+            });
+            $('#pasien').trigger('change');
+        });
     </script>
 @endsection

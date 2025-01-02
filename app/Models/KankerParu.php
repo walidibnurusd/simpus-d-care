@@ -20,7 +20,8 @@ class KankerParu extends Model
         'lingkungan_rumah', 
         'paru_kronik', 
         'klaster', 
-        'poli'
+        'poli',
+        'kesimpulan'
     ];
        public function listPasien()
     {

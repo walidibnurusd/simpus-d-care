@@ -19,11 +19,11 @@
             border-radius: .25rem;
             padding: .375rem .75rem;
         }
-        
+
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             line-height: calc(1.5em + .75rem);
         }
-        
+
         .select2-container .select2-selection--single {
             display: flex;
             align-items: center;
@@ -104,19 +104,17 @@
                         <select class="form-control form-select select2" id="pasien" name="pasien">
                             <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
                             @foreach ($pasien as $item)
-                                <option 
-                                    value="{{ $item->id }}" 
-                                    data-no_hp="{{ $item->phone }}" 
-                                    data-nik="{{ $item->nik }}" 
-                                    data-dob="{{ $item->dob }}"
-                                    data-jenis_kelamin="{{ $item->genderName->name }}"
-                                    data-alamat="{{ $item->address }}"
+                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
+                                    data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
+                                    data-jenis_kelamin="{{ $item->genderName->name }}" data-alamat="{{ $item->address }}"
                                     {{ old('pasien', $merokok->pasien ?? '') == $item->id ? 'selected' : '' }}>
                                     {{ $item->name }} - {{ $item->nik }}
-                                </option>   
+                                </option>
                             @endforeach
                         </select>
-                        @error('pasien') <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('pasien')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -145,14 +143,14 @@
                         <label>Jenis Kelamin</label>
                         <div class="d-flex">
                             <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki" id="jk_laki"
-                                    id="laki-laki"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki"
+                                    id="jk_laki" id="laki-laki"
                                     {{ isset($merokok) && $merokok->jenis_kelamin == 'laki-laki' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan" id="jk_perempuan"
-                                    id="perempuan"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan"
+                                    id="jk_perempuan" id="perempuan"
                                     {{ isset($merokok) && $merokok->jenis_kelamin == 'perempuan' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perempuan">Perempuan</label>
                             </div>
@@ -506,31 +504,35 @@
                             <label>1. Apakah kamu tahu dampak buruk dari merokok?</label>
                             <div class="d-flex">
                                 <div class="form-check mr-3">
-                                    <input type="radio" class="form-check-input" name="tau_bahaya_rokok" value="1"
+                                    <input type="radio" class="form-check-input" name="tau_bahaya_rokok"
+                                        value="1"
                                         {{ isset($merokok) && $merokok->tau_bahaya_rokok == 1 ? 'checked' : '' }}>
                                     <label class="form-check-label">Ya</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="radio" class="form-check-input" name="tau_bahaya_rokok" value="0"
+                                    <input type="radio" class="form-check-input" name="tau_bahaya_rokok"
+                                        value="0"
                                         {{ isset($merokok) && $merokok->tau_bahaya_rokok == 0 ? 'checked' : '' }}>
                                     <label class="form-check-label">Tidak</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>2. Apakah kamu pernah melihat orang yang merokok di sekolah?</label>
                             <div class="d-flex">
                                 <div class="form-check mr-3">
-                                    <input type="radio" class="form-check-input" name="melihat_orang_merokok" value="1" 
+                                    <input type="radio" class="form-check-input" name="melihat_orang_merokok"
+                                        value="1"
                                         {{ isset($merokok) && $merokok->melihat_orang_merokok == 1 ? 'checked' : '' }}
                                         onclick="toggleAdditionalQuestion(true)">
                                     <label class="form-check-label">Ya</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="radio" class="form-check-input" name="melihat_orang_merokok" value="0"
+                                    <input type="radio" class="form-check-input" name="melihat_orang_merokok"
+                                        value="0"
                                         {{ isset($merokok) && $merokok->melihat_orang_merokok == 0 ? 'checked' : '' }}
                                         onclick="toggleAdditionalQuestion(false)">
                                     <label class="form-check-label">Tidak</label>
@@ -538,63 +540,70 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="col-md-12" id="additional-question" style="display: {{ isset($merokok) &&  $merokok->melihat_orang_merokok ==1 ? 'block' : 'none' }}">
+
+                    <div class="col-md-12" id="additional-question"
+                        style="display: {{ isset($merokok) && $merokok->melihat_orang_merokok == 1 ? 'block' : 'none' }}">
                         <div class="form-group">
                             <label>Jika "Ya", sebutkan:</label>
                             <div class="d-flex flex-wrap">
                                 <div class="form-check mr-3">
                                     <input type="checkbox" class="form-check-input" name="orang_merokok[]"
-                                        value="teman" {{ isset($merokok) && is_array($merokok->orang_merokok) && in_array('teman', $merokok->orang_merokok) ? 'checked' : '' }}>
+                                        value="teman"
+                                        {{ isset($merokok) && is_array($merokok->orang_merokok) && in_array('teman', $merokok->orang_merokok) ? 'checked' : '' }}>
                                     <label class="form-check-label">Teman</label>
                                 </div>
                                 <div class="form-check mr-3">
                                     <input type="checkbox" class="form-check-input" name="orang_merokok[]"
-                                        value="guru" {{ isset($merokok) && is_array($merokok->orang_merokok) && in_array('guru', $merokok->orang_merokok) ? 'checked' : '' }}>
+                                        value="guru"
+                                        {{ isset($merokok) && is_array($merokok->orang_merokok) && in_array('guru', $merokok->orang_merokok) ? 'checked' : '' }}>
                                     <label class="form-check-label">Guru</label>
                                 </div>
                                 <div class="form-check mr-3">
                                     <input type="checkbox" class="form-check-input" name="orang_merokok[]"
-                                        value="satpam" {{ isset($merokok) && is_array($merokok->orang_merokok) && in_array('satpam', $merokok->orang_merokok) ? 'checked' : '' }}>
+                                        value="satpam"
+                                        {{ isset($merokok) && is_array($merokok->orang_merokok) && in_array('satpam', $merokok->orang_merokok) ? 'checked' : '' }}>
                                     <label class="form-check-label">Satpam</label>
                                 </div>
                                 <div class="form-check mr-3">
                                     <input type="checkbox" class="form-check-input" name="orang_merokok[]"
-                                        value="warga_sekolah" {{ isset($merokok) && is_array($merokok->orang_merokok) && in_array('warga_sekolah', $merokok->orang_merokok) ? 'checked' : '' }}>
+                                        value="warga_sekolah"
+                                        {{ isset($merokok) && is_array($merokok->orang_merokok) && in_array('warga_sekolah', $merokok->orang_merokok) ? 'checked' : '' }}>
                                     <label class="form-check-label">Warga sekolah</label>
                                 </div>
                                 <div class="form-check mr-3 d-flex align-items-center">
-                                    <input type="checkbox" class="form-check-input" id="lainnyaCheckbox" 
+                                    <input type="checkbox" class="form-check-input" id="lainnyaCheckbox"
                                         {{ isset($merokok) && is_array($merokok->orang_merokok) && in_array('lainnya', $merokok->orang_merokok) ? 'checked' : '' }}
                                         onclick="toggleLainnyaInput()">
                                     <label class="form-check-label">Lainnya</label>
-                                    <input type="text" class="form-control ml-2" name="orang_merokok_lainnya" 
-                                        id="lainnyaInput" placeholder="Masukkan lainnya" 
+                                    <input type="text" class="form-control ml-2" name="orang_merokok_lainnya"
+                                        id="lainnyaInput" placeholder="Masukkan lainnya"
                                         style="display: {{ isset($merokok->orang_merokok_lainnya) && $merokok->orang_merokok_lainnya ? 'block' : 'none' }};"
                                         value="{{ isset($merokok->orang_merokok_lainnya) ? $merokok->orang_merokok_lainnya : '' }}">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>3. Apakah ada anggota keluarga di rumah yang merokok?</label>
                             <div class="d-flex">
                                 <div class="form-check mr-3">
-                                    <input type="radio" class="form-check-input" name="anggota_keluarga_merokok" value="1"
+                                    <input type="radio" class="form-check-input" name="anggota_keluarga_merokok"
+                                        value="1"
                                         {{ isset($merokok) && $merokok->anggota_keluarga_merokok == 1 ? 'checked' : '' }}>
                                     <label class="form-check-label">Ya</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="radio" class="form-check-input" name="anggota_keluarga_merokok" value="0"
+                                    <input type="radio" class="form-check-input" name="anggota_keluarga_merokok"
+                                        value="0"
                                         {{ isset($merokok) && $merokok->anggota_keluarga_merokok == 0 ? 'checked' : '' }}>
                                     <label class="form-check-label">Tidak</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>4. Apakah teman-teman dekatmu banyak yang merokok?</label>
@@ -622,19 +631,19 @@
                             <label>1. Apakah kamu bersedia memeriksakan kadar CO pernapasan?</label>
                             <div class="d-flex">
                                 <div class="form-check mr-3">
-                                    <input type="radio" class="form-check-input" name="periksa_co2" value="1" 
+                                    <input type="radio" class="form-check-input" name="periksa_co2" value="1"
                                         {{ isset($merokok->periksa_co2) && $merokok->periksa_co2 == 1 ? 'checked' : '' }}>
                                     <label class="form-check-label">Ya</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="radio" class="form-check-input" name="periksa_co2" value="0" 
+                                    <input type="radio" class="form-check-input" name="periksa_co2" value="0"
                                         {{ isset($merokok->periksa_co2) && $merokok->periksa_co2 == 0 ? 'checked' : '' }}>
                                     <label class="form-check-label">Tidak</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>2. Hasil pemeriksaan kadar CO pernapasan?</label>
@@ -650,16 +659,25 @@
                         </div>
                     </div>
                 </div>
-                
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <label for="kesimpulan" style="color: rgb(19, 11, 241);">Kesimpulan</label>
+                <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $merokok->kesimpulan ?? '') }}</textarea>
             </div>
         </div>
 
+
         <div class="text-right mt-4">
             @if (isset($merokok) && $merokok)
-            <a href="{{ route('merokok.mtbs.admin') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-        @else
-            <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2" style="font-size: 20px">Kembali</a>
-        @endif
+                <a href="{{ route('merokok.mtbs.admin') }}" type="button" class="btn btn-secondary mr-2"
+                    style="font-size: 20px">Kembali</a>
+            @else
+                <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
+                    style="font-size: 20px">Kembali</a>
+            @endif
             <button type="submit" class="btn btn-primary">Kirim</button>
         </div>
     </form>
@@ -711,43 +729,41 @@
         }
     </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-    $(document).ready(function() {
-        // Inisialisasi Select2
-        $('.select2').select2({
-            placeholder: "Pilih pasien",
-            allowClear: true    
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Select2
+            $('.select2').select2({
+                placeholder: "Pilih pasien",
+                allowClear: true
+            });
+
+            // Event listener saat pasien dipilih
+            $('#pasien').on('change', function() {
+                var selectedOption = $(this).find(':selected');
+
+                // Ambil data dari atribut data-*
+                var no_hp = selectedOption.data('no_hp');
+                var nik = selectedOption.data('nik');
+                var dob = selectedOption.data('dob');
+                var alamat = selectedOption.data('alamat');
+                var jk = selectedOption.data('jenis_kelamin');
+                console.log(jk);
+
+                // Isi input dengan data yang diambil
+                $('#no_hp').val(no_hp);
+                $('#nik').val(nik);
+                $('#tanggal_lahir').val(dob);
+                $('#alamat').val(alamat);
+                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
+                if (jk === 'Laki-Laki') {
+                    $('#jk_laki').prop('checked', true);
+                } else if (jk === 'Perempuan') {
+                    $('#jk_perempuan').prop('checked', true);
+                }
+            });
+            $('#pasien').trigger('change');
         });
-    
-        // Event listener saat pasien dipilih
-        $('#pasien').on('change', function() {
-            var selectedOption = $(this).find(':selected');
-    
-            // Ambil data dari atribut data-*
-            var no_hp = selectedOption.data('no_hp');
-            var nik = selectedOption.data('nik');
-            var dob = selectedOption.data('dob');
-            var alamat = selectedOption.data('alamat');
-            var jk = selectedOption.data('jenis_kelamin');
-            console.log(jk);
-            
-            // Isi input dengan data yang diambil
-            $('#no_hp').val(no_hp);
-            $('#nik').val(nik);
-            $('#tanggal_lahir').val(dob);
-            $('#alamat').val(alamat);
-            $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
-            if (jk === 'Laki-Laki') {
-                $('#jk_laki').prop('checked', true);
-            } else if (jk === 'Perempuan') {
-                $('#jk_perempuan').prop('checked', true);
-            }
-                });
-        $('#pasien').trigger('change');
-    });
-    
     </script>
 @endsection
-

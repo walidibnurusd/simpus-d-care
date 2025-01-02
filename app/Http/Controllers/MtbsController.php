@@ -52,6 +52,7 @@ class MtbsController extends Controller
             'mudah_berteman' => 'nullable',
             'takut' => 'nullable',
             'rajin' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -107,6 +108,7 @@ class MtbsController extends Controller
             'mudah_berteman' => 'nullable',
             'takut' => 'nullable',
             'rajin' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -141,6 +143,7 @@ class MtbsController extends Controller
             'berat_badan' => 'required|numeric|min:1',
             'lingkar_peru' => 'required|numeric|min:1',
             'hasil' => 'required',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -180,6 +183,7 @@ class MtbsController extends Controller
             'pertanyaan6' => 'nullable',
             'pertanyaan7' => 'nullable',
             'pertanyaan8' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -244,6 +248,7 @@ class MtbsController extends Controller
             'teman_merokok' => 'nullable',
             'periksa_co2' => 'nullable',
             'kadar_co2' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -276,6 +281,7 @@ class MtbsController extends Controller
             // 'tanggal' => 'required|date',
             // 'jenis_kelamin' => 'nullable|string|max:10',
             'usia' => 'required|string|max:50',
+            'kesimpulan' => 'required',
             // 'ekspresif' => 'nullable|array',
             // 'ekspresif.*.question' => 'required|string',
             // 'ekspresif.*.answer' => 'required|in:0,1',
@@ -295,6 +301,7 @@ class MtbsController extends Controller
         // Save the data to the TesDayaDengar model
         TesDayaDengar::create([
             'pasien' => $request->input('pasien'),
+            'kesimpulan' => $request->input('kesimpulan'),
             // 'tanggal' => $request->input('tanggal'),
             // 'jenis_kelamin' => $request->input('jenis_kelamin'),
             'usia' => $request->input('usia'),

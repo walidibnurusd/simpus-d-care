@@ -441,9 +441,16 @@
                         </div>
                     </div>
                 </div>
-
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="kesimpulan" style="color: rgb(19, 11, 241);">Kesimpulan</label>
+                    <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $hiv->kesimpulan ?? '') }}</textarea>
+                </div>
             </div>
         </div>
+
+
 
         <div class="text-right mt-4">
             @if (isset($hiv))
@@ -459,16 +466,63 @@
 
     <!-- JavaScript for toggling question visibility -->
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleFollowUpQuestions(); // Menjalankan fungsi saat DOM siap
+            populateFormData(); // Mengisi form dengan data jika ada (untuk edit)
+        });
+
         function toggleFollowUpQuestions() {
-            // Check which radio button is selected
             const tesHivYa = document.getElementById('tes_hiv_ya').checked;
             const tesHivTidak = document.getElementById('tes_hiv_tidak').checked;
 
-            // Show or hide questions based on selection
+            // Tampilkan pertanyaan terkait (2-11) jika jawabannya "Ya" pada tes HIV
             document.getElementById('last_test_date').style.display = tesHivYa ? 'block' : 'none';
             document.getElementById('symptom_questions').style.display = tesHivTidak ? 'block' : 'none';
         }
-        document.addEventListener('DOMContentLoaded', toggleFollowUpQuestions);
+
+        function populateFormData() {
+            const formData = {!! json_encode($hiv) !!}; // Mengambil data hiv jika ada
+
+            // Mengisi data pada form berdasarkan jawaban yang sudah ada
+            if (formData) {
+                // Mengecek apakah tes HIV sudah dilakukan (pertanyaan 1)
+                if (formData.tes_hiv === 1) {
+                    document.getElementById('tes_hiv_ya').checked = true;
+                    toggleFollowUpQuestions(); // Menampilkan pertanyaan terkait jika "Ya"
+                } else {
+                    document.getElementById('tes_hiv_tidak').checked = true;
+                    toggleFollowUpQuestions(); // Menampilkan pertanyaan gejala jika "Tidak"
+                }
+
+                // Mengisi data untuk pertanyaan 2-11 jika tersedia dan tes HIV "Ya"
+                if (formData.tes_hiv === 1) {
+                    if (formData.tanggal_tes_terakhir) {
+                        document.querySelector('input[name="tanggal_tes_terakhir"]').value = formData.tanggal_tes_terakhir;
+                    }
+
+                    // Mengisi jawaban untuk pertanyaan 3-11
+                    const questionNames = [
+                        'penurunan_berat', 'jumlah_berat_badan_turun', 'penyakit_kulit', 'gejala_ispa',
+                        'gejala_sariawan',
+                        'riwayat_sesak', 'riwayat_hepatitis', 'riwayat_seks_bebas', 'riwayat_narkoba',
+                        'riwayat_penyakit_menular'
+                    ];
+
+                    questionNames.forEach(name => {
+                        const value = formData[name];
+                        if (value !== undefined) {
+                            const radioBtn = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                            if (radioBtn) radioBtn.checked = true;
+                        }
+                    });
+                }
+
+                // Jika jawabannya "Tidak" pada tes HIV, tampilkan pertanyaan gejala
+                if (formData.tes_hiv === 0) {
+                    document.getElementById('symptom_questions').style.display = 'block';
+                }
+            }
+        }
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

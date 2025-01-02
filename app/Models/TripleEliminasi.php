@@ -76,6 +76,7 @@ class TripleEliminasi extends Model
         'kapan_pms',
         'klaster',
         'poli',
+        'kesimpulan'
     ];
 
     /**

@@ -362,12 +362,15 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
             </div>
+
             <div class="form-group mt-4">
+                <div class="form-group">
+
+                    <label for="kesimpulan" style="color: rgb(19, 11, 241);">Kesimpulan</label>
+                    <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $geriatri->kesimpulan ?? '') }}</textarea>
+
+                </div>
                 <div class="form-group">
                     <label><strong>Hasil:</strong></label>
                     <p id="totalScore">Total Skor: 0</p>

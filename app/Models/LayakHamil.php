@@ -10,7 +10,7 @@ class LayakHamil extends Model
     use HasFactory;
     protected $table = 'layak_hamil';
 
-    protected $fillable = ['pasien',  'status', 'nama_suami',  'ingin_hamil',  'umur', 'jumlah_anak', 'waktu_persalinan_terakhir', 'lingkar_lengan_atas', 'penyakit', 'penyakit_suami', 'kesehatan_jiwa', 'klaster', 'poli'];
+    protected $fillable = ['pasien',  'status', 'nama_suami',  'ingin_hamil',  'umur', 'jumlah_anak', 'waktu_persalinan_terakhir', 'lingkar_lengan_atas', 'penyakit', 'penyakit_suami', 'kesehatan_jiwa', 'klaster', 'poli','kesimpulan'];
 
     protected $casts = [
         'penyakit' => 'array',

@@ -90,6 +90,7 @@ class KankerPayudara extends Model
         'rujukan',
         'klaster',
         'poli',
+        'kesimpulan'
     ];
     
     protected $casts = [

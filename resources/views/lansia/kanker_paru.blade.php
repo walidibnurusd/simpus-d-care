@@ -271,6 +271,11 @@
 
         </div>
         <div class="form-group mt-4">
+
+
+            <label for="kesimpulan" style="color: rgb(19, 11, 241);">Kesimpulan</label>
+            <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $kankerParu->kesimpulan ?? '') }}</textarea>
+            <br>
             <label>Skor Total</label>
             <div class="d-flex">
                 <input type="text" class="form-control" id="totalScore" value="0"

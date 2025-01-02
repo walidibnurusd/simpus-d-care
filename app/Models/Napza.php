@@ -10,7 +10,7 @@ class Napza extends Model
     use HasFactory;
     protected $table = 'napza';
 
-    protected $fillable = ['pasien', 'nama_dokter', 'klinik', 'pertanyaan1', 'nama_zat_lain','pertanyaan2', 'pertanyaan3', 'pertanyaan4', 'pertanyaan5', 'pertanyaan6', 'pertanyaan7', 'pertanyaan8', 'klaster', 'poli'];
+    protected $fillable = ['pasien', 'nama_dokter', 'klinik', 'pertanyaan1', 'nama_zat_lain','pertanyaan2', 'pertanyaan3', 'pertanyaan4', 'pertanyaan5', 'pertanyaan6', 'pertanyaan7', 'pertanyaan8', 'klaster', 'poli','kesimpulan'];
 
     protected $casts = [
         'pertanyaan1' => 'array',
