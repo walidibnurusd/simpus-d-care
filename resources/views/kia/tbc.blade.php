@@ -863,7 +863,7 @@
                         age--;
                     }
                     $('#usiaInput').val(age); // Set usia pada input
-                    console.log("Usia yang diisi: " + $('#usiaInput').val()); // Log usia untuk debug
+
                 }
 
             });

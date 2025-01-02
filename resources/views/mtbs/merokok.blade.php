@@ -135,7 +135,8 @@
                     <div class="form-group">
                         <label>Umur</label>
                         <input type="number" class="form-control" name="umur"
-                            value="{{ isset($merokok) ? $merokok->umur : '' }}" placeholder="Masukkan umur">
+                            value="{{ isset($merokok) ? $merokok->umur : '' }}" placeholder="Masukkan umur" readonly
+                            id="usiaInput">
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -422,9 +423,6 @@
                             </div>
                         </div>
                     </div>
-
-                    html
-                    Copy code
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>8. Apakah ada keinginan kamu untuk berhenti merokok?</label>
@@ -761,6 +759,17 @@
                     $('#jk_laki').prop('checked', true);
                 } else if (jk === 'Perempuan') {
                     $('#jk_perempuan').prop('checked', true);
+                }
+                if (dob) {
+                    var today = new Date();
+                    var birthDate = new Date(dob);
+                    var age = today.getFullYear() - birthDate.getFullYear();
+                    var monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    $('#usiaInput').val(age); // Set usia pada input
+
                 }
             });
             $('#pasien').trigger('change');

@@ -129,16 +129,14 @@ class MtbsController extends Controller
     }
     public function showObesitas()
     {
-        return view('mtbs.obesitas');
+        $pasien = Patients::all();
+        return view('mtbs.obesitas', compact('pasien'));
     }
     public function storeObesitas(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'tempat_lahir' => 'required|string|max:255',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
             'tinggi_badan' => 'required|numeric|min:1',
             'berat_badan' => 'required|numeric|min:1',
             'lingkar_peru' => 'required|numeric|min:1',

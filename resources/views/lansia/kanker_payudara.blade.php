@@ -70,8 +70,8 @@
                             @foreach ($pasien as $item)
                                 <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
                                     data-nik="{{ $item->nik }}" data-rt="{{ $item->rw }}"
-                                    data-pekerjaan="{{ $item->occupations->name }}" data-alamat="{{ $item->address }}"
-                                    data-pendidikan="{{ $item->educations->name }}"
+                                    data-dob="{{ $item->dob }}" data-pekerjaan="{{ $item->occupations->name }}"
+                                    data-alamat="{{ $item->address }}" data-pendidikan="{{ $item->educations->name }}"
                                     {{ old('pasien', $kankerPayudara->pasien ?? '') == $item->id ? 'selected' : '' }}>
                                     {{ $item->name }} - {{ $item->nik }}
                                 </option>
@@ -91,7 +91,7 @@
                         <div class="row align-items-center">
                             <div class="col-md-10">
                                 <input type="number" class="form-control" name="umur" placeholder="Masukkan umur"
-                                    value="{{ old('umur', $kankerPayudara->umur ?? '') }}">
+                                    id="umurInput" readonly>
                             </div>
                             <div class="col-auto">
                                 <p class="mb-0">Tahun</p>
@@ -1133,6 +1133,7 @@
                     <div class="ml-4">
                         <div class="form-check">
                             <input type="checkbox" id="diobati_checkbox" class="form-check-input" name="ims[]"
+                                value="diobati"
                                 @isset($kankerPayudara->ims) @if (in_array('diobati', $kankerPayudara->ims)) checked @endif @endisset
                                 onclick="toggleField('diobati_field', this)">
                             <label class="form-check-label">Diobati</label>
@@ -1145,6 +1146,7 @@
 
                         <div class="form-check">
                             <input type="checkbox" id="dirujuk_checkbox" class="form-check-input" name="ims[]"
+                                value="dirujuk"
                                 @isset($kankerPayudara->ims) @if (in_array('dirujuk', $kankerPayudara->ims)) checked @endif @endisset
                                 onclick="toggleField('dirujuk_field', this)">
                             <label class="form-check-label">Dirujuk</label>
@@ -1238,6 +1240,24 @@
                     }
                 });
             });
+            const imsCheckboxes = document.querySelectorAll('input[name="ims[]"]');
+            imsCheckboxes.forEach(checkbox => {
+                if (checkbox.value === 'diobati' && checkbox.checked) {
+                    toggleInput('diobati_field', true);
+                }
+                if (checkbox.value === 'dirujuk' && checkbox.checked) {
+                    toggleInput('dirujuk_field', true);
+                }
+                checkbox.addEventListener('change', function() {
+                    if (this.value === 'diobati') {
+                        toggleInput('diobati_field', this.checked);
+                    }
+                    if (this.value === 'dirujuk') {
+                        toggleInput('dirujuk_field', this.checked);
+                    }
+                });
+            });
+
 
 
         });
@@ -1263,19 +1283,31 @@
                 var alamat = selectedOption.data('alamat');
                 var pekerjaan = selectedOption.data('pekerjaan');
                 var jk = selectedOption.data('jenis_kelamin');
-                console.log(jk);
-
+                var dob = selectedOption.data('dob');
                 // Isi input dengan data yang diambil
                 $('#no_hp').val(no_hp);
                 $('#pendidikan').val(pendidikan);
                 $('#rt').val(rt);
                 $('#alamat').val(alamat);
                 $('#pekerjaan').val(pekerjaan);
+                $('#tanggal_lahir').val(dob);
                 $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
                 if (jk === 'Laki-Laki') {
                     $('#jk_laki').prop('checked', true);
                 } else if (jk === 'Perempuan') {
                     $('#jk_perempuan').prop('checked', true);
+                }
+                if (dob) {
+                    var today = new Date();
+                    var birthDate = new Date(dob);
+                    var age = today.getFullYear() - birthDate.getFullYear();
+                    var monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    $('#umurInput').val(age); // Set umur pada input
+
+
                 }
             });
             $('#pasien').trigger('change');

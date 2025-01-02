@@ -80,7 +80,7 @@
                                                         @if ($routeName === 'hipertensi.admin')
                                                             <a href="{{ route('hipertensi.edit', $item->id) }}"><i
                                                                     class="icon-pencil-alt"></i></a>
-                                                        @elseif($routeName === 'hipertensi.admin.mtbs')
+                                                        @elseif ($routeName === 'hipertensi.admin.mtbs')
                                                             <a href="{{ route('hipertensi.mbts.edit', $item->id) }}"><i
                                                                     class="icon-pencil-alt"></i></a>
                                                         @else

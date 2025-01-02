@@ -56,8 +56,8 @@ class KiaController extends Controller
         // Store the data using validated inputs and default values
         LayakHamil::create(
             array_merge($validator->validated(), [
-                'klaster' => 2,
-                'poli' => 'kia',
+                'klaster' => 3,
+                'poli' => 'lansia',
             ]),
         );
         return redirect()->route('layakHamil.view')->with('success', 'Data saved successfully');
@@ -313,15 +313,11 @@ class KiaController extends Controller
             return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
         }
 
-        // Create and store the new Talasemia record with additional fields
         Talasemia::create(
-            array_merge(
-                $validator->validated(), // Only uses validated data
-                [
-                    'klaster' => 2, // Adding 'klaster' field with a default value
-                    'poli' => 'kia', // Adding 'poli' field with a default value
-                ],
-            ),
+            array_merge($validator->validated(), [
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
+            ]),
         );
         // Redirect with a success message
         return redirect()->back()->with('success', 'Data Talasemia created successfully!');
@@ -556,53 +552,53 @@ class KiaController extends Controller
         // Define validation rules
         $validator = Validator::make($request->all(), [
             'pasien' => 'required',
-            'gravida' => 'nullable|integer',
-            'partus' => 'nullable|integer',
-            'abortus' => 'nullable|integer',
-            'umur_kehamilan' => 'nullable|integer',
+            'gravida' => 'nullable',
+            'partus' => 'nullable',
+            'abortus' => 'nullable',
+            'umur_kehamilan' => 'nullable',
             'taksiran_kehamilan' => 'nullable',
             'nama_puskesmas' => 'nullable',
             'kode_specimen' => 'nullable',
             // 'no_hp' => 'nullable|string|max:15',
-            'umur_ibu' => 'nullable|integer',
+            'umur_ibu' => 'nullable',
             // 'alamat' => 'nullable|string',
             'pendidikan' => 'nullable',
-            'gejala_hepatitis' => 'nullable|boolean',
-            'gejala_urine_gelap' => 'nullable|boolean',
-            'gejala_kuning' => 'nullable|boolean',
+            'gejala_hepatitis' => 'nullable',
+            'gejala_urine_gelap' => 'nullable',
+            'gejala_kuning' => 'nullable',
             'gejala_lainnya' => 'nullable',
-            'test_hepatitis' => 'nullable|boolean',
+            'test_hepatitis' => 'nullable',
             'lokasi_tes' => 'nullable',
-            'tanggal_tes' => 'nullable|date',
+            'tanggal_tes' => 'nullable',
             'anti_hbs' => 'nullable',
             'anti_hbc' => 'nullable',
             'sgpt' => 'nullable',
             'anti_hbe' => 'nullable',
             'hbeag' => 'nullable',
             'hbv_dna' => 'nullable',
-            'transfusi_darah' => 'nullable|boolean',
-            'kapan_transfusi' => 'nullable|date',
-            'hemodialisa' => 'nullable|boolean',
-            'kapan_hemodialisa' => 'nullable|date',
+            'transfusi_darah' => 'nullable',
+            'kapan_transfusi' => 'nullable',
+            'hemodialisa' => 'nullable',
+            'kapan_hemodialisa' => 'nullable',
             'jmlh_pasangan_seks' => 'nullable|integer',
-            'narkoba' => 'nullable|boolean',
-            'kapan_narkoba' => 'nullable|date',
-            'vaksin' => 'nullable|boolean',
-            'kapan_vaksin' => 'nullable|date',
+            'narkoba' => 'nullable',
+            'kapan_narkoba' => 'nullable',
+            'vaksin' => 'nullable',
+            'kapan_vaksin' => 'nullable',
             'jmlh_vaksin' => 'nullable|integer',
-            'tinggal_serumah' => 'nullable|boolean',
-            'kapan_tinggal_serumah' => 'nullable|date',
+            'tinggal_serumah' => 'nullable',
+            'kapan_tinggal_serumah' => 'nullable',
             'hubungan_hepatitis' => 'nullable',
             'hubungan_detail' => 'nullable',
-            'test_hiv' => 'nullable|boolean',
+            'test_hiv' => 'nullable',
             'hasil_hiv' => 'nullable',
-            'cd4_check' => 'nullable|boolean',
+            'cd4_check' => 'nullable',
             'dimana_cd4' => 'nullable',
             'hasil_cd4' => 'nullable',
-            'arv_check' => 'nullable|boolean',
+            'arv_check' => 'nullable',
             'kapan_arv' => 'nullable',
-            'gejala_pms' => 'nullable|boolean',
-            'kapan_pms' => 'nullable|date',
+            'gejala_pms' => 'nullable',
+            'kapan_pms' => 'nullable',
             'kesimpulan' => 'required',
         ]);
 

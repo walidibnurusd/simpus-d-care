@@ -128,6 +128,7 @@ class AdminController extends Controller
             'rutin_olahraga' => 'required|boolean',
             'makan_sayur' => 'required|boolean',
             'makan_buah' => 'required|boolean',
+            'kesimpulan' => 'required',
             // 'jmlh_rokok' =>'nullable'
         ]);
 
@@ -214,6 +215,7 @@ class AdminController extends Controller
             'mengerti' => 'nullable|boolean',
             'menatap_wajah' => 'nullable|boolean',
             'suka_bergerak' => 'nullable|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -275,6 +277,7 @@ class AdminController extends Controller
             'kongjungtiva_pucat' => 'required|boolean',
             'pucat' => 'required|boolean',
             'kadar_hemoglobin' => 'required',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -327,6 +330,7 @@ class AdminController extends Controller
             'keluarga_hepatitis' => 'required|boolean',
             'menderita_penyakit_menular' => 'required|boolean',
             'hasil_hiv' => 'required|string|max:255',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -407,6 +411,7 @@ class AdminController extends Controller
             'gizi_buruk' => 'required|boolean',
             'tubuh_pendek' => 'required|boolean',
             'hiperpigmentasi_kulit' => 'required|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -422,8 +427,8 @@ class AdminController extends Controller
             array_merge(
                 $validator->validated(), // Only use validated data
                 [
-                    'klaster' => $talasemia->klaster ?? 2, // Preserve existing 'klaster' or default to 2
-                    'poli' => $talasemia->poli ?? 'kia', // Preserve existing 'poli' or default to 'kia'
+                    'klaster' => $talasemia->klaster ?? 2,
+                    'poli' => $talasemia->poli ?? 'kia',
                 ],
             ),
         );
@@ -474,6 +479,7 @@ class AdminController extends Controller
             'riwayat_seks_bebas' => 'nullable|boolean',
             'riwayat_narkoba' => 'nullable|boolean',
             'riwayat_penyakit_menular' => 'nullable|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -535,6 +541,7 @@ class AdminController extends Controller
             'gatal' => 'required|boolean',
             'badan_lemah' => 'required|boolean',
             'kulit_pucat' => 'required|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -594,6 +601,7 @@ class AdminController extends Controller
             'hasil' => 'required',
             'tekanan_darah_sistol' => 'required|numeric',
             'tekanan_darah_diastol' => 'required|numeric',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -653,7 +661,6 @@ class AdminController extends Controller
             // 'alamat_ktp' => 'nullable|string|max:500',
             // 'nik' => 'required',
             // 'imt' => 'nullable',
-            'usia' => 'nullable',
             // 'pekerjaan' => 'nullable|string|max:255',
             // 'jenis_kelamin' => 'required|string',
             // 'no_hp' => 'required',
@@ -685,6 +692,7 @@ class AdminController extends Controller
             'hasil_rontgen' => 'nullable|string|max:255',
             'terduga_tbc' => 'required|boolean',
             'periksa_tbc_laten' => 'required|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -741,6 +749,7 @@ class AdminController extends Controller
             'pasangan_memukul' => 'required',
             'ketakutan' => 'nullable',
             'dibatasi' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -808,6 +817,7 @@ class AdminController extends Controller
             'tanda_kekerasan' => 'nullable',
             'kekerasan_seksual' => 'nullable',
             'dampak_kekerasan' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -853,58 +863,55 @@ class AdminController extends Controller
     {
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
-            'pasien' => 'required',
-            // 'tempat_lahir' => 'nullable|string|max:255',
-            // 'tanggal_lahir' => 'nullable|date',
-            'pekerjaan' => 'nullable|string|max:255',
-            'status_kawin' => 'nullable|string|max:255',
-            'gravida' => 'nullable|integer',
-            'partus' => 'nullable|integer',
-            'abortus' => 'nullable|integer',
-            'umur_kehamilan' => 'nullable|integer',
+         'pasien' => 'required',
+            'gravida' => 'nullable',
+            'partus' => 'nullable',
+            'abortus' => 'nullable',
+            'umur_kehamilan' => 'nullable',
             'taksiran_kehamilan' => 'nullable',
             'nama_puskesmas' => 'nullable',
             'kode_specimen' => 'nullable',
             // 'no_hp' => 'nullable|string|max:15',
-            'umur_ibu' => 'nullable|integer',
+            'umur_ibu' => 'nullable',
             // 'alamat' => 'nullable|string',
             'pendidikan' => 'nullable',
-            'gejala_hepatitis' => 'nullable|boolean',
-            'gejala_urine_gelap' => 'nullable|boolean',
-            'gejala_kuning' => 'nullable|boolean',
+            'gejala_hepatitis' => 'nullable',
+            'gejala_urine_gelap' => 'nullable',
+            'gejala_kuning' => 'nullable',
             'gejala_lainnya' => 'nullable',
-            'test_hepatitis' => 'nullable|boolean',
+            'test_hepatitis' => 'nullable',
             'lokasi_tes' => 'nullable',
-            'tanggal_tes' => 'nullable|date',
+            'tanggal_tes' => 'nullable',
             'anti_hbs' => 'nullable',
             'anti_hbc' => 'nullable',
             'sgpt' => 'nullable',
             'anti_hbe' => 'nullable',
             'hbeag' => 'nullable',
             'hbv_dna' => 'nullable',
-            'transfusi_darah' => 'nullable|boolean',
-            'kapan_transfusi' => 'nullable|date',
-            'hemodialisa' => 'nullable|boolean',
-            'kapan_hemodialisa' => 'nullable|date',
+            'transfusi_darah' => 'nullable',
+            'kapan_transfusi' => 'nullable',
+            'hemodialisa' => 'nullable',
+            'kapan_hemodialisa' => 'nullable',
             'jmlh_pasangan_seks' => 'nullable|integer',
-            'narkoba' => 'nullable|boolean',
-            'kapan_narkoba' => 'nullable|date',
-            'vaksin' => 'nullable|boolean',
-            'kapan_vaksin' => 'nullable|date',
+            'narkoba' => 'nullable',
+            'kapan_narkoba' => 'nullable',
+            'vaksin' => 'nullable',
+            'kapan_vaksin' => 'nullable',
             'jmlh_vaksin' => 'nullable|integer',
-            'tinggal_serumah' => 'nullable|boolean',
-            'kapan_tinggal_serumah' => 'nullable|date',
+            'tinggal_serumah' => 'nullable',
+            'kapan_tinggal_serumah' => 'nullable',
             'hubungan_hepatitis' => 'nullable',
             'hubungan_detail' => 'nullable',
-            'test_hiv' => 'nullable|boolean',
+            'test_hiv' => 'nullable',
             'hasil_hiv' => 'nullable',
-            'cd4_check' => 'nullable|boolean',
+            'cd4_check' => 'nullable',
             'dimana_cd4' => 'nullable',
             'hasil_cd4' => 'nullable',
-            'arv_check' => 'nullable|boolean',
+            'arv_check' => 'nullable',
             'kapan_arv' => 'nullable',
-            'gejala_pms' => 'nullable|boolean',
+            'gejala_pms' => 'nullable',
             'kapan_pms' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails

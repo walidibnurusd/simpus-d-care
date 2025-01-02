@@ -58,6 +58,7 @@ class AdminLansiaController extends Controller
             'punya_dahak' => 'required|boolean',
             'batuk' => 'required|boolean',
             'periksa_paru' => 'required|boolean',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -117,6 +118,7 @@ class AdminLansiaController extends Controller
             'tempat_tinggal' => 'nullable',
             'lingkungan_rumah' => 'nullable',
             'paru_kronik' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Check if validation fails
@@ -183,6 +185,7 @@ class AdminLansiaController extends Controller
             'bab_kambing' => 'nullable|string|max:255',
             'konstipasi_kronis' => 'nullable|string|max:255',
             'frekuensi_defekasi' => 'nullable|string|max:255',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -293,10 +296,12 @@ class AdminLansiaController extends Controller
             'iva_positif' => 'nullable',
             'tanggal_kunjungan' => '',
             'lainnya' => 'nullable',
-            'ims' => 'nullable',
+            'ims' => 'nullable|array',
+            'ims.*' => 'string',
             'detail_diobati' => 'nullable',
             'dirujuk' => 'nullable',
             'rujukan' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -362,6 +367,7 @@ class AdminLansiaController extends Controller
             'tes_bisik' => 'nullable|integer|min:0',
             'perasaan_sedih' => 'nullable|integer|min:0',
             'kesenangan' => 'nullable|integer|min:0',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal

@@ -21,7 +21,9 @@ class KankerParu extends Model
         'paru_kronik', 
         'klaster', 
         'poli',
-        'kesimpulan'
+        'kesimpulan',
+        'kanker',
+        'usia'
     ];
        public function listPasien()
     {

@@ -10,7 +10,7 @@ class Talasemia extends Model
     use HasFactory;
     protected $table = 'talasemia';
 
-    protected $fillable = ['pasien', 'terima_darah', 'saudara_talasemia', 'keluarga_transfusi', 'keluarga_transfusi', 'pubertas_telat', 'anemia', 'ikterus', 'faices_cooley', 'perut_buncit', 'gizi_buruk', 'tubuh_pendek', 'hipergimentasi_kulit', 'klaster','poli','kesimpulan'];
+    protected $fillable = ['pasien', 'terima_darah', 'saudara_talasemia', 'keluarga_transfusi', 'keluarga_transfusi', 'pubertas_telat', 'anemia', 'ikterus', 'faices_cooley', 'perut_buncit', 'gizi_buruk', 'tubuh_pendek', 'hiperpigmentasi_kulit', 'klaster','poli','kesimpulan'];
 
         public function listPasien()
     {

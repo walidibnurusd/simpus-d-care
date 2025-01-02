@@ -118,15 +118,15 @@
                         <label>Jenis Kelamin</label>
                         <div class="d-flex">
                             <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="1"
-                                    id="laki-laki"
-                                    {{ old('jenis_kelamin') == 1 || (isset($kankerKolorektal) && $kankerKolorektal->jenis_kelamin == 1) ? 'checked' : '' }}>
+                                <input type="radio" class="form-check-input" name="jenis_kelamin_kecacingan"
+                                    value="laki-laki" id="jk_laki"
+                                    {{ old('jenis_kelamin', $kecacingan->jenis_kelamin ?? '') == 'laki-laki' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="0"
-                                    id="perempuan"
-                                    {{ old('jenis_kelamin') == 0 || (isset($kankerKolorektal) && $kankerKolorektal->jenis_kelamin == 0) ? 'checked' : '' }}>
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan"
+                                    id="jk_perempuan"
+                                    {{ old('jenis_kelamin', $kecacingan->jenis_kelamin ?? '') == 'perempuan' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perempuan">Perempuan</label>
                             </div>
                         </div>
@@ -334,7 +334,6 @@
                 var dob = selectedOption.data('dob');
                 var alamat = selectedOption.data('alamat');
                 var jk = selectedOption.data('jenis_kelamin');
-                console.log(jk);
 
                 // Isi input dengan data yang diambil
                 $('#no_hp').val(no_hp);
@@ -347,6 +346,7 @@
                 } else if (jk === 'Perempuan') {
                     $('#jk_perempuan').prop('checked', true);
                 }
+                calculateTotalScore();
             });
             $('#pasien').trigger('change');
         });

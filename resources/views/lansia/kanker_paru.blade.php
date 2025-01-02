@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
                         <input type="date" class="form-control" name="tanggal" value="{{ $kankerParu->tanggal ?? '' }}"
-                            id="tanggal_lahir">
+                            readonly id="tanggal_lahir">
                     </div>
                 </div>
             </div>
@@ -366,6 +366,28 @@
     <script>
         $(document).ready(function() {
 
+            function calculateAge(dob) {
+                var today = new Date();
+                var birthDate = new Date(dob);
+                var age = today.getFullYear() - birthDate.getFullYear();
+                var monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                return age;
+            }
+
+            function updateAgeCategory(age) {
+                $('input[name="usia"]').prop('checked', false); // Uncheck all options first
+                if (age < 45) {
+                    $('#tidakPernah').prop('checked', true);
+                } else if (age >= 46 && age <= 65) {
+                    $('#usia50').prop('checked', true);
+                } else if (age > 65) {
+                    $('#ya').prop('checked', true);
+                }
+            }
+
             $('.select2').select2({
                 placeholder: "Pilih pasien",
                 allowClear: true
@@ -378,8 +400,6 @@
                 var alamat = selectedOption.data('alamat');
                 var jk = selectedOption.data('jenis_kelamin');
 
-
-
                 $('#tanggal_lahir').val(dob);
                 $('#alamat').val(alamat);
                 $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
@@ -388,7 +408,15 @@
                 } else if (jk === 'Perempuan') {
                     $('#jk_perempuan').prop('checked', true);
                 }
+
+                if (dob) {
+                    var age = calculateAge(dob);
+                    updateAgeCategory(age);
+                }
+
+                calculateTotalScore();
             });
+
             $('#pasien').trigger('change');
         });
     </script>

@@ -10,7 +10,10 @@ class Obesitas extends Model
     use HasFactory;
     protected $table = 'obesitas';
 
-    protected $fillable = ['nama','hasil', 'tanggal_lahir', 'tempat_lahir', 'alamat', 'tinggi_badan', 'berat_badan', 'lingkar_peru', 'klaster', 'poli','kesimpulan'];
-
+    protected $fillable = ['pasien','hasil', 'tinggi_badan', 'berat_badan', 'lingkar_peru', 'klaster', 'poli','kesimpulan'];
+  public function listPasien()
+    {
+        return $this->belongsTo(Patients::class, 'pasien', 'id');
+    }
   
 }

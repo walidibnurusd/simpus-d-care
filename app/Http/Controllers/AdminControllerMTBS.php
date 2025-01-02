@@ -81,6 +81,7 @@ class AdminControllerMTBS extends Controller
             'mudah_berteman' => 'required',
             'takut' => 'required',
             'rajin' => 'required',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -92,7 +93,7 @@ class AdminControllerMTBS extends Controller
         $gangguanJiwaAnak->update(
             array_merge($validator->validated(), [
                 'klaster' => 2, // Sesuaikan dengan kebutuhan
-                'poli' => 'mtbs dan remaja', // Sesuaikan dengan kebutuhan
+                'poli' => 'mtbs', // Sesuaikan dengan kebutuhan
             ]),
         );
 
@@ -157,6 +158,7 @@ class AdminControllerMTBS extends Controller
             'mudah_berteman' => 'required',
             'takut' => 'required',
             'rajin' => 'required',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -168,7 +170,7 @@ class AdminControllerMTBS extends Controller
         $gangguanJiwaRemaja->update(
             array_merge($validator->validated(), [
                 'klaster' => 2, // Sesuaikan dengan kebutuhan
-                'poli' => 'mtbs dan remaja', // Sesuaikan dengan kebutuhan
+                'poli' => 'mtbs', // Sesuaikan dengan kebutuhan
             ]),
         );
 
@@ -178,13 +180,14 @@ class AdminControllerMTBS extends Controller
 
     public function viewObesitas()
     {
-        $obesitas = Obesitas::all();
+        $obesitas = Obesitas::with('listPasien')->get();
         return view('mtbs.table.obesitas', compact('obesitas'));
     }
     public function editObesitas($id)
     {
         $obesitas = Obesitas::findOrFail($id);
-        return view('mtbs.obesitas', compact('obesitas'));
+        $pasien = Patients::all();
+        return view('mtbs.obesitas', compact('obesitas','pasien'));
     }
     public function deleteObesitas($id)
     {
@@ -201,14 +204,12 @@ class AdminControllerMTBS extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'tempat_lahir' => 'required|string|max:255',
-            'alamat' => 'required|string|max:500',
+            'pasien' => 'required',
             'tinggi_badan' => 'required|numeric|min:1',
             'berat_badan' => 'required|numeric|min:1',
             'lingkar_peru' => 'required|numeric|min:1',
             'hasil' => 'required',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -223,7 +224,7 @@ class AdminControllerMTBS extends Controller
         $obesitas->update(
             array_merge($validator->validated(), [
                 'klaster' => 2, // Nilai default tetap jika diperlukan
-                'poli' => 'mtbs dan remaja', // Nilai default tetap jika diperlukan
+                'poli' => 'mtbs', // Nilai default tetap jika diperlukan
             ]),
         );
 
@@ -282,7 +283,8 @@ class AdminControllerMTBS extends Controller
             'reseptif' => $request->input('reseptif', []), // Default to empty array if not provided
             'visual' => $request->input('visual', []), // Default to empty array if not provided
             'klaster' => 2, // Default value if not provided
-            'poli' => 'mtbs dan remaja', // Default value if not provided
+            'poli' => 'mtbs', // Default value if not provided
+            'kesimpulan' => 'required',
         ]);
 
         // Redirect with success message
@@ -351,6 +353,7 @@ class AdminControllerMTBS extends Controller
             'teman_merokok' => 'nullable',
             'periksa_co2' => 'nullable',
             'kadar_co2' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -370,7 +373,7 @@ class AdminControllerMTBS extends Controller
         $merokok->update(
             array_merge($validator->validated(), [
                 'klaster' => $merokok->klaster ?? 2, // Tetap gunakan nilai sebelumnya jika ada
-                'poli' => $merokok->poli ?? 'mtbs dan remaja', // Tetap gunakan nilai sebelumnya jika ada
+                'poli' => $merokok->poli ?? 'mtbs', // Tetap gunakan nilai sebelumnya jika ada
             ]),
         );
 
@@ -417,6 +420,7 @@ class AdminControllerMTBS extends Controller
             'pertanyaan6' => 'nullable',
             'pertanyaan7' => 'nullable',
             'pertanyaan8' => 'nullable',
+            'kesimpulan' => 'required',
         ]);
 
         // Periksa apakah validasi gagal
@@ -431,7 +435,7 @@ class AdminControllerMTBS extends Controller
         $napza->update(
             array_merge($validator->validated(), [
                 'klaster' => $napza->klaster ?? 2, // Menggunakan nilai default jika null
-                'poli' => $napza->poli ?? 'mtbs dan remaja', // Menggunakan nilai default jika null
+                'poli' => $napza->poli ?? 'mtbs', // Menggunakan nilai default jika null
             ]),
         );
 

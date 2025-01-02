@@ -60,7 +60,6 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama</th>
-                                        <th>Tanggal Lahir</th>
                                         <th>Alamat</th>
                                         <th>Action</th>
                                     </tr>
@@ -69,14 +68,13 @@
                                     @foreach ($obesitas as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->nama }}</td>
-
-                                            <td>{{ $item->tanggal_lahir }}</td>
-                                            <td>{{ $item->alamat }}</td>
+                                            <td>{{ $item->listPasien->name }}</td>
+                                            <td>{{ $item->listPasien->address }}</td>
 
                                             <td>
                                                 <ul class="action">
-                                                    <li class="edit"> <a href="{{ route('obesitas.mtbs.edit', $item->id) }}"><i
+                                                    <li class="edit"> <a
+                                                            href="{{ route('obesitas.mtbs.edit', $item->id) }}"><i
                                                                 class="icon-pencil-alt"></i></a>
                                                     </li>
                                                     <li class="delete">

@@ -39,16 +39,27 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Nama pasien</label>
-                        <input type="text" class="form-control" name="nama"
-                            value="{{ old('nama', isset($obesitas) ? $obesitas->nama : '') }}"
-                            placeholder="Masukkan nama lengkap">
+                        <label>Pasien</label>
+                        <select class="form-control form-select select2" id="pasien" name="pasien">
+                            <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
+                            @foreach ($pasien as $item)
+                                <option value="{{ $item->id }}" data-pob="{{ $item->place_birth }}"
+                                    data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
+                                    data-alamat="{{ $item->address }}" data-jenis_kelamin="{{ $item->genderName->name }}"
+                                    {{ old('pasien', $obesitas->pasien ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }} - {{ $item->nik }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('pasien')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tempat</label>
-                        <input type="text" class="form-control" name="tempat_lahir"
+                        <input type="text" class="form-control" name="tempat_lahir" id="tempat_lahir" readonly
                             value="{{ old('tempat_lahir', isset($obesitas) ? $obesitas->tempat_lahir : '') }}"
                             placeholder="Masukkan tempat lahir">
                     </div>
@@ -59,14 +70,14 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir"
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir" readonly
                             value="{{ old('tanggal_lahir', isset($obesitas) ? $obesitas->tanggal_lahir : '') }}">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Alamat</label>
-                        <input type="text" class="form-control" name="alamat"
+                        <input type="text" class="form-control" name="alamat" id="alamat" readonly
                             value="{{ old('alamat', isset($obesitas) ? $obesitas->alamat : '') }}"
                             placeholder="Masukkan alamat">
                     </div>
@@ -139,6 +150,32 @@
             <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
         </div>
     </form>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script>
+        $(document).ready(function() {
+
+            $('.select2').select2({
+                placeholder: "Pilih pasien",
+                allowClear: true
+            });
+
+            $('#pasien').on('change', function() {
+                var selectedOption = $(this).find(':selected');
+
+                var dob = selectedOption.data('dob');
+                var alamat = selectedOption.data('alamat');
+                var pob = selectedOption.data('pob');
+
+
+
+                $('#tanggal_lahir').val(dob);
+                $('#tempat_lahir').val(pob);
+                $('#alamat').val(alamat);
+
+            });
+            $('#pasien').trigger('change');
+        });
+    </script>
 
 @endsection

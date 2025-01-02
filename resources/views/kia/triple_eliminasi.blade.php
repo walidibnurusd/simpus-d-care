@@ -411,7 +411,7 @@
                         <label for="kapanTransfusi">Bila ya, kapan:</label>
                         <input type="text" id="kapanTransfusi" name="kapan_transfusi" class="form-control"
                             placeholder="Kapan"
-                            value="{{ isset($triple->kapan_transfusi) ? $triple->kapan_transfusi : old('kapan_transfusi') }}">
+                            value="{{ isset($triple->kapan_transfusi) ? \Carbon\Carbon::parse($triple->kapan_transfusi)->format('Y-m-d') : old('kapan_transfusi') }}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -435,7 +435,7 @@
                         <label for="kapanHemodialisa">Bila ya, kapan:</label>
                         <input type="text" id="kapanHemodialisa" name="kapan_hemodialisa" class="form-control"
                             placeholder="Kapan"
-                            value="{{ isset($triple->kapan_hemodialisa) ? $triple->kapan_hemodialisa : old('kapan_hemodialisa') }}">
+                            value="{{ isset($triple->kapan_hemodialisa) ? \Carbon\Carbon::parse($triple->kapan_hemodialisa)->format('Y-m-d') : old('kapan_hemodialisa') }}">
                     </div>
                 </div>
 
@@ -683,8 +683,9 @@
                         style="{{ isset($triple->gejala_pms) && $triple->gejala_pms == 1 ? '' : 'display: none;' }}">
                         <label for="kapanpms">Bila ya, kapan:</label>
                         <input type="date" id="kapan-pms" name="kapan_pms" class="form-control"
-                            value="{{ isset($triple->kapan_pms) ? $triple->kapan_pms : old('kapan_pms') }}">
+                            value="{{ isset($triple->kapan_pms) ? \Carbon\Carbon::parse($triple->kapan_pms)->format('Y-m-d') : old('kapan_pms') }}">
                     </div>
+
                 </div>
 
             </div>
