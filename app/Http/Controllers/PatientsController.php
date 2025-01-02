@@ -44,24 +44,25 @@ class PatientsController extends Controller
         $length = $request->input('length', 10);
         $draw = $request->input('draw', 1);
         $searchValue = $request->input('search.value', '');
-    
+
         // Hitung halaman berdasarkan DataTables `start` dan `length`
-        $page = ($start / $length) + 1;
-    
+        $page = $start / $length + 1;
+
         // Query dengan relasi dan filter pencarian
         $query = Patients::with('genderName', 'educations', 'occupations');
-    
+
         if (!empty($searchValue)) {
-            $query->where('name', 'LIKE', "%{$searchValue}%")
+            $query
+                ->where('name', 'LIKE', "%{$searchValue}%")
                 ->orWhere('address', 'LIKE', "%{$searchValue}%")
                 ->orWhereHas('genderName', function ($q) use ($searchValue) {
                     $q->where('gender', 'LIKE', "%{$searchValue}%");
                 });
         }
-    
+
         // Ambil data dengan pagination
         $patients = $query->paginate($length, ['*'], 'page', $page);
-    
+
         // Format data untuk DataTables
         return response()->json([
             'draw' => (int) $draw,
@@ -70,7 +71,7 @@ class PatientsController extends Controller
             'data' => $patients->items(), // Data pasien
         ]);
     }
-    
+
     public function getSkriningPatient(Request $request, $id)
     {
         // Ambil data pasien berdasarkan ID
@@ -135,35 +136,70 @@ class PatientsController extends Controller
                 'jenis_skrining' => $jenis,
                 'kesimpulan_skrining' => $data ? 'Tersedia' : 'Belum Tersedia',
                 'status_skrining' => $data ? 'Selesai' : 'Belum Selesai',
+                'id' => $data->id ?? null,
+                'poli' => $data->poli ?? 'Tidak Diketahui',
+                'route_name' => $this->formatRouteName($jenis),
             ];
         }
-        
+
         // Ambil parameter pencarian dari DataTables
         $searchValue = $request->input('search.value', '');
-        
+
         // Jika ada parameter pencarian, filter data
         if (!empty($searchValue)) {
             $skriningData = array_filter($skriningData, function ($row) use ($searchValue) {
-                return stripos($row['jenis_skrining'], $searchValue) !== false ||
-                       stripos($row['kesimpulan_skrining'], $searchValue) !== false ||
-                       stripos($row['status_skrining'], $searchValue) !== false;
+                return stripos($row['jenis_skrining'], $searchValue) !== false || stripos($row['kesimpulan_skrining'], $searchValue) !== false || stripos($row['status_skrining'], $searchValue) !== false;
             });
         }
-        
+
         // DataTables pagination parameters
         $start = $request->input('start', 0);
         $length = $request->input('length', 10);
         $draw = $request->input('draw', 1);
-        
+
         $paginatedData = array_slice(array_values($skriningData), $start, $length);
-        
+
         return response()->json([
             'draw' => (int) $draw,
             'recordsTotal' => count($skriningData),
             'recordsFiltered' => count($skriningData),
             'data' => $paginatedData,
         ]);
-        
+    }
+    private function getRouteNameMapping()
+    {
+        return [
+            'HIV & IMS' => 'hiv',
+            'Gangguan Spektrum Autisme' => 'gangguan-autis',
+            'Kecacingan' => 'kecacingan',
+            'Hipertensi' => 'hipertensi',
+            'Anemia' => 'anemia',
+            'Talasemia' => 'talasemia',
+            'Hepatitis' => 'hepatitis',
+            'Kekerasan terhadap Anak' => 'kekerasan-anak',
+            'Kekerasan terhadap Perempuan' => 'kekerasan-perempuan',
+            'Diabetes Mellitus' => 'diabetes-mellitus',
+            'TBC' => 'tbc',
+            'Triple Eliminasi Bumil' => 'triple-eliminasi',
+            'Tes Pendengaran' => 'test-pendengaran',
+            'SDQ (4-11 Tahun)' => 'sdq-anak',
+            'SDQ (11-18 Tahun)' => 'sdq-remaja',
+            'Obesitas' => 'obesitas',
+            'NAPZA' => 'napza',
+            'Perilaku Merokok bagi Anak Sekolah' => 'merokok',
+            'Kanker Paru' => 'kanker-paru',
+            'Kanker Kolorektal' => 'kanker-kolorektal',
+            'PPOK (PUMA)' => 'puma',
+            'Geriatri' => 'geriatri',
+            'Kanker Leher Rahim dan Kanker Payudara' => 'kanker-payudara',
+            'Layak Hamil' => 'layak-hamil',
+        ];
+    }
+
+    private function formatRouteName($jenis)
+    {
+        $routeMapping = $this->getRouteNameMapping();
+        return $routeMapping[$jenis] ?? strtolower(str_replace(['&', ' '], '-', preg_replace('/[^a-zA-Z0-9\s]/', '', $jenis)));
     }
 
     public function getPatientsDokter(Request $request)
@@ -173,14 +209,13 @@ class PatientsController extends Controller
         $length = $request->input('length', 10);
         $draw = $request->input('draw', 1);
         $searchValue = $request->input('search.value', '');
-    
+
         // Hitung halaman berdasarkan DataTables `start` dan `length`
-        $page = ($start / $length) + 1;
-    
+        $page = $start / $length + 1;
+
         // Query data Action yang dibuat hari ini dengan relasi
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')
-            ->whereDate('tanggal', Carbon::today());
-    
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->whereDate('tanggal', Carbon::today());
+
         // Filter pencarian jika ada nilai pencarian
         if (!empty($searchValue)) {
             $query->whereHas('patient', function ($q) use ($searchValue) {
@@ -197,10 +232,10 @@ class PatientsController extends Controller
                     });
             });
         }
-    
+
         // Ambil data dengan pagination
         $patients = $query->paginate($length, ['*'], 'page', $page);
-    
+
         // Format data untuk DataTables
         return response()->json([
             'draw' => (int) $draw,
@@ -209,7 +244,6 @@ class PatientsController extends Controller
             'data' => $patients->items(), // Data pasien yang dipaginasikan
         ]);
     }
-    
 
     public function index()
     {

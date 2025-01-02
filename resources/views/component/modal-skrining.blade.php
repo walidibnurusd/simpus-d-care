@@ -27,55 +27,60 @@
 
 
 <script>
-$(document).ready(function () {
-    $('#btnCariskrining').on('click', function () {
-        const patientId = $(this).data('id'); // Ambil ID pasien dari tombol
+    $(document).ready(function() {
+        $('#btnCariskrining').on('click', function() {
+            const patientId = $(this).data('id'); // Ambil ID pasien dari tombol
 
-        if (patientId) {
-            if ($.fn.DataTable.isDataTable('#skrining')) {
-                // Jika DataTable sudah ada, perbarui URL dan reload data
-                $('#skrining').DataTable().ajax.url(`/get-skrining/${patientId}`).load();
-            } else {
-                // Inisialisasi DataTable baru
-                $('#skrining').DataTable({
-                    ajax: {
-                        url: `/get-skrining/${patientId}`,
-                        type: 'GET',
-                    },
-                    columns: [
-                        { data: 'jenis_skrining', title: 'Jenis Skrining' },
-                        { data: 'kesimpulan_skrining', title: 'Kesimpulan Skrining' },
-                        {
-                            data: null,
-                            title: 'Action',
-                            render: function (data, type, row) {
-                                return `<button class="btn btn-primary btn-sm" onclick="handleAction(${data.id})">Action</button>`;
-                            },
+            if (patientId) {
+                if ($.fn.DataTable.isDataTable('#skrining')) {
+                    // Jika DataTable sudah ada, perbarui URL dan reload data
+                    $('#skrining').DataTable().ajax.url(`/get-skrining/${patientId}`).load();
+                } else {
+                    // Inisialisasi DataTable baru
+                    $('#skrining').DataTable({
+                        ajax: {
+                            url: `/get-skrining/${patientId}`,
+                            type: 'GET',
                         },
-                    ],
-                    processing: true,
-                    serverSide: true,
-                    searching: true, // Pastikan pencarian diaktifkan
-                    destroy: true, // Mengizinkan tabel diinisialisasi ulang
-                });
+                        columns: [{
+                                data: 'jenis_skrining',
+                                title: 'Jenis Skrining'
+                            },
+                            {
+                                data: 'kesimpulan_skrining',
+                                title: 'Kesimpulan Skrining'
+                            },
+                            {
+                                data: null,
+                                title: 'Action',
+                                render: function(data, type, row) {
+                                    const route =
+                                        `${data.poli}/${data.route_name}/${data.id}`;
+                                    return `<button class="btn btn-primary btn-sm" onclick="handleAction('${route}')">Detail</button>`;
+                                },
+
+                            },
+                        ],
+                        processing: true,
+                        serverSide: true,
+                        searching: true, // Pastikan pencarian diaktifkan
+                        destroy: true, // Mengizinkan tabel diinisialisasi ulang
+                    });
+                }
+            } else {
+                alert('Pilih pasien terlebih dahulu!');
             }
-        } else {
-            alert('Pilih pasien terlebih dahulu!');
-        }
+        });
+
+        // Tambahkan event handler ketika modal ditutup
+        $('#modalSkrining').on('hidden.bs.modal', function() {
+            console.log('Modal Skrining ditutup!');
+        });
     });
 
-    // Tambahkan event handler ketika modal ditutup
-    $('#modalSkrining').on('hidden.bs.modal', function () {
-        console.log('Modal Skrining ditutup!');
-    });
-});
-
-// Contoh fungsi untuk menangani aksi di tombol Action
-function handleAction(id) {
-    alert(`Aksi untuk ID: ${id}`);
-}
-
-
-
-
+    // Contoh fungsi untuk menangani aksi di tombol Action
+    function handleAction(route) {
+        const url = `/admin/${route}`;
+        window.open(url, '_blank');
+    }
 </script>

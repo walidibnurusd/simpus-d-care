@@ -69,19 +69,20 @@
                     <div class="col-md-6 mb-3">
                         <label>Tempat Lahir</label>
                         <input type="text" class="form-control" name="tempat_lahir" placeholder="Masukkan tempat lahir"
-                            id="tempat_lahir" value="{{ old('tempat_lahir', $diabetesMellitus->tempat_lahir ?? '') }}">
+                            readonly id="tempat_lahir"
+                            value="{{ old('tempat_lahir', $diabetesMellitus->tempat_lahir ?? '') }}">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir" readonly
                             value="{{ old('tanggal_lahir', $diabetesMellitus->tanggal_lahir ?? '') }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Alamat Lengkap</label>
                         <input type="text" class="form-control" name="alamat" placeholder="Masukkan alamat lengkap"
-                            id="alamat" value="{{ old('alamat', $diabetesMellitus->alamat ?? '') }}">
+                            readonly id="alamat" value="{{ old('alamat', $diabetesMellitus->alamat ?? '') }}">
                     </div>
                 </div>
             </div>
