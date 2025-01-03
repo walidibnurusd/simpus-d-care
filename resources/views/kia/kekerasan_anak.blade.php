@@ -69,7 +69,7 @@
                     <div class="form-group">
                         <label>Tempat Lahir</label>
                         <input type="text" class="form-control" name="tempat_lahir" placeholder="Masukkan tempat lahir"
-                            id="tempat_lahir"
+                            readonly id="tempat_lahir"
                             value="{{ isset($kekerasanAnak) ? $kekerasanAnak->tempat_lahir : old('tempat_lahir') }}">
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir" readonly
                             value="{{ isset($kekerasanAnak) ? $kekerasanAnak->tanggal_lahir : old('tanggal_lahir') }}">
                     </div>
                 </div>
@@ -87,7 +87,8 @@
                     <div class="form-group">
                         <label>Alamat Lengkap</label>
                         <input type="text" class="form-control" name="alamat" placeholder="Masukkan alamat lengkap"
-                            id="alamat" value="{{ isset($kekerasanAnak) ? $kekerasanAnak->alamat : old('alamat') }}">
+                            readonly id="alamat"
+                            value="{{ isset($kekerasanAnak) ? $kekerasanAnak->alamat : old('alamat') }}">
                     </div>
                 </div>
             </div>
@@ -227,7 +228,7 @@
                                 style="display: {{ isset($kekerasanAnak->tempat) && in_array('lain_lain', $kekerasanAnak->tempat) ? 'block' : 'none' }}; margin-top: 10px;">
                                 <label for="tempat_lain">Sebutkan tempat lainnya:</label>
                                 <input type="text" class="form-control" name="tempat_lain" id="tempat_lain"
-                                    value="{{ $tempatLain ?? '' }}">
+                                    value="{{ $kekerasanAnak->tempat_lain ?? '' }}">
                             </div>
                         </div>
                     </div>

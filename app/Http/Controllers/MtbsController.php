@@ -90,6 +90,7 @@ class MtbsController extends Controller
             'berbagi' => 'nullable',
             'marah' => 'nullable',
             'suka_sendiri' => 'nullable',
+            'dincam' => 'nullable',
             'penurut' => 'nullable',
             'cemas' => 'nullable',
             'siap_menolong' => 'nullable',

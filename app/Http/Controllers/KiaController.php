@@ -60,7 +60,7 @@ class KiaController extends Controller
                 'poli' => 'lansia',
             ]),
         );
-        return redirect()->route('layakHamil.view')->with('success', 'Data saved successfully');
+        return redirect()->back()->with('success', 'Data saved successfully');
     }
 
     public function showHipertensi(Request $request)
@@ -90,6 +90,7 @@ class KiaController extends Controller
             'makan_sayur' => 'required|boolean',
             'makan_buah' => 'required|boolean',
             'kesimpulan' => 'required',
+            'jmlh_rokok' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -105,7 +106,7 @@ class KiaController extends Controller
         );
 
         // Return response
-        return redirect()->route('hipertensi.view')->with('success', 'Data hipertensi berhasil disimpan');
+        return redirect()->back()->with('success', 'Data hipertensi berhasil disimpan');
     }
     public function showGangguanAutis()
     {
@@ -153,7 +154,7 @@ class KiaController extends Controller
         );
 
         // Redirect with a success message
-        return redirect()->route('gangguan.autis.view')->with('success', 'Data Gangguan Autis created successfully!');
+        return redirect()->back()->with('success', 'Data Gangguan Autis created successfully!');
     }
     public function showKecacingan(Request $request)
     {
@@ -195,7 +196,7 @@ class KiaController extends Controller
         );
 
         // Redirect with a success message
-        return redirect()->route('kecacingan.view')->with('success', 'Data Kecacingan created successfully!');
+        return redirect()->back()->with('success', 'Data Kecacingan created successfully!');
     }
 
     public function showHiv()
@@ -240,7 +241,7 @@ class KiaController extends Controller
         );
 
         // Redirect with a success message
-        return redirect()->route('hiv.view')->with('success', 'Data HIV created successfully!');
+        return redirect()->back()->with('success', 'Data HIV created successfully!');
     }
 
     public function showAnemia(Request $request)
@@ -389,6 +390,7 @@ class KiaController extends Controller
             'derajat_luka_bakar' => 'nullable',
             'kekerasan_seksual' => 'nullable',
             'dampak_kekerasan' => 'nullable',
+            'tempat_lain' => 'nullable',
             'kesimpulan' => 'required',
         ]);
 
@@ -423,7 +425,7 @@ class KiaController extends Controller
             'pasien' => 'required',
             'tempat_wawancara' => 'required',
             'hubungan_dengan_pasangan' => 'required|string|max:255',
-            'mengatasi_pertengkaran_mulur' => 'required|string|max:500',
+            'mengatasi_pertengkaran_mulut' => 'required|string|max:500',
             'akibat_pertengkaran_mulut' => 'nullable',
             'pasangan_memukul' => 'nullable',
             'ketakutan' => 'nullable',
@@ -610,8 +612,8 @@ class KiaController extends Controller
         // Store validated data with additional fields
         TripleEliminasi::create(
             array_merge($validator->validated(), [
-                'klaster' => 2, // Assign a default value for klaster
-                'poli' => 'kia', // Assign a default value for poli
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
             ]),
         );
 

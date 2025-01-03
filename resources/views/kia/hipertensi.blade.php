@@ -86,7 +86,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir" readonly
                             value="{{ old('tanggal_lahir', $hipertensi->tanggal_lahir ?? '') }}">
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Alamat Lengkap</label>
-                        <input type="text" class="form-control" name="alamat" id="alamat"
+                        <input type="text" class="form-control" name="alamat" id="alamat" readonly
                             value="{{ old('alamat', $hipertensi->alamat ?? '') }}" placeholder="Masukkan alamat lengkap">
                     </div>
                 </div>

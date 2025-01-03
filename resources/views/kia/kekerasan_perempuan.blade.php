@@ -82,7 +82,7 @@
                     <div class="form-group">
                         <label>Umur</label>
                         <input type="number" class="form-control" name="umur" placeholder="Masukkan umur" id="umurInput"
-                            readonly value="{{ old('umur', $kekerasanPerempuan->umur ?? '') }}">
+                            readonly readonly value="{{ old('umur', $kekerasanPerempuan->umur ?? '') }}">
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -131,21 +131,21 @@
                         <label>2. Apakah Ibu dan pasangan Ibu mengatasi pertengkaran mulut dengan?</label>
                         <div class="d-flex">
                             <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="mengatasi_pertengkaran_mulur"
+                                <input type="radio" class="form-check-input" name="mengatasi_pertengkaran_mulut"
                                     value="3" id="sangat_kesulitan" onclick="calculateScore()"
-                                    {{ isset($kekerasanPerempuan->mengatasi_pertengkaran_mulur) && $kekerasanPerempuan->mengatasi_pertengkaran_mulur == 3 ? 'checked' : '' }}>
+                                    {{ isset($kekerasanPerempuan->mengatasi_pertengkaran_mulut) && $kekerasanPerempuan->mengatasi_pertengkaran_mulut == 3 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="sangat_kesulitan">Sangat kesulitan</label>
                             </div>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" name="mengatasi_pertengkaran_mulur"
+                                <input type="radio" class="form-check-input" name="mengatasi_pertengkaran_mulut"
                                     value="2" id="agak_kesulitan" onclick="calculateScore()"
-                                    {{ isset($kekerasanPerempuan->mengatasi_pertengkaran_mulur) && $kekerasanPerempuan->mengatasi_pertengkaran_mulur == 2 ? 'checked' : '' }}>
+                                    {{ isset($kekerasanPerempuan->mengatasi_pertengkaran_mulut) && $kekerasanPerempuan->mengatasi_pertengkaran_mulut == 2 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="agak_kesulitan">Agak kesulitan</label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" class="form-check-input" name="mengatasi_pertengkaran_mulur"
+                                <input type="radio" class="form-check-input" name="mengatasi_pertengkaran_mulut"
                                     value="1" id="tanpa_kesulitan" onclick="calculateScore()"
-                                    {{ isset($kekerasanPerempuan->mengatasi_pertengkaran_mulur) && $kekerasanPerempuan->mengatasi_pertengkaran_mulur == 1 ? 'checked' : '' }}>
+                                    {{ isset($kekerasanPerempuan->mengatasi_pertengkaran_mulut) && $kekerasanPerempuan->mengatasi_pertengkaran_mulut == 1 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="tanpa_kesulitan">Tanpa kesulitan</label>
                             </div>
                         </div>
@@ -167,19 +167,19 @@
                         <div class="d-flex">
                             <div class="form-check mr-3">
                                 <input type="radio" class="form-check-input" name="akibat_pertengkaran_mulut"
-                                    value="3" id="sering" onclick="calculateScore()"
+                                    value="3" onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->akibat_pertengkaran_mulut) && $kekerasanPerempuan->akibat_pertengkaran_mulut == 3 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="sering">Sering</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="akibat_pertengkaran_mulut"
-                                    value="2" id="kadang_kadang" onclick="calculateScore()"
+                                    value="2" onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->akibat_pertengkaran_mulut) && $kekerasanPerempuan->akibat_pertengkaran_mulut == 2 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="kadang_kadang">Kadang-kadang</label>
                             </div>
                             <div class="form-check ml-3">
                                 <input type="radio" class="form-check-input" name="akibat_pertengkaran_mulut"
-                                    value="1" id="tidak_pernah" onclick="calculateScore()"
+                                    value="1" onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->akibat_pertengkaran_mulut) && $kekerasanPerempuan->akibat_pertengkaran_mulut == 1 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="tidak_pernah">Tidak pernah</label>
                             </div>
@@ -195,19 +195,19 @@
                         <div class="d-flex">
                             <div class="form-check mr-3">
                                 <input type="radio" class="form-check-input" name="pasangan_memukul" value="3"
-                                    id="sering" onclick="calculateScore()"
+                                    onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->pasangan_memukul) && $kekerasanPerempuan->pasangan_memukul == 3 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="sering">Sering</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="pasangan_memukul" value="2"
-                                    id="kadang_kadang" onclick="calculateScore()"
+                                    onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->pasangan_memukul) && $kekerasanPerempuan->pasangan_memukul == 2 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="kadang_kadang">Kadang-kadang</label>
                             </div>
                             <div class="form-check ml-3">
                                 <input type="radio" class="form-check-input" name="pasangan_memukul" value="1"
-                                    id="tidak_pernah" onclick="calculateScore()"
+                                    onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->pasangan_memukul) && $kekerasanPerempuan->pasangan_memukul == 1 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="tidak_pernah">Tidak pernah</label>
                             </div>
@@ -223,19 +223,19 @@
                         <div class="d-flex">
                             <div class="form-check mr-3">
                                 <input type="radio" class="form-check-input" name="ketakutan" value="3"
-                                    id="sering" onclick="calculateScore()"
+                                    onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->ketakutan) && $kekerasanPerempuan->ketakutan == 3 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="sering">Sering</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="ketakutan" value="2"
-                                    id="kadang_kadang" onclick="calculateScore()"
+                                    onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->ketakutan) && $kekerasanPerempuan->ketakutan == 2 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="kadang_kadang">Kadang-kadang</label>
                             </div>
                             <div class="form-check ml-3">
                                 <input type="radio" class="form-check-input" name="ketakutan" value="1"
-                                    id="tidak_pernah" onclick="calculateScore()"
+                                    onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->ketakutan) && $kekerasanPerempuan->ketakutan == 1 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="tidak_pernah">Tidak pernah</label>
                             </div>
@@ -250,19 +250,19 @@
                         <div class="d-flex">
                             <div class="form-check mr-3">
                                 <input type="radio" class="form-check-input" name="dibatasi" value="3"
-                                    id="sering" onclick="calculateScore()"
+                                    onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->dibatasi) && $kekerasanPerempuan->dibatasi == 3 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="sering">Sering</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="dibatasi" value="2"
-                                    id="kadang_kadang" onclick="calculateScore()"
+                                    onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->dibatasi) && $kekerasanPerempuan->dibatasi == 2 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="kadang_kadang">Kadang-kadang</label>
                             </div>
                             <div class="form-check ml-3">
                                 <input type="radio" class="form-check-input" name="dibatasi" value="1"
-                                    id="tidak_pernah" onclick="calculateScore()"
+                                    onclick="calculateScore()"
                                     {{ isset($kekerasanPerempuan->dibatasi) && $kekerasanPerempuan->dibatasi == 1 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="tidak_pernah">Tidak pernah</label>
                             </div>
@@ -309,9 +309,11 @@
     <script>
         function calculateScore() {
             let totalScore = 0;
+
             // Calculate the score from 'Pertanyaan Awal'
             const awalQuestions = document.querySelectorAll(
-                'input[name="hubungan_dengan_pasangan"]:checked, input[name="mengatasi_pertengkaran_mulur"]:checked');
+                'input[name="hubungan_dengan_pasangan"]:checked, input[name="mengatasi_pertengkaran_mulut"]:checked'
+            );
             awalQuestions.forEach(question => {
                 totalScore += parseInt(question.value);
             });
@@ -333,9 +335,9 @@
             radio.addEventListener('change', calculateScore);
         });
 
-        // Hide 'Pertanyaan Lanjutan' initially
+        // Run calculateScore on page load to handle pre-filled data
         window.onload = function() {
-            document.getElementById('pertanyaanLanjutanSection').classList.add('d-none');
+            calculateScore(); // Initialize the score and show/hide questions appropriately
         };
     </script>
     <script>

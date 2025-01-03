@@ -57,31 +57,31 @@ class AdminControllerMTBS extends Controller
             // 'tanggal_lahir' => 'required|date',
             // 'jenis_kelamin' => 'required|string|max:10',
             // 'alamat' => 'required|string|max:500',
-            'berusaha_baik' => 'required',
-            'gelisah' => 'required',
-            'sakit' => 'required',
-            'berbagi' => 'required',
-            'marah' => 'required',
-            'suka_sendiri' => 'required',
-            'penurut' => 'required',
-            'cemas' => 'required',
-            'siap_menolong' => 'required',
-            'badan_bergerak' => 'required',
-            'punya_teman' => 'required',
-            'suka_bertengkar' => 'required',
-            'tdk_bahagia' => 'required',
-            'disukai' => 'required',
-            'mudah_teralih' => 'required',
-            'gugup' => 'required',
-            'baik_pada_anak' => 'required',
-            'bohong' => 'required',
-            'suka_bantu' => 'required',
-            'kritis' => 'required',
-            'mencuri' => 'required',
-            'mudah_berteman' => 'required',
-            'takut' => 'required',
-            'rajin' => 'required',
-            'kesimpulan' => 'required',
+            'berusaha_baik' => 'nullable',
+            'gelisah' => 'nullable',
+            'sakit' => 'nullable',
+            'berbagi' => 'nullable',
+            'marah' => 'nullable',
+            'suka_sendiri' => 'nullable',
+            'penurut' => 'nullable',
+            'cemas' => 'nullable',
+            'siap_menolong' => 'nullable',
+            'badan_bergerak' => 'nullable',
+            'punya_teman' => 'nullable',
+            'suka_bertengkar' => 'nullable',
+            'tdk_bahagia' => 'nullable',
+            'disukai' => 'nullable',
+            'mudah_teralih' => 'nullable',
+            'gugup' => 'nullable',
+            'baik_pada_anak' => 'nullable',
+            'bohong' => 'nullable',
+            'suka_bantu' => 'nullable',
+            'kritis' => 'nullable',
+            'mencuri' => 'nullable',
+            'mudah_berteman' => 'nullable',
+            'takut' => 'nullable',
+            'rajin' => 'nullable',
+            'kesimpulan' => 'nullable',
         ]);
 
         // Periksa apakah validasi gagal
@@ -134,30 +134,31 @@ class AdminControllerMTBS extends Controller
             // 'tanggal_lahir' => 'required|date',
             // 'jenis_kelamin' => 'required|string|max:10',
             // 'alamat' => 'required|string|max:500',
-            'peduli_perasaan' => 'required',
-            'gelisah' => 'required',
-            'sakit' => 'required',
-            'berbagi' => 'required',
-            'marah' => 'required',
-            'suka_sendiri' => 'required',
-            'penurut' => 'required',
-            'cemas' => 'required',
-            'siap_menolong' => 'required',
-            'badan_bergerak' => 'required',
-            'punya_teman' => 'required',
-            'suka_bertengkar' => 'required',
-            'tdk_bahagia' => 'required',
-            'disukai' => 'required',
-            'mudah_teralih' => 'required',
-            'gugup' => 'required',
-            'baik_pada_anak' => 'required',
-            'bohong' => 'required',
-            'suka_bantu' => 'required',
-            'kritis' => 'required',
-            'mencuri' => 'required',
-            'mudah_berteman' => 'required',
-            'takut' => 'required',
-            'rajin' => 'required',
+            'peduli_perasaan' => 'nullable',
+            'gelisah' => 'nullable',
+            'sakit' => 'nullable',
+            'berbagi' => 'nullable',
+            'marah' => 'nullable',
+            'suka_sendiri' => 'nullable',
+            'penurut' => 'nullable',
+            'cemas' => 'nullable',
+            'siap_menolong' => 'nullable',
+            'badan_bergerak' => 'nullable',
+            'punya_teman' => 'nullable',
+            'suka_bertengkar' => 'nullable',
+            'tdk_bahagia' => 'nullable',
+            'disukai' => 'nullable',
+            'mudah_teralih' => 'nullable',
+            'gugup' => 'nullable',
+            'baik_pada_anak' => 'nullable',
+            'bohong' => 'nullable',
+            'suka_bantu' => 'nullable',
+            'kritis' => 'nullable',
+            'mencuri' => 'nullable',
+            'mudah_berteman' => 'nullable',
+            'takut' => 'nullable',
+            'rajin' => 'nullable',
+            'diancam' => 'nullable',
             'kesimpulan' => 'required',
         ]);
 
@@ -187,7 +188,7 @@ class AdminControllerMTBS extends Controller
     {
         $obesitas = Obesitas::findOrFail($id);
         $pasien = Patients::all();
-        return view('mtbs.obesitas', compact('obesitas','pasien'));
+        return view('mtbs.obesitas', compact('obesitas', 'pasien'));
     }
     public function deleteObesitas($id)
     {
@@ -284,7 +285,7 @@ class AdminControllerMTBS extends Controller
             'visual' => $request->input('visual', []), // Default to empty array if not provided
             'klaster' => 2, // Default value if not provided
             'poli' => 'mtbs', // Default value if not provided
-            'kesimpulan' => 'required',
+            'kesimpulan' => $request->kesimpulan,
         ]);
 
         // Redirect with success message
@@ -385,7 +386,7 @@ class AdminControllerMTBS extends Controller
     {
         $napza = Napza::all();
         $pasien = Patients::all();
-        return view('mtbs.table.Napza', compact('napza', 'pasien'));
+        return view('mtbs.table.napza', compact('napza', 'pasien'));
     }
     public function editNapza($id)
     {
@@ -475,7 +476,7 @@ class AdminControllerMTBS extends Controller
     {
         $hipertensi = Hipertensi::with('listPasien')->where('poli', 'mtbs')->get();
         $routeName = $request->route()->getName();
-        return view('kia.table.hipertensi', compact('hipertensi'));
+        return view('kia.table.hipertensi', compact('hipertensi', 'routeName'));
     }
     public function viewDiabetesMellitus(Request $request)
     {

@@ -808,19 +808,15 @@
         function calculateTotalScore() {
             let totalScore = 0;
 
-
             document.querySelectorAll('.form-check-input:checked').forEach((input) => {
-                totalScore += parseInt(input.value);
+                let value = parseInt(input.value);
+                if (!isNaN(value)) {
+                    totalScore += value;
+                }
             });
-
 
             document.getElementById('totalScore').value = totalScore;
         }
-
-
-        document.querySelectorAll('.form-check-input').forEach((input) => {
-            input.addEventListener('change', calculateTotalScore);
-        });
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -854,6 +850,7 @@
                 } else if (jk === 'Perempuan') {
                     $('#jk_perempuan').prop('checked', true);
                 }
+                calculateTotalScore();
             });
             $('#pasien').trigger('change');
         });

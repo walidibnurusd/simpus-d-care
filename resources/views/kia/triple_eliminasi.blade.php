@@ -657,7 +657,7 @@
                                 style="{{ isset($triple->arv_check) && $triple->arv_check == 1 ? '' : 'display: none;' }}">
                                 <label for="kapanarv">Bila ya, kapan:</label>
                                 <input type="date" id="kapanArv" name="kapan_arv" class="form-control"
-                                    value="{{ isset($triple->kapan_arv) ? $triple->kapan_arv : old('kapan_arv') }}">
+                                    value="{{ isset($triple->kapan_arv) ? \Carbon\Carbon::parse($triple->kapan_arv)->format('Y-m-d') : old('kapan_arv') }}">
                             </div>
                         </div>
                     </div>
@@ -709,164 +709,64 @@
     </form>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const gejalaRadios = document.getElementsByName('gejala_hepatitis');
-            const detailGejala = document.getElementById('detail-gejala');
-            const pertanyaan2 = document.getElementById('pertanyaan-2');
+            // Function untuk menampilkan atau menyembunyikan elemen berdasarkan nilai radio
+            function handleDisplay(radioGroupName, targetId, showValue, additionalActions = null) {
+                const radios = document.getElementsByName(radioGroupName);
+                const target = document.getElementById(targetId);
 
-            gejalaRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === '1') {
-                        detailGejala.style.display = 'block';
-                        pertanyaan2.style.display = 'block';
-                    } else if (this.value === '0') {
-                        detailGejala.style.display = 'none';
-                        pertanyaan2.style.display = 'block';
+                radios.forEach(radio => {
+                    if (radio.checked) {
+                        target.style.display = radio.value === showValue ? 'block' : 'none';
+                        if (additionalActions) additionalActions(radio);
                     }
+
+                    radio.addEventListener('change', function() {
+                        target.style.display = this.value === showValue ? 'block' : 'none';
+                        if (additionalActions) additionalActions(this);
+                    });
                 });
+            }
+
+            // Handling untuk setiap pertanyaan
+            handleDisplay('gejala_hepatitis', 'detail-gejala', '1', () => {
+                document.getElementById('pertanyaan-2').style.display = 'block';
             });
 
-            const testRadios = document.getElementsByName('test_hepatitis');
-            const detailTest = document.getElementById('detail-test');
+            handleDisplay('test_hepatitis', 'detail-test', '1');
+            handleDisplay('transfusi_darah', 'detail-transfusi', '1');
+            handleDisplay('hemodialisa', 'detail-hemodialisa', '1');
+            handleDisplay('narkoba', 'detail-narkoba', '1');
 
-            testRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === '1') {
-                        detailTest.style.display = 'block';
-                    } else if (this.value === '0') {
-                        detailTest.style.display = 'none';
-                    }
-                });
-            });
-            const transfusiRadios = document.getElementsByName('transfusi_darah');
-            const detailTransfusi = document.getElementById('detail-transfusi');
-
-            transfusiRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === '1') {
-                        detailTransfusi.style.display = 'block';
-                    } else if (this.value === '0') {
-                        detailTransfusi.style.display = 'none';
-                    }
-                });
+            handleDisplay('vaksin', 'detail-vaksin', '1', (radio) => {
+                document.getElementById('pertanyaan-8').style.display = 'block';
+                document.getElementById('pertanyaan-9').style.display = 'block';
+                if (radio.value === '0') {
+                    document.getElementById('pertanyaan-8').style.display = 'none';
+                }
             });
 
-
-            const hemodialisaRadios = document.getElementsByName('hemodialisa');
-            const detailHemodialisa = document.getElementById('detail-hemodialisa');
-
-            hemodialisaRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === '1') {
-                        detailHemodialisa.style.display = 'block';
-                    } else if (this.value === '0') {
-                        detailHemodialisa.style.display = 'none';
-                    }
-                });
-            });
-            const narkobaRadios = document.getElementsByName('narkoba');
-            const detailNarkoba = document.getElementById('detail-narkoba');
-
-            narkobaRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === '1') {
-                        detailNarkoba.style.display = 'block';
-                    } else if (this.value === '0') {
-                        detailNarkoba.style.display = 'none';
-                    }
-                });
-            });
-            const vaksinRadios = document.getElementsByName('vaksin');
-            const detailVaksin = document.getElementById('detail-vaksin');
-            const pertanyaan8 = document.getElementById('pertanyaan-8');
-            const pertanyaan9 = document.getElementById('pertanyaan-9');
-
-            vaksinRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === '1') { // Jika "Ya"
-                        detailVaksin.style.display = 'block';
-                        pertanyaan8.style.display = 'block';
-                        pertanyaan9.style.display = 'block';
-                    } else if (this.value === '0') { // Jika "Tidak"
-                        detailVaksin.style.display = 'none';
-                        pertanyaan8.style.display = 'none';
-                        pertanyaan9.style.display = 'block'; // Tetap tampilkan nomor 9
-                    }
-                });
+            handleDisplay('tinggal_serumah', 'detail-tinggal_serumah', '1', () => {
+                document.getElementById('pertanyaan-10').style.display = 'block';
             });
 
-            const serumahRadios = document.getElementsByName('tinggal_serumah');
-            const detailSerumah = document.getElementById('detail-tinggal_serumah');
-            const pertanyaan10 = document.getElementById('pertanyaan-10');
-            const hubunganRadios = document.getElementsByName('hubungan_hepatitis');
-            const hubunganDetail = document.getElementById('hubunganDetail');
+            handleDisplay('hubungan_hepatitis', 'hubunganDetail', '2');
 
-            serumahRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === '1') { // Jika "Ya"
-                        detailSerumah.style.display = 'block';
-                        pertanyaan10.style.display = 'block'; // Tetap tampilkan pertanyaan 10
-                    } else if (this.value === '0') { // Jika "Tidak"
-                        detailSerumah.style.display = 'none';
-                        pertanyaan10.style.display = 'block'; // Tampilkan langsung pertanyaan 10
-                    }
-                });
+            handleDisplay('test_hiv', 'detail-hiv', '1', (radio) => {
+                if (radio.value === '0') {
+                    document.getElementById('reaktif-detail').style.display = 'none';
+                    document.getElementById('cd4-detail').style.display = 'none';
+                }
             });
 
-            hubunganRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    hubunganDetail.style.display = this.value === '2' ? 'block' : 'none';
-                });
-            });
-            const testHivRadios = document.getElementsByName('test_hiv');
-            const detailHiv = document.getElementById('detail-hiv');
-            const hasilHivRadios = document.getElementsByName('hasil_hiv');
-            const reaktifDetail = document.getElementById('reaktif-detail');
-            const cd4CheckRadios = document.getElementsByName('cd4_check');
-            const arvCheckRadios = document.getElementsByName('arv_check');
-            const pmsCheckRadios = document.getElementsByName('gejala_pms');
-            const cd4Detail = document.getElementById('cd4-detail');
-            const arvDetail = document.getElementById('detail-arv');
-            const pmsDetail = document.getElementById('detail-pms');
-            const cd4Kapan = document.getElementById('kapan-cd4');
-            const pmsKapan = document.getElementById('kapan-pms');
-
-            testHivRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === '1') { // Jika "Ya"
-                        detailHiv.style.display = 'block';
-                    } else {
-                        detailHiv.style.display = 'none';
-                        reaktifDetail.style.display = 'none';
-                        cd4Detail.style.display = 'none';
-                    }
-                });
+            handleDisplay('hasil_hiv', 'reaktif-detail', '1');
+            handleDisplay('cd4_check', 'cd4-detail', '1', (radio) => {
+                document.getElementById('kapan-cd4').style.display = radio.value === '1' ? 'block' : 'none';
             });
 
-            hasilHivRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    reaktifDetail.style.display = this.value === '1' ? 'block' : 'none';
-                });
+            handleDisplay('arv_check', 'detail-arv', '1');
+            handleDisplay('gejala_pms', 'detail-pms', '1', (radio) => {
+                document.getElementById('kapan-pms').style.display = radio.value === '1' ? 'block' : 'none';
             });
-
-            cd4CheckRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    cd4Detail.style.display = this.value === '1' ? 'block' : 'none';
-                    cd4Kapan.style.display = this.value === '1' ? 'block' : 'none';
-                });
-            });
-            arvCheckRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    arvDetail.style.display = this.value === '1' ? 'block' : 'none';
-
-                });
-            });
-            pmsCheckRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    pmsDetail.style.display = this.value === '1' ? 'block' : 'none';
-
-                });
-            });
-
         });
     </script>
 

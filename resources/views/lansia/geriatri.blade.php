@@ -239,7 +239,7 @@
                                     <div class="form-check ml-3">
                                         <input type="radio" class="form-check-input" name="ukuran_lingkar"
                                             value="0" onclick="calculateTotalScore()"
-                                            {{ old('ukuran_lingkar', $geriatri->pakaian ?? '') == '0' ? 'checked' : '' }}>
+                                            {{ old('ukuran_lingkar', $geriatri->ukuran_lingkar ?? '') == '0' ? 'checked' : '' }}>
                                         <label class="form-check-label">Tidak</label>
                                     </div>
                                 </div>
