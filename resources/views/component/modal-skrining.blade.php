@@ -10,6 +10,7 @@
                     <thead>
                         <tr>
                             <th>Jenis</th>
+                            <th>Status</th>
                             <th>Kesimpulan</th>
                             <th>Action</th>
                         </tr>
@@ -30,6 +31,7 @@
     $(document).ready(function() {
         $('#btnCariskrining').on('click', function() {
             const patientId = $(this).data('id'); // Ambil ID pasien dari tombol
+            console.log('data pasien', patientId);
 
             if (patientId) {
                 if ($.fn.DataTable.isDataTable('#skrining')) {
@@ -47,8 +49,12 @@
                                 title: 'Jenis Skrining'
                             },
                             {
+                                data: 'status_skrining',
+                                title: 'status Skrining'
+                            },
+                            {
                                 data: 'kesimpulan_skrining',
-                                title: 'Kesimpulan Skrining'
+                                title: 'kesimpulan Skrining'
                             },
                             {
                                 data: null,

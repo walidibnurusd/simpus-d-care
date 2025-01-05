@@ -4,9 +4,9 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                @if (Auth::user()->role == 'admin-poli-umum' || Auth::user()->role == 'dokter')
+                @if ($routeName === 'action.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
-                @elseif(Auth::user()->role == 'admin-poli-gigi')
+                @elseif($routeName === 'action.dokter.gigi.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
@@ -196,7 +196,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (Auth::user()->role == 'admin-poli-umum' || Auth::user()->role == 'dokter')
+                            @if ($routeName === 'action.dokter.index')
                                 <div class="container">
                                     <div class="row g-2">
                                         <div class="col-md-2 ">
@@ -562,7 +562,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @elseif(Auth::user()->role == 'admin-poli-gigi')
+                            @elseif($routeName === 'action.dokter.gigi.index')
                                 <div class="container">
                                     <div class="row g-2">
                                         <div class="col-md-2 ">
@@ -578,7 +578,7 @@
                             @endif
                         </div>
                     </div>
-                    @if (Auth::user()->role == 'admin-poli-umum' || Auth::user()->role == 'dokter')
+                    @if ($routeName === 'action.index')
                         <div class="row mt-3">
                             <div class="col-md-4">
                                 <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular
@@ -628,7 +628,7 @@
                                     data-bs-toggle="modal" data-bs-target="#modalSkrining">
                                     Hasil Skrining
                                 </button>
-                                
+
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -651,7 +651,7 @@
                                 @if ($routeName === 'action.dokter.index')
                                     <option value="Diberikan Obat">Diberikan Obat</option>
                                     <option value="Dirujuk">Dirujuk</option>
-                                @elseif(Auth::user()->role == 'admin-poli-gigi')
+                                @elseif($routeName === 'action.dokter.gigi.index')
                                     <option value="Gigi Sulung Tumpatan Sementara">Gigi Sulung Tumpatan Sementara
                                     </option>
                                     <option value="Gigi Tetap Tumpatan Sementara">Gigi Tetap Tumpatan Sementara

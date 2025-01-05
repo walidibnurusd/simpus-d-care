@@ -89,7 +89,9 @@ class AdminController extends Controller
         // Delete the record
         $layakHamil->delete();
 
-        return redirect()->route('layakHamil.admin')->with('success', 'Data deleted successfully.');
+        return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function viewHipertensi(Request $request)
     {
@@ -160,7 +162,9 @@ class AdminController extends Controller
         // Delete the record
         $hipertensi->delete();
 
-        return redirect()->route('hipertensi.admin')->with('success', 'Data deleted successfully.');
+        return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function viewGangguanAutis()
     {
@@ -185,7 +189,9 @@ class AdminController extends Controller
         // Delete the record
         $gangguanAutis->delete();
 
-        return redirect()->route('gangguan.autis.admin')->with('success', 'Data deleted successfully.');
+       return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function updateGangguanAutis(Request $request, $id)
     {
@@ -253,7 +259,9 @@ class AdminController extends Controller
 
         $anemia->delete();
 
-        return redirect()->back()->with('success', 'Data anemia berhasil dihapus.');
+       return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function updateAnemia(Request $request, $id)
     {
@@ -373,7 +381,9 @@ class AdminController extends Controller
         $hepatitis->delete();
 
         // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('hepatitis.admin')->with('success', 'Data hepatitis berhasil dihapus.');
+         return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function viewTalasemia(Request $request)
     {
@@ -466,7 +476,9 @@ class AdminController extends Controller
         $hiv->delete();
 
         // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('hiv.admin')->with('success', 'Data hiv berhasil dihapus.');
+     return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function updateHiv(Request $request, $id)
     {
@@ -532,7 +544,9 @@ class AdminController extends Controller
         $kecacingan->delete();
 
         // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->back()->with('success', 'Data kecacingan berhasil dihapus.');
+        return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function updateKecacingan(Request $request, $id)
     {
@@ -598,7 +612,9 @@ class AdminController extends Controller
         $diabetesMellitus->delete();
 
         // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->back()->with('success', 'Data Diabetes Mellitus berhasil dihapus.');
+       return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function updateDiabetesMellitus(Request $request, $id)
     {
@@ -661,8 +677,9 @@ class AdminController extends Controller
         // Hapus data dari database
         $tbc->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->back()->with('success', 'Data TBC berhasil dihapus.');
+        return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function updateTbc(Request $request, $id)
     {
@@ -756,8 +773,9 @@ class AdminController extends Controller
         // Hapus data dari database
         $kekerasanPerempuan->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->back()->with('success', 'Data Kekerasan Perempuan berhasil dihapus.');
+       return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function updateKekerasanPerempuan(Request $request, $id)
     {

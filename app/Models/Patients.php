@@ -11,7 +11,7 @@ class Patients extends Model
     use HasFactory;
     protected $table = 'patients';
 
-    protected $fillable = ['nik', 'name', 'dob', 'place_birth', 'gender', 'phone', 'marrital_status', 'no_rm', 'blood_type', 'occupation', 'education', 'address', 'rw', 'indonesia_province_id', 'indonesia_city_id', 'indonesia_district', 'indonesia_village','jenis_kartu','nomor_kartu'];
+    protected $fillable = ['nik', 'name', 'dob', 'place_birth', 'gender', 'phone', 'marrital_status', 'no_rm', 'blood_type', 'occupation', 'education', 'address', 'rw', 'indonesia_province_id', 'indonesia_city_id', 'indonesia_district', 'indonesia_village','jenis_kartu','nomor_kartu','klaster','poli'];
 
     /**
      * Get the patient's age from their date of birth.

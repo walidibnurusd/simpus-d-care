@@ -63,6 +63,9 @@
                                 <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
                                     data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
                                     data-jenis_kelamin="{{ $item->genderName->name }}" data-alamat="{{ $item->address }}"
+                                    data-pekerjaan="{{ $item->occupations->name }}"
+                                    data-perkawinan="{{ $item->marritalStatus->name }}"
+                                    data-pendidikan="{{ $item->educations->name }}"
                                     data-tempat_lahir="{{ $item->place_birth }}"
                                     {{ old('pasien', $triple->pasien ?? '') == $item->id ? 'selected' : '' }}>
                                     {{ $item->name }} - {{ $item->nik }}
@@ -95,63 +98,15 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>4. Pekerjaan</label>
-                        <div class="d-flex">
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="pekerjaan" value="1"
-                                    {{ isset($triple->pekerjaan) && $triple->pekerjaan == 1 ? 'checked' : '' }}>
-                                <label class="form-check-label">Belum bekerja</label>
-                            </div>
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="pekerjaan" value="2"
-                                    {{ isset($triple->pekerjaan) && $triple->pekerjaan == 2 ? 'checked' : '' }}>
-                                <label class="form-check-label">PNS</label>
-                            </div>
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="pekerjaan" value="3"
-                                    {{ isset($triple->pekerjaan) && $triple->pekerjaan == 3 ? 'checked' : '' }}>
-                                <label class="form-check-label">Swasta</label>
-                            </div>
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="pekerjaan" value="4"
-                                    {{ isset($triple->pekerjaan) && $triple->pekerjaan == 4 ? 'checked' : '' }}>
-                                <label class="form-check-label">Pedagang</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="pekerjaan" value="5"
-                                    {{ isset($triple->pekerjaan) && $triple->pekerjaan == 5 ? 'checked' : '' }}>
-                                <label class="form-check-label">Lainnya</label>
-                            </div>
-                        </div>
+                        <input type="text" readonly class="form-control" id="pekerjaan" name="pekerjaan" readonly>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>5. Status perkawinan</label>
-                        <div class="d-flex">
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="status_kawin" value="1"
-                                    {{ isset($triple->status_kawin) && $triple->status_kawin == 1 ? 'checked' : '' }}>
-                                <label class="form-check-label">Kawin</label>
-                            </div>
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="status_kawin" value="2"
-                                    {{ isset($triple->status_kawin) && $triple->status_kawin == 2 ? 'checked' : '' }}>
-                                <label class="form-check-label">Cerai hidup</label>
-                            </div>
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="status_kawin" value="3"
-                                    {{ isset($triple->status_kawin) && $triple->status_kawin == 3 ? 'checked' : '' }}>
-                                <label class="form-check-label">Cerai mati</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="status_kawin" value="4"
-                                    {{ isset($triple->status_kawin) && $triple->status_kawin == 4 ? 'checked' : '' }}>
-                                <label class="form-check-label">Belum kawin</label>
-                            </div>
-                        </div>
+                        <label>5. Status Perkawinan</label>
+                        <input type="text" readonly class="form-control" id="perkawinan" name="perkawinan" readonly>
                     </div>
                 </div>
-
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>6. Status GPA</label>
@@ -159,22 +114,19 @@
                             <!-- Gravida -->
                             <div class="col-md-4">
                                 <label>Gravida</label>
-                                <input type="number" name="gravida" class="form-control" placeholder="0"
-                                    min="0"
+                                <input type="number" name="gravida" class="form-control" placeholder="0" min="0"
                                     value="{{ isset($triple->gravida) ? $triple->gravida : old('gravida') }}">
                             </div>
                             <!-- Partus -->
                             <div class="col-md-4">
                                 <label>Partus</label>
-                                <input type="number" name="partus" class="form-control" placeholder="0"
-                                    min="0"
+                                <input type="number" name="partus" class="form-control" placeholder="0" min="0"
                                     value="{{ isset($triple->partus) ? $triple->partus : old('partus') }}">
                             </div>
                             <!-- Abortus -->
                             <div class="col-md-4">
                                 <label>Abortus</label>
-                                <input type="number" name="abortus" class="form-control" placeholder="0"
-                                    min="0"
+                                <input type="number" name="abortus" class="form-control" placeholder="0" min="0"
                                     value="{{ isset($triple->abortus) ? $triple->abortus : old('abortus') }}">
                             </div>
                         </div>
@@ -271,33 +223,8 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>14. Pendidikan terakhir</label>
-                        <div class="d-flex">
-                            <!-- SD -->
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="pendidikan" value="1"
-                                    {{ isset($triple->pendidikan) && $triple->pendidikan == 1 ? 'checked' : '' }}>
-                                <label class="form-check-label">SD</label>
-                            </div>
-                            <!-- SMTP -->
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="pendidikan" value="2"
-                                    {{ isset($triple->pendidikan) && $triple->pendidikan == 2 ? 'checked' : '' }}>
-                                <label class="form-check-label">SMTP</label>
-                            </div>
-                            <!-- SMTA -->
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="pendidikan" value="3"
-                                    {{ isset($triple->pendidikan) && $triple->pendidikan == 3 ? 'checked' : '' }}>
-                                <label class="form-check-label">SMTA</label>
-                            </div>
-                            <!-- PT -->
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="pendidikan" value="4"
-                                    {{ isset($triple->pendidikan) && $triple->pendidikan == 4 ? 'checked' : '' }}>
-                                <label class="form-check-label">PT</label>
-                            </div>
-                        </div>
+                        <label>14. Pendidikan Terakhir</label>
+                        <input type="text" readonly class="form-control" id="pendidikan" name="pendidikan" readonly>
                     </div>
                 </div>
 
@@ -370,7 +297,7 @@
                         value="{{ isset($triple->lokasi_tes) ? $triple->lokasi_tes : old('lokasi_tes') }}"><br>
                     <label for="tanggalTes">Kapan:</label>
                     <input type="date" id="tanggalTes" name="tanggal_tes" class="form-control"
-                        value="{{ isset($triple->tanggal_tes) ? $triple->tanggal_tes : old('tanggal_tes') }}"><br>
+                        value="{{ isset($triple->tanggal_tes) ? \Carbon\Carbon::parse($triple->tanggal_tes)->format('Y-m-d') : old('tanggal_tes') }}">
                     <label>Hasil Tes:</label>
                     <ul>
                         <li>HBsAg: <input type="text" name="HBsAg" class="form-control" placeholder="Hasil"
@@ -409,7 +336,7 @@
                     <div id="detail-transfusi"
                         style="{{ isset($triple->transfusi_darah) && $triple->transfusi_darah == 1 ? '' : 'display: none;' }}">
                         <label for="kapanTransfusi">Bila ya, kapan:</label>
-                        <input type="text" id="kapanTransfusi" name="kapan_transfusi" class="form-control"
+                        <input type="date" id="kapanTransfusi" name="kapan_transfusi" class="form-control"
                             placeholder="Kapan"
                             value="{{ isset($triple->kapan_transfusi) ? \Carbon\Carbon::parse($triple->kapan_transfusi)->format('Y-m-d') : old('kapan_transfusi') }}">
                     </div>
@@ -433,7 +360,7 @@
                     <div id="detail-hemodialisa"
                         style="{{ isset($triple->hemodialisa) && $triple->hemodialisa == 1 ? '' : 'display: none;' }}">
                         <label for="kapanHemodialisa">Bila ya, kapan:</label>
-                        <input type="text" id="kapanHemodialisa" name="kapan_hemodialisa" class="form-control"
+                        <input type="date" id="kapanHemodialisa" name="kapan_hemodialisa" class="form-control"
                             placeholder="Kapan"
                             value="{{ isset($triple->kapan_hemodialisa) ? \Carbon\Carbon::parse($triple->kapan_hemodialisa)->format('Y-m-d') : old('kapan_hemodialisa') }}">
                     </div>
@@ -464,9 +391,9 @@
                     <div id="detail-narkoba"
                         style="{{ isset($triple->narkoba) && $triple->narkoba == 1 ? '' : 'display: none;' }}">
                         <label for="kapannarkoba">Bila ya, kapan:</label>
-                        <input type="text" id="kapannarkoba" name="kapan_narkoba" class="form-control"
+                        <input type="date" id="kapannarkoba" name="kapan_narkoba" class="form-control"
                             placeholder="Kapan"
-                            value="{{ isset($triple->kapan_narkoba) ? $triple->kapan_narkoba : old('kapan_narkoba') }}">
+                            value="{{ isset($triple->kapan_narkoba) ? \Carbon\Carbon::parse($triple->kapan_narkoba)->format('Y-m-d') : old('kapan_narkoba') }}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -486,7 +413,7 @@
                     <div id="detail-vaksin"
                         style="{{ isset($triple->vaksin) && $triple->vaksin == 1 ? '' : 'display: none;' }}">
                         <label for="kapanvaksin">Bila ya, kapan:</label>
-                        <input type="text" id="kapanvaksin" name="kapan_vaksin" class="form-control"
+                        <input type="date" id="kapanvaksin" name="kapan_vaksin" class="form-control"
                             placeholder="Kapan"
                             value="{{ isset($triple->kapan_vaksin) ? $triple->kapan_vaksin : old('kapan_vaksin') }}">
                     </div>
@@ -536,9 +463,9 @@
                     <div id="detail-tinggal_serumah"
                         style="{{ isset($triple->tinggal_serumah) && $triple->tinggal_serumah == 1 ? '' : 'display: none;' }}">
                         <label for="kapanTinggal">Bila ya, kapan:</label>
-                        <input type="text" id="kapanTinggal" name="kapan_tinggal_serumah" class="form-control"
+                        <input type="date" id="kapanTinggal" name="kapan_tinggal_serumah" class="form-control"
                             placeholder="Kapan"
-                            value="{{ isset($triple->kapan_tinggal_serumah) ? $triple->kapan_tinggal_serumah : old('kapan_tinggal_serumah') }}">
+                            value="{{ isset($triple->kapan_tinggal_serumah) ? \Carbon\Carbon::parse($triple->kapan_tinggal_serumah)->format('Y-m-d') : old('kapan_transfusi') }}">
 
                         <label for="hubungan">Apa hubungan anda dengan penderita hepatitis B tsb?</label>
                         <div class="d-flex align-items-center mb-2">
@@ -789,9 +716,12 @@
                 var nik = selectedOption.data('nik');
                 var dob = selectedOption.data('dob');
                 var alamat = selectedOption.data('alamat');
+                var pekerjaan = selectedOption.data('pekerjaan');
+                var perkawinan = selectedOption.data('perkawinan');
+                var pendidikan = selectedOption.data('pendidikan');
                 var tempat_lahir = selectedOption.data('tempat_lahir');
                 var jk = selectedOption.data('jenis_kelamin');
-                console.log(jk);
+
 
                 // Isi input dengan data yang diambil
                 $('#no_hp').val(no_hp);
@@ -799,6 +729,9 @@
                 $('#tanggal_lahir').val(dob);
                 $('#alamat').val(alamat);
                 $('#tempat_lahir').val(tempat_lahir);
+                $('#perkawinan').val(perkawinan);
+                $('#pendidikan').val(pendidikan);
+                $('#pekerjaan').val(pekerjaan);
                 $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
                 if (jk === 'Laki-Laki') {
                     $('#jk_laki').prop('checked', true);

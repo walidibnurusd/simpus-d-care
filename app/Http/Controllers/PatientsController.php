@@ -72,136 +72,6 @@ class PatientsController extends Controller
         ]);
     }
 
-    public function getSkriningPatient(Request $request, $id)
-    {
-        // Ambil data pasien berdasarkan ID
-        $patient = Patients::findOrFail($id);
-
-        if (!$patient) {
-            return response()->json(['error' => 'Patient not found'], 404);
-        }
-
-        $klaster = $patient->klaster;
-
-        $skriningData = [];
-
-        switch ($klaster) {
-            case 2:
-                $skrining = [
-                    'Hipertensi' => Hipertensi::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Gangguan Spektrum Autisme' => GangguanAutis::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Kecacingan' => Kecacingan::where('pasien', $id)->where('klaster', 2)->first(),
-                    'HIV & IMS' => Hiv::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Anemia' => Anemia::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Talasemia' => Talasemia::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Hepatitis' => Hepatitis::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Kekerasan terhadap Anak' => KekerasanAnak::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Kekerasan terhadap Perempuan' => KekerasanPerempuan::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Diabetes Mellitus' => DiabetesMellitus::where('pasien', $id)->where('klaster', 2)->first(),
-                    'TBC' => Tbc::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Triple Eliminasi Bumil' => TripleEliminasi::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Tes Pendengaran' => TesDayaDengar::where('pasien', $id)->where('klaster', 2)->first(),
-                    'SDQ (4-11 Tahun)' => GangguanJiwaAnak::where('pasien', $id)->where('klaster', 2)->first(),
-                    'SDQ (11-18 Tahun)' => GangguanJiwaRemaja::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Kekerasan terhadap Anak' => KekerasanAnak::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Kekerasan terhadap Perempuan' => KekerasanPerempuan::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Obesitas' => Obesitas::where('pasien', $id)->where('klaster', 2)->first(),
-                    'NAPZA' => Napza::where('pasien', $id)->where('klaster', 2)->first(),
-                    'Perilaku Merokok bagi Anak Sekolah' => Merokok::where('pasien', $id)->where('klaster', 2)->first(),
-                ];
-                break;
-
-            case 3:
-                $skrining = [
-                    'Kanker Paru' => KankerParu::where('pasien', $id)->where('klaster', 3)->first(),
-                    'Kanker Kolorektal' => KankerKolorektal::where('pasien', $id)->where('klaster', 3)->first(),
-                    'PPOK (PUMA)' => Puma::where('pasien', $id)->where('klaster', 3)->first(),
-                    'Geriatri' => Geriatri::where('pasien', $id)->where('klaster', 3)->first(),
-                    'Kanker Leher Rahim dan Kanker Payudara' => KankerPayudara::where('pasien', $id)->where('klaster', 3)->first(),
-                    'Hipertensi' => Hipertensi::where('pasien', $id)->get(),
-                    'TBC' => Tbc::where('pasien', $id)->where('klaster', 3)->first(),
-                    'Layak Hamil' => LayakHamil::where('pasien', $id)->where('klaster', 3)->first(),
-                    'Anemia' => Anemia::where('pasien', $id)->where('klaster', 3)->first(),
-                    'Talasemia' => Talasemia::where('pasien', $id)->where('klaster', 3)->first(),
-                ];
-                break;
-
-            default:
-                $skrining = [];
-                break;
-        }
-
-        foreach ($skrining as $jenis => $data) {
-            $skriningData[] = [
-                'jenis_skrining' => $jenis,
-                'kesimpulan_skrining' => $data ? 'Tersedia' : 'Belum Tersedia',
-                'status_skrining' => $data ? 'Selesai' : 'Belum Selesai',
-                'id' => $data->id ?? null,
-                'poli' => $data->poli ?? 'Tidak Diketahui',
-                'route_name' => $this->formatRouteName($jenis),
-            ];
-        }
-
-        // Ambil parameter pencarian dari DataTables
-        $searchValue = $request->input('search.value', '');
-
-        // Jika ada parameter pencarian, filter data
-        if (!empty($searchValue)) {
-            $skriningData = array_filter($skriningData, function ($row) use ($searchValue) {
-                return stripos($row['jenis_skrining'], $searchValue) !== false || stripos($row['kesimpulan_skrining'], $searchValue) !== false || stripos($row['status_skrining'], $searchValue) !== false;
-            });
-        }
-
-        // DataTables pagination parameters
-        $start = $request->input('start', 0);
-        $length = $request->input('length', 10);
-        $draw = $request->input('draw', 1);
-
-        $paginatedData = array_slice(array_values($skriningData), $start, $length);
-
-        return response()->json([
-            'draw' => (int) $draw,
-            'recordsTotal' => count($skriningData),
-            'recordsFiltered' => count($skriningData),
-            'data' => $paginatedData,
-        ]);
-    }
-    private function getRouteNameMapping()
-    {
-        return [
-            'HIV & IMS' => 'hiv',
-            'Gangguan Spektrum Autisme' => 'gangguan-autis',
-            'Kecacingan' => 'kecacingan',
-            'Hipertensi' => 'hipertensi',
-            'Anemia' => 'anemia',
-            'Talasemia' => 'talasemia',
-            'Hepatitis' => 'hepatitis',
-            'Kekerasan terhadap Anak' => 'kekerasan-anak',
-            'Kekerasan terhadap Perempuan' => 'kekerasan-perempuan',
-            'Diabetes Mellitus' => 'diabetes-mellitus',
-            'TBC' => 'tbc',
-            'Triple Eliminasi Bumil' => 'triple-eliminasi',
-            'Tes Pendengaran' => 'test-pendengaran',
-            'SDQ (4-11 Tahun)' => 'sdq-anak',
-            'SDQ (11-18 Tahun)' => 'sdq-remaja',
-            'Obesitas' => 'obesitas',
-            'NAPZA' => 'napza',
-            'Perilaku Merokok bagi Anak Sekolah' => 'merokok',
-            'Kanker Paru' => 'kanker-paru',
-            'Kanker Kolorektal' => 'kanker-kolorektal',
-            'PPOK (PUMA)' => 'puma',
-            'Geriatri' => 'geriatri',
-            'Kanker Leher Rahim dan Kanker Payudara' => 'kanker-payudara',
-            'Layak Hamil' => 'layak-hamil',
-        ];
-    }
-
-    private function formatRouteName($jenis)
-    {
-        $routeMapping = $this->getRouteNameMapping();
-        return $routeMapping[$jenis] ?? strtolower(str_replace(['&', ' '], '-', preg_replace('/[^a-zA-Z0-9\s]/', '', $jenis)));
-    }
-
     public function getPatientsDokter(Request $request)
     {
         // Ambil parameter DataTables
@@ -271,6 +141,7 @@ class PatientsController extends Controller
                 'district' => 'required',
                 'village' => 'nullable',
                 'rw' => 'nullable',
+                'klaster' => 'required',
                 'address' => 'required|string|max:255',
                 'jenis_kartu' => 'required|string|max:255',
                 'nomor_kartu' => 'required|string|max:255',
@@ -294,6 +165,7 @@ class PatientsController extends Controller
             $patient->indonesia_district = $validatedData['district'];
             $patient->indonesia_village = $validatedData['village'] ?? null;
             $patient->rw = $validatedData['rw'] ?? null;
+            $patient->klaster = $validatedData['klaster'] ?? null;
             $patient->address = $validatedData['address'];
             $patient->jenis_kartu = $validatedData['jenis_kartu'];
             $patient->nomor_kartu = $validatedData['nomor_kartu'];
@@ -332,6 +204,7 @@ class PatientsController extends Controller
                 'district' => 'required',
                 'village' => 'nullable',
                 'rw' => 'nullable',
+                'klaster' => 'required',
                 'address' => 'required|string|max:255',
                 'jenis_kartu' => 'required|string|max:255',
                 'nomor_kartu' => 'required|string|max:255',
@@ -357,6 +230,7 @@ class PatientsController extends Controller
             $patient->indonesia_district = $validatedData['district'];
             $patient->indonesia_village = $validatedData['village'] ?? null;
             $patient->rw = $validatedData['rw'] ?? null;
+            $patient->klaster = $validatedData['klaster'] ?? null;
             $patient->address = $validatedData['address'];
             $patient->jenis_kartu = $validatedData['jenis_kartu'];
             $patient->nomor_kartu = $validatedData['nomor_kartu'];

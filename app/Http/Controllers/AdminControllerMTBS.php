@@ -42,9 +42,12 @@ class AdminControllerMTBS extends Controller
 
         // Hapus data dari database
         $gangguanJiwaAnak->delete();
-
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('sdq.mtbs.admin')->with('success', 'Data Gangguan Jiwa Anak berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateGangguanJiwaAnak(Request $request, $id)
     {
@@ -120,8 +123,12 @@ class AdminControllerMTBS extends Controller
         // Hapus data dari database
         $gangguanJiwaRemaja->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('sdq.mtbs.admin')->with('success', 'Data Gangguan Jiwa Remaja berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateGangguanJiwaRemaja(Request $request, $id)
     {
@@ -134,7 +141,7 @@ class AdminControllerMTBS extends Controller
             // 'tanggal_lahir' => 'required|date',
             // 'jenis_kelamin' => 'required|string|max:10',
             // 'alamat' => 'required|string|max:500',
-            'peduli_perasaan' => 'nullable',
+            'berusaha_baik' => 'nullable',
             'gelisah' => 'nullable',
             'sakit' => 'nullable',
             'berbagi' => 'nullable',
@@ -253,8 +260,12 @@ class AdminControllerMTBS extends Controller
         // Hapus data dari database
         $testPendengaran->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('testPendengaran.mtbs.admin')->with('success', 'Data Tes Daya Dengar berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateTestPendengaran(Request $request, $id)
     {
@@ -313,8 +324,12 @@ class AdminControllerMTBS extends Controller
         // Hapus data dari database
         $merokok->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('merokok.mtbs.admin')->with('success', 'Data Merokok berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateMerokok(Request $request, $id)
     {
@@ -392,7 +407,7 @@ class AdminControllerMTBS extends Controller
     {
         $napza = Napza::findOrFail($id);
         $pasien = Patients::all();
-        return view('mtbs.Napza', compact('napza', 'pasien'));
+        return view('mtbs.napza', compact('napza', 'pasien'));
     }
     public function deleteNapza($id)
     {
@@ -402,8 +417,12 @@ class AdminControllerMTBS extends Controller
         // Hapus data dari database
         $napza->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('napza.mtbs.admin')->with('success', 'Data Napza berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateNapza(Request $request, $id)
     {

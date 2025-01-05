@@ -105,8 +105,8 @@
                         <label>Jenis Kelamin</label>
                         <div class="d-flex">
                             <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="jenis_kelamin_kecacingan"
-                                    value="laki-laki" id="jk_laki"
+                                <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki"
+                                    id="jk_laki"
                                     {{ old('jenis_kelamin', $kecacingan->jenis_kelamin ?? '') == 'laki-laki' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>

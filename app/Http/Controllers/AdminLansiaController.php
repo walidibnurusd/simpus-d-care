@@ -28,7 +28,7 @@ class AdminLansiaController extends Controller
     {
         $puma = Puma::findOrFail($id);
         $pasien = Patients::all();
-        return view('lansia.Puma', compact('puma', 'pasien'));
+        return view('lansia.puma', compact('puma', 'pasien'));
     }
     public function deletePuma($id)
     {
@@ -38,8 +38,12 @@ class AdminLansiaController extends Controller
         // Hapus data dari database
         $puma->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('puma.lansia.admin')->with('success', 'Data Puma berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updatePuma(Request $request, $id)
     {
@@ -103,8 +107,12 @@ class AdminLansiaController extends Controller
         // Hapus data dari database
         $kankerParu->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('kankerParu.lansia.admin')->with('success', 'Data Kanker paru berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateKankerParu(Request $request, $id)
     {
@@ -164,8 +172,12 @@ class AdminLansiaController extends Controller
         // Hapus data dari database
         $kankerKolorektal->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('kankerKolorektal.lansia.admin')->with('success', 'Data Kanker Kolorektal berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateKankerKolorektal(Request $request, $id)
     {
@@ -227,8 +239,12 @@ class AdminLansiaController extends Controller
         // Hapus data dari database
         $kankerPayudara->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('kankerPayudara.lansia.admin')->with('success', 'Data Kanker Payudara berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateKankerPayudara(Request $request, $id)
     {
@@ -348,8 +364,12 @@ class AdminLansiaController extends Controller
         // Hapus data dari database
         $geriatri->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('geriatri.lansia.admin')->with('success', 'Data Geriatri berhasil dihapus.');
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateGeriatri(Request $request, $id)
     {

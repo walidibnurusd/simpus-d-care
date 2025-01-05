@@ -84,7 +84,7 @@ class MtbsController extends Controller
             // 'tanggal_lahir' => 'required|date',
             // 'jenis_kelamin' => 'required|string|max:10',
             // 'alamat' => 'required|string|max:500',
-            'peduli_perasaan' => 'nullable',
+            'berusaha_baik' => 'nullable',
             'gelisah' => 'nullable',
             'sakit' => 'nullable',
             'berbagi' => 'nullable',

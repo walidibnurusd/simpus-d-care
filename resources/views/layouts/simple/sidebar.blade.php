@@ -28,18 +28,33 @@
                             <h6 class="lan-1">General</h6>
                         </div>
                     </li>
-
-                    <li class="sidebar-list">
-                        <a class="sidebar-link sidebar-title link-nav" href="{{ route('patient.index') }}">
-                            <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-user') }}"></use>
-                            </svg>
-                            <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-user') }}"></use>
-                            </svg>
-                            <span>Pasien</span>
-                        </a>
-                    </li>
+                    @if (Auth::user()->role == 'admin-loket')
+                        <li class="sidebar-list">
+                            <a class="sidebar-link sidebar-title link-nav" href="{{ route('patient.index') }}">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-user') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-user') }}"></use>
+                                </svg>
+                                <span>Pasien</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->role == 'admin-skrining')
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                                href="#">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
+                                </svg><span>Skrining</span></a>
+                            <ul class="sidebar-submenu">
+                                <li><a href="{{ route('skrining.index') }}">Skrining Ilp</a></li>
+                            </ul>
+                        </li>
+                    @endif
                     <li class="sidebar-list">
                         <a class="sidebar-link sidebar-title link-nav" href="{{ route('profile') }}">
                             <svg class="stroke-icon">
@@ -51,79 +66,81 @@
                             <span>Profile</span>
                         </a>
                     </li>
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                            href="#">
-                            <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                            </svg>
-                            <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+                    @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'admin-kajian-awal')
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                                href="#">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
 
-                            </svg><span>Poli Umum</span></a>
+                                </svg><span>Poli Umum</span></a>
 
-                        {{-- </svg><span>Poli Gigi</span></a>
+                            {{-- </svg><span>Poli Gigi</span></a>
                  
                         </svg><span>UGD</span></a> --}}
 
-                        <ul class="sidebar-submenu">
-                            @if (Auth::user()->role == 'dokter')
-                                <li><a href="{{ route('action.dokter.index') }}">Tindakan</a></li>
-                                <li><a href="{{ route('report.index') }}">Laporan</a></li>
-                            @else
-                                <li><a href="{{ route('action.index') }}">Tindakan</a></li>
-                                <li><a href="{{ route('report.index') }}">Laporan</a></li>
-                            @endif
-                        </ul>
-                    </li>
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                            href="#">
-                            <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                            </svg>
-                            <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+                            <ul class="sidebar-submenu">
+                                @if (Auth::user()->role == 'dokter')
+                                    <li><a href="{{ route('action.dokter.index') }}">Tindakan</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                                @elseif(Auth::user()->role == 'admin-kajian-awal')
+                                    <li><a href="{{ route('action.index') }}">Kajian Awal</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                                @endif
+                            </ul>
+                        </li>
+                    @endif
+                    @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'admin-kajian-awal')
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                                href="#">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
 
-                            </svg><span>Poli Gigi</span></a>
+                                </svg><span>Poli Gigi</span></a>
 
-                        <ul class="sidebar-submenu">
+                            <ul class="sidebar-submenu">
+                                @if (Auth::user()->role == 'dokter')
+                                    <li><a href="{{ route('action.dokter.gigi.index') }}">Tindakan</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                                @elseif(Auth::user()->role == 'admin-kajian-awal')
+                                    <li><a href="{{ route('action.index.gigi') }}">Kajian Awal</a></li>
+                                    <li><a href="{{ route('report.index.gigi') }}">Laporan</a></li>
+                                @endif
 
-                            <li><a href="{{ route('action.index.gigi') }}">Tindakan</a></li>
-                            <li><a href="{{ route('report.index.gigi') }}">Laporan</a></li>
+                            </ul>
+                        </li>
+                    @endif
 
-                        </ul>
-                    </li>
+                    @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'admin-kajian-awal')
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                                href="#">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
 
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                            href="#">
-                            <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                            </svg>
-                            <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+                                </svg><span>UGD</span></a>
 
-                            </svg><span>UGD</span></a>
+                            <ul class="sidebar-submenu">
+                                @if (Auth::user()->role == 'dokter')
+                                    <li><a href="{{ route('action.dokter.ugd.index') }}">Tindakan</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                                @elseif(Auth::user()->role == 'admin-kajian-awal')
+                                    <li><a href="{{ route('action.index.ugd') }}">Kajian Awal</a></li>
+                                    <li><a href="{{ route('report.index.ugd') }}">Laporan</a></li>
+                                @endif
 
-                        <ul class="sidebar-submenu">
+                            </ul>
+                        </li>
+                    @endif
 
-                            <li><a href="{{ route('action.index.ugd') }}">Tindakan</a></li>
-                            <li><a href="{{ route('report.index.ugd') }}">Laporan</a></li>
-
-                        </ul>
-                    </li>
-
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                            href="#">
-                            <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
-                            </svg>
-                            <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
-                            </svg><span>Skrining</span></a>
-                        <ul class="sidebar-submenu">
-                            <li><a href="{{ route('skrining.ilp') }}" target="_blank">Skrining Ilp</a></li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                    {{-- <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
                             href="#">
                             <svg class="stroke-icon">
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
@@ -201,7 +218,7 @@
                             <li><a href="{{ route('anemia.admin.lansia') }}">Anemia</a></li>
 
                         </ul>
-                    </li>
+                    </li> --}}
 
                 </ul>
             </div>

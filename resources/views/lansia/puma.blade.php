@@ -165,14 +165,14 @@
                             <br>
                             <p>Merokok (diisi oleh responden) :</p>
                             <label>Rata-rata jumlah rokok/hari</label>
-                            <input type="number" class="form-control" name="jumlah_rokok_per_hari"
+                            <input type="number" class="form-control" name="jumlah_rokok"
                                 placeholder="Masukkan jumlah batang"
-                                value="{{ old('jumlah_rokok_per_hari', $puma->jumlah_rokok_per_hari ?? '') }}">
+                                value="{{ old('jumlah_rokok', $puma->jumlah_rokok ?? '') }}">
 
                             <label>Lama merokok dalam tahun</label>
-                            <input type="number" class="form-control" name="lama_merokok"
-                                placeholder="Masukkan lama merokok dalam tahun"
-                                value="{{ old('lama_merokok', $puma->lama_merokok ?? '') }}">
+                            <input type="number" class="form-control" name="lama_rokok"
+                                placeholder="Masukkan lama rokok dalam tahun"
+                                value="{{ old('lama_rokok', $puma->lama_rokok ?? '') }}">
 
                             <label>Hitung Pack years (oleh petugas)</label>
                             <p class="form-check-label">Pack years = Lama merokok dalam tahun x Jumlah batang rokok per
@@ -420,7 +420,7 @@
                 } else if (jk === 'Perempuan') {
                     $('#jk_perempuan').prop('checked', true);
                 }
-                calculateTotalScore();  
+                calculateTotalScore();
             });
             $('#pasien').trigger('change');
         });

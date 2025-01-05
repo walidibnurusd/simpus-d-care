@@ -133,7 +133,40 @@
                         </div>
                     </div>
                     <div class="row g-2">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="klaster">Klaster</label>
+                                <select class="form-control" id="klaster" name="klaster">
+                                    <option value="">Pilih</option>
+                                    @for ($i = 2; $i <= 3; $i++)
+                                        <option value="{{ $i }}"
+                                            {{ old('klaster', $patient->klaster) == $i ? 'selected' : '' }}>
+                                            {{ $i }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="poli">Poli</label>
+                                <select class="form-control" id="poli" name="poli" required>
+                                    <option value="" disabled {{ empty($patient->poli) ? 'selected' : '' }}>
+                                        Pilih
+                                    </option>
+                                    <option value="kia" {{ $patient->poli == 'kia' ? 'selected' : '' }}>
+                                        KIA
+                                    </option>
+                                    <option value="mtbs" {{ $patient->poli == 'mtbs' ? 'selected' : '' }}>
+                                        MTBS
+                                    </option>
+                                    <option value="lansia" {{ $patient->poli == 'lansia' ? 'selected' : '' }}>
+                                        Lansia
+                                    </option>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="kartu">Jenis Kartu</label>
                                 <select class="form-control" id="jenis_kartu" name="jenis_kartu" required>
@@ -160,7 +193,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="nomor">Nomor Kartu</label>
                                 <input type="text" class="form-control" id="nomor_kartu" name="nomor_kartu"

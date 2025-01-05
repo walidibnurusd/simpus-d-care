@@ -5,11 +5,14 @@
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 @if ($routeName === 'action.index')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI UMUM</h5>
+                    <input type="hidden" name="tipe" value="poli-umum">
                 @elseif($routeName === 'action.index.gigi')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI GIGI</h5>
+                    <input type="hidden" name="tipe" value="poli-gigi">
                 @else
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL UGD</h5>
+                    <input type="hidden" name="tipe" value="ruang-tindakan">
                 @endif
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

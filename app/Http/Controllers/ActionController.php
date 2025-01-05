@@ -93,8 +93,51 @@ class ActionController extends Controller
             $dokter = [];
         }
 
-        $actions = Action::where('tipe', 'poli-umum')->get();
+        $actions = Action::where('tipe', 'poli-umum')->whereNotNull('diagnosa')->get();
         $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
+
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+
+        $routeName = $request->route()->getName();
+        return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+      public function indexGigiDokter(Request $request)
+    {
+        $response = Http::withHeaders([
+            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
+        ])->get('https://simpusdignityspace.cloud/api/master/docters');
+
+        if ($response->successful()) {
+            $dokter = $response->json()['data'];
+        } else {
+            $dokter = [];
+        }
+
+        $actions = Action::where('tipe', 'poli-gigi')->whereNotNull('diagnosa')->get();
+        $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
+
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+
+        $routeName = $request->route()->getName();
+        return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+
+public function indexUgdDokter(Request $request)
+    {
+        $response = Http::withHeaders([
+            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
+        ])->get('https://simpusdignityspace.cloud/api/master/docters');
+
+        if ($response->successful()) {
+            $dokter = $response->json()['data'];
+        } else {
+            $dokter = [];
+        }
+
+        $actions = Action::where('tipe', 'ruang-tindakan')->whereNotNull('diagnosa')->get();
+        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -137,19 +180,11 @@ class ActionController extends Controller
                     ->withErrors(['nik' => 'Patient with the provided NIK does not exist.'])
                     ->withInput();
             }
-            if (Auth::user()->role == 'admin-poli-gigi') {
-                $tipe = 'poli-gigi';
-            } elseif (Auth::user()->role == 'admin-poli-umum') {
-                $tipe = 'poli-umum';
-            } else {
-                $tipe = 'ruang-tindakan';
-            }
-
+        
             // Format the date and merge the patient ID into the request
             $request->merge([
                 'tanggal' => Carbon::createFromFormat('d-m-Y', $request->tanggal)->format('Y-m-d'),
                 'id_patient' => $patient->id,
-                'tipe' => $tipe,
             ]);
 
             // Validate the request

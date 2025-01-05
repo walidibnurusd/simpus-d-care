@@ -43,7 +43,7 @@
                 ajax: {
                     url: '/get-patients-dokter', // Endpoint untuk mengambil data
                     type: 'GET',
-              
+
                 },
                 columns: [{
                         data: 'patient.nik',

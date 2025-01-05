@@ -1,5 +1,5 @@
 @extends('layouts.simple.master')
-@section('title', 'Tindakan')
+@section('title', 'Kajian Awal')
 
 @section('css')
 
@@ -15,7 +15,7 @@
 
 @section('breadcrumb-items')
     <li class="breadcrumb-item">{{ Auth::user()->name }}</li>
-    <li class="breadcrumb-item active">Tindakan</li>
+    <li class="breadcrumb-item active">Kajian Awal</li>
 @endsection
 
 @section('content')
@@ -75,7 +75,7 @@
 
                 <div class="card mb-4">
                     <div class="card-header pb-0">
-                        <h6>Daftar Data Tindakan</h6>
+                        <h6>Daftar Data Kajian Awal</h6>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-4">
@@ -155,13 +155,14 @@
                                                 <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
                                             </td>
                                             @php
-                                                // Assuming $actions->diagnosa is an array of Diagnosis IDs
-                                                $diagnosaIds = $action->diagnosa; // This should be an array of IDs.
-                                                $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get(); // Fetch the diagnoses by IDs
+
+                                                $diagnosaIds = $action->diagnosa;
+                                                $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
                                             @endphp
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ implode(', ', $diagnosa->pluck('name')->toArray()) }} </p>
+                                                    {{ $diagnosa->isNotEmpty() ? implode(', ', $diagnosa->pluck('name')->toArray()) : '' }}
+                                                </p>
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
