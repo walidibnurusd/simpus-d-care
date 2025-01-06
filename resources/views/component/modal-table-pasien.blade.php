@@ -43,7 +43,7 @@
                 ajax: {
                     url: '/get-patients', // Endpoint untuk mengambil data
                     type: 'GET',
-               
+
                 },
                 columns: [{
                         data: 'nik',
@@ -65,6 +65,8 @@
                             return `
                             <button class="btn btn-success btnPilihPasien" 
                                 data-id="${row.id}" 
+                                data-jenis_kartu="${row.jenis_kartu}" 
+                                data-nomor_kartu="${row.nomor_kartu}" 
                                 data-nik="${row.nik}" 
                                 data-name="${row.name}" 
                                 data-gender="${row.gender}" 
@@ -117,9 +119,22 @@
             $('#displayJob').text(data.job);
             $('#displayRmNumber').text(data.rm);
 
-            // Set nilai ID ke input form
             $('#nik').val(data.nik);
-            console.log
+            $('#nomor_kartu').val(data.nomor_kartu);
+            let jenisKartu = data.jenis_kartu;
+            if (jenisKartu === 'pbi') {
+                jenisKartu = 'PBI (KIS)';
+            } else if (jenisKartu === 'askes') {
+                jenisKartu = 'AKSES'
+            } else if (jenisKartu === 'jkn_mandiri') {
+                jenisKartu = 'JKN Mandiri'
+            } else if (jenisKartu === 'umum') {
+                jenisKartu = 'Umum'
+            } else {
+                jenisKartu = 'JKD'
+            }
+            $('#jenis_kartu').val(jenisKartu);
+
 
 
             $('#patientDetails').show();

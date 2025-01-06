@@ -10,7 +10,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>Tindakan</h3>
+    <h3>Kajian Awal</h3>
 @endsection
 
 @section('breadcrumb-items')
@@ -156,7 +156,11 @@
                                             </td>
                                             @php
 
-                                                $diagnosaIds = $action->diagnosa;
+                                                $diagnosaIds =
+                                                    is_array($action->diagnosa) ||
+                                                    $action->diagnosa instanceof \Countable
+                                                        ? $action->diagnosa
+                                                        : [];
                                                 $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
                                             @endphp
                                             <td>

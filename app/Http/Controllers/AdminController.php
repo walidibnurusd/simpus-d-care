@@ -838,8 +838,9 @@ class AdminController extends Controller
         // Hapus data dari database
         $kekerasanAnak->delete();
 
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('kekerasan.eliminasi.admin')->with('success', 'Data Kekerasan Anak berhasil dihapus.');
+         return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
 
     public function updateKekerasanAnak(Request $request, $id)
@@ -902,9 +903,9 @@ class AdminController extends Controller
 
         // Hapus data dari database
         $triple->delete();
-
-        // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return redirect()->route('triple.eliminasi.admin')->with('success', 'Data Triple Eliminasi berhasil dihapus.');
+  return response()->json([
+            'message' => 'Data skrining berhasil dihapus.',
+        ], 200);
     }
     public function updateTripleEliminasi(Request $request, $id)
     {
