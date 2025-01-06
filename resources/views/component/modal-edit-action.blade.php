@@ -70,9 +70,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="tanggal">Tanggal</label>
-                                            <input type="text" class="form-control flatpickr-input" id="tanggal"
-                                                name="tanggal" value="{{ $action->tanggal }}"
-                                                placeholder="Pilih Tanggal" required>
+                                            <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                                value="{{ $action->tanggal }}" placeholder="Pilih Tanggal" required>
                                         </div>
                                     </div>
 
@@ -82,9 +81,9 @@
                                             <select class="form-control" id="doctor" name="doctor" required>
                                                 <option value="" disabled selected>Pilih Dokter</option>
                                                 @foreach ($dokter as $item)
-                                                    <option value="{{ $item['name'] }}"
-                                                        {{ $action->doctor == $item['name'] ? 'selected' : '' }}>
-                                                        {{ $item['name'] }}
+                                                    <option value="{{ $item->name }}"
+                                                        {{ $action->doctor == $item->name ? 'selected' : '' }}>
+                                                        {{ $item->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -625,24 +624,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            @elseif($action->tipe == 'poli-gigi')
-                                <div class="container">
-                                    <div class="row g-2">
-                                        <div class="col-md-2 ">
-                                            <label for="hamil" style="color: green;">Hamil</label>
-                                            <select class="form-control" id="hamil" name="hamil">
-                                                <option {{ empty($action->hamil) ? 'selected' : '' }} disabled
-                                                    selected>pilih</option>
-                                                <option
-                                                    value="ya"{{ old('hamil', $action->hamil) == 'ya' ? 'selected' : '' }}>
-                                                    Ya</option>
-                                                <option
-                                                    value="tidak"{{ old('hamil', $action->hamil) == 'tidak' ? 'selected' : '' }}>
-                                                    Tidak</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
                             @endif
                         </div>
                     </div>
@@ -902,13 +883,7 @@
                 lainnyaKeluargaTextarea.required = false;
             }
         });
-        flatpickr('#tanggal', {
-            dateFormat: 'd-m-Y', // Format tanggal
-            defaultDate: new Date(), // Optional: default to today's date
-            locale: {
-                firstDayOfWeek: 0 // Optional: Sunday as the first day of the week
-            }
-        });
+
     });
 </script>
 

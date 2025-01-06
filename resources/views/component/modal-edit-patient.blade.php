@@ -147,23 +147,21 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="poli">Poli</label>
+
                                 <select class="form-control" id="poli" name="poli" required>
                                     <option value="" disabled {{ empty($patient->poli) ? 'selected' : '' }}>
-                                        Pilih
+                                        Pilih</option>
+                                    <option value="kia" {{ $patient->poli == 'kia' ? 'selected' : '' }}>KIA
                                     </option>
-                                    <option value="kia" {{ $patient->poli == 'kia' ? 'selected' : '' }}>
-                                        KIA
-                                    </option>
-                                    <option value="mtbs" {{ $patient->poli == 'mtbs' ? 'selected' : '' }}>
-                                        MTBS
+                                    <option value="mtbs" {{ $patient->poli == 'mtbs' ? 'selected' : '' }}>MTBS
                                     </option>
                                     <option value="lansia" {{ $patient->poli == 'lansia' ? 'selected' : '' }}>
-                                        Lansia
-                                    </option>
-
+                                        Lansia</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">

@@ -112,6 +112,67 @@
             /* Merah tua */
             color: #ffffff;
         }
+
+        input[type="text"],
+        textarea,
+        select {
+            color: #000;
+            /* Hitam */
+            background-color: #fff;
+            /* Putih */
+            border: 1px solid #ccc;
+            /* Border abu-abu */
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+            /* Border biru saat fokus */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            /* Efek fokus */
+        }
+
+        ::placeholder {
+            color: #999;
+            /* Placeholder abu-abu */
+            opacity: 1;
+            /* Tidak transparan */
+        }
+
+        .form-control {
+            color: #212529;
+            /* Warna teks lebih gelap */
+            background-color: #f8f9fa;
+            /* Latar belakang abu muda */
+            border: 1px solid #ced4da;
+            /* Border abu-abu */
+        }
+
+        .form-control:focus {
+            color: #212529;
+            background-color: #fff;
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        ::placeholder {
+            color: #6c757d;
+            /* Warna placeholder abu-abu gelap */
+            opacity: 1;
+            /* Placeholder tidak transparan */
+        }
+
+        .form-control {
+            background-color: #ffffff !important;
+            /* Putih */
+            color: #212529 !important;
+            /* Hitam */
+            border: 1px solid #ced4da !important;
+            /* Border abu-abu */
+        }
     </style>
 </head>
 

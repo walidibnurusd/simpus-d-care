@@ -115,8 +115,11 @@
                         <td>{{ $actions->keluhan }}</td>
                         @php
                             // Assuming $actions->diagnosa is an array of Diagnosis IDs
-                            $diagnosaIds = $actions->diagnosa; // This should be an array of IDs.
-                            $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get(); // Fetch the diagnoses by IDs
+                            $diagnosaIds =
+                                is_array($actions->diagnosa) || $actions->diagnosa instanceof \Countable
+                                    ? $actions->diagnosa
+                                    : [];
+                            $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
                         @endphp
 
                         <td>
@@ -128,7 +131,7 @@
                         <td>{{ $actions->educations->name }}</td>
                         <td>{{ $actions->occupations->name }}</td> --}}
                         <td>{{ $actions->tindakan }}</td>
-                        <td>{{ $actions->hospitalReferral->name }}</td>
+                        <td>{{ $actions->hospitalReferral->name ?? '' }}</td>
 
                         <td>{{ $actions->keterangan }}</td>
                         <td>{{ $actions->doctor }}</td>

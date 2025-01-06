@@ -66,8 +66,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="tanggal">Tanggal</label>
-                                            <input type="text" class="form-control flatpickr-input" id="tanggal"
-                                                name="tanggal" placeholder="Pilih Tanggal" required>
+                                            <input type="date" class="form-control" name="tanggal"
+                                                placeholder="Pilih Tanggal" required>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -265,21 +265,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            @if ($routeName === 'action.index.gigi')
-                                <div class="container">
-                                    <div class="row g-2">
-                                        <div class="col-md-2 ">
-                                            <label for="hamil" style="color: green;">Hamil</label>
-                                            <select class="form-control" id="hamil" name="hamil">
-                                                <option value="" disabled selected>pilih</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
                         </div>
                     </div>
 
@@ -353,18 +338,18 @@
     });
 </script>
 
-<script>
+{{-- <script>
     // Initialize Flatpickr for the date picker
     document.addEventListener('DOMContentLoaded', function() {
         flatpickr('#tanggal', {
-            dateFormat: 'd-m-Y', // Format tanggal
-            defaultDate: new Date(), // Optional: default to today's date
+            dateFormat: 'd-m-Y',
+            defaultDate: new Date(),
             locale: {
-                firstDayOfWeek: 0 // Optional: Sunday as the first day of the week
+                firstDayOfWeek: 0
             }
         });
     });
-</script>
+</script> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -31,15 +31,7 @@ class ActionController extends Controller
     }
     public function indexPoliGigi(Request $request)
     {
-        $response = Http::withHeaders([
-            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
-        ])->get('https://simpusdignityspace.cloud/api/master/docters');
-
-        if ($response->successful()) {
-            $dokter = $response->json()['data'];
-        } else {
-            $dokter = [];
-        }
+        $dokter = User::where('role', 'dokter')->get();
 
         $actions = Action::where('tipe', 'poli-gigi')->get();
         $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
@@ -53,15 +45,7 @@ class ActionController extends Controller
     }
     public function indexUgd(Request $request)
     {
-        $response = Http::withHeaders([
-            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
-        ])->get('https://simpusdignityspace.cloud/api/master/docters');
-
-        if ($response->successful()) {
-            $dokter = $response->json()['data'];
-        } else {
-            $dokter = [];
-        }
+        $dokter = User::where('role', 'dokter')->get();
 
         $actions = Action::where('tipe', 'ruang-tindakan')->get();
         $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
@@ -75,16 +59,7 @@ class ActionController extends Controller
     }
     public function indexDokter(Request $request)
     {
-        $response = Http::withHeaders([
-            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
-        ])->get('https://simpusdignityspace.cloud/api/master/docters');
-
-        if ($response->successful()) {
-            $dokter = $response->json()['data'];
-        } else {
-            $dokter = [];
-        }
-
+        $dokter = User::where('role', 'dokter')->get();
         $actions = Action::where('tipe', 'poli-umum')->whereNotNull('diagnosa')->get();
         $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
 
@@ -96,15 +71,7 @@ class ActionController extends Controller
     }
     public function indexGigiDokter(Request $request)
     {
-        $response = Http::withHeaders([
-            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
-        ])->get('https://simpusdignityspace.cloud/api/master/docters');
-
-        if ($response->successful()) {
-            $dokter = $response->json()['data'];
-        } else {
-            $dokter = [];
-        }
+        $dokter = User::where('role', 'dokter')->get();
 
         $actions = Action::where('tipe', 'poli-gigi')->whereNotNull('diagnosa')->get();
         $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
@@ -118,15 +85,7 @@ class ActionController extends Controller
 
     public function indexUgdDokter(Request $request)
     {
-        $response = Http::withHeaders([
-            'API-KEY' => 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY',
-        ])->get('https://simpusdignityspace.cloud/api/master/docters');
-
-        if ($response->successful()) {
-            $dokter = $response->json()['data'];
-        } else {
-            $dokter = [];
-        }
+        $dokter = User::where('role', 'dokter')->get();
 
         $actions = Action::where('tipe', 'ruang-tindakan')->whereNotNull('diagnosa')->get();
         $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
@@ -192,6 +151,9 @@ class ActionController extends Controller
                 'beratBadan' => 'nullable|numeric',
                 'tinggiBadan' => 'nullable|numeric',
                 'lingkarPinggang' => 'nullable|numeric',
+                'nadi' => 'nullable|numeric',
+                'nafas' => 'nullable|numeric',
+                'suhu' => 'nullable|numeric',
                 'riwayat_penyakit_sekarang' => 'nullable',
                 'riwayat_penyakit_dulu' => 'nullable',
                 'riwayat_penyakit_lainnya' => 'nullable',
@@ -205,8 +167,14 @@ class ActionController extends Controller
 
             // Save the validated data into the actions table
             $action = Action::create($validated);
-
-            return redirect()->route('action.index')->with('success', 'Action has been successfully created.');
+            if ($action->tipe === 'poli-umum') {
+                $route = 'action.index';
+            } elseif ($action->tipe === 'poli-gigi') {
+                $route = 'action.index.gigi';
+            } else {
+                $route = 'action.index.ugd';
+            }
+            return redirect()->route($route)->with('success', 'Action has been successfully created.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -293,10 +261,23 @@ class ActionController extends Controller
             // Update the action with the validated data
             $action->update($validated);
             if (Auth::user()->role == 'dokter') {
-                return redirect()->route('action.dokter.index')->with('success', 'Action has been successfully updated.');
+                if ($action->tipe === 'poli-umum') {
+                    $route = 'action.dokter.index';
+                } elseif ($action->tipe === 'poli-gigi') {
+                    $route = 'action.dokter.gigi.index';
+                } else {
+                    $route = 'action.dokter.ugd.index';
+                }
             } else {
-                return redirect()->route('action.index')->with('success', 'Action has been successfully updated.');
+                if ($action->tipe === 'poli-umum') {
+                    $route = 'action.index';
+                } elseif ($action->tipe === 'poli-gigi') {
+                    $route = 'action.index.gigi';
+                } else {
+                    $route = 'action.index.ugd';
+                }
             }
+            return redirect()->route($route)->with('success', 'Action has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -403,8 +384,14 @@ class ActionController extends Controller
             // Update the action with the validated data
             // dd($validated);
             $action->update($validated);
-
-            return redirect()->route('action.dokter.index')->with('success', 'Action has been successfully updated.');
+            if ($action->tipe === 'poli-umum') {
+                $route = 'action.dokter.index';
+            } elseif ($action->tipe === 'poli-gigi') {
+                $route = 'action.dokter.gigi.index';
+            } else {
+                $route = 'action.dokter.ugd.index';
+            }
+            return redirect()->route($route)->with('success', 'Action has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -419,9 +406,21 @@ class ActionController extends Controller
         $action->delete();
 
         if (Auth::user()->role == 'dokter') {
-            return redirect()->route('action.dokter.index')->with('success', 'Action has been successfully deleted.');
+            if ($action->tipe === 'poli-umum') {
+                $route = 'action.dokter.index';
+            } elseif ($action->tipe === 'poli-gigi') {
+                $route = 'action.dokter.gigi.index';
+            } else {
+                $route = 'action.dokter.ugd.index';
+            }
         } else {
-            return redirect()->route('action.index')->with('success', 'Action has been successfully deleted.');
+            if ($action->tipe === 'poli-umum') {
+                $route = 'action.index';
+            } elseif ($action->tipe === 'poli-gigi') {
+                $route = 'action.index.gigi';
+            } else {
+                $route = 'action.index.ugd';
+            }
         }
     }
 }
