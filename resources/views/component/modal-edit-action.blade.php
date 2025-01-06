@@ -308,7 +308,7 @@
                                         <div class="form-group">
                                             <label for="nadi">Nadi</label>
                                             <input type="text" class="form-control" id="nadi" name="nadi"
-                                                placeholder="Masukkan Nadi" value="{{ $action->nandi }}" required>
+                                                placeholder="Masukkan Nadi" value="{{ $action->nadi }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-2">

@@ -167,6 +167,7 @@ class PatientsController extends Controller
             $patient->indonesia_village = $validatedData['village'] ?? null;
             $patient->rw = $validatedData['rw'] ?? null;
             $patient->klaster = $validatedData['klaster'] ?? null;
+            $patient->poli = $validatedData['poli'] ?? null;
             $patient->address = $validatedData['address'];
             $patient->jenis_kartu = $validatedData['jenis_kartu'];
             $patient->nomor_kartu = $validatedData['nomor_kartu'];

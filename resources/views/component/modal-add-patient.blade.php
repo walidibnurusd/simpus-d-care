@@ -386,7 +386,50 @@
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Check for success message
+        const klasterSelect = document.getElementById('klaster');
+        const poliSelect = document.getElementById('poli');
+
+
+        function updatePoliOptions() {
+            const selectedKlaster = klasterSelect.value;
+
+
+            Array.from(poliSelect.options).forEach(option => {
+                option.style.display = 'block';
+                option.disabled = false;
+            });
+
+            if (selectedKlaster === '2') {
+
+                Array.from(poliSelect.options).forEach(option => {
+                    if (option.value !== 'kia' && option.value !== 'mtbs' && option.value !== '') {
+                        option.style.display = 'none';
+                        option.disabled = true;
+                    }
+                });
+            } else if (selectedKlaster === '3') {
+
+                Array.from(poliSelect.options).forEach(option => {
+                    if (option.value !== 'lansia' && option.value !== '') {
+                        option.style.display = 'none';
+                        option.disabled = true;
+                    }
+                });
+            } else {
+
+                poliSelect.value = '';
+            }
+
+
+            if (poliSelect.options[poliSelect.selectedIndex]?.disabled) {
+                poliSelect.value = '';
+            }
+        }
+
+        klasterSelect.addEventListener('change', updatePoliOptions);
+        updatePoliOptions();
+
+
         @if (session('success'))
             Swal.fire({
                 title: 'Success!',

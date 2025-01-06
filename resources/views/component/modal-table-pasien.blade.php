@@ -120,7 +120,8 @@
             $('#displayRmNumber').text(data.rm);
 
             $('#nik').val(data.nik);
-            $('#nomor_kartu').val(data.nomor_kartu);
+            $('#nomor_kartu').val(data);
+            console.log(data.nomor_kartu);
             let jenisKartu = data.jenis_kartu;
             if (jenisKartu === 'pbi') {
                 jenisKartu = 'PBI (KIS)';

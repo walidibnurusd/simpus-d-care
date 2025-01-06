@@ -79,8 +79,8 @@
     data-tanggal="${row.tanggal}" 
     data-doctor="${row.doctor}" 
     data-kunjungan="${row.kunjungan}" 
-    data-kartu="${row.kartu}" 
-    data-nomor="${row.nomor}" 
+    data-kartu="${row.patient.jenis_kartu}" 
+    data-nomor="${row.patient.nomor_kartu}" 
     data-faskes="${row.faskes}" 
     data-sistol="${row.sistol}" 
     data-diastol="${row.diastol}" 
@@ -195,9 +195,23 @@
             $('#idAction').val(data.id);
             $('#tanggal').val(data.tanggal);
             $('#doctor').val(data.doctor);
+            $('#nomor_kartu').val(data.nomor);
+            let jenisKartu = data.kartu;
+            if (jenisKartu === 'pbi') {
+                jenisKartu = 'PBI (KIS)';
+            } else if (jenisKartu === 'askes') {
+                jenisKartu = 'AKSES'
+            } else if (jenisKartu === 'jkn_mandiri') {
+                jenisKartu = 'JKN Mandiri'
+            } else if (jenisKartu === 'umum') {
+                jenisKartu = 'Umum'
+            } else {
+                jenisKartu = 'JKD'
+            }
+            $('#jenis_kartu').val(jenisKartu);
+
+
             $('#kunjungan').val(data.kunjungan);
-            $('#kartu').val(data.kartu);
-            $('#nomor').val(data.nomor);
             $('#wilayah_faskes').val(data.faskes);
             $('#sistol').val(data.sistol);
             $('#diastol').val(data.diastol);

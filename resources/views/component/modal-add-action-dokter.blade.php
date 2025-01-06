@@ -91,22 +91,16 @@
 
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="kartu">Kartu</label>
-                                            <select class="form-control" id="kartu" name="kartu" required>
-                                                <option value="" disabled selected>Pilih Jenis Kartu</option>
-                                                <option value="umum">Umum</option>
-                                                <option value="akses">AKSES</option>
-                                                <option value="bpjs">BPJS-KIS_JKM</option>
-                                                <option value="gratis_jkd">Gratis-JKD</option>
-                                                <option value="bpjs_mandiri">BPJS-Mandiri</option>
-                                            </select>
+                                            <label for="jenis_kartu">Jenis Kartu</label>
+                                            <input type="text" class="form-control" id="jenis_kartu"
+                                                name="jenis_kartu" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="nomor">Nomor Kartu</label>
-                                            <input type="text" class="form-control" id="nomor" name="nomor"
-                                                placeholder="Masukkan Nomor" required>
+                                            <label for="nomor_kartu">Nomor Kartu</label>
+                                            <input type="text" class="form-control" id="nomor_kartu"
+                                                name="nomor_kartu" placeholder="Masukkan Nomor" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-3">

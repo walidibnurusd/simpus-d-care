@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ActionController extends Controller
 {
@@ -134,7 +135,6 @@ class ActionController extends Controller
 
             // Format the date and merge the patient ID into the request
             $request->merge([
-                'tanggal' => Carbon::createFromFormat('d-m-Y', $request->tanggal)->format('Y-m-d'),
                 'id_patient' => $patient->id,
             ]);
 
@@ -201,7 +201,6 @@ class ActionController extends Controller
 
             // Format the date and merge the patient ID into the request
             $request->merge([
-                'tanggal' => Carbon::createFromFormat('d-m-Y', $request->tanggal)->format('Y-m-d'),
                 'id_patient' => $patient->id,
             ]);
 
@@ -304,7 +303,6 @@ class ActionController extends Controller
 
             // Merge the request with the formatted tanggal and id_patient
             $request->merge([
-                'tanggal' => $request->tanggal,
                 'id_patient' => $patient->id,
             ]);
             // dd($request->);
@@ -379,6 +377,7 @@ class ActionController extends Controller
                 'riwayat_penyakit_lainnya_keluarga' => 'nullable',
                 'riwayat_pengobatan' => 'nullable',
                 'riwayat_alergi' => 'nullable',
+                'pemeriksaan_penunjang' => 'nullable',
             ]);
 
             // Update the action with the validated data
