@@ -63,17 +63,38 @@ class SkriningController extends Controller
 
                 'mtbs' => ['Hipertensi', 'Kecacingan', 'Anemia', 'Talasemia', 'Kekerasan terhadap Anak', 'Kekerasan terhadap Perempuan', 'Diabetes Mellitus', 'TBC', 'Tes Pendengaran', 'SDQ (4-11 Tahun)', 'SDQ (11-18 Tahun)', 'Obesitas', 'NAPZA', 'Perilaku Merokok bagi Anak Sekolah'],
             ],
-            3 => ['lansi' => ['Kanker Paru', 'Kanker Kolorektal', 'PPOK (PUMA)', 'Geriatri', 'Kanker Leher Rahim dan Kanker Payudara', 'Hipertensi', 'TBC', 'Layak Hamil', 'Anemia', 'Talasemia']],
+            3 => ['lansia' => ['Kanker Paru', 'Kanker Kolorektal', 'PPOK (PUMA)', 'Geriatri', 'Kanker Leher Rahim dan Kanker Payudara', 'Hipertensi', 'TBC', 'Layak Hamil', 'Anemia', 'Talasemia']],
         ];
 
-        $jenisSkrining = $allSkriningTypes[$klaster][$poliPatient] ?? [];
+        $jenisSkrining = $allSkriningTypes[$klaster][$poliPatient];
 
         foreach ($jenisSkrining as $jenis) {
             // Ambil data skrining sesuai jenis
             $data = match ($jenis) {
                 'Hipertensi' => Hipertensi::where('pasien', $id)->where('klaster', $klaster)->first(),
                 'Gangguan Spektrum Autisme' => GangguanAutis::where('pasien', $id)->where('klaster', $klaster)->first(),
-                // Tambahkan semua jenis lainnya seperti ini...
+                'Kecacingan' => Kecacingan::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'HIV $ IMS' => Hiv::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Anemia' => Anemia::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Talasemia' => Talasemia::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Hepatitis' => Hepatitis::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Kekerasan terhadap Anak' => KekerasanAnak::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Kekerasan terhadap Perempuan' => KekerasanPerempuan::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Diabetes Mellitus' => DiabetesMellitus::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'TBC' => Tbc::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Triple Eliminasi Bumil' => TripleEliminasi::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Tes Pendengaran' => TesDayaDengar::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'SDQ (4-11 Tahun)' => GangguanJiwaAnak::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'SDQ (11-18 Tahun)' => GangguanJiwaRemaja::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Obesitas' => Obesitas::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Napza' => Napza::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Perilaku Merokok bagi Anak Sekolah' => Merokok::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Kanker Paru' => KankerParu::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Kanker Kolorektal' => KankerKolorektal::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'PPOK (PUMA)' => Puma::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Geriatri' => Geriatri::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Kanker Leher Rahim dan Kanker Payudara' => KankerPayudara::where('pasien', $id)->where('klaster', $klaster)->first(),
+
                 default => null,
             };
 
