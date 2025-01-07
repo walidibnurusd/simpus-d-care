@@ -211,12 +211,13 @@
                                             <label for="penyakit_lainnya" style="color: rgb(241, 11, 11);">Sebutkan
                                                 Penyakit Lainnya</label>
                                             <textarea class="form-control" id="penyakit_lainnya_edit" name="riwayat_penyakit_lainnya"
-                                                placeholder="Isi penyakit lainnya"><{{ old('penyakit_lainnya', $action->riwayat_penyakit_lainnya ?? '') }}/textarea>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label for="riwayat_pengobatan" style="color: rgb(241, 11, 11);">Riwayat
-                                            Pengobatan</label>
-                                        <textarea class="form-control" id="riwayat_pengobatan" name="riwayat_pengobatan" placeholder="Riwayat Pengobatan">{{ old('riwayat_pengobatan', $action->riwayat_pengobatan ?? '') }}</textarea>
+                                                placeholder="Isi penyakit lainnya">{{ old('penyakit_lainnya', $action->riwayat_penyakit_lainnya ?? '') }}</textarea>
+
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label for="riwayat_pengobatan" style="color: rgb(241, 11, 11);">Riwayat
+                                                Pengobatan</label>
+                                            <textarea class="form-control" id="riwayat_pengobatan" name="riwayat_pengobatan" placeholder="Riwayat Pengobatan">{{ old('riwayat_pengobatan', $action->riwayat_pengobatan ?? '') }}</textarea>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -226,15 +227,13 @@
                                                     name="riwayat_penyakit_keluarga" required>
                                                     <option value="" disabled
                                                         {{ empty($action->riwayat_penyakit_keluarga) ? 'selected' : '' }}>
-                                                        pilih
-                                                    </option>>Pilih</option>
+                                                        Pilih</option>
                                                     <option value="hipertensi"
                                                         {{ $action->riwayat_penyakit_keluarga == 'hipertensi' ? 'selected' : '' }}>
                                                         Hipertensi</option>
                                                     <option value="dm"
                                                         {{ $action->riwayat_penyakit_keluarga == 'dm' ? 'selected' : '' }}>
-                                                        DM
-                                                    </option>
+                                                        DM</option>
                                                     <option value="jantung"
                                                         {{ $action->riwayat_penyakit_keluarga == 'jantung' ? 'selected' : '' }}>
                                                         Jantung</option>
@@ -252,13 +251,13 @@
                                                         Ginjal</option>
                                                     <option value="tb"
                                                         {{ $action->riwayat_penyakit_keluarga == 'tb' ? 'selected' : '' }}>
-                                                        TB
-                                                    </option>
+                                                        TB</option>
                                                     <option value="lainnya"
                                                         {{ $action->riwayat_penyakit_keluarga == 'lainnya' ? 'selected' : '' }}>
                                                         Lainnya</option>
                                                 </select>
                                             </div>
+
                                         </div>
                                         <div class="col-md-12 mt-2" id="penyakit_lainnya_keluarga_container_edit"
                                             style="display: none;">
@@ -266,7 +265,7 @@
                                                 style="color: rgb(241, 11, 11);">Sebutkan
                                                 Penyakit Lainnya</label>
                                             <textarea class="form-control" id="penyakit_lainnya_keluarga_edit" name="riwayat_penyakit_lainnya_keluarga"
-                                                placeholder="Isi penyakit lainnya">{{ old('riwayat_lainnya_keluarga', $action->riwayat_lainnya_keluarga ?? '') }}</textarea>
+                                                placeholder="Isi penyakit lainnya">{{ old('riwayat_penyakit_lainnya_keluarga', $action->riwayat_penyakit_lainnya_keluarga ?? '') }}</textarea>
                                         </div>
                                         <div class="col-md-12">
                                             <label for="riwayat_alergi" style="color: rgb(241, 11, 11);">Riwayat
@@ -875,69 +874,84 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const selectElement = document.getElementById('riwayat_penyakit_dulu_edit');
-        const selectPenyakitKeluargaElement = document.getElementById('riwayat_penyakit_keluarga_edit');
-        const lainnyaContainer = document.getElementById('penyakit_lainnya_container_edit');
-        const lainnyaTextarea = document.getElementById('penyakit_lainnya_edit');
-        const lainnyaKeluargaContainer = document.getElementById('penyakit_lainnya_keluarga_container_edit');
-        const lainnyaKeluargaTextarea = document.getElementById('penyakit_lainnya_keluarga_edit');
+        // Attach event listeners dynamically for all modal edit elements
+        const allModals = document.querySelectorAll('.modal'); // Semua modal yang memiliki form edit
+        allModals.forEach((modal) => {
+            const selectPenyakitDulu = modal.querySelector('[id^="riwayat_penyakit_dulu_edit"]');
+            const selectPenyakitKeluarga = modal.querySelector(
+                '[id^="riwayat_penyakit_keluarga_edit"]');
 
-        // Event listener for 'riwayat_penyakit_dulu'
-        selectElement.addEventListener('change', function() {
-            toggleLainnya(selectElement, lainnyaContainer, lainnyaTextarea);
-        });
+            // Container untuk input "lainnya"
+            const lainnyaContainer = modal.querySelector('#penyakit_lainnya_container_edit');
+            const lainnyaTextarea = modal.querySelector('#penyakit_lainnya_edit');
 
-        // Event listener for 'riwayat_penyakit_keluarga'
-        selectPenyakitKeluargaElement.addEventListener('change', function() {
-            toggleLainnya(selectPenyakitKeluargaElement, lainnyaKeluargaContainer,
-                lainnyaKeluargaTextarea);
-        });
+            const lainnyaKeluargaContainer = modal.querySelector(
+                '#penyakit_lainnya_keluarga_container_edit');
+            const lainnyaKeluargaTextarea = modal.querySelector('#penyakit_lainnya_keluarga_edit');
 
-        // Function to toggle "lainnya" fields
-        function toggleLainnya(select, container, textarea) {
-            if (select.value === 'lainnya') {
-                container.style.display = 'block';
-                textarea.required = true;
-            } else {
-                container.style.display = 'none';
-                textarea.value = '';
-                textarea.required = false;
+            if (selectPenyakitDulu) {
+                // Event listener untuk 'riwayat_penyakit_dulu_edit'
+                selectPenyakitDulu.addEventListener('change', function() {
+                    toggleLainnya(selectPenyakitDulu, lainnyaContainer, lainnyaTextarea);
+                });
             }
-        }
 
-        // Populate form fields for edit mode
-        function populateFormData() {
-            // Replace these with actual values from your backend
-            const formData = {!! json_encode($action ?? null) !!}; // Example variable
-
-            if (formData) {
-                // Set value for 'riwayat_penyakit_dulu' and toggle "lainnya" if necessary
-                if (formData.riwayat_penyakit_dulu) {
-                    selectElement.value = formData.riwayat_penyakit_dulu;
-                    toggleLainnya(selectElement, lainnyaContainer, lainnyaTextarea);
-
-                    if (formData.riwayat_penyakit_dulu === 'lainnya' && formData.riwayat_penyakit_lainnya) {
-                        lainnyaTextarea.value = formData.riwayat_penyakit_lainnya;
-                    }
-                }
-
-                // Set value for 'riwayat_penyakit_keluarga' and toggle "lainnya" if necessary
-                if (formData.riwayat_penyakit_keluarga) {
-                    selectPenyakitKeluargaElement.value = formData.riwayat_penyakit_keluarga;
-                    toggleLainnya(selectPenyakitKeluargaElement, lainnyaKeluargaContainer,
+            if (selectPenyakitKeluarga) {
+                // Event listener untuk 'riwayat_penyakit_keluarga_edit'
+                selectPenyakitKeluarga.addEventListener('change', function() {
+                    toggleLainnya(selectPenyakitKeluarga, lainnyaKeluargaContainer,
                         lainnyaKeluargaTextarea);
+                });
+            }
 
-                    if (formData.riwayat_penyakit_keluarga === 'lainnya' && formData
-                        .riwayat_penyakit_lainnya_keluarga) {
-                        lainnyaKeluargaTextarea.value = formData.riwayat_penyakit_lainnya_keluarga;
-                    }
-                }
+            // Populate form data on modal show
+            modal.addEventListener('show.bs.modal', function() {
+                populateFormData(
+                    modal,
+                    selectPenyakitDulu,
+                    lainnyaContainer,
+                    lainnyaTextarea,
+                    'riwayat_penyakit_dulu'
+                );
+                populateFormData(
+                    modal,
+                    selectPenyakitKeluarga,
+                    lainnyaKeluargaContainer,
+                    lainnyaKeluargaTextarea,
+                    'riwayat_penyakit_keluarga'
+                );
+            });
+        });
+    });
+
+    // Fungsi toggle "lainnya"
+    function toggleLainnya(select, container, textarea) {
+        if (select.value === 'lainnya') {
+            container.style.display = 'block';
+            textarea.required = true;
+        } else {
+            container.style.display = 'none';
+            textarea.value = '';
+            textarea.required = false;
+        }
+    }
+
+    // Populate data berdasarkan modal
+    function populateFormData(modal, selectElement, container, textarea, field) {
+        const actionId = modal.getAttribute('id').replace('editActionModal', ''); // Ambil ID tindakan dari modal
+        const actions = {!! json_encode($actions ?? []) !!}; // Semua data tindakan dari Laravel
+
+        const actionData = actions.find((action) => action.id.toString() === actionId);
+
+        if (actionData && actionData[field]) {
+            selectElement.value = actionData[field];
+            toggleLainnya(selectElement, container, textarea);
+
+            if (actionData[field] === 'lainnya' && actionData[`${field}_lainnya`]) {
+                textarea.value = actionData[`${field}_lainnya`];
             }
         }
-
-        // Call populateFormData on page load
-        populateFormData();
-    });
+    }
 </script>
 
 <script>

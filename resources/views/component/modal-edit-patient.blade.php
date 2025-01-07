@@ -433,58 +433,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const klasterSelect = document.getElementById('klaster');
-        const poliSelect = document.getElementById('poli');
 
-        function updatePoliOptions() {
-            const klasterValue = klasterSelect.value;
-            poliSelect.innerHTML = ''; // Kosongkan opsi poli
-
-            if (klasterValue === '2' || klasterValue === '3') { // Klaster 2 atau 3
-                const options = [{
-                        value: 'kia',
-                        text: 'KIA'
-                    },
-                    {
-                        value: 'mtbs',
-                        text: 'MTBS'
-                    }
-                ];
-                options.forEach(option => {
-                    const opt = document.createElement('option');
-                    opt.value = option.value;
-                    opt.textContent = option.text;
-                    poliSelect.appendChild(opt);
-                });
-            } else {
-                // Jika tidak sesuai klaster, kembalikan opsi default
-                const defaultOptions = [{
-                        value: 'kia',
-                        text: 'KIA'
-                    },
-                    {
-                        value: 'mtbs',
-                        text: 'MTBS'
-                    },
-                    {
-                        value: 'lansia',
-                        text: 'Lansia'
-                    }
-                ];
-                defaultOptions.forEach(option => {
-                    const opt = document.createElement('option');
-                    opt.value = option.value;
-                    opt.textContent = option.text;
-                    poliSelect.appendChild(opt);
-                });
-            }
-        }
-
-        // Event listener untuk perubahan pada dropdown klaster
-        klasterSelect.addEventListener('change', updatePoliOptions);
-
-        // Jalankan fungsi pada awal untuk memeriksa kondisi awal
-        updatePoliOptions();
         // Check for success message
         @if (session('success'))
             Swal.fire({

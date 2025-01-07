@@ -376,40 +376,6 @@
                             @endif
                         </div>
                     </div>
-                    @if ($routeName === 'action.index')
-                        <div class="row mt-3">
-                            <div class="col-md-4">
-                                <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular
-                                    Pada
-                                    Keluarga</label>
-                                <select class="form-control =" id="riwayat_penyakit_keluarga"
-                                    name="riwayat_penyakit_keluarga[]" multiple>
-
-                                    @foreach ($penyakit as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select>
-
-                            </div>
-                            <div class="col-md-4">
-                                <label for="alkohol" style="color: rgb(241, 11, 11);">Riwayat Penyakit Tidak Menular
-                                    Pada
-                                    Sendiri</label>
-                                <select class="form-control" id="riwayat_penyakit_tidak_menular"
-                                    name="riwayat_penyakit_tidak_menular[]" multiple>
-                                    =
-                                    @foreach ($penyakit as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
-                                <input type="text" class="form-control" id="keluhan" name="keluhan"
-                                    placeholder="Kosongkan Bila sehat">
-                            </div>
-                        </div>
-                    @endif
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
@@ -435,11 +401,6 @@
                             <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
                                 placeholder="Pemeriksaan Penunjang"></textarea>
                         </div>
-
-
-
-
-
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-4">

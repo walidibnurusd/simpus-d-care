@@ -129,9 +129,8 @@
                                 <label for="klaster">Klaster</label>
                                 <select class="form-control" id="klaster" name="klaster">
                                     <option value="">Pilih</option>
-                                    @for ($i = 2; $i <= 3; $i++)
-                                        <option value="{{ $i }}">{{ $i }}</option>
-                                    @endfor
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
                                 </select>
                             </div>
                         </div>
@@ -140,9 +139,9 @@
                                 <label for="poli">Poli</label>
                                 <select class="form-control" id="poli" name="poli" required>
                                     <option value="" disabled selected>Pilih</option>
-                                    <option value="kia">KIA</option>
+                                    {{-- <option value="kia">KIA</option>
                                     <option value="mtbs">MTBS</option>
-                                    <option value="lansia">Lansia</option>
+                                    <option value="lansia">Lansia</option> --}}
                                 </select>
                             </div>
                         </div>
@@ -282,6 +281,8 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     function updateVillage() {
         const district = document.getElementById('district').value;
@@ -293,14 +294,14 @@
             village.value = 'Tamangapa';
         }
     }
-    $(document).ready(function() {
-
-        $('#province').change(function() {
-            var provinceId = $(this).val();
-            var citySelect = $('#city');
+    var $j = jQuery.noConflict();
+    $j(document).ready(function() {
+        $j('#province').change(function() {
+            var provinceId = $j(this).val();
+            var citySelect = $j('#city');
 
             if (provinceId) {
-                $.ajax({
+                $j.ajax({
                     url: "{{ url('/cities') }}/" + provinceId,
                     type: "GET",
                     dataType: "json",
@@ -308,12 +309,12 @@
                         console.log(data);
                         citySelect.empty();
                         citySelect.append('<option value="">Pilih</option>');
-                        $.each(data, function(key, value) {
+                        $j.each(data, function(key, value) {
                             citySelect.append('<option value="' + value.id + '">' +
                                 value.name + '</option>');
                         });
-                        $('#district').empty().append('<option value="">Pilih</option>');
-                        $('#village').empty().append('<option value="">Pilih</option>');
+                        $j('#district').empty().append('<option value="">Pilih</option>');
+                        $j('#village').empty().append('<option value="">Pilih</option>');
                     },
                     error: function() {
                         alert('Gagal mengambil data kota/kabupaten');
@@ -324,111 +325,39 @@
                 citySelect.append('<option value="">Pilih</option>');
             }
         });
-        $('#city').change(function() {
-            var cityId = $(this).val();
-            var districtSelect = $('#district');
-
-            if (cityId) {
-                $.ajax({
-                    url: "{{ url('/districts') }}/" + cityId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        console.log(data);
-                        districtSelect.empty();
-                        districtSelect.append('<option value="">Pilih</option>');
-                        $.each(data, function(key, value) {
-                            districtSelect.append('<option value="' + value.id +
-                                '">' + value.name + '</option>');
-                        });
-
-                        // Clear village dropdown
-                        $('#village').empty().append('<option value="">Pilih</option>');
-                    },
-                    error: function() {
-                        alert('Gagal mengambil data kecamatan');
-                    }
-                });
-            } else {
-                districtSelect.empty();
-                districtSelect.append('<option value="">Pilih</option>');
-            }
-        });
-
-        $('#district').change(function() {
-            var districtId = $(this).val();
-            var villageSelect = $('#village');
-
-            if (districtId) {
-                $.ajax({
-                    url: "{{ url('/villages') }}/" + districtId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        console.log(data);
-                        villageSelect.empty();
-                        villageSelect.append('<option value="">Pilih</option>');
-                        $.each(data, function(key, value) {
-                            villageSelect.append('<option value="' + value.id +
-                                '">' + value.name + '</option>');
-                        });
-                    },
-                    error: function() {
-                        alert('Gagal mengambil data kelurahan/desa');
-                    }
-                });
-            } else {
-                villageSelect.empty();
-                villageSelect.append('<option value="">Pilih</option>');
-            }
-        });
     });
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const klasterSelect = document.getElementById('klaster');
-        const poliSelect = document.getElementById('poli');
+        const klasterSelect = document.getElementById('klaster'); // Dropdown klaster
+        const poliSelect = document.getElementById('poli'); // Dropdown poli
 
-
+        // Fungsi untuk memperbarui opsi poli berdasarkan klaster yang dipilih
         function updatePoliOptions() {
-            const selectedKlaster = klasterSelect.value;
+            const selectedKlaster = klasterSelect.value; // Ambil nilai klaster yang dipilih
 
+            // Kosongkan semua opsi di poli
+            poliSelect.innerHTML = '';
 
-            Array.from(poliSelect.options).forEach(option => {
-                option.style.display = 'block';
-                option.disabled = false;
-            });
-
+            // Logika untuk memperbarui dropdown poli berdasarkan klaster
             if (selectedKlaster === '2') {
-
-                Array.from(poliSelect.options).forEach(option => {
-                    if (option.value !== 'kia' && option.value !== 'mtbs' && option.value !== '') {
-                        option.style.display = 'none';
-                        option.disabled = true;
-                    }
-                });
+                // Opsi untuk Klaster 2
+                poliSelect.innerHTML += '<option value="kia">KIA</option>';
+                poliSelect.innerHTML += '<option value="mtbs">MTBS</option>';
             } else if (selectedKlaster === '3') {
-
-                Array.from(poliSelect.options).forEach(option => {
-                    if (option.value !== 'lansia' && option.value !== '') {
-                        option.style.display = 'none';
-                        option.disabled = true;
-                    }
-                });
+                // Opsi untuk Klaster 3
+                poliSelect.innerHTML += '<option value="lansia">Lansia</option>';
             } else {
-
-                poliSelect.value = '';
-            }
-
-
-            if (poliSelect.options[poliSelect.selectedIndex]?.disabled) {
-                poliSelect.value = '';
+                // Jika tidak ada klaster dipilih, tambahkan placeholder
+                poliSelect.innerHTML = '<option value="" disabled selected>Pilih</option>';
             }
         }
 
+        // Event listener untuk perubahan pada dropdown klaster
         klasterSelect.addEventListener('change', updatePoliOptions);
-        updatePoliOptions();
 
+        // Panggil fungsi saat halaman dimuat (untuk mengatur nilai awal dropdown poli)
+        updatePoliOptions();
 
         @if (session('success'))
             Swal.fire({

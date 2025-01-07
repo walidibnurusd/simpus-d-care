@@ -163,7 +163,7 @@ class ActionController extends Controller
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'poli-gigi')->whereNotNull('diagnosa');
+        $actionsQuery = Action::where('tipe', 'ruang-tindakan')->whereNotNull('diagnosa');
 
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -335,6 +335,7 @@ class ActionController extends Controller
                 'neurologis' => 'nullable|string|max:255',
                 'hasil_lab' => 'nullable|string|max:255',
                 'obat' => 'nullable',
+                 'pemeriksaan_penunjang' => 'nullable',
             ]);
 
             // Update the action with the validated data
@@ -416,8 +417,6 @@ class ActionController extends Controller
                 'rujuk_ubm' => 'nullable|string|max:255',
                 'kondisi' => 'nullable|string|max:255',
                 'edukasi' => 'nullable|string|max:255',
-                'riwayat_penyakit_keluarga' => 'nullable',
-                'riwayat_penyakit_tidak_menular' => 'nullable',
                 'keluhan' => 'nullable|string|max:255',
                 'diagnosa' => 'nullable',
                 'tindakan' => 'nullable',
@@ -451,6 +450,7 @@ class ActionController extends Controller
                 'hasil_lab' => 'nullable|string|max:255',
                 'obat' => 'nullable',
                 'riwayat_penyakit_sekarang' => 'nullable',
+                'riwayat_penyakit_keluarga' => 'nullable',
                 'riwayat_penyakit_dulu' => 'nullable',
                 'riwayat_penyakit_lainnya' => 'nullable',
                 'riwayat_penyakit_lainnya_keluarga' => 'nullable',
