@@ -17,6 +17,13 @@
             <div class="modal-body">
                 <form id="addPatientForm" action="" method="POST" class="px-3">
                     @csrf
+                    @if ($routeName === 'action.dokter.index')
+                        <input type="hidden" name="tipe" id="tipe" value="poli-umum">
+                    @elseif($routeName === 'action.dokter.gigi.index')
+                        <input type="hidden" name="tipe" id="tipe" value="poli-gigi">
+                    @else
+                        <input type="hidden" name="tipe" id="tipe" value="ruang-tindakan">
+                    @endif
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
@@ -57,8 +64,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="tanggal">Tanggal</label>
-                                            <input type="text" class="form-control flatpickr-input" id="tanggal"
-                                                name="tanggal" placeholder="Pilih Tanggal" required>
+                                            <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                                placeholder="Pilih Tanggal" required>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -366,19 +373,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            @elseif($routeName === 'action.dokter.gigi.index')
-                                <div class="container">
-                                    <div class="row g-2">
-                                        <div class="col-md-2 ">
-                                            <label for="hamil" style="color: green;">Hamil</label>
-                                            <select class="form-control" id="hamil" name="hamil">
-                                                <option value="" disabled selected>pilih</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
                             @endif
                         </div>
                     </div>
@@ -607,18 +601,7 @@
     });
 </script>
 
-<script>
-    // Initialize Flatpickr for the date picker
-    document.addEventListener('DOMContentLoaded', function() {
-        flatpickr('#tanggal', {
-            dateFormat: 'd-m-Y', // Format tanggal
-            defaultDate: new Date(), // Optional: default to today's date
-            locale: {
-                firstDayOfWeek: 0 // Optional: Sunday as the first day of the week
-            }
-        });
-    });
-</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -647,9 +630,3 @@
         @endif
     });
 </script>
-
-<!-- Flatpickr CSS -->
-<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-
-<!-- Flatpickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

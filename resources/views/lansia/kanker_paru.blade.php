@@ -72,24 +72,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Usia</label>
-                        <div class="d-flex">
-                            <div class="form-check mr-3">
-                                <input type="radio" class="form-check-input" name="usia" value="1"
-                                    id="tidakPernah" {{ old('usia', $kankerParu->usia ?? '') == 1 ? 'checked' : '' }}>
-                                <label class="form-check-label" for="tidakPernah">
-                                    < 45 tahun</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="usia" value="2" id="usia50"
-                                    {{ old('usia', $kankerParu->usia ?? '') == 2 ? 'checked' : '' }}>
-                                <label class="form-check-label" for="usia50">46-65 tahun</label>
-                            </div>
-                            <div class="form-check ml-3">
-                                <input type="radio" class="form-check-input" name="usia" value="3" id="ya"
-                                    {{ old('usia', $kankerParu->usia ?? '') == 3 ? 'checked' : '' }}>
-                                <label class="form-check-label" for="ya">65 tahun</label>
-                            </div>
-                        </div>
+                        <input type="number" class="form-control" name="usia" value="{{ $tbc->usia ?? '' }}"
+                            id="usiaInput" readonly>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -290,17 +274,17 @@
                 <li>Risiko berat (skor 17-29) → Rujuk ke FKTRL</li>
             </strong></ul>
 
-        </div>
+
 
 
         <div class="text-right mt-4">
-            @if (isset($kankerParu) && $kankerParu)
+            {{-- @if (isset($kankerParu) && $kankerParu)
                 <a href="{{ route('kankerParu.lansia.admin') }}" type="button" class="btn btn-secondary mr-2"
                     style="font-size: 20px">Kembali</a>
             @else
                 <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
                     style="font-size: 20px">Kembali</a>
-            @endif
+            @endif --}}
             <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
         </div>
     </form>
@@ -366,27 +350,27 @@
     <script>
         $(document).ready(function() {
 
-            function calculateAge(dob) {
-                var today = new Date();
-                var birthDate = new Date(dob);
-                var age = today.getFullYear() - birthDate.getFullYear();
-                var monthDiff = today.getMonth() - birthDate.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-                return age;
-            }
+            // function calculateAge(dob) {
+            //     var today = new Date();
+            //     var birthDate = new Date(dob);
+            //     var age = today.getFullYear() - birthDate.getFullYear();
+            //     var monthDiff = today.getMonth() - birthDate.getMonth();
+            //     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            //         age--;
+            //     }
+            //     return age;
+            // }
 
-            function updateAgeCategory(age) {
-                $('input[name="usia"]').prop('checked', false); // Uncheck all options first
-                if (age < 45) {
-                    $('#tidakPernah').prop('checked', true);
-                } else if (age >= 46 && age <= 65) {
-                    $('#usia50').prop('checked', true);
-                } else if (age > 65) {
-                    $('#ya').prop('checked', true);
-                }
-            }
+            // function updateAgeCategory(age) {
+            //     $('input[name="usia"]').prop('checked', false); // Uncheck all options first
+            //     if (age < 45) {
+            //         $('#tidakPernah').prop('checked', true);
+            //     } else if (age >= 46 && age <= 65) {
+            //         $('#usia50').prop('checked', true);
+            //     } else if (age > 65) {
+            //         $('#ya').prop('checked', true);
+            //     }
+            // }
 
             $('.select2').select2({
                 placeholder: "Pilih pasien",
@@ -410,10 +394,16 @@
                 }
 
                 if (dob) {
-                    var age = calculateAge(dob);
-                    updateAgeCategory(age);
-                }
+                    var today = new Date();
+                    var birthDate = new Date(dob);
+                    var age = today.getFullYear() - birthDate.getFullYear();
+                    var monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    $('#usiaInput').val(age); // Set usia pada input
 
+                }
                 calculateTotalScore();
             });
 

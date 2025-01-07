@@ -223,10 +223,10 @@ Route::middleware('auth')->group(function () {
             Route::put('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'updateTbc'])->name('tbc.update');
             Route::delete('/tbc/{id}', [App\Http\Controllers\AdminController::class, 'deleteTbc'])->name('tbc.delete');
 
-            Route::get('triple', [App\Http\Controllers\AdminController::class, 'viewTripleEliminasi'])->name('triple.eliminasi.admin');
-            Route::get('/triple/{id}', [App\Http\Controllers\AdminController::class, 'editTripleEliminasi'])->name('triple.eliminasi.edit');
-            Route::put('/triple/{id}', [App\Http\Controllers\AdminController::class, 'updateTripleEliminasi'])->name('triple.eliminasi.update');
-            Route::delete('/triple/{id}', [App\Http\Controllers\AdminController::class, 'deleteTripleEliminasi'])->name('triple.eliminasi.delete');
+            Route::get('triple-eliminasi-bumil', [App\Http\Controllers\AdminController::class, 'viewTripleEliminasi'])->name('triple.eliminasi.admin');
+            Route::get('/triple-eliminasi-bumil/{id}', [App\Http\Controllers\AdminController::class, 'editTripleEliminasi'])->name('triple.eliminasi.edit');
+            Route::put('/triple-eliminasi-bumil/{id}', [App\Http\Controllers\AdminController::class, 'updateTripleEliminasi'])->name('triple.eliminasi.update');
+            Route::delete('/triple-eliminasi-bumil/{id}', [App\Http\Controllers\AdminController::class, 'deleteTripleEliminasi'])->name('triple.eliminasi.delete');
 
             Route::get('kekerasan-perempuan', [App\Http\Controllers\AdminController::class, 'viewKekerasanPerempuan'])->name('kekerasan.perempuan.admin');
             Route::get('/kekerasan-perempuan/{id}', [App\Http\Controllers\AdminController::class, 'editKekerasanPerempuan'])->name('kekerasan.perempuan.edit');
@@ -333,6 +333,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/kanker-kolorektal/{id}', [App\Http\Controllers\AdminLansiaController::class, 'deleteKankerKolorektal'])->name('kankerKolorektal.lansia.delete');
 
             Route::get('layak-hamil', [App\Http\Controllers\AdminController::class, 'viewLayakHamil'])->name('layakHamil.admin.lansia');
+            Route::get('/layak-hamil/{id}', [App\Http\Controllers\AdminController::class, 'editLayakHamil'])->name('layakHamil.lansia.edit');
             Route::delete('/layak-hamil/{id}', [App\Http\Controllers\AdminController::class, 'deleteLayakHamil'])->name('layak_hamil.lansia.delete');
 
             Route::get('hipertensi', [App\Http\Controllers\AdminLansiaController::class, 'viewHipertensi'])->name('hipertensi.admin.lansia');
@@ -360,7 +361,9 @@ Route::get('districts/{cityId}', [DependentDropdownController::class, 'districts
 Route::get('villages/{districtId}', [DependentDropdownController::class, 'villagesData'])->name('villages');
 Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('get-patients');
 Route::get('/get-skrining/{id}', [SkriningController::class, 'getSkriningPatient'])->name('get-skrining-patient');
-Route::get('/get-patients-dokter', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
+Route::get('/get-patients-dokter/poli-umum', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
+Route::get('/get-patients-dokter/poli-gigi', [PatientsController::class, 'getPatientsDokterGigi'])->name('get-patients-dokter-gigi');
+Route::get('/get-patients-dokter/ruang-tindakan', [PatientsController::class, 'getPatientsDokterRuangTindakan'])->name('get-patients-dokter-ruang-tindakan');
 
 //Language Change
 Route::get('lang/{locale}', function ($locale) {

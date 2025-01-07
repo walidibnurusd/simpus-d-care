@@ -21,11 +21,11 @@
                 <form id="addPatientForm" action="{{ route('action.store') }}" method="POST" class="px-3">
                     @csrf
                     @if ($routeName === 'action.index')
-                        <input type="hidden" name="tipe" value="poli-umum">
+                        <input type="hidden" name="tipe" id="tipe" value="poli-umum">
                     @elseif($routeName === 'action.index.gigi')
-                        <input type="hidden" name="tipe" value="poli-gigi">
+                        <input type="hidden" name="tipe" id="tipe" value="poli-gigi">
                     @else
-                        <input type="hidden" name="tipe" value="ruang-tindakan">
+                        <input type="hidden" name="tipe" id="tipe" value="ruang-tindakan">
                     @endif
                     <div class="row">
                         <div class="col-4">
@@ -78,7 +78,6 @@
                                                 @foreach ($dokter as $item)
                                                     <option value="{{ $item['name'] }}">{{ $item['name'] }}</option>
                                                 @endforeach
-
                                             </select>
                                         </div>
                                     </div>
@@ -89,7 +88,6 @@
                                                 <option value="" disabled selected>Pilih Jenis Kunjungan</option>
                                                 <option value="baru">Baru </option>
                                                 <option value="lama">Lama </option>
-
                                             </select>
                                         </div>
                                     </div>
@@ -157,7 +155,8 @@
                                         style="display: none;">
                                         <label for="penyakit_lainnya" style="color: rgb(241, 11, 11);">Sebutkan
                                             Penyakit Lainnya</label>
-                                        <textarea class="form-control" id="penyakit_lainnya" name="penyakit_lainnya" placeholder="Isi penyakit lainnya"></textarea>
+                                        <textarea class="form-control" id="penyakit_lainnya" name="riwayat_penyakit_lainnya"
+                                            placeholder="Isi penyakit lainnya"></textarea>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="riwayat_pengobatan" style="color: rgb(241, 11, 11);">Riwayat
@@ -188,7 +187,7 @@
                                         <label for="penyakit_lainnya_keluarga"
                                             style="color: rgb(241, 11, 11);">Sebutkan
                                             Penyakit Lainnya</label>
-                                        <textarea class="form-control" id="penyakit_lainnya_keluarga" name="penyakit_lainnya_keluarga"
+                                        <textarea class="form-control" id="penyakit_lainnya_keluarga" name="riwayat_penyakit_lainnya_keluarga"
                                             placeholder="Isi penyakit lainnya"></textarea>
                                     </div>
                                     <div class="col-md-12">

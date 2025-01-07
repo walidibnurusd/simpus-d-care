@@ -29,21 +29,23 @@
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
                             <div id="patientDetailsEdit" style=" margin-top: 10px; padding: 10px; border-radius: 5px;">
-                                <p><strong>N I K</strong> : <span id="NIK">{{ $action->patient->nik }}</span></p>
+                                <p><strong>N I K</strong> : <span
+                                        id="NIK{{ $action->id }}">{{ $action->patient->nik }}</span></p>
                                 <p><strong>Nama Pasien</strong> : <span
-                                        id="Name">{{ $action->patient->name }}</span></p>
+                                        id="Name{{ $action->id }}">{{ $action->patient->name }}</span></p>
                                 {{-- <p><strong>J.Kelamin</strong> : <span id="Gender">{{ $action->patient->genderName->name }}</span></p> --}}
                                 <p><strong>Umur</strong> : <span id="Age"></span>
                                     {{ \Carbon\Carbon::parse($action->patient->dob)->age }}</p>
                                 <p><strong>Telepon/WA</strong> : <span
-                                        id="Phone">{{ $action->patient->phone }}</span></p>
+                                        id="Phone{{ $action->id }}">{{ $action->patient->phone }}</span></p>
                                 <p><strong>Alamat</strong> : <span id="Address">{{ $action->patient->address }}</span>
                                 </p>
                                 <p><strong>Darah</strong> : <span
-                                        id="Blood">{{ $action->patient->blood_type }}</span></p>
+                                        id="Blood{{ $action->id }}">{{ $action->patient->blood_type }}</span></p>
                                 {{-- <p><strong>Pendidikan</strong> : <span id="Education">{{ $action->patient->educations->name }}</span></p> --}}
                                 {{-- <p><strong>Pekerjaan</strong> : <span id="Job"></span>{{ $action->patient->occupations->name }}</p> --}}
-                                <p><strong>Nomor RM</strong> : <span id="RmNumber">{{ $action->patient->no_rm }}</span>
+                                <p><strong>Nomor RM</strong> : <span
+                                        id="RmNumber{{ $action->id }}">{{ $action->patient->no_rm }}</span>
                                 </p>
                             </div>
 
@@ -56,8 +58,9 @@
                                         <div class="form-group">
                                             <label for="nik">Cari Pasien</label>
                                             <div class="input-group">
-                                                <input readonly type="text" class="form-control" id="nikEdit"
-                                                    name="nikEdit" placeholder="NIK" required>
+                                                <input readonly type="text" class="form-control"
+                                                    id="nikEdit{{ $action->id }}" value="" name="nikEdit"
+                                                    placeholder="NIK" required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
                                                         data-bs-toggle="modal" data-bs-target="#modalPasienEdit">
@@ -112,13 +115,24 @@
                                             <label for="kartu">Kartu</label>
                                             <input type="text" class="form-control" id="jenis_kartu"
                                                 name="jenis_kartu" readonly
-                                                value="{{ $action->patient->jenis_kartu }}">
+                                                value="{{ $action->patient->jenis_kartu == 'pbi'
+                                                    ? 'PBI (KIS)'
+                                                    : ($action->patient->jenis_kartu == 'askes'
+                                                        ? 'AKSES'
+                                                        : ($action->patient->jenis_kartu == 'jkn_mandiri'
+                                                            ? 'JKN Mandiri'
+                                                            : ($action->patient->jenis_kartu == 'umum'
+                                                                ? 'Umum'
+                                                                : ($action->patient->jenis_kartu == 'jkd'
+                                                                    ? 'JKD'
+                                                                    : 'Tidak Diketahui')))) }}">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="nomor">Nomor Kartu</label>
-                                            <input type="text" class="form-control" id="nomor" name="nomor"
+                                            <input type="text" class="form-control"
+                                                id="nomor_kartu{{ $action->id }}" name="nomor"
                                                 placeholder="Masukkan Nomor"
                                                 value="{{ $action->patient->nomor_kartu }}" readonly>
                                         </div>
@@ -138,122 +152,128 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
-                                        <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
-                                        <textarea class="form-control" id="keluhan" name="keluhan" placeholder="Keluhan">{{ old('keluhan', $action->keluhan ?? '') }}</textarea>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label for="riwayat_penyakit_sekarang"
-                                            style="color: rgb(241, 11, 11);">Riwayat
-                                            Penyakit Sekarang</label>
-                                        <textarea class="form-control" id="riwayat_penyakit_sekarang" name="riwayat_penyakit_sekarang"
-                                            placeholder="Riwayat Penyakit Sekarang">{{ old('riwayat_penyakit_sekarang', $action->riwayat_penyakit_sekarang ?? '') }}</textarea>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="riwayat_penyakit_dulu"
-                                                style="color: rgb(241, 11, 11);">Riwayat Penyakit Terdahulu</label>
-                                            <select class="form-control" id="riwayat_penyakit_dulu"
-                                                name="riwayat_penyakit_dulu" required>
-                                                <option value="" disabled
-                                                    {{ empty($action->riwayat_penyakit_dulu) ? 'selected' : '' }}>pilih
-                                                </option>>Pilih</option>
-                                                <option value="hipertensi"
-                                                    {{ $action->riwayat_penyakit_dulu == 'hipertensi' ? 'selected' : '' }}>
-                                                    Hipertensi</option>
-                                                <option value="dm"
-                                                    {{ $action->riwayat_penyakit_dulu == 'dm' ? 'selected' : '' }}>DM
-                                                </option>
-                                                <option value="jantung"
-                                                    {{ $action->riwayat_penyakit_dulu == 'jantung' ? 'selected' : '' }}>
-                                                    Jantung</option>
-                                                <option value="stroke"
-                                                    {{ $action->riwayat_penyakit_dulu == 'stroke' ? 'selected' : '' }}>
-                                                    Stroke</option>
-                                                <option value="asma"
-                                                    {{ $action->riwayat_penyakit_dulu == 'asma' ? 'selected' : '' }}>
-                                                    Asma</option>
-                                                <option value="liver"
-                                                    {{ $action->riwayat_penyakit_dulu == 'liver' ? 'selected' : '' }}>
-                                                    Liver</option>
-                                                <option value="ginjal"
-                                                    {{ $action->riwayat_penyakit_dulu == 'ginjal' ? 'selected' : '' }}>
-                                                    Ginjal</option>
-                                                <option value="tb"
-                                                    {{ $action->riwayat_penyakit_dulu == 'tb' ? 'selected' : '' }}>TB
-                                                </option>
-                                                <option value="lainnya"
-                                                    {{ $action->riwayat_penyakit_dulu == 'lainnya' ? 'selected' : '' }}>
-                                                    Lainnya</option>
-                                            </select>
+                                    @if ($routeName == 'action.dokter.index' || Auth::user()->role == 'admin-kajian-awal')
+                                        <div class="col-md-12">
+                                            <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
+                                            <textarea class="form-control" id="keluhan" name="keluhan" placeholder="Keluhan">{{ old('keluhan', $action->keluhan ?? '') }}</textarea>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12 mt-2" id="penyakit_lainnya_container"
-                                        style="display: none;">
-                                        <label for="penyakit_lainnya" style="color: rgb(241, 11, 11);">Sebutkan
-                                            Penyakit Lainnya</label>
-                                        <textarea class="form-control" id="penyakit_lainnya" name="penyakit_lainnya" placeholder="Isi penyakit lainnya"><{{ old('penyakit_lainnya', $action->penyakit_lainnya ?? '') }}/textarea>
+                                        <div class="col-md-12">
+                                            <label for="riwayat_penyakit_sekarang"
+                                                style="color: rgb(241, 11, 11);">Riwayat
+                                                Penyakit Sekarang</label>
+                                            <textarea class="form-control" id="riwayat_penyakit_sekarang" name="riwayat_penyakit_sekarang"
+                                                placeholder="Riwayat Penyakit Sekarang">{{ old('riwayat_penyakit_sekarang', $action->riwayat_penyakit_sekarang ?? '') }}</textarea>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="riwayat_penyakit_dulu"
+                                                    style="color: rgb(241, 11, 11);">Riwayat Penyakit Terdahulu</label>
+                                                <select class="form-control" id="riwayat_penyakit_dulu_edit"
+                                                    name="riwayat_penyakit_dulu" required>
+                                                    <option value="" disabled
+                                                        {{ empty($action->riwayat_penyakit_dulu) ? 'selected' : '' }}>
+                                                        pilih
+                                                    </option>>Pilih</option>
+                                                    <option value="hipertensi"
+                                                        {{ $action->riwayat_penyakit_dulu == 'hipertensi' ? 'selected' : '' }}>
+                                                        Hipertensi</option>
+                                                    <option value="dm"
+                                                        {{ $action->riwayat_penyakit_dulu == 'dm' ? 'selected' : '' }}>
+                                                        DM
+                                                    </option>
+                                                    <option value="jantung"
+                                                        {{ $action->riwayat_penyakit_dulu == 'jantung' ? 'selected' : '' }}>
+                                                        Jantung</option>
+                                                    <option value="stroke"
+                                                        {{ $action->riwayat_penyakit_dulu == 'stroke' ? 'selected' : '' }}>
+                                                        Stroke</option>
+                                                    <option value="asma"
+                                                        {{ $action->riwayat_penyakit_dulu == 'asma' ? 'selected' : '' }}>
+                                                        Asma</option>
+                                                    <option value="liver"
+                                                        {{ $action->riwayat_penyakit_dulu == 'liver' ? 'selected' : '' }}>
+                                                        Liver</option>
+                                                    <option value="ginjal"
+                                                        {{ $action->riwayat_penyakit_dulu == 'ginjal' ? 'selected' : '' }}>
+                                                        Ginjal</option>
+                                                    <option value="tb"
+                                                        {{ $action->riwayat_penyakit_dulu == 'tb' ? 'selected' : '' }}>
+                                                        TB
+                                                    </option>
+                                                    <option value="lainnya"
+                                                        {{ $action->riwayat_penyakit_dulu == 'lainnya' ? 'selected' : '' }}>
+                                                        Lainnya</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mt-2" id="penyakit_lainnya_container_edit"
+                                            style="display: none;">
+                                            <label for="penyakit_lainnya" style="color: rgb(241, 11, 11);">Sebutkan
+                                                Penyakit Lainnya</label>
+                                            <textarea class="form-control" id="penyakit_lainnya_edit" name="riwayat_penyakit_lainnya"
+                                                placeholder="Isi penyakit lainnya"><{{ old('penyakit_lainnya', $action->riwayat_penyakit_lainnya ?? '') }}/textarea>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="riwayat_pengobatan" style="color: rgb(241, 11, 11);">Riwayat
                                             Pengobatan</label>
                                         <textarea class="form-control" id="riwayat_pengobatan" name="riwayat_pengobatan" placeholder="Riwayat Pengobatan">{{ old('riwayat_pengobatan', $action->riwayat_pengobatan ?? '') }}</textarea>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="riwayat_penyakit_keluarga"
-                                                style="color: rgb(241, 11, 11);">Riwayat Penyakit Keluarga</label>
-                                            <select class="form-control" id="riwayat_penyakit_keluarga"
-                                                name="riwayat_penyakit_keluarga" required>
-                                                <option value="" disabled
-                                                    {{ empty($action->riwayat_penyakit_keluarga) ? 'selected' : '' }}>
-                                                    pilih
-                                                </option>>Pilih</option>
-                                                <option value="hipertensi"
-                                                    {{ $action->riwayat_penyakit_keluarga == 'hipertensi' ? 'selected' : '' }}>
-                                                    Hipertensi</option>
-                                                <option value="dm"
-                                                    {{ $action->riwayat_penyakit_keluarga == 'dm' ? 'selected' : '' }}>
-                                                    DM
-                                                </option>
-                                                <option value="jantung"
-                                                    {{ $action->riwayat_penyakit_keluarga == 'jantung' ? 'selected' : '' }}>
-                                                    Jantung</option>
-                                                <option value="stroke"
-                                                    {{ $action->riwayat_penyakit_keluarga == 'stroke' ? 'selected' : '' }}>
-                                                    Stroke</option>
-                                                <option value="asma"
-                                                    {{ $action->riwayat_penyakit_keluarga == 'asma' ? 'selected' : '' }}>
-                                                    Asma</option>
-                                                <option value="liver"
-                                                    {{ $action->riwayat_penyakit_keluarga == 'liver' ? 'selected' : '' }}>
-                                                    Liver</option>
-                                                <option value="ginjal"
-                                                    {{ $action->riwayat_penyakit_keluarga == 'ginjal' ? 'selected' : '' }}>
-                                                    Ginjal</option>
-                                                <option value="tb"
-                                                    {{ $action->riwayat_penyakit_keluarga == 'tb' ? 'selected' : '' }}>
-                                                    TB
-                                                </option>
-                                                <option value="lainnya"
-                                                    {{ $action->riwayat_penyakit_keluarga == 'lainnya' ? 'selected' : '' }}>
-                                                    Lainnya</option>
-                                            </select>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12 mt-2" id="penyakit_lainnya_keluarga_container"
-                                        style="display: none;">
-                                        <label for="penyakit_lainnya_keluarga"
-                                            style="color: rgb(241, 11, 11);">Sebutkan
-                                            Penyakit Lainnya</label>
-                                        <textarea class="form-control" id="penyakit_lainnya_keluarga" name="penyakit_lainnya_keluarga"
-                                            placeholder="Isi penyakit lainnya">{{ old('riwayat_lainnya_keluarga', $action->riwayat_lainnya_keluarga ?? '') }}</textarea>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label for="riwayat_alergi" style="color: rgb(241, 11, 11);">Riwayat
-                                            Alergi</label>
-                                        <textarea class="form-control" id="riwayat_alergi" name="riwayat_alergi" placeholder="Riwayat Alergi">{{ old('riwayat_alergi', $action->riwayat_alergi ?? '') }}</textarea>
-                                    </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="riwayat_penyakit_keluarga"
+                                                    style="color: rgb(241, 11, 11);">Riwayat Penyakit Keluarga</label>
+                                                <select class="form-control" id="riwayat_penyakit_keluarga_edit"
+                                                    name="riwayat_penyakit_keluarga" required>
+                                                    <option value="" disabled
+                                                        {{ empty($action->riwayat_penyakit_keluarga) ? 'selected' : '' }}>
+                                                        pilih
+                                                    </option>>Pilih</option>
+                                                    <option value="hipertensi"
+                                                        {{ $action->riwayat_penyakit_keluarga == 'hipertensi' ? 'selected' : '' }}>
+                                                        Hipertensi</option>
+                                                    <option value="dm"
+                                                        {{ $action->riwayat_penyakit_keluarga == 'dm' ? 'selected' : '' }}>
+                                                        DM
+                                                    </option>
+                                                    <option value="jantung"
+                                                        {{ $action->riwayat_penyakit_keluarga == 'jantung' ? 'selected' : '' }}>
+                                                        Jantung</option>
+                                                    <option value="stroke"
+                                                        {{ $action->riwayat_penyakit_keluarga == 'stroke' ? 'selected' : '' }}>
+                                                        Stroke</option>
+                                                    <option value="asma"
+                                                        {{ $action->riwayat_penyakit_keluarga == 'asma' ? 'selected' : '' }}>
+                                                        Asma</option>
+                                                    <option value="liver"
+                                                        {{ $action->riwayat_penyakit_keluarga == 'liver' ? 'selected' : '' }}>
+                                                        Liver</option>
+                                                    <option value="ginjal"
+                                                        {{ $action->riwayat_penyakit_keluarga == 'ginjal' ? 'selected' : '' }}>
+                                                        Ginjal</option>
+                                                    <option value="tb"
+                                                        {{ $action->riwayat_penyakit_keluarga == 'tb' ? 'selected' : '' }}>
+                                                        TB
+                                                    </option>
+                                                    <option value="lainnya"
+                                                        {{ $action->riwayat_penyakit_keluarga == 'lainnya' ? 'selected' : '' }}>
+                                                        Lainnya</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mt-2" id="penyakit_lainnya_keluarga_container_edit"
+                                            style="display: none;">
+                                            <label for="penyakit_lainnya_keluarga"
+                                                style="color: rgb(241, 11, 11);">Sebutkan
+                                                Penyakit Lainnya</label>
+                                            <textarea class="form-control" id="penyakit_lainnya_keluarga_edit" name="riwayat_penyakit_lainnya_keluarga"
+                                                placeholder="Isi penyakit lainnya">{{ old('riwayat_lainnya_keluarga', $action->riwayat_lainnya_keluarga ?? '') }}</textarea>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label for="riwayat_alergi" style="color: rgb(241, 11, 11);">Riwayat
+                                                Alergi</label>
+                                            <textarea class="form-control" id="riwayat_alergi" name="riwayat_alergi" placeholder="Riwayat Alergi">{{ old('riwayat_alergi', $action->riwayat_alergi ?? '') }}</textarea>
+                                        </div>
+                                    @endif
 
                                 </div>
                             </div>
@@ -827,8 +847,8 @@
 
 <script>
     var nikValue = "{{ $action->patient->nik ?? '' }}";
-    document.getElementById('nikEdit').value = nikValue;
-    //  console.log(nikValue);
+    document.getElementById('nikEdit{{ $action->id }}').value = nikValue;
+    console.log(nikValue);
 </script>
 <script>
     $(document).ready(function() {
@@ -854,36 +874,69 @@
 </style>
 
 <script>
-    // Initialize Flatpickr for the date picker
     document.addEventListener('DOMContentLoaded', function() {
-        const selectElement = document.getElementById('riwayat_penyakit_dulu');
-        const selectPenyakitKeluargaElement = document.getElementById('riwayat_penyakit_keluarga');
-        const lainnyaContainer = document.getElementById('penyakit_lainnya_container');
-        const lainnyaTextarea = document.getElementById('penyakit_lainnya');
-        const lainnyaKeluargaContainer = document.getElementById('penyakit_lainnya_keluarga_container');
-        const lainnyaKeluargaTextarea = document.getElementById('penyakit_keluarga_lainnya');
+        const selectElement = document.getElementById('riwayat_penyakit_dulu_edit');
+        const selectPenyakitKeluargaElement = document.getElementById('riwayat_penyakit_keluarga_edit');
+        const lainnyaContainer = document.getElementById('penyakit_lainnya_container_edit');
+        const lainnyaTextarea = document.getElementById('penyakit_lainnya_edit');
+        const lainnyaKeluargaContainer = document.getElementById('penyakit_lainnya_keluarga_container_edit');
+        const lainnyaKeluargaTextarea = document.getElementById('penyakit_lainnya_keluarga_edit');
 
+        // Event listener for 'riwayat_penyakit_dulu'
         selectElement.addEventListener('change', function() {
-            if (this.value === 'lainnya') {
-                lainnyaContainer.style.display = 'block';
-                lainnyaTextarea.required = true;
-            } else {
-                lainnyaContainer.style.display = 'none';
-                lainnyaTextarea.value = '';
-                lainnyaTextarea.required = false;
-            }
-        });
-        selectPenyakitKeluargaElement.addEventListener('change', function() {
-            if (this.value === 'lainnya') {
-                lainnyaKeluargaContainer.style.display = 'block';
-                lainnyaKeluargaTextarea.required = true;
-            } else {
-                lainnyaKeluargaContainer.style.display = 'none';
-                lainnyaKeluargaTextarea.value = '';
-                lainnyaKeluargaTextarea.required = false;
-            }
+            toggleLainnya(selectElement, lainnyaContainer, lainnyaTextarea);
         });
 
+        // Event listener for 'riwayat_penyakit_keluarga'
+        selectPenyakitKeluargaElement.addEventListener('change', function() {
+            toggleLainnya(selectPenyakitKeluargaElement, lainnyaKeluargaContainer,
+                lainnyaKeluargaTextarea);
+        });
+
+        // Function to toggle "lainnya" fields
+        function toggleLainnya(select, container, textarea) {
+            if (select.value === 'lainnya') {
+                container.style.display = 'block';
+                textarea.required = true;
+            } else {
+                container.style.display = 'none';
+                textarea.value = '';
+                textarea.required = false;
+            }
+        }
+
+        // Populate form fields for edit mode
+        function populateFormData() {
+            // Replace these with actual values from your backend
+            const formData = {!! json_encode($action ?? null) !!}; // Example variable
+
+            if (formData) {
+                // Set value for 'riwayat_penyakit_dulu' and toggle "lainnya" if necessary
+                if (formData.riwayat_penyakit_dulu) {
+                    selectElement.value = formData.riwayat_penyakit_dulu;
+                    toggleLainnya(selectElement, lainnyaContainer, lainnyaTextarea);
+
+                    if (formData.riwayat_penyakit_dulu === 'lainnya' && formData.riwayat_penyakit_lainnya) {
+                        lainnyaTextarea.value = formData.riwayat_penyakit_lainnya;
+                    }
+                }
+
+                // Set value for 'riwayat_penyakit_keluarga' and toggle "lainnya" if necessary
+                if (formData.riwayat_penyakit_keluarga) {
+                    selectPenyakitKeluargaElement.value = formData.riwayat_penyakit_keluarga;
+                    toggleLainnya(selectPenyakitKeluargaElement, lainnyaKeluargaContainer,
+                        lainnyaKeluargaTextarea);
+
+                    if (formData.riwayat_penyakit_keluarga === 'lainnya' && formData
+                        .riwayat_penyakit_lainnya_keluarga) {
+                        lainnyaKeluargaTextarea.value = formData.riwayat_penyakit_lainnya_keluarga;
+                    }
+                }
+            }
+        }
+
+        // Call populateFormData on page load
+        populateFormData();
     });
 </script>
 
@@ -914,9 +967,3 @@
         @endif
     });
 </script>
-
-<!-- Flatpickr CSS -->
-<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-
-<!-- Flatpickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

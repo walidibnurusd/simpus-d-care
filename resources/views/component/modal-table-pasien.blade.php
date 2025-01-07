@@ -120,7 +120,7 @@
             $('#displayRmNumber').text(data.rm);
 
             $('#nik').val(data.nik);
-            $('#nomor_kartu').val(data);
+            $('#nomor_kartu').val(data.nomor_kartu);
             console.log(data.nomor_kartu);
             let jenisKartu = data.jenis_kartu;
             if (jenisKartu === 'pbi') {

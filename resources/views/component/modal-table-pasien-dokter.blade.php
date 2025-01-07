@@ -38,10 +38,12 @@
             // if ($.fn.DataTable.isDataTable('#pasien')) {
             //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
             // }
-
+            const tipe = $('#tipe').val(); // Ambil route name
+            const url = `/get-patients-dokter/${tipe}`;
+            console.log(url);
             table = $('#pasienDokter').DataTable({
                 ajax: {
-                    url: '/get-patients-dokter', // Endpoint untuk mengambil data
+                    url: url, // Endpoint untuk mengambil data
                     type: 'GET',
 
                 },

@@ -198,15 +198,15 @@
                                                     @include('component.modal-edit-action')
                                                     <!-- Tombol Delete -->
                                                     <form action="{{ route('action.destroy', $action->id) }}"
-                                                        method="POST" class="d-inline">
+                                                        method="POST" class="d-inline form-delete">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-sm text-white font-weight-bold"
-                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-delete btn-sm text-white font-weight-bold">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </form>
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -227,6 +227,7 @@
 @endsection
 
 @section('script')
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -250,9 +251,16 @@
                         var actionDate = data[
                             1]; // Assumes the 'Tanggal' column is the second column (index 1)
 
+                        // If startDate and endDate are provided, compare with the actionDate
                         if (startDate && endDate) {
-                            return actionDate >= startDate && actionDate <= endDate;
+                            // Format both dates as YYYY-MM-DD for comparison
+                            var actionDateFormatted = moment(actionDate, 'YYYY-MM-DD').format(
+                                'YYYY-MM-DD');
+
+                            return actionDateFormatted >= startDate && actionDateFormatted <=
+                                endDate;
                         }
+
                         return true;
                     });
                 }
@@ -303,11 +311,12 @@
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
 
-                    var formAction = this.getAttribute('data-form-action');
+                    // Ambil URL dari data-action
+                    var formAction = this.getAttribute('data-action');
 
                     Swal.fire({
                         title: 'Konfirmasi Penghapusan',
-                        text: 'Apakah Anda yakin ingin menghapus Tindakan ini?',
+                        text: 'Apakah Anda yakin ingin menghapus tindakan ini?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -319,25 +328,11 @@
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Create and submit the form
-                            var form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = formAction;
-
-                            var csrfToken = document.createElement('input');
-                            csrfToken.type = 'hidden';
-                            csrfToken.name = '_token';
-                            csrfToken.value = "{{ csrf_token() }}";
-                            form.appendChild(csrfToken);
-
-                            var methodField = document.createElement('input');
-                            methodField.type = 'hidden';
-                            methodField.name = '_method';
-                            methodField.value = 'DELETE';
-                            form.appendChild(methodField);
-
-                            document.body.appendChild(form);
-                            form.submit();
+                            // Submit form menggunakan fetch atau form asli
+                            var form = this.closest('form');
+                            if (form) {
+                                form.submit();
+                            }
                         }
                     });
                 });

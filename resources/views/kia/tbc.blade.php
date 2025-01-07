@@ -802,17 +802,16 @@
                 Dikatakan <strong>Pemeriksaan TBC Laten "Tidak"</strong>, jika: dikatakan sebagai terduga TBC.
             </p>
         </div>
-        </div>
 
 
         <div class="text-right mt-4">
-            @if (isset($tbc))
+            {{-- @if (isset($tbc))
                 <a href="{{ route('tbc.admin') }}" type="button" class="btn btn-secondary mr-2"
                     style="font-size: 20px">Kembali</a>
             @else
                 <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
                     style="font-size: 20px">Kembali</a>
-            @endif
+            @endif --}}
             <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
         </div>
     </form>

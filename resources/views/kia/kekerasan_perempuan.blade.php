@@ -291,16 +291,16 @@
         </div>
         <li><strong>Jika hasil penjumlahan skor dari pertanyaan awal dan pertanyaan Lanjutan ≥ 13
                 maka pasien terindikasi mengalami kekerasan</strong></li>
-        </div>
+
 
         <div class="text-right mt-4">
-            @if (isset($kekerasanPerempuan))
+            {{-- @if (isset($kekerasanPerempuan))
                 <a href="{{ route('kekerasan.perempuan.admin') }}" type="button" class="btn btn-secondary mr-2"
                     style="font-size: 20px">Kembali</a>
             @else
                 <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
                     style="font-size: 20px">Kembali</a>
-            @endif
+            @endif --}}
             <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
         </div>
     </form>

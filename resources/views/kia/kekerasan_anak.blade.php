@@ -623,13 +623,13 @@
             </div>
 
             <div class="text-right mt-4">
-                @if (isset($kekerasanAnak))
+                {{-- @if (isset($kekerasanAnak))
                     <a href="{{ route('kekerasan.anak.admin') }}" type="button" class="btn btn-secondary mr-2"
                         style="font-size: 20px">Kembali</a>
                 @else
                     <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
                         style="font-size: 20px">Kembali</a>
-                @endif
+                @endif --}}
                 <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
             </div>
     </form>

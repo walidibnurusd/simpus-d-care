@@ -222,6 +222,7 @@
 @endsection
 
 @section('script')
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -245,9 +246,16 @@
                         var actionDate = data[
                             1]; // Assumes the 'Tanggal' column is the second column (index 1)
 
+                        // If startDate and endDate are provided, compare with the actionDate
                         if (startDate && endDate) {
-                            return actionDate >= startDate && actionDate <= endDate;
+                            // Format both dates as YYYY-MM-DD for comparison
+                            var actionDateFormatted = moment(actionDate, 'YYYY-MM-DD').format(
+                                'YYYY-MM-DD');
+
+                            return actionDateFormatted >= startDate && actionDateFormatted <=
+                                endDate;
                         }
+
                         return true;
                     });
                 }

@@ -19,26 +19,57 @@ class ActionController extends Controller
 {
     public function index(Request $request)
     {
-        $dokter = User::where('role', 'dokter')->get();
-        $actions = Action::where('tipe', 'poli-umum')->get();
-        $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
+        // Get the filtering dates from the request
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
+        // Retrieve all doctors, actions, diagnoses, diseases, and hospitals
+        $dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
         $penyakit = Disease::all();
         $rs = Hospital::all();
 
+        // Filter actions based on the date range
+        $actionsQuery = Action::where('tipe', 'poli-umum');
+
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
+
+        // Get the current route name
         $routeName = $request->route()->getName();
 
+        // Return the view with the data
         return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
     public function indexPoliGigi(Request $request)
     {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
         $dokter = User::where('role', 'dokter')->get();
 
-        $actions = Action::where('tipe', 'poli-gigi')->get();
         $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
+        $actionsQuery = Action::where('tipe', 'poli-gigi');
+
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
 
         $routeName = $request->route()->getName();
 
@@ -46,54 +77,103 @@ class ActionController extends Controller
     }
     public function indexUgd(Request $request)
     {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
         $dokter = User::where('role', 'dokter')->get();
 
-        $actions = Action::where('tipe', 'ruang-tindakan')->get();
         $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
 
+        $actionsQuery = Action::where('tipe', 'ruang-tindakan');
+
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
 
         return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
     public function indexDokter(Request $request)
     {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
         $dokter = User::where('role', 'dokter')->get();
-        $actions = Action::where('tipe', 'poli-umum')->whereNotNull('diagnosa')->get();
         $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
+        $actionsQuery = Action::where('tipe', 'poli-umum')->whereNotNull('diagnosa');
+
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
 
         $routeName = $request->route()->getName();
         return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
     public function indexGigiDokter(Request $request)
     {
-        $dokter = User::where('role', 'dokter')->get();
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
-        $actions = Action::where('tipe', 'poli-gigi')->whereNotNull('diagnosa')->get();
+        $dokter = User::where('role', 'dokter')->get();
         $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
 
+        $actionsQuery = Action::where('tipe', 'poli-gigi')->whereNotNull('diagnosa');
+
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
         return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
 
     public function indexUgdDokter(Request $request)
     {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
 
-        $actions = Action::where('tipe', 'ruang-tindakan')->whereNotNull('diagnosa')->get();
         $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
+        $actionsQuery = Action::where('tipe', 'poli-gigi')->whereNotNull('diagnosa');
 
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
         return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
@@ -373,7 +453,6 @@ class ActionController extends Controller
                 'riwayat_penyakit_sekarang' => 'nullable',
                 'riwayat_penyakit_dulu' => 'nullable',
                 'riwayat_penyakit_lainnya' => 'nullable',
-                'riwayat_penyakit_keluarga' => 'nullable',
                 'riwayat_penyakit_lainnya_keluarga' => 'nullable',
                 'riwayat_pengobatan' => 'nullable',
                 'riwayat_alergi' => 'nullable',
@@ -401,25 +480,34 @@ class ActionController extends Controller
 
     public function destroy($id)
     {
-        $action = Action::findOrFail($id);
-        $action->delete();
+        try {
+            $action = Action::findOrFail($id);
 
-        if (Auth::user()->role == 'dokter') {
-            if ($action->tipe === 'poli-umum') {
-                $route = 'action.dokter.index';
-            } elseif ($action->tipe === 'poli-gigi') {
-                $route = 'action.dokter.gigi.index';
+            $action->delete();
+
+            if (Auth::user()->role == 'dokter') {
+                if ($action->tipe === 'poli-umum') {
+                    $route = 'action.dokter.index';
+                } elseif ($action->tipe === 'poli-gigi') {
+                    $route = 'action.dokter.gigi.index';
+                } else {
+                    $route = 'action.dokter.ugd.index';
+                }
             } else {
-                $route = 'action.dokter.ugd.index';
+                if ($action->tipe === 'poli-umum') {
+                    $route = 'action.index';
+                } elseif ($action->tipe === 'poli-gigi') {
+                    $route = 'action.index.gigi';
+                } else {
+                    $route = 'action.index.ugd';
+                }
             }
-        } else {
-            if ($action->tipe === 'poli-umum') {
-                $route = 'action.index';
-            } elseif ($action->tipe === 'poli-gigi') {
-                $route = 'action.index.gigi';
-            } else {
-                $route = 'action.index.ugd';
-            }
+
+            return redirect()->route($route)->with('success', 'Data berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
 }

@@ -224,20 +224,15 @@ class KiaController extends Controller
             'kesimpulan' => 'required',
         ]);
 
-        // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
         }
 
-        // Create and store the new Hiv record with additional fields
         Hiv::create(
-            array_merge(
-                $validator->validated(), // Only use validated data
-                [
-                    'klaster' => 2, // Adding 'klaster' field with a default value
-                    'poli' => 'kia', // Adding 'poli' field with a default value
-                ],
-            ),
+            array_merge($validator->validated(), [
+                'klaster' => 2,
+                'poli' => 'kia',
+            ]),
         );
 
         // Redirect with a success message
@@ -564,7 +559,6 @@ class KiaController extends Controller
             // 'no_hp' => 'nullable|string|max:15',
             'umur_ibu' => 'nullable',
             // 'alamat' => 'nullable|string',
-            'pendidikan' => 'nullable',
             'gejala_hepatitis' => 'nullable',
             'gejala_urine_gelap' => 'nullable',
             'gejala_kuning' => 'nullable',
@@ -612,8 +606,8 @@ class KiaController extends Controller
         // Store validated data with additional fields
         TripleEliminasi::create(
             array_merge($validator->validated(), [
-                'klaster' => $request->klaster,
-                'poli' => $request->poli,
+                'klaster' => 2,
+                'poli' => 'kia',
             ]),
         );
 

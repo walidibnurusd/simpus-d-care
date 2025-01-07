@@ -83,8 +83,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        // Query data Action yang dibuat hari ini dengan relasi
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->whereDate('tanggal', Carbon::today());
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->whereDate('tanggal', Carbon::today())->where('tipe', 'poli-umum');
 
         // Filter pencarian jika ada nilai pencarian
         if (!empty($searchValue)) {
@@ -114,7 +113,88 @@ class PatientsController extends Controller
             'data' => $patients->items(), // Data pasien yang dipaginasikan
         ]);
     }
+    public function getPatientsDokterGigi(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
 
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->whereDate('tanggal', Carbon::today())->where('tipe', 'poli-gigi');
+
+        // Filter pencarian jika ada nilai pencarian
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                    ->orWhereHas('genderName', function ($q2) use ($searchValue) {
+                        $q2->where('gender', 'LIKE', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('educations', function ($q2) use ($searchValue) {
+                        $q2->where('education_name', 'LIKE', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('occupations', function ($q2) use ($searchValue) {
+                        $q2->where('occupation_name', 'LIKE', "%{$searchValue}%");
+                    });
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
+    }
+    public function getPatientsDokterRuangTindakan(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->whereDate('tanggal', Carbon::today())->where('tipe', 'ruang-tindakan');
+
+        // Filter pencarian jika ada nilai pencarian
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                    ->orWhereHas('genderName', function ($q2) use ($searchValue) {
+                        $q2->where('gender', 'LIKE', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('educations', function ($q2) use ($searchValue) {
+                        $q2->where('education_name', 'LIKE', "%{$searchValue}%");
+                    })
+                    ->orWhereHas('occupations', function ($q2) use ($searchValue) {
+                        $q2->where('occupation_name', 'LIKE', "%{$searchValue}%");
+                    });
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
+    }
     public function index()
     {
         $patients = Patients::all();
@@ -234,6 +314,7 @@ class PatientsController extends Controller
             $patient->indonesia_village = $validatedData['village'] ?? null;
             $patient->rw = $validatedData['rw'] ?? null;
             $patient->klaster = $validatedData['klaster'] ?? null;
+            $patient->poli = $validatedData['poli'] ?? null;
             $patient->address = $validatedData['address'];
             $patient->jenis_kartu = $validatedData['jenis_kartu'];
             $patient->nomor_kartu = $validatedData['nomor_kartu'];

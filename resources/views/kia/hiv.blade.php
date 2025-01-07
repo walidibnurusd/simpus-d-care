@@ -453,13 +453,13 @@
 
 
         <div class="text-right mt-4">
-            @if (isset($hiv))
+            {{-- @if (isset($hiv))
                 <a href="{{ route('hiv.admin') }}" type="button" class="btn btn-secondary mr-2"
                     style="font-size: 20px">Kembali</a>
             @else
                 <a href="{{ route('skrining.ilp') }}" type="button" class="btn btn-secondary mr-2"
                     style="font-size: 20px">Kembali</a>
-            @endif
+            @endif --}}
             <button type="submit" class="btn btn-primary" style="font-size: 20px">Kirim</button>
         </div>
     </form>
@@ -481,7 +481,7 @@
         }
 
         function populateFormData() {
-            const formData = {!! json_encode($hiv) !!}; // Mengambil data hiv jika ada
+            const formData = {!! json_encode($hiv ?? null) !!}; // Mengambil data hiv jika ada
 
             // Mengisi data pada form berdasarkan jawaban yang sudah ada
             if (formData) {
