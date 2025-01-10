@@ -1,5 +1,5 @@
 @extends('layouts.simple.master')
-@section('title', 'Pasien')
+@section('title', 'Kunjungan')
 
 @section('css')
 
@@ -10,12 +10,12 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>Pasien</h3>
+    <h3>Kunjungan</h3>
 @endsection
 
 @section('breadcrumb-items')
     <li class="breadcrumb-item">{{ Auth::user()->name }}</li>
-    <li class="breadcrumb-item active">Pasien</li>
+    <li class="breadcrumb-item active">Kunjungan</li>
 @endsection
 
 @section('content')
@@ -24,19 +24,14 @@
         <div class="row">
             <div class="col-12" style="min-height: 100vh; overflow-x: hidden;">
                 <div class="button-container">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#addKunjunganModal">
                         Tambah
                         <i class="fas fa-plus ms-2"></i> <!-- Icon with margin to the left -->
                     </button>
-                    <a href="{{ route('patient.report') }}" class="btn btn-warning" target="_blank">
-                        Print
-                        <i class="fas fa-print ms-2"></i> <!-- Ikon print dengan margin -->
-                    </a>
-
-
                 </div>
 
-                @include('component.modal-add-patient')
+                @include('component.modal-add-kunjungan')
                 <!-- Modal -->
 
 
@@ -59,22 +54,16 @@
                                             NAMA</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            ALAMAT</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             TEMPAT/TGL.LAHIR</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            JK</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            TELEPON</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            NIKAH</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             No RM</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            POLI</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            KLASTER</th>
 
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -85,52 +74,48 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($patients as $index => $patient)
-                                        @include('component.modal-edit-patient')
+                                    @foreach ($kunjungan as $index => $k)
+                                        @include('component.modal-edit-kunjungan', ['k' => $k])
                                         <tr>
                                             <td>
                                                 <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Row number -->
                                             </td>
                                             <td>
-                                                <p class="text-xs  mb-0">{{ $patient->nik }}</p>
+                                                <p class="text-xs  mb-0">{{ $k->patient->nik }}</p>
                                                 <!-- NIK -->
                                             </td>
                                             <td>
-                                                <p class="text-xs  mb-0">{{ $patient->name }}</p>
+                                                <p class="text-xs  mb-0">{{ $k->patient->name }}</p>
                                                 <!-- Name -->
                                             </td>
                                             <td>
-                                                <p class="text-xs  mb-0">{{ $patient->address }}</p>
-                                                <!-- Address -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $patient->place_birth }}</p>
-                                                <p class="text-xs  mb-0">{{ $patient->dob }}
-                                                    <span class="age-red">({{ $patient->getAgeAttribute() }}-thn)</span>
+                                                <p class="text-xs  mb-0">{{ $k->patient->place_birth }}</p>
+                                                <p class="text-xs  mb-0">{{ $k->patient->dob }}
+                                                    <span class="age-red">({{ $k->patient->getAgeAttribute() }}-thn)</span>
                                                 </p>
                                                 <!-- Date of Birth -->
                                             </td>
                                             <td>
-                                                <p class="text-xs  mb-0">
-                                                    {{ $patient->genderName->name }}</p>
-                                                <!-- Gender -->
+                                                <p class="text-xs  mb-0">{{ $k->patient->no_rm }}</p>
+                                                <!-- No RM -->
                                             </td>
                                             <td>
-                                                <p class="text-xs  mb-0">{{ $patient->phone }}</p>
-                                                <!-- Phone -->
+                                                @if ($k->poli == 'poli-umum')
+                                                    <p class="text-xs  mb-0">Poli Umum</p>
+                                                @elseif($k->poli == 'poli-gigi')
+                                                    <p class="text-xs  mb-0">Poli Gigi</p>
+                                                @else
+                                                    <p class="text-xs  mb-0">UGD</p>
+                                                @endif
+                                                <!-- No RM -->
                                             </td>
                                             <td>
-                                                <p class="text-xs  mb-0">
-                                                    {{ $patient->marritalStatus->name }}</p>
-                                                <!-- Marital Status -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $patient->no_rm }}</p>
+                                                <p class="text-xs  mb-0">{{ $k->klaster }}</p>
                                                 <!-- No RM -->
                                             </td>
 
                                             <td>
-                                                <p class="text-xs  mb-0">{{ $patient->created_at }}</p>
+                                                <p class="text-xs  mb-0">{{ $k->created_at }}</p>
                                                 <!-- Place of Birth -->
                                             </td>
                                             <td>
@@ -138,12 +123,12 @@
                                                     <button type="button"
                                                         class="mb-0 btn btn-primary btn-sm text-white font-weight-bold text-xs"
                                                         data-bs-toggle="modal"
-                                                        data-bs-target="#editPatientModal{{ $patient->id }}">
+                                                        data-bs-target="#editKunjunganModal{{ $k->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
                                                     <button type="button"
                                                         class="btn btn-danger btn-sm text-white font-weight-bold d-flex align-items-center btn-delete"
-                                                        data-form-action="{{ route('patient.destroy', $patient->id) }}">
+                                                        data-form-action="{{ route('patient.destroy', $k->id) }}">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 </div>

@@ -150,6 +150,7 @@ class ActionController extends Controller
 
         $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
+
         return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
 
@@ -335,7 +336,7 @@ class ActionController extends Controller
                 'neurologis' => 'nullable|string|max:255',
                 'hasil_lab' => 'nullable|string|max:255',
                 'obat' => 'nullable',
-                 'pemeriksaan_penunjang' => 'nullable',
+                'pemeriksaan_penunjang' => 'nullable',
             ]);
 
             // Update the action with the validated data

@@ -10,6 +10,7 @@ use App\Http\Controllers\KadarLemakController;
 use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SkriningController;
+use App\Http\Controllers\KunjunganController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -175,6 +176,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
     Route::prefix('skrining')->group(function () {
         Route::get('/', [App\Http\Controllers\SkriningController::class, 'index'])->name('skrining.index');
+    });
+    Route::prefix('kunjungan')->group(function () {
+        Route::get('/', [App\Http\Controllers\KunjunganController::class, 'index'])->name('kunjungan.index');
+        Route::post('/', [App\Http\Controllers\KunjunganController::class, 'store'])->name('kunjungan.store');
     });
     Route::prefix('admin')->group(function () {
         Route::prefix('kia')->group(function () {

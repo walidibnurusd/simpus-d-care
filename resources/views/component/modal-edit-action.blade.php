@@ -653,7 +653,7 @@
                                 <select class="form-control" id="diagnosaEdit" name="diagnosa[]" multiple>
                                     @foreach ($diagnosa as $item)
                                         <option value="{{ $item->id }}"
-                                            {{ in_array($item->id, old('diagnosa', $action->diagnosa ?? [])) ? 'selected' : '' }}>
+                                            {{ in_array($item->id, old('diagnosa', $diagnosa ?? [])) ? 'selected' : '' }}>
                                             {{ $item->name }}
                                         </option>
                                     @endforeach

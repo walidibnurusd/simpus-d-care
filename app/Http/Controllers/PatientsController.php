@@ -94,10 +94,10 @@ class PatientsController extends Controller
                         $q2->where('gender', 'LIKE', "%{$searchValue}%");
                     })
                     ->orWhereHas('educations', function ($q2) use ($searchValue) {
-                        $q2->where('education_name', 'LIKE', "%{$searchValue}%");
+                        $q2->where('education', 'LIKE', "%{$searchValue}%");
                     })
                     ->orWhereHas('occupations', function ($q2) use ($searchValue) {
-                        $q2->where('occupation_name', 'LIKE', "%{$searchValue}%");
+                        $q2->where('occupation', 'LIKE', "%{$searchValue}%");
                     });
             });
         }
@@ -135,10 +135,10 @@ class PatientsController extends Controller
                         $q2->where('gender', 'LIKE', "%{$searchValue}%");
                     })
                     ->orWhereHas('educations', function ($q2) use ($searchValue) {
-                        $q2->where('education_name', 'LIKE', "%{$searchValue}%");
+                        $q2->where('education', 'LIKE', "%{$searchValue}%");
                     })
                     ->orWhereHas('occupations', function ($q2) use ($searchValue) {
-                        $q2->where('occupation_name', 'LIKE', "%{$searchValue}%");
+                        $q2->where('occupation', 'LIKE', "%{$searchValue}%");
                     });
             });
         }
@@ -176,10 +176,10 @@ class PatientsController extends Controller
                         $q2->where('gender', 'LIKE', "%{$searchValue}%");
                     })
                     ->orWhereHas('educations', function ($q2) use ($searchValue) {
-                        $q2->where('education_name', 'LIKE', "%{$searchValue}%");
+                        $q2->where('education', 'LIKE', "%{$searchValue}%");
                     })
                     ->orWhereHas('occupations', function ($q2) use ($searchValue) {
-                        $q2->where('occupation_name', 'LIKE', "%{$searchValue}%");
+                        $q2->where('occupation', 'LIKE', "%{$searchValue}%");
                     });
             });
         }

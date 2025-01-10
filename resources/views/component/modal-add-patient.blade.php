@@ -12,7 +12,7 @@
 
 @endphp
 
-<div class="modal fade" style="z-index: 9999;" id="addPatientModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade" style="z-index: 1050;" id="addPatientModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -26,21 +26,38 @@
                     <div class="row g-2">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nik">NIK</label>
-                                <input type="text" class="form-control" id="nik" name="nik"
-                                    placeholder="NIK" required>
+                                <label for="nik">Cari Pasien</label>
+                                <div class="input-group">
+                                    <input readonly type="text" class="form-control" id="nik" name="nik"
+                                        placeholder="NIK" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" id="btnCariNIK"
+                                            data-bs-toggle="modal" data-bs-target="#modalPasien">
+                                            Cari
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name">Nama Pasien</label>
-                                <input type="text" class="form-control" id="name" name="name"
+                                <input type="text" class="form-control" id="name" name="namePatient"
                                     placeholder="Nama Pasien" required>
                             </div>
                         </div>
                     </div>
 
                     <div class="row g-2">
+                        <div class="row g-2">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="no_rm">NOMOR RM</label>
+                                    <input type="text" class="form-control" id="no_rm" name="no_rm"
+                                        placeholder="Nomor RM" required>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="phone">Telpon/WA</label>
@@ -263,13 +280,18 @@
                         </div>
                     </div>
 
-                    <div class="row g-2">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="no_rm">NOMOR RM</label>
-                                <input type="text" class="form-control" id="no_rm" name="no_rm"
-                                    placeholder="Nomor RM" required>
-                            </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Data Kunjungan</h5>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <div class="form-group">
+                            <label for="poli">Poli Tujuan Berobat</label>
+                            <select class="form-control" id="poli" name="poli">
+                                <option value="">Pilih</option>
+                                <option value="poli-umum">Poli Umum</option>
+                                <option value="poli-gigi">Poli Gigi</option>
+                                <option value="ruang-tindakan">Ruang Tindakan</option>
+                            </select>
                         </div>
                     </div>
             </div>
@@ -281,8 +303,13 @@
         </div>
     </div>
 </div>
+@include('component.modal-table-pasien')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<style>
+    .select2-dropdown {
+        z-index: 9999 !important;
+    }
+</style>
 <script>
     function updateVillage() {
         const district = document.getElementById('district').value;
@@ -346,7 +373,7 @@
                 poliSelect.innerHTML += '<option value="mtbs">MTBS</option>';
             } else if (selectedKlaster === '3') {
                 // Opsi untuk Klaster 3
-                poliSelect.innerHTML += '<option value="lansia">Lansia</option>';
+                poliSelect.innerHTML += '<option value="lansia">Lansia & Dewasa</option>';
             } else {
                 // Jika tidak ada klaster dipilih, tambahkan placeholder
                 poliSelect.innerHTML = '<option value="" disabled selected>Pilih</option>';

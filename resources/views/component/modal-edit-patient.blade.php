@@ -160,7 +160,7 @@
                                     <option value="mtbs" {{ $patient->poli == 'mtbs' ? 'selected' : '' }}>MTBS
                                     </option>
                                     <option value="lansia" {{ $patient->poli == 'lansia' ? 'selected' : '' }}>
-                                        Lansia</option>
+                                        Lansia & Dewasa</option>
                                 </select>
                             </div>
                         </div>
