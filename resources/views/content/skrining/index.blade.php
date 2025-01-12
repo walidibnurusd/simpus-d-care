@@ -161,7 +161,7 @@
                                         // Jika status skrining belum selesai, tampilkan tombol Mulai Skrining
                                         if (row.status_skrining === 'Belum Selesai') {
                                             const startRoute =
-                                                `${data.poliPatient}/${data.route_name}`;
+                                                `${data.poliPatient}/${data.route_name}/${data.patientId}`;
                                             actionButtons += `
                     <button class="btn btn-success btn-sm" onclick="handleStartSkrining('${startRoute}')">
                         Mulai Skrining

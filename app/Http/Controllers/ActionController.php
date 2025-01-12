@@ -9,6 +9,7 @@ use App\Models\Doctor;
 use App\Models\User;
 use App\Models\Hospital;
 use App\Models\Patients;
+use App\Models\Kunjungan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;

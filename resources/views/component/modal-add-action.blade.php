@@ -56,7 +56,7 @@
                                                     name="nik" placeholder="NIK" required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
-                                                        data-bs-toggle="modal" data-bs-target="#modalPasien">
+                                                        data-bs-toggle="modal" data-bs-target="#modalPasienKunjungan">
                                                         Cari
                                                     </button>
                                                 </div>
@@ -66,7 +66,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="tanggal">Tanggal</label>
-                                            <input type="date" class="form-control" name="tanggal"
+                                            <input type="date" class="form-control" name="tanggal" id="tanggal"
                                                 placeholder="Pilih Tanggal" required>
                                         </div>
                                     </div>
@@ -298,7 +298,7 @@
 </div>
 
 
-@include('component.modal-table-pasien')
+@include('component.modal-table-pasien-kunjungan')
 
 <style>
     .select2-dropdown {
@@ -307,6 +307,8 @@
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('tanggal').value = today;
         const selectElement = document.getElementById('riwayat_penyakit_dulu');
         const selectPenyakitKeluargaElement = document.getElementById('riwayat_penyakit_keluarga');
         const lainnyaContainer = document.getElementById('penyakit_lainnya_container');

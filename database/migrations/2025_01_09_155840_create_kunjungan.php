@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('pasien');
             $table->foreign('pasien')->references('id')->on('patients')->onDelete('cascade');
             $table->string('poli');
-            $table->int('klaster');
+            $table->boolean('hamil');
             $table->date('tanggal');
             $table->timestamps();
         });

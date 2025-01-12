@@ -17,6 +17,7 @@ use App\Models\Tbc;
 use App\Models\KekerasanPerempuan;
 use App\Models\Patients;
 use App\Models\TripleEliminasi;
+use App\Models\Preeklampsia;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
@@ -77,6 +78,7 @@ class AdminController extends Controller
 
         return redirect()->route('layakHamil.admin')->with('success', 'Data updated successfully');
     }
+
     public function deleteLayakHamil($id)
     {
         // Find the record by ID
@@ -89,9 +91,81 @@ class AdminController extends Controller
         // Delete the record
         $layakHamil->delete();
 
-        return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
+    }
+    public function editPreeklampsia($id)
+    {
+        $preeklampsia = Preeklampsia::with('pasien')->findOrFail($id);
+        $pasienId = $preeklampsia->pasien;
+        $pasien = Patients::findOrFail($pasienId);
+
+        return view('kia.preeklampsia', compact('preeklampsia', 'pasien'));
+    }
+    public function updatePreeklampsia(Request $request, $id)
+    {
+        // Define validation rules
+        $validator = FacadesValidator::make($request->all(), [
+            'pasien' => 'required',
+            // 'no_hp' => 'required|string|max:15',
+            // 'nik' => 'required|string|max:16|unique:layak_hamil,nik,' . $id,
+            'status' => 'required|string|max:50',
+            'nama_suami' => 'required|string|max:255',
+            // 'alamat' => 'required|string',
+            'ingin_hamil' => 'required|boolean',
+            // 'tanggal_lahir' => 'required|date',
+            'umur' => 'required',
+            'jumlah_anak' => 'required',
+            'waktu_persalinan_terakhir' => 'required',
+            'lingkar_lengan_atas' => 'required',
+            'penyakit' => 'array',
+            'penyakit_suami' => 'array',
+            'kesehatan_jiwa' => 'array',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
+        }
+
+        // Find the record by ID
+        $preeklampsia = LayakHamil::find($id);
+
+        if (!$preeklampsia) {
+            return redirect()->back()->with('error', 'Record not found.');
+        }
+
+        // Update the record with validated data
+        $preeklampsia->update(
+            array_merge($validator->validated(), [
+                'klaster' => 2,
+                'poli' => 'kia',
+            ]),
+        );
+
+        return redirect()->route('layakHamil.admin')->with('success', 'Data updated successfully');
+    }
+    public function deletePreeklampsia($id)
+    {
+        // Find the record by ID
+        $preeklampsia = Preeklampsia::find($id);
+
+        if (!$preeklampsia) {
+            return redirect()->route('layakHamil.admin')->with('error', 'Record not found.');
+        }
+
+        // Delete the record
+        $preeklampsia->delete();
+
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function viewHipertensi(Request $request)
     {
@@ -162,9 +236,12 @@ class AdminController extends Controller
         // Delete the record
         $hipertensi->delete();
 
-        return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function viewGangguanAutis()
     {
@@ -189,9 +266,12 @@ class AdminController extends Controller
         // Delete the record
         $gangguanAutis->delete();
 
-       return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateGangguanAutis(Request $request, $id)
     {
@@ -259,9 +339,12 @@ class AdminController extends Controller
 
         $anemia->delete();
 
-       return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateAnemia(Request $request, $id)
     {
@@ -381,9 +464,12 @@ class AdminController extends Controller
         $hepatitis->delete();
 
         // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-         return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function viewTalasemia(Request $request)
     {
@@ -476,9 +562,12 @@ class AdminController extends Controller
         $hiv->delete();
 
         // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-     return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateHiv(Request $request, $id)
     {
@@ -544,9 +633,12 @@ class AdminController extends Controller
         $kecacingan->delete();
 
         // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-        return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateKecacingan(Request $request, $id)
     {
@@ -612,9 +704,12 @@ class AdminController extends Controller
         $diabetesMellitus->delete();
 
         // Redirect ke halaman sebelumnya atau halaman daftar dengan pesan sukses
-       return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateDiabetesMellitus(Request $request, $id)
     {
@@ -677,9 +772,12 @@ class AdminController extends Controller
         // Hapus data dari database
         $tbc->delete();
 
-        return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateTbc(Request $request, $id)
     {
@@ -773,9 +871,12 @@ class AdminController extends Controller
         // Hapus data dari database
         $kekerasanPerempuan->delete();
 
-       return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateKekerasanPerempuan(Request $request, $id)
     {
@@ -838,9 +939,12 @@ class AdminController extends Controller
         // Hapus data dari database
         $kekerasanAnak->delete();
 
-         return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
 
     public function updateKekerasanAnak(Request $request, $id)
@@ -903,9 +1007,12 @@ class AdminController extends Controller
 
         // Hapus data dari database
         $triple->delete();
-  return response()->json([
-            'message' => 'Data skrining berhasil dihapus.',
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
     }
     public function updateTripleEliminasi(Request $request, $id)
     {

@@ -69,14 +69,15 @@
                         <label>1. Pasien</label>
                         <select class="form-control form-select select2" id="pasien" name="pasien">
                             <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
-                            @foreach ($pasien as $item)
-                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
-                                    data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
-                                    data-jenis_kelamin="{{ $item->genderName->name }}" data-alamat="{{ $item->address }}"
-                                    {{ old('pasien', $hipertensi->pasien ?? '') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }} - {{ $item->nik }}
+                            @if ($pasien)
+                                <option value="{{ $pasien->id }}" selected>{{ $pasien->name }} - {{ $pasien->nik }}
                                 </option>
-                            @endforeach
+                                {{-- @else
+                                <option value="" disabled selected>Pilih</option>
+                                @foreach ($allPasien as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }} - {{ $item->nik }}</option>
+                                @endforeach --}}
+                            @endif
                         </select>
                         @error('pasien')
                             <span class="text-danger">{{ $message }}</span>
@@ -87,7 +88,7 @@
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
                         <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir" readonly
-                            value="{{ old('tanggal_lahir', $hipertensi->tanggal_lahir ?? '') }}">
+                            value="{{ old('tanggal_lahir', $pasien->dob ?? '') }}">
                     </div>
                 </div>
             </div>
@@ -98,7 +99,7 @@
                     <div class="form-group">
                         <label>Alamat Lengkap</label>
                         <input type="text" class="form-control" name="alamat" id="alamat" readonly
-                            value="{{ old('alamat', $hipertensi->alamat ?? '') }}" placeholder="Masukkan alamat lengkap">
+                            value="{{ old('alamat', $pasien->address ?? '') }}" placeholder="Masukkan alamat lengkap">
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -108,13 +109,13 @@
                             <div class="form-check mr-3">
                                 <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki"
                                     id="jk_laki"
-                                    {{ old('jenis_kelamin', $hipertensi->jenis_kelamin ?? '') == 'laki-laki' ? 'checked' : '' }}>
+                                    {{ old('jenis_kelamin', $pasien->gender ?? '') == '2' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan"
                                     id="jk_perempuan"
-                                    {{ old('jenis_kelamin', $hipertensi->jenis_kelamin ?? '') == 'perempuan' ? 'checked' : '' }}>
+                                    {{ old('jenis_kelamin', $pasien->gender ?? '') == '1' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perempuan">Perempuan</label>
                             </div>
                         </div>
@@ -507,29 +508,29 @@
                 allowClear: true
             });
 
-            $('#pasien').on('change', function() {
-                var selectedOption = $(this).find(':selected');
+            // $('#pasien').on('change', function() {
+            //     var selectedOption = $(this).find(':selected');
 
 
-                var no_hp = selectedOption.data('no_hp');
-                var nik = selectedOption.data('nik');
-                var dob = selectedOption.data('dob');
-                var alamat = selectedOption.data('alamat');
-                var jk = selectedOption.data('jenis_kelamin');
+            //     var no_hp = selectedOption.data('no_hp');
+            //     var nik = selectedOption.data('nik');
+            //     var dob = selectedOption.data('dob');
+            //     var alamat = selectedOption.data('alamat');
+            //     var jk = selectedOption.data('jenis_kelamin');
 
 
-                $('#no_hp').val(no_hp);
-                $('#nik').val(nik);
-                $('#tanggal_lahir').val(dob);
-                $('#alamat').val(alamat);
-                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
-                if (jk === 'Laki-Laki') {
-                    $('#jk_laki').prop('checked', true);
-                } else if (jk === 'Perempuan') {
-                    $('#jk_perempuan').prop('checked', true);
-                }
-            });
-            $('#pasien').trigger('change');
+            //     $('#no_hp').val(no_hp);
+            //     $('#nik').val(nik);
+            //     $('#tanggal_lahir').val(dob);
+            //     $('#alamat').val(alamat);
+            //     $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
+            //     if (jk === 'Laki-Laki') {
+            //         $('#jk_laki').prop('checked', true);
+            //     } else if (jk === 'Perempuan') {
+            //         $('#jk_perempuan').prop('checked', true);
+            //     }
+            // });
+            // $('#pasien').trigger('change');
         });
     </script>
 @endsection

@@ -61,7 +61,7 @@
                                 title: 'Action',
                                 render: function(data, type, row) {
                                     const route =
-                                        `${data.poli}/${data.route_name}/${data.id}`;
+                                        `show/${data.poli}/${data.route_name}/${data.id}`;
                                     return `<button class="btn btn-primary btn-sm" onclick="handleAction('${route}')">Detail</button>`;
                                 },
 

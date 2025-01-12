@@ -28,7 +28,7 @@
                             <div class="form-group">
                                 <label for="nik">Cari Pasien</label>
                                 <div class="input-group">
-                                    <input readonly type="text" class="form-control" id="nik" name="nik"
+                                    <input type="number" class="form-control" id="nikAdd" name="nik"
                                         placeholder="NIK" required>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="button" id="btnCariNIK"
@@ -42,7 +42,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name">Nama Pasien</label>
-                                <input type="text" class="form-control" id="name" name="namePatient"
+                                <input type="text" class="form-control" id="name" name="name"
                                     placeholder="Nama Pasien" required>
                             </div>
                         </div>
@@ -141,28 +141,8 @@
 
                     </div>
                     <div class="row g-2">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="klaster">Klaster</label>
-                                <select class="form-control" id="klaster" name="klaster">
-                                    <option value="">Pilih</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="poli">Poli</label>
-                                <select class="form-control" id="poli" name="poli" required>
-                                    <option value="" disabled selected>Pilih</option>
-                                    {{-- <option value="kia">KIA</option>
-                                    <option value="mtbs">MTBS</option>
-                                    <option value="lansia">Lansia</option> --}}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
+
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kartu">Jenis Kartu</label>
                                 <select class="form-control" id="jenis_kartu" name="jenis_kartu" required>
@@ -175,7 +155,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nomor">Nomor Kartu</label>
                                 <input type="text" class="form-control" id="nomor_kartu" name="nomor_kartu"
@@ -283,15 +263,27 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Tambah Data Kunjungan</h5>
                     </div>
-                    <div class="col-md-4 mt-2">
-                        <div class="form-group">
-                            <label for="poli">Poli Tujuan Berobat</label>
-                            <select class="form-control" id="poli" name="poli">
-                                <option value="">Pilih</option>
-                                <option value="poli-umum">Poli Umum</option>
-                                <option value="poli-gigi">Poli Gigi</option>
-                                <option value="ruang-tindakan">Ruang Tindakan</option>
-                            </select>
+                    <div class="row g-2 mt-2">
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="poli">Poli Tujuan Berobat</label>
+                                <select class="form-control" id="poli_berobat" name="poli_berobat">
+                                    <option value="">Pilih</option>
+                                    <option value="poli-umum">Poli Umum</option>
+                                    <option value="poli-gigi">Poli Gigi</option>
+                                    <option value="ruang-tindakan">Ruang Tindakan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="hamil">Hamil?</label>
+                                <select class="form-control" id="hamil" name="hamil">
+                                    <option value="">Pilih</option>
+                                    <option value="1">Ya</option>
+                                    <option value="0">Tidak</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
             </div>
@@ -303,7 +295,7 @@
         </div>
     </div>
 </div>
-@include('component.modal-table-pasien')
+@include('component.modal-add-table-pasien')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
     .select2-dropdown {
@@ -359,33 +351,49 @@
         const klasterSelect = document.getElementById('klaster'); // Dropdown klaster
         const poliSelect = document.getElementById('poli'); // Dropdown poli
 
-        // Fungsi untuk memperbarui opsi poli berdasarkan klaster yang dipilih
-        function updatePoliOptions() {
-            const selectedKlaster = klasterSelect.value; // Ambil nilai klaster yang dipilih
+        // Function to update poli options based on selected klaster
+        function updatePoliOptions(selectedPoli = '') {
+            const selectedKlaster = klasterSelect.value; // Get the selected klaster value
 
-            // Kosongkan semua opsi di poli
+            // Clear all options in poli
             poliSelect.innerHTML = '';
 
-            // Logika untuk memperbarui dropdown poli berdasarkan klaster
+            // Logic to populate poli dropdown based on klaster
             if (selectedKlaster === '2') {
-                // Opsi untuk Klaster 2
+                // Options for Klaster 2
                 poliSelect.innerHTML += '<option value="kia">KIA</option>';
                 poliSelect.innerHTML += '<option value="mtbs">MTBS</option>';
             } else if (selectedKlaster === '3') {
-                // Opsi untuk Klaster 3
+                // Options for Klaster 3
                 poliSelect.innerHTML += '<option value="lansia">Lansia & Dewasa</option>';
             } else {
-                // Jika tidak ada klaster dipilih, tambahkan placeholder
+                // If no klaster selected, add placeholder
                 poliSelect.innerHTML = '<option value="" disabled selected>Pilih</option>';
+            }
+
+            // If a specific poli value is provided, set it as selected
+            if (selectedPoli) {
+                poliSelect.value = selectedPoli;
             }
         }
 
-        // Event listener untuk perubahan pada dropdown klaster
-        klasterSelect.addEventListener('change', updatePoliOptions);
+        // Event listener for changes in the klaster dropdown
+        klasterSelect.addEventListener('change', () => updatePoliOptions());
 
-        // Panggil fungsi saat halaman dimuat (untuk mengatur nilai awal dropdown poli)
-        updatePoliOptions();
+        // Pre-fill data if available (e.g., for editing)
+        const preselectedKlaster =
+            "{{ old('klaster', $data->klaster ?? '') }}"; // Replace $data->klaster with your server-side variable
+        const preselectedPoli =
+            "{{ old('poli', $data->poli ?? '') }}"; // Replace $data->poli with your server-side variable
 
+        if (preselectedKlaster) {
+            klasterSelect.value = preselectedKlaster; // Set klaster dropdown value
+            updatePoliOptions(preselectedPoli); // Populate poli based on klaster and set selected poli
+        } else {
+            updatePoliOptions(); // Initialize the poli dropdown
+        }
+
+        // Success notification using SweetAlert2
         @if (session('success'))
             Swal.fire({
                 title: 'Success!',
@@ -395,7 +403,7 @@
             });
         @endif
 
-        // Check for validation errors
+        // Validation error handling
         @if ($errors->any())
             Swal.fire({
                 title: 'Error!',

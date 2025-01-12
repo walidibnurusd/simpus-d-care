@@ -40,6 +40,17 @@
                                 <span>Pasien</span>
                             </a>
                         </li>
+                        <li class="sidebar-list">
+                            <a class="sidebar-link sidebar-title link-nav" href="{{ route('kunjungan.index') }}">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-user') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-user') }}"></use>
+                                </svg>
+                                <span>Kunjungan</span>
+                            </a>
+                        </li>
                     @endif
                     @if (Auth::user()->role == 'admin-skrining')
                         <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"

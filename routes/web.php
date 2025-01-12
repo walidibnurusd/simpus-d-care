@@ -35,8 +35,11 @@ Route::prefix('kia')->group(function () {
     Route::get('layak-hamil', [App\Http\Controllers\KiaController::class, 'showLayakHamil'])->name('layakHamil.view');
     Route::post('/layak-hamil/store', [App\Http\Controllers\KiaController::class, 'storeLayakHamil'])->name('layak_hamil.store');
 
-    Route::get('hipertensi', [App\Http\Controllers\KiaController::class, 'showHipertensi'])->name('hipertensi.view');
+    Route::get('hipertensi/{id}', [App\Http\Controllers\KiaController::class, 'showHipertensi'])->name('hipertensi.view');
     Route::post('hipertensi', [App\Http\Controllers\KiaController::class, 'storeHipertensi'])->name('hipertensi.store');
+
+    Route::get('preeklampsia/{id}', [App\Http\Controllers\KiaController::class, 'showPreeklampsia'])->name('preeklampsia.view');
+    Route::post('preeklampsia', [App\Http\Controllers\KiaController::class, 'storePreeklampsia'])->name('preeklampsia.store');
 
     Route::get('gangguan-autis', [App\Http\Controllers\KiaController::class, 'showGangguanAutis'])->name('gangguan.autis.view');
     Route::post('gangguan-autis', [App\Http\Controllers\KiaController::class, 'storeGangguanAutis'])->name('gangguan.autis.store');
@@ -187,6 +190,10 @@ Route::middleware('auth')->group(function () {
             Route::get('/layak-hamil/{id}', [App\Http\Controllers\AdminController::class, 'editLayakHamil'])->name('layak_hamil.edit');
             Route::put('/layak-hamil/{id}', [App\Http\Controllers\AdminController::class, 'updateLayakHamil'])->name('layak_hamil.update');
             Route::delete('/layak-hamil/{id}', [App\Http\Controllers\AdminController::class, 'deleteLayakHamil'])->name('layak_hamil.delete');
+
+            Route::get('/preeklampsia/{id}', [App\Http\Controllers\AdminController::class, 'editPreeklampsia'])->name('preeklampsia.edit');
+            Route::put('/preeklampsia/{id}', [App\Http\Controllers\AdminController::class, 'updatePreeklampsia'])->name('preeklampsia.update');
+            Route::delete('/preeklampsia/{id}', [App\Http\Controllers\AdminController::class, 'deletePreeklampsia'])->name('preeklampsia.delete');
 
             Route::get('hipertensi', [App\Http\Controllers\AdminController::class, 'viewHipertensi'])->name('hipertensi.admin');
             Route::get('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'editHipertensi'])->name('hipertensi.edit');
@@ -366,6 +373,9 @@ Route::get('districts/{cityId}', [DependentDropdownController::class, 'districts
 Route::get('villages/{districtId}', [DependentDropdownController::class, 'villagesData'])->name('villages');
 Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('get-patients');
 Route::get('/get-skrining/{id}', [SkriningController::class, 'getSkriningPatient'])->name('get-skrining-patient');
+Route::get('/get-patients/poli-umum', [PatientsController::class, 'getPatientsPoliUmum'])->name('get-patients-poli-umum');
+Route::get('/get-patients/poli-gigi', [PatientsController::class, 'getPatientsPoliGigi'])->name('get-patients-poli-gigi');
+Route::get('/get-patients/ruang-tindakan', [PatientsController::class, 'getPatientsRuangTindakan'])->name('get-patients-ruang-tindakan');
 Route::get('/get-patients-dokter/poli-umum', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
 Route::get('/get-patients-dokter/poli-gigi', [PatientsController::class, 'getPatientsDokterGigi'])->name('get-patients-dokter-gigi');
 Route::get('/get-patients-dokter/ruang-tindakan', [PatientsController::class, 'getPatientsDokterRuangTindakan'])->name('get-patients-dokter-ruang-tindakan');

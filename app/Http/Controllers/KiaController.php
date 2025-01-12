@@ -15,6 +15,7 @@ use App\Models\DiabetesMellitus;
 use App\Models\Patients;
 use App\Models\Tbc;
 use App\Models\Talasemia;
+use App\Models\Preeklampsia;
 use App\Models\TripleEliminasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -63,33 +64,41 @@ class KiaController extends Controller
         return redirect()->back()->with('success', 'Data saved successfully');
     }
 
-    public function showHipertensi(Request $request)
+    public function showHipertensi(Request $request, $id)
     {
-        $pasien = Patients::all();
+        $pasien = Patients::find($id);
         $routeName = $request->route()->getName();
+
+        if (!$pasien) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Pasien tidak ditemukan.']);
+        }
+
         return view('kia.hipertensi', compact('pasien', 'routeName'));
     }
+
     public function storeHipertensi(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [
             'pasien' => 'required',
-            'ortu_hipertensi' => 'required|boolean',
-            'saudara_hipertensi' => 'required|boolean',
-            'tubuh_gemuk' => 'required|boolean',
-            'usia_50' => 'required|boolean',
-            'merokok' => 'required|boolean',
-            'makan_asin' => 'required|boolean',
-            'makan_santan' => 'required|boolean',
-            'makan_lemak' => 'required|boolean',
-            'sakit_kepala' => 'required|boolean',
-            'sakit_tenguk' => 'required|boolean',
-            'tertekan' => 'required|boolean',
-            'sulit_tidur' => 'required|boolean',
-            'rutin_olahraga' => 'required|boolean',
-            'makan_sayur' => 'required|boolean',
-            'makan_buah' => 'required|boolean',
-            'kesimpulan' => 'required',
+            'ortu_hipertensi' => 'nullable|boolean',
+            'saudara_hipertensi' => 'nullable|boolean',
+            'tubuh_gemuk' => 'nullable|boolean',
+            'usia_50' => 'nullable|boolean',
+            'merokok' => 'nullable|boolean',
+            'makan_asin' => 'nullable|boolean',
+            'makan_santan' => 'nullable|boolean',
+            'makan_lemak' => 'nullable|boolean',
+            'sakit_kepala' => 'nullable|boolean',
+            'sakit_tenguk' => 'nullable|boolean',
+            'tertekan' => 'nullable|boolean',
+            'sulit_tidur' => 'nullable|boolean',
+            'rutin_olahraga' => 'nullable|boolean',
+            'makan_sayur' => 'nullable|boolean',
+            'makan_buah' => 'nullable|boolean',
+            'kesimpulan' => 'nullable',
             'jmlh_rokok' => 'nullable',
         ]);
 
@@ -108,6 +117,61 @@ class KiaController extends Controller
         // Return response
         return redirect()->back()->with('success', 'Data hipertensi berhasil disimpan');
     }
+
+    public function showPreeklampsia(Request $request, $id)
+    {
+        $pasien = Patients::find($id);
+        $routeName = $request->route()->getName();
+
+        if (!$pasien) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Pasien tidak ditemukan.']);
+        }
+
+        return view('kia.preeklampsia', compact('pasien', 'routeName'));
+    }
+
+    public function storePreeklampsia(Request $request)
+    {
+        // Define validation rules
+        $validator = Validator::make($request->all(), [
+            'pasien' => 'required',
+            'multipara' => 'nullable|boolean',
+            'teknologi_hamil' => 'nullable|boolean',
+            'umur35' => 'nullable|boolean',
+            'nulipara' => 'nullable|boolean',
+            'multipara10' => 'nullable|boolean',
+            'riwayat_preeklampsia' => 'nullable|boolean',
+            'obesitas' => 'nullable|boolean',
+            'multipara_sebelumnya' => 'nullable|boolean',
+            'hamil_multipel' => 'nullable|boolean',
+            'diabetes' => 'nullable|boolean',
+            'hipertensi' => 'nullable|boolean',
+            'ginjal' => 'nullable|boolean',
+            'autoimun' => 'nullable|boolean',
+            'phospholipid' => 'nullable|boolean',
+            'arterial' => 'nullable|boolean',
+            'kesimpulan' => 'nullable',
+            'proteinura' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('error', 'Validation errors occurred.')->withInput();
+        }
+
+        // Store data with default values for 'klaster' and 'poli' if not provided
+        $preeklampsia = Preeklampsia::create(
+            array_merge($validator->validated(), [
+                'klaster' => 2,
+                'poli' => 'kia',
+            ]),
+        );
+
+        // Return response
+        return redirect()->back()->with('success', 'Data preeklampsia berhasil disimpan');
+    }
+
     public function showGangguanAutis()
     {
         $pasien = Patients::all();

@@ -28,6 +28,7 @@ use App\Models\Tbc;
 use App\Models\TesDayaDengar;
 use App\Models\TripleEliminasi;
 use App\Models\Puma;
+use App\Models\Preeklampsia;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -44,23 +45,45 @@ class SkriningController extends Controller
     }
     public function getSkriningPatient(Request $request, $id)
     {
-        // Ambil data pasien berdasarkan ID
-        $patient = Patients::findOrFail($id);
+        $patient = Patients::with([
+            'kunjungans' => function ($query) {
+                $query->orderBy('tanggal', 'desc'); // Urutkan kunjungan berdasarkan tanggal terbaru
+            },
+        ])->findOrFail($id);
 
         if (!$patient) {
             return response()->json(['error' => 'Patient not found'], 404);
         }
 
-        $klaster = $patient->klaster;
-        $poliPatient = $patient->poli;
+        $age = \Carbon\Carbon::parse($patient->dob)->age;
+
+        // Ambil kunjungan terakhir
+        $latestKunjungan = $patient->kunjungans->first();
+
+        // Tentukan klaster berdasarkan logika
+        if ($age < 5 && (!$latestKunjungan || !$latestKunjungan->hamil)) {
+            $klaster = 2;
+            $poliPatient = 'anak';
+        } elseif ($latestKunjungan && $latestKunjungan->hamil) {
+            $klaster = 2;
+            $poliPatient = 'kia';
+        } elseif ($age >= 5 && $age <= 18) {
+            $klaster = 2;
+            $poliPatient = 'mtbs';
+        } else {
+            $klaster = 3;
+            $poliPatient = 'lansia';
+        }
+        // Tambahkan klaster ke data pasien
+        $patient->klaster = $klaster;
 
         $skriningData = [];
 
         // Daftar lengkap jenis skrining untuk klaster 2 dan 3
         $allSkriningTypes = [
             2 => [
-                'kia' => ['Hipertensi', 'Gangguan Spektrum Autisme', 'Kecacingan', 'HIV & IMS', 'Anemia', 'Talasemia', 'Hepatitis', 'Kekerasan terhadap Anak', 'Kekerasan terhadap Perempuan', 'Diabetes Mellitus', 'TBC', 'Triple Eliminasi Bumil'],
-
+                'kia' => ['Preeklampsia', 'Hipertensi', 'Gangguan Spektrum Autisme', 'Kecacingan', 'HIV & IMS', 'Anemia', 'Talasemia', 'Hepatitis', 'Kekerasan terhadap Anak', 'Kekerasan terhadap Perempuan', 'Diabetes Mellitus', 'TBC', 'Triple Eliminasi Bumil'],
+                'anak' => ['Hipertensi', 'Gangguan Spektrum Autisme', 'Kecacingan', 'HIV & IMS', 'Anemia', 'Talasemia', 'Hepatitis', 'Diabetes Mellitus', 'TBC'],
                 'mtbs' => ['Hipertensi', 'Kecacingan', 'Anemia', 'Talasemia', 'Kekerasan terhadap Anak', 'Kekerasan terhadap Perempuan', 'Diabetes Mellitus', 'TBC', 'Tes Pendengaran', 'SDQ (4-11 Tahun)', 'SDQ (11-18 Tahun)', 'Obesitas', 'NAPZA', 'Perilaku Merokok bagi Anak Sekolah'],
             ],
             3 => ['lansia' => ['Kanker Paru', 'Kanker Kolorektal', 'PPOK (PUMA)', 'Geriatri', 'Kanker Leher Rahim dan Kanker Payudara', 'Hipertensi', 'TBC', 'Layak Hamil', 'Anemia', 'Talasemia']],
@@ -95,6 +118,7 @@ class SkriningController extends Controller
                 'Geriatri' => Geriatri::where('pasien', $id)->where('klaster', $klaster)->first(),
                 'Layak Hamil' => LayakHamil::where('pasien', $id)->where('klaster', $klaster)->first(),
                 'Kanker Leher Rahim dan Kanker Payudara' => KankerPayudara::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Preeklampsia' => Preeklampsia::where('pasien', $id)->where('klaster', $klaster)->first(),
 
                 default => null,
             };
@@ -106,6 +130,7 @@ class SkriningController extends Controller
                 'id' => $data->id ?? null,
                 'poli' => $data->poli ?? 'Tidak Diketahui',
                 'poliPatient' => $poliPatient,
+                'patientId' => $patient->id,
                 'route_name' => $this->formatRouteName($jenis),
             ];
         }

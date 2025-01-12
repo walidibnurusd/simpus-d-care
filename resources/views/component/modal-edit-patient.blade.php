@@ -40,7 +40,15 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="row g-2">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="no_rm">NOMOR RM</label>
+                                <input type="text" class="form-control" id="no_rm" name="no_rm"
+                                    placeholder="Nomor RM" value="{{ old('no_rm', $patient->no_rm) }}" required>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row g-2">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -311,15 +319,7 @@
                         </div>
                     </div>
 
-                    <div class="row g-2">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="no_rm">NOMOR RM</label>
-                                <input type="text" class="form-control" id="no_rm" name="no_rm"
-                                    placeholder="Nomor RM" value="{{ old('no_rm', $patient->no_rm) }}" required>
-                            </div>
-                        </div>
-                    </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

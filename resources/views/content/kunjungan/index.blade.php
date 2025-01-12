@@ -23,21 +23,17 @@
     <div class="main-content content mt-6" id="main-content">
         <div class="row">
             <div class="col-12" style="min-height: 100vh; overflow-x: hidden;">
-                <div class="button-container">
+                {{-- <div class="button-container">
                     <button type="button" class="btn btn-success" data-bs-toggle="modal"
                         data-bs-target="#addKunjunganModal">
                         Tambah
                         <i class="fas fa-plus ms-2"></i> <!-- Icon with margin to the left -->
                     </button>
-                </div>
-
-                @include('component.modal-add-kunjungan')
-                <!-- Modal -->
-
+                </div> --}}
 
                 <div class="card mb-4">
                     <div class="card-header pb-0">
-                        <h6>Daftar Data Pasien</h6>
+                        <h6>Daftar Data Kunjungan</h6>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-4">
@@ -51,16 +47,20 @@
                                             NIK</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            No RM</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             NAMA</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             TEMPAT/TGL.LAHIR</th>
+
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            No RM</th>
+                                            POLI BEROBAT</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            POLI</th>
+                                            HAMIL</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             KLASTER</th>
@@ -69,13 +69,12 @@
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             TANGGAL INPUT</th>
 
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            AKSI</th>
+                                        {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            AKSI</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($kunjungan as $index => $k)
-                                        @include('component.modal-edit-kunjungan', ['k' => $k])
                                         <tr>
                                             <td>
                                                 <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Row number -->
@@ -83,6 +82,10 @@
                                             <td>
                                                 <p class="text-xs  mb-0">{{ $k->patient->nik }}</p>
                                                 <!-- NIK -->
+                                            </td>
+                                            <td>
+                                                <p class="text-xs  mb-0">{{ $k->patient->no_rm }}</p>
+                                                <!-- No RM -->
                                             </td>
                                             <td>
                                                 <p class="text-xs  mb-0">{{ $k->patient->name }}</p>
@@ -95,10 +98,7 @@
                                                 </p>
                                                 <!-- Date of Birth -->
                                             </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $k->patient->no_rm }}</p>
-                                                <!-- No RM -->
-                                            </td>
+
                                             <td>
                                                 @if ($k->poli == 'poli-umum')
                                                     <p class="text-xs  mb-0">Poli Umum</p>
@@ -110,15 +110,26 @@
                                                 <!-- No RM -->
                                             </td>
                                             <td>
-                                                <p class="text-xs  mb-0">{{ $k->klaster }}</p>
+                                                @if ($k->hamil == '1')
+                                                    <p class="text-xs  mb-0">Ya</p>
+                                                @else
+                                                    <p class="text-xs  mb-0">Tidak</p>
+                                                @endif
                                                 <!-- No RM -->
+                                            </td>
+                                            <td>
+                                                @if ($k->patient->getAgeAttribute() < 18 || $k->hamil == '1')
+                                                    <p class="text-xs mb-0">Klaster 2</p>
+                                                @else
+                                                    <p class="text-xs mb-0">Klaster 3</p>
+                                                @endif
                                             </td>
 
                                             <td>
-                                                <p class="text-xs  mb-0">{{ $k->created_at }}</p>
-                                                <!-- Place of Birth -->
+                                                <p class="text-xs mb-0">{{ $k->created_at->format('d-m-Y H:i:s') }}</p>
+
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <div class="action-buttons">
                                                     <button type="button"
                                                         class="mb-0 btn btn-primary btn-sm text-white font-weight-bold text-xs"
@@ -133,7 +144,7 @@
                                                     </button>
                                                 </div>
 
-                                            </td>
+                                            </td> --}}
 
                                         </tr>
                                     @endforeach

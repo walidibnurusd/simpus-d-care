@@ -2,7 +2,13 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalPasienLabel">Cari Pasien</h5>
+                <div class="w-100">
+                    <h5 class="modal-title" id="modalPasienLabel">Cari Pasien</h5>
+                    <div class="form-group mt-2">
+                        <label for="filterDate" class="form-label">Filter Tanggal</label>
+                        <input type="date" id="filterDate" class="form-control">
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -11,7 +17,7 @@
                         <tr>
                             <th>NIK</th>
                             <th>Nama</th>
-                            <th>Alamat</th>
+                            <th>Tanggal Kajian Awal</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -40,11 +46,14 @@
             // }
             const tipe = $('#tipe').val(); // Ambil route name
             const url = `/get-patients-dokter/${tipe}`;
-            console.log(url);
+            const filterDate = $('#filterDate').val();
             table = $('#pasienDokter').DataTable({
                 ajax: {
                     url: url, // Endpoint untuk mengambil data
                     type: 'GET',
+                    data: function(d) {
+                        d.filterDate = filterDate; // Kirim tanggal sebagai parameter tambahan
+                    }
 
                 },
                 columns: [{
@@ -56,8 +65,23 @@
                         name: 'name'
                     },
                     {
-                        data: 'patient.address',
-                        name: 'address'
+                        data: 'created_at',
+                        name: 'created_at',
+                        render: function(data) {
+                            if (!data) return '-'; // Jika data kosong, tampilkan tanda "-"
+
+                            // Konversi ke format dd-mm-yyyy hh:mm:ss
+                            const dateObj = new Date(data);
+                            const day = String(dateObj.getDate()).padStart(2, '0');
+                            const month = String(dateObj.getMonth() + 1).padStart(2,
+                                '0'); // Bulan dimulai dari 0
+                            const year = dateObj.getFullYear();
+                            const hours = String(dateObj.getHours()).padStart(2, '0');
+                            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                            const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+
+                            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+                        }
                     },
                     {
                         data: null,
@@ -158,6 +182,13 @@
                 serverSide: true,
             });
         }
+        $('#filterDate').on('change', function() {
+            if ($.fn.DataTable.isDataTable('#pasienDokter')) {
+                table.destroy(); // Hancurkan DataTables yang ada
+            }
+            initializeTable(); // Inisialisasi ulang dengan filter baru
+        });
+
 
         // Handle tombol "Pilih" diklik
         $(document).on('click', '.btnPilihPasien', function() {
