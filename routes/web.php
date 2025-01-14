@@ -41,37 +41,43 @@ Route::prefix('kia')->group(function () {
     Route::get('preeklampsia/{id}', [App\Http\Controllers\KiaController::class, 'showPreeklampsia'])->name('preeklampsia.view');
     Route::post('preeklampsia', [App\Http\Controllers\KiaController::class, 'storePreeklampsia'])->name('preeklampsia.store');
 
-    Route::get('gangguan-autis', [App\Http\Controllers\KiaController::class, 'showGangguanAutis'])->name('gangguan.autis.view');
+    Route::get('keswa-srq-dewasa/{id}', [App\Http\Controllers\KiaController::class, 'showGangguanJiwaDewasa'])->name('srq.dewasa.view');
+    Route::post('keswa-srq-dewasa', [App\Http\Controllers\KiaController::class, 'storeGangguanJiwaDewasa'])->name('srq.dewasa.store');
+
+    Route::get('malaria/{id}', [App\Http\Controllers\KiaController::class, 'showMigrasiMalaria'])->name('malaria.view');
+    Route::post('malaria', [App\Http\Controllers\KiaController::class, 'storeMalaria'])->name('malaria.store');
+
+    Route::get('gangguan-autis/{id}', [App\Http\Controllers\KiaController::class, 'showGangguanAutis'])->name('gangguan.autis.view');
     Route::post('gangguan-autis', [App\Http\Controllers\KiaController::class, 'storeGangguanAutis'])->name('gangguan.autis.store');
 
-    Route::get('anemia', [App\Http\Controllers\KiaController::class, 'showAnemia'])->name('anemia.view');
+    Route::get('anemia/{id}', [App\Http\Controllers\KiaController::class, 'showAnemia'])->name('anemia.view');
     Route::post('anemia', [App\Http\Controllers\KiaController::class, 'storeAnemia'])->name('anemia.store');
 
-    Route::get('kecacingan', [App\Http\Controllers\KiaController::class, 'showKecacingan'])->name('kecacingan.view');
+    Route::get('kecacingan/{id}', [App\Http\Controllers\KiaController::class, 'showKecacingan'])->name('kecacingan.view');
     Route::post('kecacingan', [App\Http\Controllers\KiaController::class, 'storeKecacingan'])->name('kecacingan.store');
 
-    Route::get('hiv', [App\Http\Controllers\KiaController::class, 'showHiv'])->name('hiv.view');
+    Route::get('hiv/{id}', [App\Http\Controllers\KiaController::class, 'showHiv'])->name('hiv.view');
     Route::post('hiv', [App\Http\Controllers\KiaController::class, 'storeHiv'])->name('hiv.store');
 
-    Route::get('talasemia', [App\Http\Controllers\KiaController::class, 'showTalasemia'])->name('talasemia.view');
+    Route::get('talasemia/{id}', [App\Http\Controllers\KiaController::class, 'showTalasemia'])->name('talasemia.view');
     Route::post('talasemia', [App\Http\Controllers\KiaController::class, 'storeTalasemia'])->name('talasemia.store');
 
-    Route::get('hepatitis', [App\Http\Controllers\KiaController::class, 'showHepatitis'])->name('hepatitis.view');
+    Route::get('hepatitis/{id}', [App\Http\Controllers\KiaController::class, 'showHepatitis'])->name('hepatitis.view');
     Route::post('hepatitis', [App\Http\Controllers\KiaController::class, 'storeHepatitis'])->name('hepatitis.store');
 
-    Route::get('kekerasan-anak', [App\Http\Controllers\KiaController::class, 'showKekerasanAnak'])->name('kekerasan.anak.view');
+    Route::get('kekerasan-anak/{id}', [App\Http\Controllers\KiaController::class, 'showKekerasanAnak'])->name('kekerasan.anak.view');
     Route::post('kekerasan-anak', [App\Http\Controllers\KiaController::class, 'storeKekerasanAnak'])->name('kekerasan.anak.store');
 
-    Route::get('kekerasan-perempuan', [App\Http\Controllers\KiaController::class, 'showKekerasanPerempuan'])->name('kekerasan.perempuan.view');
+    Route::get('kekerasan-perempuan/{id}', [App\Http\Controllers\KiaController::class, 'showKekerasanPerempuan'])->name('kekerasan.perempuan.view');
     Route::post('kekerasan-perempuan', [App\Http\Controllers\KiaController::class, 'storeKekerasanPerempuan'])->name('kekerasan.perempuan.store');
 
-    Route::get('diabetes-mellitus', [App\Http\Controllers\KiaController::class, 'showDiabetesMellitus'])->name('diabetes.mellitus.view');
+    Route::get('diabetes-mellitus/{id}', [App\Http\Controllers\KiaController::class, 'showDiabetesMellitus'])->name('diabetes.mellitus.view');
     Route::post('diabetes-mellitus', [App\Http\Controllers\KiaController::class, 'storeDiabetesMellitus'])->name('diabetes.mellitus.store');
 
-    Route::get('tbc', [App\Http\Controllers\KiaController::class, 'showTbc'])->name('tbc.view');
+    Route::get('tbc/{id}', [App\Http\Controllers\KiaController::class, 'showTbc'])->name('tbc.view');
     Route::post('tbc', [App\Http\Controllers\KiaController::class, 'storeTbc'])->name('tbc.store');
 
-    Route::get('triple-eliminasi-bumil', [App\Http\Controllers\KiaController::class, 'showTripleEliminasi'])->name('triple.eliminasi.view');
+    Route::get('triple-eliminasi-bumil/{id}', [App\Http\Controllers\KiaController::class, 'showTripleEliminasi'])->name('triple.eliminasi.view');
     Route::post('triple-eliminasi-bumil', [App\Http\Controllers\KiaController::class, 'storeTripleEliminasi'])->name('triple.eliminasi.store');
 });
 
@@ -194,6 +200,10 @@ Route::middleware('auth')->group(function () {
             Route::get('/preeklampsia/{id}', [App\Http\Controllers\AdminController::class, 'editPreeklampsia'])->name('preeklampsia.edit');
             Route::put('/preeklampsia/{id}', [App\Http\Controllers\AdminController::class, 'updatePreeklampsia'])->name('preeklampsia.update');
             Route::delete('/preeklampsia/{id}', [App\Http\Controllers\AdminController::class, 'deletePreeklampsia'])->name('preeklampsia.delete');
+
+            Route::get('/keswa-srq-dewasa/{id}', [App\Http\Controllers\AdminController::class, 'editGangguanJiwaDewasa'])->name('srq.dewasa.edit');
+            Route::put('/keswa-srq-dewasa/{id}', [App\Http\Controllers\AdminController::class, 'updateGangguanJiwaDewasa'])->name('srq.dewasa.update');
+            Route::delete('/keswa-srq-dewasa/{id}', [App\Http\Controllers\AdminController::class, 'deleteGangguanJiwaDewasa'])->name('srq.dewasa.delete');
 
             Route::get('hipertensi', [App\Http\Controllers\AdminController::class, 'viewHipertensi'])->name('hipertensi.admin');
             Route::get('/hipertensi/{id}', [App\Http\Controllers\AdminController::class, 'editHipertensi'])->name('hipertensi.edit');

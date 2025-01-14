@@ -68,15 +68,10 @@
                         <label>1. Pasien</label>
                         <select class="form-control form-select select2" id="pasien" name="pasien">
                             <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
-                            @foreach ($pasien as $item)
-                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
-                                    data-nik="{{ $item->nik }}" data-pekerjaan="{{ $item->occupations->name }}"
-                                    data-jenis_kelamin="{{ $item->genderName->name }}" data-dob="{{ $item->dob }}"
-                                    data-alamat="{{ $item->address }}"
-                                    {{ old('pasien', $tbc->pasien ?? '') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }} - {{ $item->nik }}
+                            @if ($pasien)
+                                <option value="{{ $pasien->id }}" selected>{{ $pasien->name }} - {{ $pasien->nik }}
                                 </option>
-                            @endforeach
+                            @endif
                         </select>
                         @error('pasien')
                             <span class="text-danger">{{ $message }}</span>
@@ -97,14 +92,14 @@
                     <div class="form-group">
                         <label>Alamat KTP</label>
                         <input type="text" class="form-control" name="alamat_ktp" placeholder="Masukkan alamat KTP"
-                            id="alamat" value="{{ $tbc->alamat_ktp ?? '' }}">
+                            id="alamat" value="{{ $pasien->address ?? '' }}" readonly>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Alamat Domisili</label>
                         <input type="text" class="form-control" name="alamat_domisili" id="alamatd"
-                            placeholder="Masukkan alamat domisili" value="{{ $tbc->alamat_domisili ?? '' }}">
+                            placeholder="Masukkan alamat domisili" value="{{ $pasien->address ?? '' }}" readonly>
                     </div>
                 </div>
             </div>
@@ -112,16 +107,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>NIK</label>
-                        <input type="number" class="form-control" name="nik" placeholder="Masukkan NIK" id="nik"
-                            value="{{ $tbc->nik ?? '' }}">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
                         <label>Pekerjaan</label>
                         <input type="text" class="form-control" name="pekerjaan" placeholder="Masukkan pekerjaan"
-                            id="pekerjaan" value="{{ $tbc->pekerjaan ?? '' }}">
+                            id="pekerjaan" value="{{ $pasien->occupations->name ?? '' }}" readonly>
                     </div>
                 </div>
             </div>
@@ -131,7 +119,7 @@
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
                         <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
-                            value="{{ $tbc->tanggal_lahir ?? '' }}">
+                            value="{{ $pasien->dob ?? '' }}" readonly>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -147,14 +135,12 @@
                         <div class="d-flex">
                             <div class="form-check mr-3">
                                 <input type="radio" class="form-check-input" name="jenis_kelamin" value="laki-laki"
-                                    id="jk_laki" id="laki-laki"
-                                    {{ isset($tbc) && $tbc->jenis_kelamin == 'laki-laki' ? 'checked' : '' }}>
+                                    id="jk_laki" id="laki-laki" {{ $pasien->gender == '2' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="laki-laki">Laki-laki</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="jenis_kelamin" value="perempuan"
-                                    id="jk_perempuan" id="perempuan"
-                                    {{ isset($tbc) && $tbc->jenis_kelamin == 'perempuan' ? 'checked' : '' }}>
+                                    id="jk_perempuan" id="perempuan" {{ $pasien->gender == '1' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perempuan">Perempuan</label>
                             </div>
                         </div>
@@ -166,7 +152,7 @@
                     <div class="form-group">
                         <label>No HP</label>
                         <input type="number" class="form-control" name="no_hp" placeholder="Masukkan no HP"
-                            id="no_hp" value="{{ $tbc->no_hp ?? '' }}">
+                            id="no_hp" value="{{ $pasien->phone ?? '' }}" readonly>
                     </div>
                 </div>
             </div>
@@ -827,57 +813,39 @@
                 allowClear: true
             });
 
-            // Event listener saat pasien dipilih
-            $('#pasien').on('change', function() {
-                var selectedOption = $(this).find(':selected');
 
-                // Ambil data dari atribut data-*
-                var no_hp = selectedOption.data('no_hp');
-                var nik = selectedOption.data('nik');
-                var dob = selectedOption.data('dob');
-                var alamat = selectedOption.data('alamat');
-                var pekerjaan = selectedOption.data('pekerjaan');
-                var jk = selectedOption.data('jenis_kelamin');
-
-
-                // Isi input dengan data yang diambil
-                $('#no_hp').val(no_hp);
-                $('#nik').val(nik);
-                $('#tanggal_lahir').val(dob);
-                $('#pekerjaan').val(pekerjaan);
-                $('#alamat').val(alamat);
-                $('#alamatd').val(alamat);
-                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
-                if (jk === 'Laki-Laki') {
-                    $('#jk_laki').prop('checked', true);
-                } else if (jk === 'Perempuan') {
-                    $('#jk_perempuan').prop('checked', true);
-                }
-                if (dob) {
-                    var today = new Date();
-                    var birthDate = new Date(dob);
-                    var age = today.getFullYear() - birthDate.getFullYear();
-                    var monthDiff = today.getMonth() - birthDate.getMonth();
-                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                        age--;
-                    }
-                    $('#usiaInput').val(age); // Set usia pada input
-
-                }
-
-            });
-            $('#pasien').trigger('change');
         });
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Event Listener untuk Tanggal Lahir
+            const tanggalLahirInput = document.getElementById('tanggal_lahir');
             const usiaInput = document.getElementById('usiaInput');
 
-            if (usiaInput) {
-                usiaInput.addEventListener('input', handleUsiaChange);
+            if (tanggalLahirInput && usiaInput) {
+                // Tambahkan event listener untuk menghitung usia saat tanggal lahir berubah
+                tanggalLahirInput.addEventListener('change', () => {
+                    const tanggalLahir = new Date(tanggalLahirInput.value);
+                    const hariIni = new Date();
+                    let usia = hariIni.getFullYear() - tanggalLahir.getFullYear();
+                    const bulan = hariIni.getMonth() - tanggalLahir.getMonth();
 
-                // Jalankan pembaruan awal saat halaman dimuat
-                handleUsiaChange();
+                    // Koreksi jika bulan/tanggal sekarang lebih kecil dari bulan/tanggal lahir
+                    if (bulan < 0 || (bulan === 0 && hariIni.getDate() < tanggalLahir.getDate())) {
+                        usia--;
+                    }
+
+                    // Perbarui nilai usia (jangan biarkan negatif)
+                    usiaInput.value = usia >= 0 ? usia : 0;
+
+                    // Panggil fungsi terkait usia
+                    handleUsiaChange();
+                });
+            }
+
+            // Jalankan fungsi awal jika nilai sudah diatur
+            if (tanggalLahirInput?.value) {
+                tanggalLahirInput.dispatchEvent(new Event('change'));
             }
         });
 

@@ -20,6 +20,7 @@ use App\Models\KankerPayudara;
 use App\Models\Kecacingan;
 use App\Models\KekerasanPerempuan;
 use App\Models\KekerasanAnak;
+use App\Models\GangguanJiwaDewasa;
 use App\Models\LayakHamil;
 use App\Models\Merokok;
 use App\Models\Napza;
@@ -82,7 +83,7 @@ class SkriningController extends Controller
         // Daftar lengkap jenis skrining untuk klaster 2 dan 3
         $allSkriningTypes = [
             2 => [
-                'kia' => ['Preeklampsia', 'Hipertensi', 'Gangguan Spektrum Autisme', 'Kecacingan', 'HIV & IMS', 'Anemia', 'Talasemia', 'Hepatitis', 'Kekerasan terhadap Anak', 'Kekerasan terhadap Perempuan', 'Diabetes Mellitus', 'TBC', 'Triple Eliminasi Bumil'],
+                'kia' => ['Preeklampsia', 'Hipertensi', 'Diabetes Mellitus', 'Anemia', 'Triple Eliminasi Bumil', 'TBC', 'SRQ (>18 Tahun)', 'Kekerasan terhadap Perempuan', 'Malaria'],
                 'anak' => ['Hipertensi', 'Gangguan Spektrum Autisme', 'Kecacingan', 'HIV & IMS', 'Anemia', 'Talasemia', 'Hepatitis', 'Diabetes Mellitus', 'TBC'],
                 'mtbs' => ['Hipertensi', 'Kecacingan', 'Anemia', 'Talasemia', 'Kekerasan terhadap Anak', 'Kekerasan terhadap Perempuan', 'Diabetes Mellitus', 'TBC', 'Tes Pendengaran', 'SDQ (4-11 Tahun)', 'SDQ (11-18 Tahun)', 'Obesitas', 'NAPZA', 'Perilaku Merokok bagi Anak Sekolah'],
             ],
@@ -119,6 +120,7 @@ class SkriningController extends Controller
                 'Layak Hamil' => LayakHamil::where('pasien', $id)->where('klaster', $klaster)->first(),
                 'Kanker Leher Rahim dan Kanker Payudara' => KankerPayudara::where('pasien', $id)->where('klaster', $klaster)->first(),
                 'Preeklampsia' => Preeklampsia::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'SRQ (>18 Tahun)' => GangguanJiwaDewasa::where('pasien', $id)->where('klaster', $klaster)->first(),
 
                 default => null,
             };
@@ -187,6 +189,7 @@ class SkriningController extends Controller
             'Geriatri' => 'geriatri',
             'Kanker Leher Rahim dan Kanker Payudara' => 'kanker-payudara',
             'Layak Hamil' => 'layak-hamil',
+            'SRQ (>18 Tahun)' => 'keswa-srq-dewasa',
         ];
     }
 

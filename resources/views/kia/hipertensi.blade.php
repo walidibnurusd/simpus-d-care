@@ -72,11 +72,6 @@
                             @if ($pasien)
                                 <option value="{{ $pasien->id }}" selected>{{ $pasien->name }} - {{ $pasien->nik }}
                                 </option>
-                                {{-- @else
-                                <option value="" disabled selected>Pilih</option>
-                                @foreach ($allPasien as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }} - {{ $item->nik }}</option>
-                                @endforeach --}}
                             @endif
                         </select>
                         @error('pasien')

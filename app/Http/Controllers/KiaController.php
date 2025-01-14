@@ -17,6 +17,7 @@ use App\Models\Tbc;
 use App\Models\Talasemia;
 use App\Models\Preeklampsia;
 use App\Models\TripleEliminasi;
+use App\Models\GangguanJiwaDewasa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
@@ -172,9 +173,9 @@ class KiaController extends Controller
         return redirect()->back()->with('success', 'Data preeklampsia berhasil disimpan');
     }
 
-    public function showGangguanAutis()
+    public function showGangguanAutis($id)
     {
-        $pasien = Patients::all();
+        $pasien = Patients::find($id);
         return view('kia.gangguan_autis', compact('pasien'));
     }
     public function storeGangguanAutis(Request $request)
@@ -220,9 +221,9 @@ class KiaController extends Controller
         // Redirect with a success message
         return redirect()->back()->with('success', 'Data Gangguan Autis created successfully!');
     }
-    public function showKecacingan(Request $request)
+    public function showKecacingan(Request $request, $id)
     {
-        $pasien = Patients::all();
+        $pasien = Patients::find($id);
         $routeName = $request->route()->getName();
         return view('kia.kecacingan', compact('pasien', 'routeName'));
     }
@@ -303,9 +304,9 @@ class KiaController extends Controller
         return redirect()->back()->with('success', 'Data HIV created successfully!');
     }
 
-    public function showAnemia(Request $request)
+    public function showAnemia(Request $request, $id)
     {
-        $pasien = Patients::all();
+        $pasien = Patients::find($id);
         $routeName = $request->route()->getName();
         return view('kia.anemia', compact('pasien', 'routeName'));
     }
@@ -509,9 +510,9 @@ class KiaController extends Controller
         return redirect()->back()->with('success', 'Data Kekerasan Perempuan created successfully!');
     }
 
-    public function showDiabetesMellitus(Request $request)
+    public function showDiabetesMellitus(Request $request, $id)
     {
-        $pasien = Patients::all();
+        $pasien = Patients::find($id);
         $routeName = $request->route()->getName();
         return view('kia.diabetes_mellitus', compact('pasien', 'routeName'));
     }
@@ -544,9 +545,9 @@ class KiaController extends Controller
         // Redirect with a success message
         return redirect()->back()->with('success', 'Data Diabetes Mellitus created successfully!');
     }
-    public function showTbc(Request $request)
+    public function showTbc(Request $request, $id)
     {
-        $pasien = Patients::all();
+        $pasien = Patients::find($id);
         $routeName = $request->route()->getName();
         return view('kia.tbc', compact('pasien', 'routeName'));
     }
@@ -555,35 +556,35 @@ class KiaController extends Controller
         // Define validation rules
         $validator = Validator::make($request->all(), [
             'pasien' => 'required',
-            'tempat_skrining' => 'required|string|max:255',
-            'tinggi_badan' => 'required|numeric',
-            'berat_badan' => 'required|numeric',
-            'status_gizi' => 'nullable|string|max:255',
+            'tempat_skrining' => 'nullable',
+            'tinggi_badan' => 'nullable',
+            'berat_badan' => 'nullable',
+            'status_gizi' => 'nullable',
             'kontak_dengan_pasien' => '',
             'kontak_tbc' => '',
-            'jenis_tbc' => 'nullable|string|max:255',
-            'pernah_berobat_tbc' => 'required',
+            'jenis_tbc' => 'nullable',
+            'pernah_berobat_tbc' => 'nullable',
             'kapan' => 'nullable|date',
-            'pernah_berobat_tbc_tdk_tuntas' => 'required',
-            'kurang_gizi' => 'required',
-            'merokok' => 'required',
-            'perokok_pasif' => 'required',
-            'kencing_manis' => 'required',
-            'odhiv' => '',
-            'lansia' => 'required',
-            'ibu_hamil' => 'required',
-            'tinggal_wilayah_kumuh' => 'required',
-            'batuk' => 'required',
-            'durasi' => 'nullable|string|max:255',
-            'batuk_darah' => 'required',
-            'bb_turun' => 'required',
-            'demam' => 'required',
-            'lesu' => 'required',
-            'pembesaran_kelenjar' => 'required',
-            'sudah_rontgen' => 'required',
-            'hasil_rontgen' => 'nullable|string|max:255',
-            'terduga_tbc' => 'required',
-            'periksa_tbc_laten' => 'required',
+            'pernah_berobat_tbc_tdk_tuntas' => 'nullable',
+            'kurang_gizi' => 'nullable',
+            'merokok' => 'nullable',
+            'perokok_pasif' => 'nullable',
+            'kencing_manis' => 'nullable',
+            'odhiv' => 'nullable',
+            'lansia' => 'nullable',
+            'ibu_hamil' => 'nullable',
+            'tinggal_wilayah_kumuh' => 'nullable',
+            'batuk' => 'nullable',
+            'durasi' => 'nullable',
+            'batuk_darah' => 'nullable',
+            'bb_turun' => 'nullable',
+            'demam' => 'nullable',
+            'lesu' => 'nullable',
+            'pembesaran_kelenjar' => 'nullable',
+            'sudah_rontgen' => 'nullable',
+            'hasil_rontgen' => 'nullable',
+            'terduga_tbc' => 'nullable',
+            'periksa_tbc_laten' => 'nullable',
             'kesimpulan' => 'required',
         ]);
 
@@ -603,9 +604,109 @@ class KiaController extends Controller
         // Redirect with success message
         return redirect()->back()->with('success', 'Data TBC created successfully!');
     }
-    public function showTripleEliminasi()
+    public function showGangguanJiwaDewasa(Request $request, $id)
     {
-        $pasien = Patients::all();
+        $pasien = Patients::find($id);
+        $routeName = $request->route()->getName();
+        return view('kia.gangguan_jiwa_dewasa', compact('pasien', 'routeName'));
+    }
+    public function storeGangguanJiwaDewasa(Request $request)
+    {
+        // Define validation rules
+        $validator = Validator::make($request->all(), [
+            'pasien' => 'required',
+            'sakit_kepala' => 'nullable',
+            'hilang_nafsu_makan' => 'nullable',
+            'tidur_nyenyak' => 'nullable',
+            'takut' => 'nullable',
+            'cemas' => 'nullable',
+            'tangan_gemetar' => 'nullable',
+            'gangguan_pencernaan' => 'nullable',
+            'sulit_berpikir_jernih' => 'nullable',
+            'tdk_bahagia' => 'nullable',
+            'sering_menangis' => 'nullable',
+            'sulit_aktivitas' => 'nullable',
+            'sulit_ambil_keputusan' => 'nullable',
+            'tugas_terbengkalai' => 'nullable',
+            'tdk_berperan' => 'nullable',
+            'hilang_minat' => 'nullable',
+            'tdk_berharga' => 'nullable',
+            'pikiran_mati' => 'nullable',
+            'lelah_selalu' => 'nullable',
+            'sakit_perut' => 'nullable',
+            'mudah_lelah' => 'nullable',
+            'kesimpulan' => 'required',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
+        }
+
+        // Store validated data with additional fields
+        GangguanJiwaDewasa::create(
+            array_merge($validator->validated(), [
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
+            ]),
+        );
+
+        // Redirect with success message
+        return redirect()->back()->with('success', 'Data Gangguan Jiwa Dewasa created successfully!');
+    }
+    public function showMigrasiMalaria(Request $request, $id)
+    {
+        $pasien = Patients::find($id);
+        $routeName = $request->route()->getName();
+        return view('kia.malaria', compact('pasien', 'routeName'));
+    }
+    public function storeMalaria(Request $request)
+    {
+        // Define validation rules
+        $validator = Validator::make($request->all(), [
+            'pasien' => 'required',
+            'sakit_kepala' => 'nullable',
+            'hilang_nafsu_makan' => 'nullable',
+            'tidur_nyenyak' => 'nullable',
+            'takut' => 'nullable',
+            'cemas' => 'nullable',
+            'tangan_gemetar' => 'nullable',
+            'gangguan_pencernaan' => 'nullable',
+            'sulit_berpikir_jernih' => 'nullable',
+            'tdk_bahagia' => 'nullable',
+            'sering_menangis' => 'nullable',
+            'sulit_aktivitas' => 'nullable',
+            'sulit_ambil_keputusan' => 'nullable',
+            'tugas_terbengkalai' => 'nullable',
+            'tdk_berperan' => 'nullable',
+            'hilang_minat' => 'nullable',
+            'tdk_berharga' => 'nullable',
+            'pikiran_mati' => 'nullable',
+            'lelah_selalu' => 'nullable',
+            'sakit_perut' => 'nullable',
+            'mudah_lelah' => 'nullable',
+            'kesimpulan' => 'required',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
+        }
+
+        // Store validated data with additional fields
+        GangguanJiwaDewasa::create(
+            array_merge($validator->validated(), [
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
+            ]),
+        );
+
+        // Redirect with success message
+        return redirect()->back()->with('success', 'Data Gangguan Jiwa Dewasa created successfully!');
+    }
+    public function showTripleEliminasi($id)
+    {
+        $pasien = Patients::find($id);
         return view('kia.triple_eliminasi', compact('pasien'));
     }
     public function storeTripleEliminasi(Request $request)

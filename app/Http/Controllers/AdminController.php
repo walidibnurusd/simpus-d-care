@@ -18,6 +18,7 @@ use App\Models\KekerasanPerempuan;
 use App\Models\Patients;
 use App\Models\TripleEliminasi;
 use App\Models\Preeklampsia;
+use App\Models\GangguanJiwaDewasa;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
@@ -76,7 +77,7 @@ class AdminController extends Controller
             ]),
         );
 
-        return redirect()->route('layakHamil.admin')->with('success', 'Data updated successfully');
+        return redirect()->back()->with('success', 'Data updated successfully');
     }
 
     public function deleteLayakHamil($id)
@@ -111,20 +112,23 @@ class AdminController extends Controller
         // Define validation rules
         $validator = FacadesValidator::make($request->all(), [
             'pasien' => 'required',
-            // 'no_hp' => 'required|string|max:15',
-            // 'nik' => 'required|string|max:16|unique:layak_hamil,nik,' . $id,
-            'status' => 'required|string|max:50',
-            'nama_suami' => 'required|string|max:255',
-            // 'alamat' => 'required|string',
-            'ingin_hamil' => 'required|boolean',
-            // 'tanggal_lahir' => 'required|date',
-            'umur' => 'required',
-            'jumlah_anak' => 'required',
-            'waktu_persalinan_terakhir' => 'required',
-            'lingkar_lengan_atas' => 'required',
-            'penyakit' => 'array',
-            'penyakit_suami' => 'array',
-            'kesehatan_jiwa' => 'array',
+            'multipara' => 'nullable|boolean',
+            'teknologi_hamil' => 'nullable|boolean',
+            'umur35' => 'nullable|boolean',
+            'nulipara' => 'nullable|boolean',
+            'multipara10' => 'nullable|boolean',
+            'riwayat_preeklampsia' => 'nullable|boolean',
+            'obesitas' => 'nullable|boolean',
+            'multipara_sebelumnya' => 'nullable|boolean',
+            'hamil_multipel' => 'nullable|boolean',
+            'diabetes' => 'nullable|boolean',
+            'hipertensi' => 'nullable|boolean',
+            'ginjal' => 'nullable|boolean',
+            'autoimun' => 'nullable|boolean',
+            'phospholipid' => 'nullable|boolean',
+            'arterial' => 'nullable|boolean',
+            'kesimpulan' => 'nullable',
+            'proteinura' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -132,7 +136,7 @@ class AdminController extends Controller
         }
 
         // Find the record by ID
-        $preeklampsia = LayakHamil::find($id);
+        $preeklampsia = Preeklampsia::find($id);
 
         if (!$preeklampsia) {
             return redirect()->back()->with('error', 'Record not found.');
@@ -146,7 +150,7 @@ class AdminController extends Controller
             ]),
         );
 
-        return redirect()->route('layakHamil.admin')->with('success', 'Data updated successfully');
+        return redirect()->back()->with('success', 'Data updated successfully');
     }
     public function deletePreeklampsia($id)
     {
@@ -159,6 +163,86 @@ class AdminController extends Controller
 
         // Delete the record
         $preeklampsia->delete();
+
+        return response()->json(
+            [
+                'message' => 'Data skrining berhasil dihapus.',
+            ],
+            200,
+        );
+    }
+    public function editGangguanJiwaDewasa(Request $request, $id)
+    {
+        $gangguanJiwaDewasa = GangguanJiwaDewasa::with('pasien')->findOrFail($id);
+        $pasienId = $gangguanJiwaDewasa->pasien;
+        $pasien = Patients::findOrFail($pasienId);
+        $routeName = $request->route()->getName();
+
+        return view('kia.gangguan_jiwa_dewasa', compact('gangguanJiwaDewasa', 'pasien', 'routeName'));
+    }
+    public function updateGangguanJiwaDewasa(Request $request, $id)
+    {
+        // Define validation rules
+        $validator = FacadesValidator::make($request->all(), [
+            'pasien' => 'required',
+            'sakit_kepala' => 'nullable',
+            'hilang_nafsu_makan' => 'nullable',
+            'tidur_nyeyak' => 'nullable',
+            'takut' => 'nullable',
+            'cemas' => 'nullable',
+            'tangan_gemetar' => 'nullable',
+            'gangguan_pencernaan' => 'nullable',
+            'sulit_berpikir_jernih' => 'nullable',
+            'tdk_bahagia' => 'nullable',
+            'sering_menangis' => 'nullable',
+            'sulit_aktivitas' => 'nullable',
+            'sulit_ambil_keputusan' => 'nullable',
+            'tugas_terbengkalai' => 'nullable',
+            'tdk_berperan' => 'nullable',
+            'hilang_minat' => 'nullable',
+            'tdk_berharga' => 'nullable',
+            'pikiran_mati' => 'nullable',
+            'lelah_selalu' => 'nullable',
+            'sakit_perut' => 'nullable',
+            'mudah_lelah' => 'nullable',
+            'kesimpulan' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
+        }
+
+        // Find the record by ID
+        $gangguanJiwaDewasa = GangguanJiwaDewasa::find($id);
+
+        if (!$gangguanJiwaDewasa) {
+            return redirect()->back()->with('error', 'Record not found.');
+        }
+
+        // Update the record with validated data
+        $gangguanJiwaDewasa->update(
+            array_merge(
+                $validator->validated(), // Only uses validated data
+                [
+                    'klaster' => $gangguanJiwaDewasa->klaster,
+                    'poli' => $gangguanJiwaDewasa->poli,
+                ],
+            ),
+        );
+
+        return redirect()->back()->with('success', 'Data updated successfully');
+    }
+    public function deleteGangguanJiwaDewasa($id)
+    {
+        // Find the record by ID
+        $gangguanJiwaDewasa = GangguanJiwaDewasa::find($id);
+
+        if (!$gangguanJiwaDewasa) {
+            return redirect()->route('layakHamil.admin')->with('error', 'Record not found.');
+        }
+
+        // Delete the record
+        $gangguanJiwaDewasa->delete();
 
         return response()->json(
             [
@@ -222,7 +306,7 @@ class AdminController extends Controller
         );
 
         // Redirect with success message
-        return redirect()->route('hipertensi.admin')->with('success', 'Data hipertensi berhasil diperbarui');
+        return redirect() - back()->with('success', 'Data hipertensi berhasil diperbarui');
     }
     public function deleteHipertensi($id)
     {
@@ -230,7 +314,7 @@ class AdminController extends Controller
         $hipertensi = Hipertensi::find($id);
 
         if (!$hipertensi) {
-            return redirect()->route('hipertensi.admin')->with('error', 'Record not found.');
+            return redirect() - back()->with('error', 'Record not found.');
         }
 
         // Delete the record
@@ -260,7 +344,7 @@ class AdminController extends Controller
         $gangguanAutis = GangguanAutis::find($id);
 
         if (!$gangguanAutis) {
-            return redirect()->route('gangguan.autis.admin')->with('error', 'Record not found.');
+            return redirect()->back()->with('error', 'Record not found.');
         }
 
         // Delete the record
@@ -318,7 +402,7 @@ class AdminController extends Controller
         );
 
         // Redirect with a success message
-        return redirect()->route('gangguan.autis.admin')->with('success', 'Data Gangguan Autis updated successfully!');
+        return redirect()->back()->with('success', 'Data Gangguan Autis updated successfully!');
     }
     public function viewAnemia(Request $request)
     {
@@ -396,7 +480,7 @@ class AdminController extends Controller
         }
 
         // Redirect with a success message
-        return redirect()->route($route)->with('success', 'Data Anemia updated successfully!');
+        return redirect()->back() > with('success', 'Data Anemia updated successfully!');
     }
 
     public function viewHepatitis()
@@ -453,7 +537,7 @@ class AdminController extends Controller
         );
 
         // Redirect with a success message
-        return redirect()->route('hepatitis.admin')->with('success', 'Data Hepatitis updated successfully!');
+        return redirect()->back()->with('success', 'Data Hepatitis updated successfully!');
     }
     public function deleteHepatitis($id)
     {
@@ -539,7 +623,7 @@ class AdminController extends Controller
         } else {
             $route = 'talasemia.admin.mtbs';
         }
-        return redirect()->route($route)->with('success', 'Data Talasemia updated successfully!');
+        return redirect()->back()->with('success', 'Data Talasemia updated successfully!');
     }
     public function viewHiv()
     {
@@ -609,7 +693,7 @@ class AdminController extends Controller
         );
 
         // Redirect with a success message
-        return redirect()->route('hiv.admin')->with('success', 'Data HIV updated successfully!');
+        return redirect()->back()->with('success', 'Data HIV updated successfully!');
     }
     public function viewKecacingan(Request $request)
     {
@@ -680,7 +764,7 @@ class AdminController extends Controller
         } else {
             $route = 'kecacingan.admin.mtbs';
         }
-        return redirect()->route($route)->with('success', 'Data Kecacingan updated successfully!');
+        return redirect()->back()->with('success', 'Data Kecacingan updated successfully!');
     }
     public function viewDiabetesMellitus(Request $request)
     {
@@ -749,7 +833,7 @@ class AdminController extends Controller
         } else {
             $route = 'diabetes.mellitus.admin.mtbs';
         }
-        return redirect()->route($route)->with('success', 'Data Diabetes Mellitus updated successfully!');
+        return redirect()->bakc()->with('success', 'Data Diabetes Mellitus updated successfully!');
     }
     public function viewTbc(Request $request)
     {
@@ -847,7 +931,7 @@ class AdminController extends Controller
             $route = 'tbc.admin.mtbs';
         }
         // Redirect with success message
-        return redirect()->route($route)->with('success', 'Data TBC updated successfully!');
+        return redirect()->back()->with('success', 'Data TBC updated successfully!');
     }
 
     public function viewKekerasanPerempuan(Request $request)
@@ -915,7 +999,7 @@ class AdminController extends Controller
             $route = 'kekerasanPerempuan.admin.mtbs';
         }
 
-        return redirect()->route('kekerasan.perempuan.admin')->with('success', 'Data Kekerasan Perempuan updated successfully!');
+        return redirect()->back()->with('success', 'Data Kekerasan Perempuan updated successfully!');
     }
 
     public function viewKekerasanAnak(Request $request)
@@ -986,7 +1070,7 @@ class AdminController extends Controller
 
         $route = $kekerasanAnak->poli === 'kia' ? 'kekerasan.anak.admin' : 'kekerasan.anak.admin.mtbs';
 
-        return redirect()->route($route)->with('success', 'Data Kekerasan Anak updated successfully!');
+        return redirect()->back()->with('success', 'Data Kekerasan Anak updated successfully!');
     }
     public function viewTripleEliminasi()
     {
@@ -1090,6 +1174,6 @@ class AdminController extends Controller
         );
 
         // Redirect with success message
-        return redirect()->route('triple.eliminasi.admin')->with('success', 'Data Triple Eliminasi updated successfully!');
+        return redirect()->back()->with('success', 'Data Triple Eliminasi updated successfully!');
     }
 }

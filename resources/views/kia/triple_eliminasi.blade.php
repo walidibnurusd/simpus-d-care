@@ -59,18 +59,10 @@
                         <label>1. Pasien</label>
                         <select class="form-control form-select select2" id="pasien" name="pasien">
                             <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
-                            @foreach ($pasien as $item)
-                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
-                                    data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
-                                    data-jenis_kelamin="{{ $item->genderName->name }}" data-alamat="{{ $item->address }}"
-                                    data-pekerjaan="{{ $item->occupations->name }}"
-                                    data-perkawinan="{{ $item->marritalStatus->name }}"
-                                    data-pendidikan="{{ $item->educations->name }}"
-                                    data-tempat_lahir="{{ $item->place_birth }}"
-                                    {{ old('pasien', $triple->pasien ?? '') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }} - {{ $item->nik }}
+                            @if ($pasien)
+                                <option value="{{ $pasien->id }}" selected>{{ $pasien->name }} - {{ $pasien->nik }}
                                 </option>
-                            @endforeach
+                            @endif
                         </select>
                         @error('pasien')
                             <span class="text-danger">{{ $message }}</span>
@@ -82,7 +74,7 @@
                         <label>2. Tempat lahir</label>
                         <input type="text" readonly class="form-control" id="tempat_lahir" name="tempat_lahir"
                             placeholder="Masukkan tempat lahir"
-                            value="{{ isset($triple->tempat_lahir) ? $triple->tempat_lahir : old('tempat_lahir') }}">
+                            value="{{ isset($pasien->place_birth) ? $pasien->place_birth : old('tempat_lahir') }}">
                     </div>
                 </div>
             </div>
@@ -92,19 +84,21 @@
                     <div class="form-group">
                         <label>3. Tanggal Lahir</label>
                         <input type="date" readonly class="form-control" id="tanggal_lahir" name="tanggal_lahir"
-                            value="{{ isset($triple->tanggal_lahir) ? $triple->tanggal_lahir->format('Y-m-d') : old('tanggal_lahir') }}">
+                            value="{{ isset($pasien->dob) ? $pasien->dob : old('tanggal_lahir') }}">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>4. Pekerjaan</label>
-                        <input type="text" readonly class="form-control" id="pekerjaan" name="pekerjaan" readonly>
+                        <input type="text" readonly class="form-control" id="pekerjaan" name="pekerjaan" readonly
+                            value="{{ $pasien->occupations->name }}">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>5. Status Perkawinan</label>
-                        <input type="text" readonly class="form-control" id="perkawinan" name="perkawinan" readonly>
+                        <input type="text" readonly class="form-control" id="perkawinan" name="perkawinan" readonly
+                            value="{{ $pasien->marritalStatus->name }}">
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -187,8 +181,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="number" id="no_hp" name="no_hp" readonly class="form-control"
-                                    placeholder="masukkan no hp"
-                                    value="{{ isset($triple->no_hp) ? $triple->no_hp : old('no_hp') }}">
+                                    placeholder="masukkan no hp" value="{{ $pasien->phone }}">
                             </div>
                         </div>
                     </div>
@@ -215,8 +208,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="text" id="alamat" name="alamat" class="form-control" readonly
-                                    placeholder="masukkan alamat"
-                                    value="{{ isset($triple->alamat) ? $triple->alamat : old('alamat') }}">
+                                    placeholder="masukkan alamat" value="{{ $pasien->address }}">
                             </div>
                         </div>
                     </div>
@@ -224,7 +216,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>14. Pendidikan Terakhir</label>
-                        <input type="text" readonly class="form-control" id="pendidikan" name="pendidikan" readonly>
+                        <input type="text" readonly class="form-control" id="pendidikan" name="pendidikan" readonly
+                            value="{{ $pasien->educations->name }}">
                     </div>
                 </div>
 
@@ -707,39 +700,7 @@
                 allowClear: true
             });
 
-            // Event listener saat pasien dipilih
-            $('#pasien').on('change', function() {
-                var selectedOption = $(this).find(':selected');
 
-                // Ambil data dari atribut data-*
-                var no_hp = selectedOption.data('no_hp');
-                var nik = selectedOption.data('nik');
-                var dob = selectedOption.data('dob');
-                var alamat = selectedOption.data('alamat');
-                var pekerjaan = selectedOption.data('pekerjaan');
-                var perkawinan = selectedOption.data('perkawinan');
-                var pendidikan = selectedOption.data('pendidikan');
-                var tempat_lahir = selectedOption.data('tempat_lahir');
-                var jk = selectedOption.data('jenis_kelamin');
-
-
-                // Isi input dengan data yang diambil
-                $('#no_hp').val(no_hp);
-                $('#nik').val(nik);
-                $('#tanggal_lahir').val(dob);
-                $('#alamat').val(alamat);
-                $('#tempat_lahir').val(tempat_lahir);
-                $('#perkawinan').val(perkawinan);
-                $('#pendidikan').val(pendidikan);
-                $('#pekerjaan').val(pekerjaan);
-                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
-                if (jk === 'Laki-Laki') {
-                    $('#jk_laki').prop('checked', true);
-                } else if (jk === 'Perempuan') {
-                    $('#jk_perempuan').prop('checked', true);
-                }
-            });
-            $('#pasien').trigger('change');
         });
     </script>
 @endsection

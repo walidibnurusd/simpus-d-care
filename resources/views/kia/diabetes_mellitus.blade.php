@@ -51,15 +51,10 @@
                             <label>Pasien</label>
                             <select class="form-control form-select select2" id="pasien" name="pasien">
                                 <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
-                                @foreach ($pasien as $item)
-                                    <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
-                                        data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
-                                        data-alamat="{{ $item->address }}" data-pob="{{ $item->place_birth }}"
-                                        data-jenis_kelamin="{{ $item->genderName->name }}"
-                                        {{ old('pasien', $diabetesMellitus->pasien ?? '') == $item->id ? 'selected' : '' }}>
-                                        {{ $item->name }} - {{ $item->nik }}
+                                @if ($pasien)
+                                    <option value="{{ $pasien->id }}" selected>{{ $pasien->name }} - {{ $pasien->nik }}
                                     </option>
-                                @endforeach
+                                @endif
                             </select>
                             @error('pasien')
                                 <span class="text-danger">{{ $message }}</span>
@@ -69,20 +64,19 @@
                     <div class="col-md-6 mb-3">
                         <label>Tempat Lahir</label>
                         <input type="text" class="form-control" name="tempat_lahir" placeholder="Masukkan tempat lahir"
-                            readonly id="tempat_lahir"
-                            value="{{ old('tempat_lahir', $diabetesMellitus->tempat_lahir ?? '') }}">
+                            readonly id="tempat_lahir" value="{{ old('tempat_lahir', $pasien->place_birth ?? '') }}">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label>Tanggal Lahir</label>
                         <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir" readonly
-                            value="{{ old('tanggal_lahir', $diabetesMellitus->tanggal_lahir ?? '') }}">
+                            value="{{ old('tanggal_lahir', $pasien->dob ?? '') }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Alamat Lengkap</label>
                         <input type="text" class="form-control" name="alamat" placeholder="Masukkan alamat lengkap"
-                            readonly id="alamat" value="{{ old('alamat', $diabetesMellitus->alamat ?? '') }}">
+                            readonly id="alamat" value="{{ old('alamat', $pasien->address ?? '') }}">
                     </div>
                 </div>
             </div>
@@ -127,8 +121,7 @@
                             <input type="number" class="form-control" name="tekanan_darah_sistol" placeholder="Sistol"
                                 value="{{ old('tekanan_darah_sistol', $diabetesMellitus->tekanan_darah_sistol ?? '') }}">
                             <span class="input-group-text">/</span>
-                            <input type="number" class="form-control" name="tekanan_darah_diastol"
-                                placeholder="Diastol"
+                            <input type="number" class="form-control" name="tekanan_darah_diastol" placeholder="Diastol"
                                 value="{{ old('tekanan_darah_diastol', $diabetesMellitus->tekanan_darah_diastol ?? '') }}">
                             <div class="input-group-append">
                                 <span class="input-group-text">mmHg</span>
@@ -187,28 +180,6 @@
                 placeholder: "Pilih pasien",
                 allowClear: true
             });
-
-            $('#pasien').on('change', function() {
-                var selectedOption = $(this).find(':selected');
-
-                var dob = selectedOption.data('dob');
-                var alamat = selectedOption.data('alamat');
-                var jk = selectedOption.data('jenis_kelamin');
-                var pob = selectedOption.data('pob');
-
-
-
-                $('#tanggal_lahir').val(dob);
-                $('#tempat_lahir').val(pob);
-                $('#alamat').val(alamat);
-                $('input[name="jenis_kelamin"]').prop('checked', false); // Uncheck all checkboxes first
-                if (jk === 'Laki-Laki') {
-                    $('#jk_laki').prop('checked', true);
-                } else if (jk === 'Perempuan') {
-                    $('#jk_perempuan').prop('checked', true);
-                }
-            });
-            $('#pasien').trigger('change');
         });
     </script>
 @endsection
