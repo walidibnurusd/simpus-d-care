@@ -691,55 +691,58 @@
                     </thead>
                     <tbody>
                         @if (isset($malaria) && $malaria->surveyKontak->isNotEmpty())
-                            @foreach ($malaria->surveyKontak as $index => $survey)
+                            @foreach ($malaria->surveyKontak as $index => $surveyKontak)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>
                                         <input type="text" class="form-control"
-                                            name="survey[{{ $index }}][nama]"
-                                            value="{{ old("survey.{$index}.nama", $survey->nama) }}" placeholder="Nama">
+                                            name="surveyKontak[{{ $index }}][nama]"
+                                            value="{{ old("surveyKontak.{$index}.nama", $surveyKontak->nama) }}"
+                                            placeholder="Nama">
                                     </td>
                                     <td>
                                         <input type="number" class="form-control"
-                                            name="survey[{{ $index }}][umur]"
-                                            value="{{ old("survey.{$index}.umur", $survey->umur) }}" placeholder="Umur">
+                                            name="surveyKontak[{{ $index }}][umur]"
+                                            value="{{ old("surveyKontak.{$index}.umur", $surveyKontak->umur) }}"
+                                            placeholder="Umur">
                                     </td>
                                     <td>
-                                        <select class="form-control" name="survey[{{ $index }}][jenis_kelamin]">
+                                        <select class="form-control"
+                                            name="surveyKontak[{{ $index }}][jenis_kelamin]">
                                             <option value="1"
-                                                {{ old("survey.{$index}.jenis_kelamin", $survey->jenis_kelamin) == 1 ? 'selected' : '' }}>
+                                                {{ old("surveyKontak.{$index}.jenis_kelamin", $surveyKontak->jenis_kelamin) == 1 ? 'selected' : '' }}>
                                                 Laki-laki</option>
                                             <option value="0"
-                                                {{ old("survey.{$index}.jenis_kelamin", $survey->jenis_kelamin) == 0 ? 'selected' : '' }}>
+                                                {{ old("surveyKontak.{$index}.jenis_kelamin", $surveyKontak->jenis_kelamin) == 0 ? 'selected' : '' }}>
                                                 Perempuan</option>
                                         </select>
                                     </td>
                                     <td>
                                         <input type="text" class="form-control"
-                                            name="survey[{{ $index }}][alamat]"
-                                            value="{{ old("survey.{$index}.alamat", $survey->alamat) }}"
+                                            name="surveyKontak[{{ $index }}][alamat]"
+                                            value="{{ old("surveyKontak.{$index}.alamat", $surveyKontak->alamat) }}"
                                             placeholder="Alamat">
                                     </td>
                                     <td>
                                         <input type="text" class="form-control"
-                                            name="survey[{{ $index }}][hub_kasus]"
-                                            value="{{ old("survey.{$index}.hub_kasus", $survey->hub_kasus) }}"
+                                            name="surveyKontak[{{ $index }}][hub_kasus]"
+                                            value="{{ old("surveyKontak.{$index}.hub_kasus", $surveyKontak->hub_kasus) }}"
                                             placeholder="Hubungan">
                                     </td>
                                     <td>
                                         <input type="date" class="form-control"
-                                            name="survey[{{ $index }}][tgl_pengambilan_darah]"
-                                            value="{{ old("survey.{$index}.tgl_pengambilan_darah", $survey->tgl_pengambilan_darah) }}">
+                                            name="surveyKontak[{{ $index }}][tgl_pengambilan_darah]"
+                                            value="{{ old("surveyKontak.{$index}.tgl_pengambilan_darah", $surveyKontak->tgl_pengambilan_darah) }}">
                                     </td>
                                     <td>
                                         <input type="date" class="form-control"
-                                            name="survey[{{ $index }}][tgl_diagnosis]"
-                                            value="{{ old("survey.{$index}.tgl_diagnosis", $survey->tgl_diagnosis) }}">
+                                            name="surveyKontak[{{ $index }}][tgl_diagnosis]"
+                                            value="{{ old("surveyKontak.{$index}.tgl_diagnosis", $surveyKontak->tgl_diagnosis) }}">
                                     </td>
                                     <td>
                                         <input type="text" class="form-control"
-                                            name="survey[{{ $index }}][hasil_pemeriksaan]"
-                                            value="{{ old("survey.{$index}.hasil_pemeriksaan", $survey->hasil_pemeriksaan) }}"
+                                            name="surveyKontak[{{ $index }}][hasil_pemeriksaan]"
+                                            value="{{ old("surveyKontak.{$index}.hasil_pemeriksaan", $surveyKontak->hasil_pemeriksaan) }}"
                                             placeholder="Hasil">
                                     </td>
                                     <td>
@@ -751,35 +754,36 @@
                             <tr>
                                 <td>1</td>
                                 <td>
-                                    <input type="text" class="form-control" name="survey[0][nama]"
+                                    <input type="text" class="form-control" name="surveyKontak[0][nama]"
                                         placeholder="Nama">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" name="survey[0][umur]"
+                                    <input type="number" class="form-control" name="surveyKontak[0][umur]"
                                         placeholder="Umur">
                                 </td>
                                 <td>
-                                    <select class="form-control" name="survey[0][jenis_kelamin]">
+                                    <select class="form-control" name="surveyKontak[0][jenis_kelamin]">
                                         <option value="1">Laki-laki</option>
                                         <option value="0">Perempuan</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="survey[0][alamat]"
+                                    <input type="text" class="form-control" name="surveyKontak[0][alamat]"
                                         placeholder="Alamat">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="survey[0][hub_kasus]"
+                                    <input type="text" class="form-control" name="surveyKontak[0][hub_kasus]"
                                         placeholder="Hubungan">
                                 </td>
                                 <td>
-                                    <input type="date" class="form-control" name="survey[0][tgl_pengambilan_darah]">
+                                    <input type="date" class="form-control"
+                                        name="surveyKontak[0][tgl_pengambilan_darah]">
                                 </td>
                                 <td>
-                                    <input type="date" class="form-control" name="survey[0][tgl_diagnosis]">
+                                    <input type="date" class="form-control" name="surveyKontak[0][tgl_diagnosis]">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="survey[0][hasil_pemeriksaan]"
+                                    <input type="text" class="form-control" name="surveyKontak[0][hasil_pemeriksaan]"
                                         placeholder="Hasil">
                                 </td>
                                 <td>
@@ -913,64 +917,80 @@
                 </thead>
                 <tbody>
                     @if (isset($malaria) && $malaria->surveyNyamuk->isNotEmpty())
-                        @foreach ($malaria->surveyNyamuk as $index => $survey)
+                        @foreach ($malaria->surveyNyamuk as $index => $surveyNyamuk)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td><input type="text" class="form-control"
-                                        name="survey[{{ $index }}][habitat]"
-                                        value="{{ old("survey.{$index}.habitat", $survey->habitat) }}"
+                                        name="surveyNyamuk[{{ $index }}][habitat]"
+                                        value="{{ old("surveyNyamuk.{$index}.habitat", $surveyNyamuk->habitat) }}"
                                         placeholder="Habitat"></td>
-                                <td><input type="text" class="form-control" name="survey[{{ $index }}][ph]"
-                                        value="{{ old("survey.{$index}.ph", $survey->ph) }}" placeholder="pH"></td>
-                                <td><input type="text" class="form-control" name="survey[{{ $index }}][sal]"
-                                        value="{{ old("survey.{$index}.sal", $survey->sal) }}" placeholder="Sal"></td>
-                                <td><input type="text" class="form-control" name="survey[{{ $index }}][suhu]"
-                                        value="{{ old("survey.{$index}.suhu", $survey->suhu) }}" placeholder="Suhu">
-                                </td>
-                                <td><input type="text" class="form-control" name="survey[{{ $index }}][kond]"
-                                        value="{{ old("survey.{$index}.kond", $survey->kond) }}" placeholder="Kond">
-                                </td>
-                                <td><input type="text" class="form-control" name="survey[{{ $index }}][kept]"
-                                        value="{{ old("survey.{$index}.kept", $survey->kept) }}" placeholder="Kept">
+                                <td><input type="text" class="form-control"
+                                        name="surveyNyamuk[{{ $index }}][ph]"
+                                        value="{{ old("surveyNyamuk.{$index}.ph", $surveyNyamuk->ph) }}"
+                                        placeholder="pH"></td>
+                                <td><input type="text" class="form-control"
+                                        name="surveyNyamuk[{{ $index }}][sal]"
+                                        value="{{ old("surveyNyamuk.{$index}.sal", $surveyNyamuk->sal) }}"
+                                        placeholder="Sal"></td>
+                                <td><input type="text" class="form-control"
+                                        name="surveyNyamuk[{{ $index }}][suhu]"
+                                        value="{{ old("surveyNyamuk.{$index}.suhu", $surveyNyamuk->suhu) }}"
+                                        placeholder="Suhu">
                                 </td>
                                 <td><input type="text" class="form-control"
-                                        name="survey[{{ $index }}][dasar]"
-                                        value="{{ old("survey.{$index}.dasar", $survey->dasar) }}" placeholder="Dasar">
+                                        name="surveyNyamuk[{{ $index }}][kond]"
+                                        value="{{ old("surveyNyamuk.{$index}.kond", $surveyNyamuk->kond) }}"
+                                        placeholder="Kond">
                                 </td>
-                                <td><input type="text" class="form-control" name="survey[{{ $index }}][air]"
-                                        value="{{ old("survey.{$index}.air", $survey->air) }}" placeholder="Air"></td>
-                                <td><input type="text" class="form-control" name="survey[{{ $index }}][sktr]"
-                                        value="{{ old("survey.{$index}.sktr", $survey->sktr) }}"
+                                <td><input type="text" class="form-control"
+                                        name="surveyNyamuk[{{ $index }}][kept]"
+                                        value="{{ old("surveyNyamuk.{$index}.kept", $surveyNyamuk->kept) }}"
+                                        placeholder="Kept">
+                                </td>
+                                <td><input type="text" class="form-control"
+                                        name="surveyNyamuk[{{ $index }}][dasar]"
+                                        value="{{ old("surveyNyamuk.{$index}.dasar", $surveyNyamuk->dasar) }}"
+                                        placeholder="Dasar">
+                                </td>
+                                <td><input type="text" class="form-control"
+                                        name="surveyNyamuk[{{ $index }}][air]"
+                                        value="{{ old("surveyNyamuk.{$index}.air", $surveyNyamuk->air) }}"
+                                        placeholder="Air"></td>
+                                <td><input type="text" class="form-control"
+                                        name="surveyNyamuk[{{ $index }}][sktr]"
+                                        value="{{ old("surveyNyamuk.{$index}.sktr", $surveyNyamuk->sktr) }}"
                                         placeholder="Tanaman Sktr"></td>
                                 <td><input type="text" class="form-control"
-                                        name="survey[{{ $index }}][teduh]"
-                                        value="{{ old("survey.{$index}.teduh", $survey->teduh) }}"
+                                        name="surveyNyamuk[{{ $index }}][teduh]"
+                                        value="{{ old("surveyNyamuk.{$index}.teduh", $surveyNyamuk->teduh) }}"
                                         placeholder="Tanaman Teduh"></td>
                                 <td><input type="text" class="form-control"
-                                        name="survey[{{ $index }}][predator]"
-                                        value="{{ old("survey.{$index}.predator", $survey->predator) }}"
+                                        name="surveyNyamuk[{{ $index }}][predator]"
+                                        value="{{ old("surveyNyamuk.{$index}.predator", $surveyNyamuk->predator) }}"
                                         placeholder="Predator"></td>
                                 <td><input type="text" class="form-control"
-                                        name="survey[{{ $index }}][larva_an]"
-                                        value="{{ old("survey.{$index}.larva_an", $survey->larva_an) }}"
+                                        name="surveyNyamuk[{{ $index }}][larva_an]"
+                                        value="{{ old("surveyNyamuk.{$index}.larva_an", $surveyNyamuk->larva_an) }}"
                                         placeholder="An"></td>
                                 <td><input type="text" class="form-control"
-                                        name="survey[{{ $index }}][larva_cx]"
-                                        value="{{ old("survey.{$index}.larva_cx", $survey->larva_cx) }}"
+                                        name="surveyNyamuk[{{ $index }}][larva_cx]"
+                                        value="{{ old("surveyNyamuk.{$index}.larva_cx", $surveyNyamuk->larva_cx) }}"
                                         placeholder="Cx"></td>
                                 <td><input type="text" class="form-control"
-                                        name="survey[{{ $index }}][jarak_kamp]"
-                                        value="{{ old("survey.{$index}.jarak_kamp", $survey->jarak_kamp) }}"
+                                        name="surveyNyamuk[{{ $index }}][jarak_kamp]"
+                                        value="{{ old("surveyNyamuk.{$index}.jarak_kamp", $surveyNyamuk->jarak_kamp) }}"
                                         placeholder="Jarak Kamp"></td>
                                 <td><input type="text" class="form-control"
-                                        name="survey[{{ $index }}][klp_habitat]"
-                                        value="{{ old("survey.{$index}.klp_habitat", $survey->klp_habitat) }}"
+                                        name="surveyNyamuk[{{ $index }}][klp_habitat]"
+                                        value="{{ old("surveyNyamuk.{$index}.klp_habitat", $surveyNyamuk->klp_habitat) }}"
                                         placeholder="Klp Habitat"></td>
-                                <td><input type="text" class="form-control" name="survey[{{ $index }}][gps]"
-                                        value="{{ old("survey.{$index}.gps", $survey->gps) }}" placeholder="GPS"></td>
                                 <td><input type="text" class="form-control"
-                                        name="survey[{{ $index }}][catatan]"
-                                        value="{{ old("survey.{$index}.catatan", $survey->catatan) }}"
+                                        name="surveyNyamuk[{{ $index }}][gps]"
+                                        value="{{ old("surveyNyamuk.{$index}.gps", $surveyNyamuk->gps) }}"
+                                        placeholder="GPS"></td>
+                                <td><input type="text" class="form-control"
+                                        name="surveyNyamuk[{{ $index }}][catatan]"
+                                        value="{{ old("surveyNyamuk.{$index}.catatan", $surveyNyamuk->catatan) }}"
                                         placeholder="Catatan"></td>
                                 <td><button type="button" class="btn btn-danger remove-row">Hapus</button></td>
                             </tr>
@@ -978,35 +998,45 @@
                     @else
                         <tr>
                             <td>1</td>
-                            <td><input type="text" class="form-control" name="survey[0][habitat]"
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][habitat]"
                                     placeholder="Habitat"></td>
-                            <td><input type="text" class="form-control" name="survey[0][ph]" placeholder="pH"></td>
-                            <td><input type="text" class="form-control" name="survey[0][sal]" placeholder="Sal"></td>
-                            <td><input type="text" class="form-control" name="survey[0][suhu]" placeholder="Suhu">
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][ph]" placeholder="pH">
                             </td>
-                            <td><input type="text" class="form-control" name="survey[0][kond]" placeholder="Kond">
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][sal]"
+                                    placeholder="Sal"></td>
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][suhu]"
+                                    placeholder="Suhu">
                             </td>
-                            <td><input type="text" class="form-control" name="survey[0][kept]" placeholder="Kept">
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][kond]"
+                                    placeholder="Kond">
                             </td>
-                            <td><input type="text" class="form-control" name="survey[0][dasar]" placeholder="Dasar">
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][kept]"
+                                    placeholder="Kept">
                             </td>
-                            <td><input type="text" class="form-control" name="survey[0][air]" placeholder="Air"></td>
-                            <td><input type="text" class="form-control" name="survey[0][sktr]"
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][dasar]"
+                                    placeholder="Dasar">
+                            </td>
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][air]"
+                                    placeholder="Air"></td>
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][sktr]"
                                     placeholder="Tanaman Sktr"></td>
-                            <td><input type="text" class="form-control" name="survey[0][teduh]"
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][teduh]"
                                     placeholder="Tanaman Teduh"></td>
-                            <td><input type="text" class="form-control" name="survey[0][predator]"
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][predator]"
                                     placeholder="Predator"></td>
-                            <td><input type="text" class="form-control" name="survey[0][larva_an]" placeholder="An">
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][larva_an]"
+                                    placeholder="An">
                             </td>
-                            <td><input type="text" class="form-control" name="survey[0][larva_cx]" placeholder="Cx">
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][larva_cx]"
+                                    placeholder="Cx">
                             </td>
-                            <td><input type="text" class="form-control" name="survey[0][jarak_kamp]"
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][jarak_kamp]"
                                     placeholder="Jarak Kamp"></td>
-                            <td><input type="text" class="form-control" name="survey[0][klp_habitat]"
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][klp_habitat]"
                                     placeholder="Klp Habitat"></td>
-                            <td><input type="text" class="form-control" name="survey[0][gps]" placeholder="GPS"></td>
-                            <td><input type="text" class="form-control" name="survey[0][catatan]"
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][gps]"
+                                    placeholder="GPS"></td>
+                            <td><input type="text" class="form-control" name="surveyNyamuk[0][catatan]"
                                     placeholder="Catatan"></td>
                             <td><button type="button" class="btn btn-danger remove-row">Hapus</button></td>
                         </tr>
@@ -1114,7 +1144,7 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <label for="kesimpulan" style="color: rgb(19, 11, 241);">Kesimpulan</label>
-                    <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $anemia->kesimpulan ?? '') }}</textarea>
+                    <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $malaria->kesimpulan ?? '') }}</textarea>
                 </div>
             </div>
             <div class="text-right mt-4">
@@ -1134,7 +1164,45 @@
 
         });
         document.addEventListener('DOMContentLoaded', function() {
+            const umurInput = document.getElementById('umurInput');
+            const tanggalLahirInput = document.getElementById('tanggal_lahir');
 
+            if (tanggalLahirInput && umurInput) {
+                // Tambahkan event listener untuk menghitung usia saat tanggal lahir berubah
+                tanggalLahirInput.addEventListener('change', () => {
+                    const tanggalLahirValue = tanggalLahirInput.value;
+
+                    if (!tanggalLahirValue) {
+                        umurInput.value = ''; // Kosongkan usia jika tanggal lahir kosong
+                        return;
+                    }
+
+                    const tanggalLahir = new Date(tanggalLahirValue);
+                    const hariIni = new Date();
+
+                    // Periksa apakah tanggal lahir valid
+                    if (isNaN(tanggalLahir.getTime())) {
+                        umurInput.value = 'Invalid Date';
+                        return;
+                    }
+
+                    let usia = hariIni.getFullYear() - tanggalLahir.getFullYear();
+                    const bulan = hariIni.getMonth() - tanggalLahir.getMonth();
+
+                    // Koreksi jika bulan atau tanggal saat ini lebih kecil dari bulan/tanggal lahir
+                    if (bulan < 0 || (bulan === 0 && hariIni.getDate() < tanggalLahir.getDate())) {
+                        usia--;
+                    }
+
+                    // Set nilai usia ke input umur
+                    umurInput.value = usia >= 0 ? usia : 0;
+                });
+
+                // Trigger perubahan saat halaman dimuat (jika tanggal lahir sudah ada)
+                if (tanggalLahirInput.value) {
+                    tanggalLahirInput.dispatchEvent(new Event('change'));
+                }
+            }
             // Tampilkan Pertanyaan Tambahan Berdasarkan Radio Button
             const toggleAdditionalQuestions = (radioYes, radioNo, targetDivId) => {
                 const targetDiv = document.getElementById(targetDivId);
@@ -1190,8 +1258,8 @@
             <td><input type="number" class="form-control" name="survey[${rowCount}][umur]" placeholder="Umur"></td>
             <td>
                 <select class="form-control" name="survey[${rowCount}][jenis_kelamin]">
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
+                    <option value="1">Laki-laki</option>
+                    <option value="0">Perempuan</option>
                 </select>
             </td>
             <td><input type="text" class="form-control" name="survey[${rowCount}][alamat]" placeholder="Alamat"></td>

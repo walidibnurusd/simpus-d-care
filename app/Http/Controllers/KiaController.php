@@ -747,31 +747,31 @@ class KiaController extends Controller
             'tanggal_survey' => 'nullable|date',
             'kolektor' => 'nullable',
             'kesimpulan' => 'nullable',
-            'survey.*.habitat' => 'nullable|string',
-            'survey.*.ph' => 'nullable|string',
-            'survey.*.sal' => 'nullable|string',
-            'survey.*.suhu' => 'nullable|string',
-            'survey.*.kond' => 'nullable|string',
-            'survey.*.kept' => 'nullable|string',
-            'survey.*.dasar' => 'nullable|string',
-            'survey.*.air' => 'nullable|string',
-            'survey.*.sktr' => 'nullable|string',
-            'survey.*.teduh' => 'nullable|string',
-            'survey.*.predator' => 'nullable|string',
-            'survey.*.larva_an' => 'nullable|string',
-            'survey.*.larva_cx' => 'nullable|string',
-            'survey.*.jarak_kamp' => 'nullable|string',
-            'survey.*.klp_habitat' => 'nullable|string',
-            'survey.*.gps' => 'nullable|string',
-            'survey.*.catatan' => 'nullable|string',
+            'surveyNyamuk.*.habitat' => 'nullable|string',
+            'surveyNyamuk.*.ph' => 'nullable|string',
+            'surveyNyamuk.*.sal' => 'nullable|string',
+            'surveyNyamuk.*.suhu' => 'nullable|string',
+            'surveyNyamuk.*.kond' => 'nullable|string',
+            'surveyNyamuk.*.kept' => 'nullable|string',
+            'surveyNyamuk.*.dasar' => 'nullable|string',
+            'surveyNyamuk.*.air' => 'nullable|string',
+            'surveyNyamuk.*.sktr' => 'nullable|string',
+            'surveyNyamuk.*.teduh' => 'nullable|string',
+            'surveyNyamuk.*.predator' => 'nullable|string',
+            'surveyNyamuk.*.larva_an' => 'nullable|string',
+            'surveyNyamuk.*.larva_cx' => 'nullable|string',
+            'surveyNyamuk.*.jarak_kamp' => 'nullable|string',
+            'surveyNyamuk.*.klp_habitat' => 'nullable|string',
+            'surveyNyamuk.*.gps' => 'nullable|string',
+            'surveyNyamuk.*.catatan' => 'nullable|string',
             'kelompok.*.nama' => 'nullable|string',
             'kelompok.*.alamat' => 'nullable|string',
-            'survey.*.nama' => 'nullable|string',
-            'survey.*.alamat' => 'nullable|string',
-            'survey.*.hub_kasus' => 'nullable|string',
-            'survey.*.tgl_pengambilan_darah' => 'nullable|string',
-            'survey.*.tgl_diagnosis' => 'nullable|string',
-            'survey.*.hasil_pemeriksaan' => 'nullable|string',
+            'surveyKontak.*.nama' => 'nullable|string',
+            'surveyKontak.*.alamat' => 'nullable|string',
+            'surveyKontak.*.hub_kasus' => 'nullable|string',
+            'surveyKontak.*.tgl_pengambilan_darah' => 'nullable|string',
+            'surveyKontak.*.tgl_diagnosis' => 'nullable|string',
+            'surveyKontak.*.hasil_pemeriksaan' => 'nullable|string',
         ]);
 
         // Check if validation fails
@@ -779,9 +779,19 @@ class KiaController extends Controller
             return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
         }
 
-        $malaria = Malaria::create();
-        if ($request->has('survey')) {
-            foreach ($request->input('survey') as $surveyData) {
+        $malaria = Malaria::create(
+            array_merge($validator->validated(), [
+                'klaster' => $request->klaster,
+                'poli' => $request->poli,
+            ]),
+        );
+        if ($request->has('surveyKontak')) {
+            foreach ($request->input('surveyKontak') as $surveyData) {
+                $malaria->surveyKontak()->create($surveyData);
+            }
+        }
+        if ($request->has('surveyKontak')) {
+            foreach ($request->input('surveyKontak') as $surveyData) {
                 $malaria->surveyNyamuk()->create($surveyData);
                 $malaria->surveyKontak()->create($surveyData);
             }
@@ -794,7 +804,7 @@ class KiaController extends Controller
         // Redirect with success message
         return redirect()->back()->with('success', 'Data Malaria created successfully!');
     }
-    public function storeMalaria(Request $request)
+  public function storeMalaria(Request $request)
     {
         // Define validation rules
         $validator = Validator::make($request->all(), [

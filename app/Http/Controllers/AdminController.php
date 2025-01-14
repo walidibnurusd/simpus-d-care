@@ -22,6 +22,7 @@ use App\Models\Preeklampsia;
 use App\Models\GangguanJiwaDewasa;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 
 class AdminController extends Controller
@@ -426,31 +427,31 @@ class AdminController extends Controller
             'tanggal_survey' => 'nullable|date',
             'kolektor' => 'nullable',
             'kesimpulan' => 'nullable',
-            'survey.*.habitat' => 'nullable|string',
-            'survey.*.ph' => 'nullable|string',
-            'survey.*.sal' => 'nullable|string',
-            'survey.*.suhu' => 'nullable|string',
-            'survey.*.kond' => 'nullable|string',
-            'survey.*.kept' => 'nullable|string',
-            'survey.*.dasar' => 'nullable|string',
-            'survey.*.air' => 'nullable|string',
-            'survey.*.sktr' => 'nullable|string',
-            'survey.*.teduh' => 'nullable|string',
-            'survey.*.predator' => 'nullable|string',
-            'survey.*.larva_an' => 'nullable|string',
-            'survey.*.larva_cx' => 'nullable|string',
-            'survey.*.jarak_kamp' => 'nullable|string',
-            'survey.*.klp_habitat' => 'nullable|string',
-            'survey.*.gps' => 'nullable|string',
-            'survey.*.catatan' => 'nullable|string',
+            'surveyNyamuk.*.habitat' => 'nullable|string',
+            'surveyNyamuk.*.ph' => 'nullable|string',
+            'surveyNyamuk.*.sal' => 'nullable|string',
+            'surveyNyamuk.*.suhu' => 'nullable|string',
+            'surveyNyamuk.*.kond' => 'nullable|string',
+            'surveyNyamuk.*.kept' => 'nullable|string',
+            'surveyNyamuk.*.dasar' => 'nullable|string',
+            'surveyNyamuk.*.air' => 'nullable|string',
+            'surveyNyamuk.*.sktr' => 'nullable|string',
+            'surveyNyamuk.*.teduh' => 'nullable|string',
+            'surveyNyamuk.*.predator' => 'nullable|string',
+            'surveyNyamuk.*.larva_an' => 'nullable|string',
+            'surveyNyamuk.*.larva_cx' => 'nullable|string',
+            'surveyNyamuk.*.jarak_kamp' => 'nullable|string',
+            'surveyNyamuk.*.klp_habitat' => 'nullable|string',
+            'surveyNyamuk.*.gps' => 'nullable|string',
+            'surveyNyamuk.*.catatan' => 'nullable|string',
             'kelompok.*.nama' => 'nullable|string',
             'kelompok.*.alamat' => 'nullable|string',
-            'survey.*.nama' => 'nullable|string',
-            'survey.*.alamat' => 'nullable|string',
-            'survey.*.hub_kasus' => 'nullable|string',
-            'survey.*.tgl_pengambilan_darah' => 'nullable|string',
-            'survey.*.tgl_diagnosis' => 'nullable|string',
-            'survey.*.hasil_pemeriksaan' => 'nullable|string',
+            'surveyKontak.*.nama' => 'nullable|string',
+            'surveyKontak.*.alamat' => 'nullable|string',
+            'surveyKontak.*.hub_kasus' => 'nullable|string',
+            'surveyKontak.*.tgl_pengambilan_darah' => 'nullable|string',
+            'surveyKontak.*.tgl_diagnosis' => 'nullable|string',
+            'surveyKontak.*.hasil_pemeriksaan' => 'nullable|string',
         ]);
 
         // Check if validation fails
@@ -458,55 +459,61 @@ class AdminController extends Controller
             return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
         }
 
-        $malaria->update($request->except(['survey', 'kelompok']));
+        $malaria->update($request->except(['surveyKontak', 'surveyNyamuk', 'kelompok']));
 
-        // Update surveyNyamuk
-        if ($request->has('survey')) {
-            // Hapus data lama
+        if ($request->has('surveyNyamuk')) {
+            Log::info('Survey Nyamuk Sebelum Dihapus', ['surveyNyamuk' => $malaria->surveyNyamuk]);
+
             $malaria->surveyNyamuk()->delete();
 
-            // Simpan data baru
-            foreach ($request->input('survey') as $surveyData) {
+            Log::info('Survey Nyamuk Setelah Dihapus', ['surveyNyamuk' => $malaria->surveyNyamuk]);
+
+            foreach ($request->input('surveyNyamuk') as $surveyData) {
                 $malaria->surveyNyamuk()->create($surveyData);
+                Log::info('Survey Nyamuk Ditambahkan', ['surveyData' => $surveyData]);
             }
         }
 
-        // Update surveyKontak
-        if ($request->has('survey')) {
-            // Hapus data lama
+        if ($request->has('surveyKontak')) {
+            Log::info('Survey Kontak Sebelum Dihapus', ['surveyKontak' => $malaria->surveyKontak]);
+
             $malaria->surveyKontak()->delete();
 
-            // Simpan data baru
-            foreach ($request->input('survey') as $surveyData) {
+            Log::info('Survey Kontak Setelah Dihapus', ['surveyKontak' => $malaria->surveyKontak]);
+
+            foreach ($request->input('surveyKontak') as $surveyData) {
                 $malaria->surveyKontak()->create($surveyData);
+                Log::info('Survey Kontak Ditambahkan', ['surveyData' => $surveyData]);
             }
         }
 
-        // Update kelompokMalaria
         if ($request->has('kelompok')) {
-            // Hapus data lama
+            Log::info('Kelompok Malaria Sebelum Dihapus', ['kelompokMalaria' => $malaria->kelompokMalaria]);
+
             $malaria->kelompokMalaria()->delete();
 
-            // Simpan data baru
+            Log::info('Kelompok Malaria Setelah Dihapus', ['kelompokMalaria' => $malaria->kelompokMalaria]);
+
             foreach ($request->input('kelompok') as $kelompokData) {
                 $malaria->kelompokMalaria()->create($kelompokData);
+                Log::info('Kelompok Malaria Ditambahkan', ['kelompokData' => $kelompokData]);
             }
         }
 
         // Redirect with success message
         return redirect()->back()->with('success', 'Data Malaria updated successfully!');
     }
-    public function deleteMaterial($id)
+    public function deleteMalaria($id)
     {
         // Find the record by ID
-        $material = Material::find($id);
+        $malaria = Malaria::find($id);
 
-        if (!$material) {
+        if (!$malaria) {
             return redirect()->back()->with('error', 'Record not found.');
         }
 
         // Delete the record
-        $material->delete();
+        $malaria->delete();
 
         return response()->json(
             [
