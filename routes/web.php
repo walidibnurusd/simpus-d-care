@@ -264,6 +264,10 @@ Route::middleware('auth')->group(function () {
             Route::get('/diabetes-mellitus/{id}', [App\Http\Controllers\AdminController::class, 'editDiabetesMellitus'])->name('diabetes.mellitus.edit');
             Route::put('/diabetes-mellitus/{id}', [App\Http\Controllers\AdminController::class, 'updateDiabetesMellitus'])->name('diabetes.mellitus.update');
             Route::delete('/diabetes-mellitus/{id}', [App\Http\Controllers\AdminController::class, 'deleteDiabetesMellitus'])->name('diabetes.mellitus.delete');
+
+            Route::get('/malaria/{id}', [App\Http\Controllers\AdminController::class, 'editMalaria'])->name('malaria.edit');
+            Route::put('/malaria/{id}', [App\Http\Controllers\AdminController::class, 'updateMalaria'])->name('malaria.update');
+            Route::delete('/malaria/{id}', [App\Http\Controllers\AdminController::class, 'deleteMalaria'])->name('malaria.delete');
         });
         Route::prefix('mtbs')->group(function () {
             Route::get('keswa-sdq', [App\Http\Controllers\AdminControllerMTBS::class, 'viewGangguanJiwaAnak'])->name('sdq.mtbs.admin');

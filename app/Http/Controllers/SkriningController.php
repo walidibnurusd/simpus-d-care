@@ -30,6 +30,7 @@ use App\Models\TesDayaDengar;
 use App\Models\TripleEliminasi;
 use App\Models\Puma;
 use App\Models\Preeklampsia;
+use App\Models\Malaria;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -121,6 +122,7 @@ class SkriningController extends Controller
                 'Kanker Leher Rahim dan Kanker Payudara' => KankerPayudara::where('pasien', $id)->where('klaster', $klaster)->first(),
                 'Preeklampsia' => Preeklampsia::where('pasien', $id)->where('klaster', $klaster)->first(),
                 'SRQ (>18 Tahun)' => GangguanJiwaDewasa::where('pasien', $id)->where('klaster', $klaster)->first(),
+                'Malaria' => Malaria::where('pasien', $id)->where('klaster', $klaster)->first(),
 
                 default => null,
             };
@@ -190,6 +192,7 @@ class SkriningController extends Controller
             'Kanker Leher Rahim dan Kanker Payudara' => 'kanker-payudara',
             'Layak Hamil' => 'layak-hamil',
             'SRQ (>18 Tahun)' => 'keswa-srq-dewasa',
+            'Malaria' => 'malaria',
         ];
     }
 
