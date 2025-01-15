@@ -364,16 +364,6 @@
                                     <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Penunjang</span>
                                     <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                                 </div>
-                                <div class="container">
-                                    <div class="row g-2">
-                                        <div class="col-md-12">
-                                            <label for="hasil_lab" style="color: green;">Hasil Laboratorium</label>
-                                            <input type="text" class="form-control" id="hasil_lab"
-                                                name="hasil_lab" placeholder="Hasil Laboratorium"
-                                                data-role="{{ auth()->user()->role }}">
-                                        </div>
-                                    </div>
-                                </div>
                             @endif
                         </div>
                     </div>
@@ -568,11 +558,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const input = document.getElementById("hasil_lab");
-        const role = input.dataset.role;
-        if (role === "dokter") {
-            input.readOnly = true;
-        }
+
         // Display success message if session has a success
         @if (session('success'))
             Swal.fire({

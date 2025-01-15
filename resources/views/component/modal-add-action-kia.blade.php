@@ -1,0 +1,513 @@
+<style>
+    .custom-radio {
+        width: 20px;
+        /* Mengatur ukuran lebar radio button */
+        height: 20px;
+        /* Mengatur ukuran tinggi radio button */
+        margin-right: 10px;
+        /* Memberi jarak antara radio button dan label */
+        vertical-align: middle;
+        /* Menjaga radio button berada di tengah secara vertikal */
+    }
+
+
+    .form-check-inline {
+        margin-right: 15px;
+        /* Memberi jarak antara setiap pilihan */
+    }
+</style>
+<!-- Modal Add Action -->
+<div class="modal fade" style="z-index: 1050;" id="addActionModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+
+                <h5 class="modal-title" id="exampleModalLabel">TINDAKAN KIA</h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="addPatientForm" action="" method="POST" class="px-3">
+                    @csrf
+                    <div class="row">
+                        <div class="col-4">
+                            <h5>Detail Pasien</h5>
+                            <div id="patientDetails"
+                                style="display:none; margin-top: 10px; padding: 10px; border-radius: 5px;">
+                                <p><strong>N I K</strong> : <span id="displayNIK"></span></p>
+                                <p><strong>Nama Pasien</strong> : <span id="displayName"></span></p>
+                                {{-- <p><strong>J.Kelamin</strong> : <span id="displayGender"></span></p> --}}
+                                <p><strong>Umur</strong> : <span id="displayAge"></span></p>
+                                <p><strong>Telepon/WA</strong> : <span id="displayPhone"></span></p>
+                                <p><strong>Alamat</strong> : <span id="displayAddress"></span></p>
+                                <p><strong>Darah</strong> : <span id="displayBlood"></span></p>
+                                {{-- <p><strong>Pendidikan</strong> : <span id="displayEducation"></span></p> --}}
+                                {{-- <p><strong>Pekerjaan</strong> : <span id="displayJob"></span></p> --}}
+                                <p><strong>Nomor RM</strong> : <span id="displayRmNumber"></span></p>
+                            </div>
+                        </div>
+                        <div class="row col-8">
+                            <div class="col-12">
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="nik">Cari Pasien</label>
+                                            <div class="input-group">
+                                                <input type="text" hidden id="idAction" name="idAction"
+                                                    value="">
+                                                <input readonly type="text" class="form-control" id="nik"
+                                                    name="nik" placeholder="NIK" required>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button" id="btnCariNIK"
+                                                        data-bs-toggle="modal" data-bs-target="#modalPasien">
+                                                        Cari
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="tanggal">Tanggal</label>
+                                            <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                                placeholder="Pilih Tanggal" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="doctor">Dokter</label>
+                                            <select class="form-control" id="doctor" name="doctor" required>
+                                                <option value="" disabled selected>Pilih Dokter</option>
+                                                @foreach ($dokter as $item)
+                                                    <option value="{{ $item['name'] }}">{{ $item['name'] }}</option>
+                                                @endforeach
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="kunjungan">Kunjungan</label>
+                                            <select class="form-control" id="kunjungan" name="kunjungan" required>
+                                                <option value="" disabled selected>Pilih Jenis Kunjungan</option>
+                                                <option value="baru">Baru </option>
+                                                <option value="lama">Lama </option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="row g-2">
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="jenis_kartu">Jenis Kartu</label>
+                                            <input type="text" class="form-control" id="jenis_kartu"
+                                                name="jenis_kartu" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="nomor_kartu">Nomor Kartu</label>
+                                            <input type="text" class="form-control" id="nomor_kartu"
+                                                name="nomor_kartu" placeholder="Masukkan Nomor" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="wilayah_faskes">Wilayah Faskes</label>
+                                            <select class="form-control" id="wilayah_faskes" name="faskes" required>
+                                                <option value="" disabled selected>Pilih Wilayah Faskes</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; text-align: center;">
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                <span style="margin: 0 10px; white-space: nowrap;">Pelayanan ANC</span>
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                            </div>
+
+                            <div class="col-12">
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="usia_hamil">Usia kehamilan </label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="usia_hamil"
+                                                    name="usia_hamil" placeholder="Masukkan usia kehamilan">
+                                                <span class="input-group-text">minggu</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="jenis_anc">Jenis ANC</label>
+                                            <select class="form-control" id="jenis_anc" name="jenis_anc" required>
+                                                <option value="" disabled selected>Pilih jenis ANC</option>
+                                                <option value="anc1">ANC 1</option>
+                                                <option value="anc2">ANC II</option>
+                                                <option value="anc3">ANC III</option>
+                                                <option value="anc4">ANC IV</option>
+                                                <option value="anc5">ANC V</option>
+                                                <option value="anc6">ANC VI</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="lingkar_lengan_atas">Lingkar lengan atas </label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="lingkar_lengan_atas"
+                                                    name="lingkar_lengan_atas"
+                                                    placeholder="Masukkan lingkar lengan atas">
+                                                <span class="input-group-text">cm</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="tinggi_fundus_uteri">Tinggi fundus uteri</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="tinggi_fundus_uteri"
+                                                    name="tinggi_fundus_uteri"
+                                                    placeholder="Masukkan tinggi fundus uteri">
+                                                <span class="input-group-text">cm</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="presentansi_janin">Presentasi janin</label>
+                                            <select class="form-control" id="presentansi_janin"
+                                                name="presentansi_janin" required>
+                                                <option value="" disabled selected>Pilih presentasi janin
+                                                </option>
+                                                <option value="kepala">Kepala</option>
+                                                <option value="sungsang">Sungsang</option>
+                                                <option value="melintang">Melintang</option>
+                                                <option value="lain-lain">Lain-lain</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="denyut_jantung">Denyut nyantung </label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="denyut_jantung"
+                                                    name="denyut_jantung" placeholder="Masukkan denyut jantung">
+                                                <span class="input-group-text">bpm</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <label>Kaki Bengkak</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="kaki_bengkak" id="kaki_bengkak_ya" value="ya" required>
+                                            <label class="form-check-label" for="kaki_bengkak_ya">Ya</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="kaki_bengkak" id="kaki_bengkak_tidak" value="tidak" required>
+                                            <label class="form-check-label" for="kaki_bengkak_tidak">Tidak</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Diberikan Imunisasi TT</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="imunisasi_tt" id="imunisasi_tt_ya" value="ya" required>
+                                            <label class="form-check-label" for="imunisasi_tt_ya">Ya</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="imunisasi_tt" id="imunisasi_tt_tidak" value="tidak" required>
+                                            <label class="form-check-label" for="imunisasi_tt_tidak">Tidak</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Diberikan Tablet FE</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="tablet_fe" id="tablet_fe_ya" value="ya" required>
+                                            <label class="form-check-label" for="tablet_fe_ya">Ya</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="tablet_fe" id="tablet_fe_tidak" value="tidak" required>
+                                            <label class="form-check-label" for="tablet_fe_tidak">Tidak</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mt-3">
+                                    <label>Status Kehamilan</label>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="gravida" name="gravida"
+                                                placeholder="Gravida">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="partus" name="partus"
+                                                placeholder="Partus">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="abortus" name="abortus"
+                                                placeholder="Abortus">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mt-3">
+                                    <label>Nilai Hb</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="nilai_hb" name="nilai_hb"
+                                            placeholder="Masukkan Nilai Hb">
+                                        <span class="input-group-text">g/dl</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mt-3">
+                                    <label>Proteinuria</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="proteinuria" id="proteinuria_positif" value="positif" required>
+                                            <label class="form-check-label" for="proteinuria_positif">Positif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="proteinuria" id="proteinuria_negatif" value="negatif" required>
+                                            <label class="form-check-label" for="proteinuria_negatif">Negatif</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; text-align: center;">
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                <span style="margin: 0 10px; white-space: nowrap;">Hasil Test Triple Eliminasi</span>
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <label>HIV</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="hiv" id="hiv_reaktif" value="reaktif" required>
+                                            <label class="form-check-label" for="hiv_reaktif">Reaktif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="hiv" id="hiv_non_reaktif" value="non-reaktif" required>
+                                            <label class="form-check-label" for="hiv_non_reaktif">Non-Reaktif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="hiv" id="hiv_tdk_tersedia" value="tidak-tersedia" required>
+                                            <label class="form-check-label" for="hiv_tdk_tersedia">Tidak
+                                                Tersedia</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Sifilis</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="sifilis" id="sifilis_reaktif" value="reaktif" required>
+                                            <label class="form-check-label" for="sifilis_reaktif">Reaktif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="sifilis" id="sifilis_non_reaktif" value="non-reaktif" required>
+                                            <label class="form-check-label"
+                                                for="sifilis_non_reaktif">Non-Reaktif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="sifilis" id="sifilis_tdk_tersedia" value="tidak-tersedia"
+                                                required>
+                                            <label class="form-check-label" for="sifilis_tdk_tersedia">Tidak
+                                                Tersedia</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Hepatitis</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="hepatitis" id="hepatitis_reaktif" value="reaktif" required>
+                                            <label class="form-check-label" for="hepatitis_reaktif">Reaktif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="hepatitis" id="hepatitis_non_reaktif" value="non-reaktif"
+                                                required>
+                                            <label class="form-check-label"
+                                                for="hepatitis_non_reaktif">Non-Reaktif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="hepatitis" id="hepatitis_tdk_tersedia" value="tidak-tersedia"
+                                                required>
+                                            <label class="form-check-label" for="hepatitis_tdk_tersedia">Tidak
+                                                Tersedia</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mt-3">
+                                    <label>Dengan pemeriksaan USG</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="periksa_usg" id="periksa_usg_ya" value="ya" required>
+                                            <label class="form-check-label" for="periksa_usg_ya">Ya</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input custom-radio" type="radio"
+                                                name="periksa_usg" id="periksa_usg_tidak" value="tidak" required>
+                                            <label class="form-check-label" for="periksa_usg_tidak">Tidak</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="hasil_usg">Hasil USG</label>
+                            <textarea class="form-control" id="hasil_usg" name="hasil_usg" placeholder="Hasil USG"></textarea>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="treatment_anc">Treatment ANC</label>
+                            <textarea class="form-control" id="treatment_anc" name="treatment_anc" placeholder="Treatment ANC"></textarea>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="kesimpulan">Kesimpulan</label>
+                            <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan"></textarea>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="tanggal_kembali">Tanggal kembali</label>
+                            <input type="date" class="form-control" name="tanggal_kembali" id="tanggal_kembali"
+                                placeholder="Pilih Tanggal" required>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary">Simpan Data</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@include('component.modal-table-pasien-dokter')
+@include('component.modal-skrining')
+
+
+<script>
+    $(document).ready(function() {
+        $('#riwayat_penyakit_keluarga').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#riwayat_penyakit_tidak_menular').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#diagnosa').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#tindakan').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+</script>
+<style>
+    .select2-dropdown {
+        z-index: 9999 !important;
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        // Set z-index for modalPasien to be higher than addActionModal
+        // $('#modalPasien').on('show.bs.modal', function() {
+        //     $(this).css('z-index', '2000'); // set a high z-index for modalPasien
+        // });
+
+        // // Remove backdrop when modalPasien is closed
+        // $('#modalPasien').on('hidden.bs.modal', function() {
+        //     $('.modal-backdrop').not('.modal-stack').remove();
+        // });
+    });
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Display success message if session has a success
+        @if (session('success'))
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        @endif
+
+        // Display error message if validation errors exist
+        @if ($errors->any())
+            Swal.fire({
+                title: 'Error!',
+                html: '<ul>' +
+                    '@foreach ($errors->all() as $error)' +
+                    '<li>{{ $error }}</li>' +
+                    '@endforeach' +
+                    '</ul>',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        @endif
+    });
+</script>

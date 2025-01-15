@@ -255,6 +255,30 @@ class ActionController extends Controller
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
+    public function indexKia(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dokter = User::where('role', 'dokter')->get();
+
+        // $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+
+        // $penyakit = Disease::all();
+        // $rs = Hospital::all();
+        $actionsQuery = Action::where('tipe', 'kia');
+
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
+        $routeName = $request->route()->getName();
+        return view('content.action.index-kia', compact('actions', 'dokter', 'routeName'));
+    }
     public function actionReport(Request $request)
     {
         // Ambil parameter filter awal dan akhir dari query string
@@ -425,6 +449,14 @@ class ActionController extends Controller
                 } else {
                     $route = 'action.dokter.ugd.index';
                 }
+            } elseif (Auth::user()->role == 'lab') {
+                if ($action->tipe === 'poli-umum') {
+                    $route = 'action.lab.index';
+                } elseif ($action->tipe === 'poli-gigi') {
+                    $route = 'action.lab.gigi.index';
+                } else {
+                    $route = 'action.lab.ugd.index';
+                }
             } else {
                 if ($action->tipe === 'poli-umum') {
                     $route = 'action.index';
@@ -557,10 +589,12 @@ class ActionController extends Controller
     public function updateLab(Request $request, $id)
     {
         try {
-            $action = Action::findOrFail($id);
-
+            $action = Action::find($id);
+            if (!$action) {
+                return redirect()->back()->with('error', 'Action not found');
+            }
             // Fetch the patient ID based on the provided NIK
-            $patient = Patients::where('nik', $request->nikEdit)->first();
+            $patient = Patients::where('nik', $request->nik)->first();
 
             if (!$patient) {
                 return redirect()
@@ -577,73 +611,7 @@ class ActionController extends Controller
             // Validate the request
             $validated = $request->validate([
                 'id_patient' => 'required',
-                'tanggal' => 'required',
-                'doctor' => 'required',
-                'kunjungan' => 'nullable|string|max:255',
-                'faskes' => 'nullable|string|max:255',
-                'sistol' => 'nullable|numeric',
-                'diastol' => 'nullable|numeric',
-                'beratBadan' => 'nullable|numeric',
-                'tinggiBadan' => 'nullable|numeric',
-                'lingkarPinggang' => 'nullable|numeric',
-                'gula' => 'nullable|numeric',
-                'merokok' => 'nullable|string|max:255',
-                'fisik' => 'nullable|string|max:255',
-                'garam' => 'nullable|string|max:255',
-                'gula_lebih' => 'nullable|string|max:255',
-                'lemak' => 'nullable|string|max:255',
-                'alkohol' => 'nullable|string|max:255',
-                'hidup' => 'nullable|string|max:255',
-                'buah_sayur' => 'nullable|string|max:255',
-                'hasil_iva' => 'nullable|string|max:255',
-                'tindak_iva' => 'nullable|string|max:255',
-                'hasil_sadanis' => 'nullable|string|max:255',
-                'tindak_sadanis' => 'nullable|string|max:255',
-                'konseling' => 'nullable|string|max:255',
-                'car' => 'nullable|string|max:255',
-                'rujuk_ubm' => 'nullable|string|max:255',
-                'kondisi' => 'nullable|string|max:255',
-                'edukasi' => 'nullable|string|max:255',
-                'keluhan' => 'nullable|string|max:255',
-                'diagnosa' => 'nullable',
-                'tindakan' => 'nullable',
-                'rujuk_rs' => 'nullable|exists:hospitals,id',
-                'keterangan' => 'nullable|string|max:255',
-                'nadi' => 'nullable|numeric',
-                'nafas' => 'nullable|numeric',
-                'suhu' => 'nullable|numeric',
-                'mata_anemia' => 'nullable|string|max:255',
-                'pupil' => 'nullable|string|max:255',
-                'ikterus' => 'nullable|string|max:255',
-                'udem_palpebral' => 'nullable|string|max:255',
-                'nyeri_tekan' => 'nullable|string|max:255',
-                'peristaltik' => 'nullable|string|max:255',
-                'ascites' => 'nullable|string|max:255',
-                'lokasi_abdomen' => 'nullable|string|max:255',
-                'thorax' => 'nullable|string|max:255',
-                'thorax_bj' => 'nullable|string|max:255',
-                'suara_nafas' => 'nullable|string|max:255',
-                'ronchi' => 'nullable|string|max:255',
-                'wheezing' => 'nullable|string|max:255',
-                'ekstremitas' => 'nullable|string|max:255',
-                'edema' => 'nullable|string|max:255',
-                'tonsil' => 'nullable|string|max:255',
-                'fharing' => 'nullable|string|max:255',
-                'kelenjar' => 'nullable|string|max:255',
-                'genetalia' => 'nullable|string|max:255',
-                'warna_kulit' => 'nullable|string|max:255',
-                'turgor' => 'nullable|string|max:255',
-                'neurologis' => 'nullable|string|max:255',
-                'hasil_lab' => 'nullable|string|max:255',
-                'obat' => 'nullable',
-                'riwayat_penyakit_sekarang' => 'nullable',
-                'riwayat_penyakit_keluarga' => 'nullable',
-                'riwayat_penyakit_dulu' => 'nullable',
-                'riwayat_penyakit_lainnya' => 'nullable',
-                'riwayat_penyakit_lainnya_keluarga' => 'nullable',
-                'riwayat_pengobatan' => 'nullable',
-                'riwayat_alergi' => 'nullable',
-                'pemeriksaan_penunjang' => 'nullable',
+                'hasil_lab' => 'nullable',
             ]);
 
             $action->update($validated);

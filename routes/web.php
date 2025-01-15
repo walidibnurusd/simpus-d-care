@@ -151,6 +151,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/tindakan/lab/poli-umum', [ActionController::class, 'indexLab'])->name('action.lab.index');
     Route::get('/tindakan/lab/poli-gigi', [ActionController::class, 'indexGigiLab'])->name('action.lab.gigi.index');
     Route::get('/tindakan/lab/ugd', [ActionController::class, 'indexUgdLab'])->name('action.lab.ugd.index');
+    Route::get('/tindakan/kia', [ActionController::class, 'indexKia'])->name('action.kia.index');
     Route::post('/tindakan', [ActionController::class, 'store'])->name('action.store');
     Route::POST('/tindakan/{id}', [ActionController::class, 'update'])->name('action.update');
     Route::POST('/tindakan-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');

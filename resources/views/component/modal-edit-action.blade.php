@@ -648,6 +648,20 @@
                     </div>
                     @if (Auth::user()->role == 'dokter')
                         <div class="row mt-3">
+                            <div class="container">
+                                <div class="row g-2">
+                                    <div class="col-md-12">
+                                        <label for="hasil_lab" style="color: green;">Hasil Laboratorium</label>
+                                        <input type="text" class="form-control" id="hasil_lab" readonly
+                                            name="hasil_lab"
+                                            value="{{ old('hasil_lab', $action->hasil_lab ?? '') }}"
+                                            placeholder="Hasil Laboratorium">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+
                             <div class="col-md-4">
                                 <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                 <select class="form-control" id="diagnosaEdit" name="diagnosa[]" multiple>
