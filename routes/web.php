@@ -148,9 +148,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/tindakan/poli-umum', [ActionController::class, 'indexDokter'])->name('action.dokter.index');
     Route::get('/tindakan/poli-gigi', [ActionController::class, 'indexGigiDokter'])->name('action.dokter.gigi.index');
     Route::get('/tindakan/ugd', [ActionController::class, 'indexUgdDokter'])->name('action.dokter.ugd.index');
+    Route::get('/tindakan/lab/poli-umum', [ActionController::class, 'indexLab'])->name('action.lab.index');
+    Route::get('/tindakan/lab/poli-gigi', [ActionController::class, 'indexGigiLab'])->name('action.lab.gigi.index');
+    Route::get('/tindakan/lab/ugd', [ActionController::class, 'indexUgdLab'])->name('action.lab.ugd.index');
     Route::post('/tindakan', [ActionController::class, 'store'])->name('action.store');
     Route::POST('/tindakan/{id}', [ActionController::class, 'update'])->name('action.update');
     Route::POST('/tindakan-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
+    Route::POST('/tindakan-lab/{id}', [ActionController::class, 'updateLab'])->name('action.update.lab');
     Route::delete('/tindakan/{id}', [ActionController::class, 'destroy'])->name('action.destroy');
     Route::get('/laporan/tindakan', [ActionController::class, 'actionReport'])->name('action.report');
 
@@ -393,6 +397,9 @@ Route::get('/get-patients/ruang-tindakan', [PatientsController::class, 'getPatie
 Route::get('/get-patients-dokter/poli-umum', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
 Route::get('/get-patients-dokter/poli-gigi', [PatientsController::class, 'getPatientsDokterGigi'])->name('get-patients-dokter-gigi');
 Route::get('/get-patients-dokter/ruang-tindakan', [PatientsController::class, 'getPatientsDokterRuangTindakan'])->name('get-patients-dokter-ruang-tindakan');
+Route::get('/get-patients-lab/poli-umum', [PatientsController::class, 'getPatientsLab'])->name('get-patients-lab');
+Route::get('/get-patients-lab/poli-gigi', [PatientsController::class, 'getPatientsLabGigi'])->name('get-patients-lab-gigi');
+Route::get('/get-patients-lab/ruang-tindakan', [PatientsController::class, 'getPatientsLabRuangTindakan'])->name('get-patients-lab-ruang-tindakan');
 
 //Language Change
 Route::get('lang/{locale}', function ($locale) {

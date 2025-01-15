@@ -363,6 +363,107 @@ class PatientsController extends Controller
             'data' => $patients->items(), // Data pasien yang dipaginasikan
         ]);
     }
+    public function getPatientsLab(Request $request)
+    {
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-umum')->whereNotNull('pemeriksaan_penunjang');
+
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(),
+        ]);
+    }
+
+    public function getPatientsLabGigi(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-gigi')->whereNotNull('pemeriksaan_penunjang');
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
+    }
+    public function getPatientsLabRuangTindakan(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'ruang-tindakan')->whereNotNull('pemeriksaan_penunjang');
+
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
+    }
     public function index()
     {
         $patients = Patients::all();

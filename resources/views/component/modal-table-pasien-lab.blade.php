@@ -1,9 +1,9 @@
-<div class="modal fade" id="modalPasien" tabindex="-1" aria-labelledby="modalPasienLabel" aria-hidden="true">
+<div class="modal fade" id="modalPasienLab" tabindex="-1" aria-labelledby="modalPasienLabLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="w-100">
-                    <h5 class="modal-title" id="modalPasienLabel">Cari Pasien</h5>
+                    <h5 class="modal-title" id="modalPasienLabLabel">Cari Pasien</h5>
                     <div class="form-group mt-2">
                         <label for="filterDate" class="form-label">Filter Tanggal</label>
                         <input type="date" id="filterDate" class="form-control">
@@ -12,7 +12,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-striped" id="pasienDokter">
+                <table class="table table-striped" id="pasienLab">
                     <thead>
                         <tr>
                             <th>NIK</th>
@@ -45,9 +45,9 @@
             //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
             // }
             const tipe = $('#tipe').val(); // Ambil route name
-            const url = `/get-patients-dokter/${tipe}`;
+            const url = `/get-patients-lab/${tipe}`;
             const filterDate = $('#filterDate').val();
-            table = $('#pasienDokter').DataTable({
+            table = $('#pasienLab').DataTable({
                 ajax: {
                     url: url, // Endpoint untuk mengambil data
                     type: 'GET',
@@ -104,73 +104,10 @@
     data-rm="${row.patient.no_rm}" 
     data-tanggal="${row.tanggal}" 
     data-doctor="${row.doctor}" 
-    data-kunjungan="${row.kunjungan}" 
-    data-kartu="${row.patient.jenis_kartu}" 
-    data-nomor="${row.patient.nomor_kartu}" 
-    data-faskes="${row.faskes}" 
-    data-sistol="${row.sistol}" 
-    data-diastol="${row.diastol}" 
-    data-beratbadan="${row.beratBadan}" 
-    data-tinggibadan="${row.tinggiBadan}" 
-    data-lingkarpinggang="${row.lingkarPinggang}" 
-    data-gula="${row.gula}" 
-    data-merokok="${row.merokok}" 
-    data-fisik="${row.fisik}" 
-    data-garam="${row.garam}" 
-    data-gulalebih="${row.gula_lebih}" 
-    data-lemak="${row.lemak}" 
-    data-alkohol="${row.alkohol}" 
-    data-hidup="${row.hidup}" 
-    data-buahsayur="${row.buah_sayur}" 
-    data-hasiliva="${row.hasil_iva}" 
-    data-tindakiva="${row.tindak_iva}" 
-    data-hasilsadanis="${row.hasil_sadanis}" 
-    data-tindaksadanis="${row.tindak_sadanis}" 
-    data-konseling="${row.konseling}" 
-    data-car="${row.car}" 
-    data-rujukubm="${row.rujuk_ubm}" 
-    data-kondisi="${row.kondisi}" 
-    data-edukasi="${row.edukasi}" 
-    data-riwayatpenyakitkeluarga='${JSON.stringify(row.riwayat_penyakit_keluarga)}' 
-    data-riwayatpenyakittidakmenular='${JSON.stringify(row.riwayat_penyakit_tidak_menular)}' 
-    data-keluhan="${row.keluhan}" 
-    data-diagnosa='${JSON.stringify(row.diagnosa)}' 
-    data-tindakan="${row.tindakan}" 
-    data-rujukrs="${row.rujuk_rs}" 
-    data-keterangan="${row.keterangan}" 
-    data-nadi="${row.nadi}" 
-    data-nafas="${row.nafas}" 
-    data-suhu="${row.suhu}" 
-    data-mataanemia="${row.mata_anemia}" 
-    data-pupil="${row.pupil}" 
-    data-ikterus="${row.ikterus}" 
-    data-udempalpebral="${row.udem_palpebral}" 
-    data-nyeritekan="${row.nyeri_tekan}" 
-    data-peristaltik="${row.peristaltik}" 
-    data-ascites="${row.ascites}" 
-    data-lokasiabdomen="${row.lokasi_abdomen}" 
-    data-thorax="${row.thorax}" 
-    data-thoraxbj="${row.thorax_bj}" 
-    data-paru="${row.paru}" 
-    data-suara-nafas="${row.suara_nafas}" 
-    data-ronchi="${row.ronchi}" 
-    data-wheezing="${row.wheezing}" 
-    data-ekstremitas="${row.ekstremitas}" 
-    data-edema="${row.edema}" 
-    data-tonsil="${row.tonsil}" 
-    data-fharing="${row.fharing}" 
-    data-kelenjar="${row.kelenjar}" 
-    data-genetalia="${row.genetalia}" 
-    data-warnakulit="${row.warna_kulit}" 
-    data-turgor="${row.turgor}" 
-    data-neurologis="${row.neurologis}" 
+    data-kunjungan="${row.kunjungan}"    
+    data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}"    
     data-hasillab="${row.hasil_lab}" 
-     data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}" 
-    data-hamil="${row.hamil}" 
-    data-tipe="${row.tipe}" 
-    data-icd10="${row.icd10}" 
-    data-oralit="${row.oralit}" 
-    data-zinc="${row.zinc}">
+">
     Pilih
 </button>
 
@@ -184,7 +121,7 @@
             });
         }
         $('#filterDate').on('change', function() {
-            if ($.fn.DataTable.isDataTable('#pasienDokter')) {
+            if ($.fn.DataTable.isDataTable('#pasienLab')) {
                 table.destroy(); // Hancurkan DataTables yang ada
             }
             initializeTable(); // Inisialisasi ulang dengan filter baru
@@ -195,6 +132,7 @@
         $(document).on('click', '.btnPilihPasien', function() {
 
             const data = $(this).data();
+            console.log("Data Pasien:", data);
             // Assuming 'data.dob' contains the date of birth, e.g., "1990-01-01"
             var dob = data.age; // data.dob should be in the format 'YYYY-MM-DD'
 
@@ -208,7 +146,7 @@
 
             // Get the age
             var age = calculateAge(dob);
-            // Tampilkan data pasienDokter di elemen luar modal
+            // Tampilkan data pasienLab di elemen luar modal
             $('#displayNIK').text(data.nik);
             $('#displayName').text(data.name);
             $('#displayGender').text(data.gender);
@@ -219,9 +157,9 @@
             $('#displayEducation').text(data.education);
             $('#displayJob').text(data.job);
             $('#displayRmNumber').text(data.rm);
-            console.log(data.tindakan);
+
             const actionId = data.id;
-            const actionUrl = "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__',
+            const actionUrl = "{{ route('action.update.lab', '__ID__') }}".replace('__ID__',
                 actionId);
             $('#addPatientForm').attr('action', actionUrl);
             // Set nilai ID ke input form
@@ -246,58 +184,10 @@
 
 
             $('#kunjungan').val(data.kunjungan);
-            $('#wilayah_faskes').val(data.faskes);
-            $('#sistol').val(data.sistol);
-            $('#diastol').val(data.diastol);
-            $('#berat_badan').val(data.beratbadan);
-            $('#tinggi_badan').val(data.tinggibadan);
-            $('#ling_pinggang').val(data.lingkarpinggang);
-            $('#gula').val(data.gula);
-            $('#nadi').val(data.nadi);
-            $('#nafas').val(data.nafas);
-            $('#suhu').val(data.suhu);
-            $('#merokok').val(data.merokok);
-            $('#aktivitas_fisik').val(data.fisik);
-            $('#gula_lebih').val(data.gulalebih);
-            $('#garam').val(data.garam);
-            $('#buah_sayur').val(data.buahsayur);
-            $('#alkohol').val(data.alkohol);
-            $('#kondisi_hidup').val(data.hidup);
-            $('#hasil_iva').val(data.hasiliva);
-            $('#tindak_iva').val(data.tindak_iva);
-            $('#hasil_sadanis').val(data.hasilsadanis);
-            $('#tindak_sadanis').val(data.tindaksadanis);
-            $('#konseling').val(data.konseling);
-            $('#car').val(data.car);
-            $('#rujuk_ubm').val(data.rujukubm);
-            $('#kondisi').val(data.kondisi);
-            $('#edukasi').val(data.edukasi);
-            $('#mata_anemia').val(data.mataanemia);
-            $('#ikterus').val(data.ikterus);
-            $('#udem_palpebral').val(data.udempalpebral);
-            $('#nyeri_tekan').val(data.nyeritekan);
-            $('#peristaltik').val(data.peristaltik);
-            $('#lokasi_abdomen').val(data.lokasiabdomen);
-            $('#thorax_bj').val(data.thoraxbj);
-            $('#paru').val(data.paru);
-            $('#suara_nafas').val(data.suaranafas);
-            $('#ronchi').val(data.ronchi);
-            $('#wheezing').val(data.wheezing);
-            $('#ekstremitas').val(data.ekstremitas);
-            $('#edema').val(data.edema);
-            $('#tonsil').val(data.tonsil);
-            $('#fharing').val(data.fharing);
-            $('#kelenjar').val(data.kelenjar);
-            $('#genetalia').val(data.genetalia);
-            $('#warna_kulit').val(data.warnakulit);
-            $('#turgor').val(data.turgor);
-            $('#neurologis').val(data.neurologis);
-            $('#hasil_lab').val(data.hasillab);
-            $('#riwayat_penyakit_keluarga').val(data.riwayatpenyakitkeluarga).trigger('change');
-            $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
 
-            $('#riwayat_penyakit_tidak_menular').val(data.riwayatpenyakittidakmenular).trigger(
-                'change');
+            $('#hasillab').val(data.hasillab);
+            $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
+            $('#riwayat_penyakit_keluarga').val(data.riwayatpenyakitkeluarga).trigger('change');
 
             $('#keluhan').val(data.keluhan);
             $('#diagnosa').val(data.diagnosa).trigger('change');
@@ -311,15 +201,14 @@
             const patientId = $(this).data('id-patient');
             // console.log($('#patientDetails').show());
             $('#btnCariskrining').data('id', patientId);
-            console.log('id patient', patientId);
 
 
             // Tutup modal
-            $('#modalPasien').modal('hide');
+            $('#modalPasienLab').modal('hide');
         });
 
         // Inisialisasi ulang DataTables saat modal ditampilkan
-        $('#modalPasien').on('shown.bs.modal', function() {
+        $('#modalPasienLab').on('shown.bs.modal', function() {
             initializeTable();
         });
     });

@@ -790,10 +790,10 @@ class KiaController extends Controller
                 $malaria->surveyKontak()->create($surveyData);
             }
         }
-        if ($request->has('surveyKontak')) {
-            foreach ($request->input('surveyKontak') as $surveyData) {
+        if ($request->has('surveyNyamuk')) {
+            foreach ($request->input('surveyNyamuk') as $surveyData) {
                 $malaria->surveyNyamuk()->create($surveyData);
-                $malaria->surveyKontak()->create($surveyData);
+
             }
         }
         if ($request->has('kelompok')) {
@@ -804,140 +804,7 @@ class KiaController extends Controller
         // Redirect with success message
         return redirect()->back()->with('success', 'Data Malaria created successfully!');
     }
-  public function storeMalaria(Request $request)
-    {
-        // Define validation rules
-        $validator = Validator::make($request->all(), [
-            'pasien' => 'required',
-            'alamat' => 'nullable',
-            'gejala' => 'nullable',
-            'jenis_wilayah' => 'nullable',
-            'tanggal_gejala' => 'nullable|date',
-            'hasil_darah' => 'nullable',
-            'jenis_parasit' => 'nullable',
-            'riwayat_malaria' => 'nullable',
-            'waktu' => 'nullable',
-            'jenis_parasit_malaria' => 'nullable',
-            'jenis_obat_malaria' => 'nullable',
-            'tanggal_diagnosis' => 'nullable|date',
-            'diagnosis' => 'nullable',
-            'fasyankes' => 'nullable',
-            'perawatan' => 'nullable',
-            'no_rm' => 'nullable',
-            'metode_diagnosis' => 'nullable',
-            'jenis_parasit_malaria_sebelumnya' => 'nullable',
-            'riwayat_tanggal_gejala' => 'nullable|date',
-            'riwaya_kasus_malaria' => 'nullable',
-            'kasus_waktu' => 'nullable',
-            'kasus_jenis_parasit' => 'nullable',
-            'kasus_jenis_obat' => 'nullable',
-            'tanggal_pengobatan' => 'nullable|date',
-            'jmlh_obat_dhp' => 'nullable|integer',
-            'jmlh_obat_primaquin' => 'nullable|integer',
-            'jmlh_obat_artesunat' => 'nullable|integer',
-            'jmlh_obat_artemeter' => 'nullable|integer',
-            'jmlh_obat_kina' => 'nullable|integer',
-            'jmlh_obat_klindamisin' => 'nullable|integer',
-            'obat_habis' => 'nullable|boolean',
-            'riwayat_desa_1' => 'nullable',
-            'riwayat_desa_2' => 'nullable',
-            'riwayat_desa_3' => 'nullable',
-            'riwayat_kecamatan_1' => 'nullable',
-            'riwayat_kecamatan_2' => 'nullable',
-            'riwayat_kecamatan_3' => 'nullable',
-            'riwayat_kabupaten_1' => 'nullable',
-            'riwayat_kabupaten_2' => 'nullable',
-            'riwayat_kabupaten_3' => 'nullable',
-            'riwayat_provinsi_1' => 'nullable',
-            'riwayat_provinsi_2' => 'nullable',
-            'riwayat_provinsi_3' => 'nullable',
-            'riwayat_negara_1' => 'nullable',
-            'riwayat_negara_2' => 'nullable',
-            'riwayat_negara_3' => 'nullable',
-            'riwayat_jenis_wilayah_1' => 'nullable',
-            'riwayat_jenis_wilayah_3' => 'nullable',
-            'riwayat_kepentingan_1' => 'nullable',
-            'riwayat_kepentingan_2' => 'nullable',
-            'riwayat_kepentingan_3' => 'nullable',
-            'obat_profilaksis' => 'nullable',
-            'transfusi_darah' => 'nullable|boolean',
-            'kontak_kasus' => 'nullable|boolean',
-            'import_desa' => 'nullable',
-            'import_kabupaten' => 'nullable',
-            'import_provinsi' => 'nullable',
-            'import_negara' => 'nullable',
-            'kegiatan1' => 'nullable',
-            'tempat1' => 'nullable',
-            'kegiatan2' => 'nullable',
-            'tempat2' => 'nullable',
-            'kegiatan3' => 'nullable',
-            'tempat3' => 'nullable',
-            'kegiatan4' => 'nullable',
-            'tempat4' => 'nullable',
-            'kegiatan5' => 'nullable',
-            'tempat5' => 'nullable',
-            'kegiatan6' => 'nullable',
-            'tempat6' => 'nullable',
-            'kegiatan_sosial' => 'nullable',
-            'kabupaten' => 'nullable',
-            'kecamatan' => 'nullable',
-            'desa' => 'nullable',
-            'dusun' => 'nullable',
-            'tanggal_survey' => 'nullable|date',
-            'kolektor' => 'nullable',
-            'kesimpulan' => 'nullable',
-            'survey.*.habitat' => 'nullable|string',
-            'survey.*.ph' => 'nullable|string',
-            'survey.*.sal' => 'nullable|string',
-            'survey.*.suhu' => 'nullable|string',
-            'survey.*.kond' => 'nullable|string',
-            'survey.*.kept' => 'nullable|string',
-            'survey.*.dasar' => 'nullable|string',
-            'survey.*.air' => 'nullable|string',
-            'survey.*.sktr' => 'nullable|string',
-            'survey.*.teduh' => 'nullable|string',
-            'survey.*.predator' => 'nullable|string',
-            'survey.*.larva_an' => 'nullable|string',
-            'survey.*.larva_cx' => 'nullable|string',
-            'survey.*.jarak_kamp' => 'nullable|string',
-            'survey.*.klp_habitat' => 'nullable|string',
-            'survey.*.gps' => 'nullable|string',
-            'survey.*.catatan' => 'nullable|string',
-            'kelompok.*.nama' => 'nullable|string',
-            'kelompok.*.alamat' => 'nullable|string',
-            'survey.*.nama' => 'nullable|string',
-            'survey.*.alamat' => 'nullable|string',
-            'survey.*.hub_kasus' => 'nullable|string',
-            'survey.*.tgl_pengambilan_darah' => 'nullable|string',
-            'survey.*.tgl_diagnosis' => 'nullable|string',
-            'survey.*.hasil_pemeriksaan' => 'nullable|string',
-        ]);
 
-        // Check if validation fails
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->with('error', 'There were validation errors.')->withInput();
-        }
-
-        $malaria = Malaria::create(
-            array_merge($validator->validated(), [
-                'klaster' => $request->klaster,
-                'poli' => $request->poli,
-            ]),
-        );
-        if ($request->has('survey')) {
-            foreach ($request->input('survey') as $surveyData) {
-                $malaria->surveyNyamuk()->create($surveyData);
-                $malaria->surveyKontak()->create($surveyData);
-            }
-        }
-        if ($request->has('kelompok')) {
-            foreach ($request->input('kelompok') as $surveyData) {
-                $malaria->kelompokMalaria()->create($surveyData);
-            }
-        }
-        // Redirect with success message
-        return redirect()->back()->with('success', 'Data Malaria created successfully!');
-    }
 
     public function showTripleEliminasi($id)
     {

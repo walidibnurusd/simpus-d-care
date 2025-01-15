@@ -1,5 +1,5 @@
 @extends('layouts.simple.master')
-@section('title', 'Tindakan')
+@section('title', 'Tindakan Laboratorium')
 
 @section('css')
 
@@ -10,7 +10,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>Tindakan Dokter</h3>
+    <h3>Tindakan Laboratorium</h3>
 @endsection
 
 @section('breadcrumb-items')
@@ -31,13 +31,12 @@
             <div class="col-12 mb-4">
                 <div class="button-container">
                     <!-- Tombol Tambah -->
-                    @if (Auth::user()->role == 'dokter')
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                            data-bs-target="#addActionModal">
-                            Tambah
-                            <i class="fas fa-plus ms-2"></i> <!-- Ikon Tambah -->
-                        </button>
-                    @endif
+
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addActionModal">
+                        Tambah
+                        <i class="fas fa-plus ms-2"></i> <!-- Ikon Tambah -->
+                    </button>
+
                     <!-- Form untuk Print dan Filter -->
                     <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3">
                         <div class="row">
@@ -74,7 +73,7 @@
                 </div>
 
 
-                @include('component.modal-add-action-dokter')
+                @include('component.modal-add-action-lab')
 
                 <div class="card mb-4">
                     <div class="card-header pb-0">
@@ -102,33 +101,18 @@
                                             UMUR</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            KARTU</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            KELUHAN</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             DIAGNOSA</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            TINDAKAN</th>
+                                            PEMERIKSAAN PENUNJANG</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            OBAT</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            RUJUK RS</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            KUNJ</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            FASKES</th>
-                                        @if (Auth::user()->role == 'dokter')
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                AKSI
-                                            </th>
-                                        @endif
+                                            HASIL LAB</th>
+
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            AKSI
+                                        </th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -156,12 +140,6 @@
                                                     {{ \Carbon\Carbon::parse($action->patient->dob)->age }} Tahun</p>
                                                 <!-- Ganti dengan perhitungan umur jika perlu -->
                                             </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->kartu }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
-                                            </td>
                                             @php
                                                 // Assuming $actions->diagnosa is an array of Diagnosis IDs
                                                 $diagnosaIds = $action->diagnosa; // This should be an array of IDs.
@@ -173,52 +151,28 @@
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->tindakan) }}
+                                                    {{ ucwords($action->pemeriksaan_penunjang) }}
                                                 </p>
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->obat) }}
+                                                    {{ ucwords($action->hasil_lab) }}
                                                 </p>
                                             </td>
+
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->hospitalReferral)->name }}</p>
+                                                <div class="action-buttons">
+                                                    <!-- Tombol Edit -->
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-sm text-white font-weight-bold"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editActionModal{{ $action->id }}">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    @include('component.modal-edit-action-lab')
+                                                </div>
                                             </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->kunjungan) }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->faskes) }}
-                                                </p>
-                                            </td>
-                                            @if (Auth::user()->role == 'dokter')
-                                                <td>
-                                                    <div class="action-buttons">
-                                                        <!-- Tombol Edit -->
-                                                        <button type="button"
-                                                            class="btn btn-primary btn-sm text-white font-weight-bold"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editActionModal{{ $action->id }}">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        @include('component.modal-edit-action')
-                                                        <!-- Tombol Delete -->
-                                                        <form action="{{ route('action.destroy', $action->id) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                class="btn btn-danger btn-sm text-white font-weight-bold"
-                                                                onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            @endif
+
                                         </tr>
                                     @endforeach
                                 </tbody>

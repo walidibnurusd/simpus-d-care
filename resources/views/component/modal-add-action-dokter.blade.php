@@ -366,10 +366,11 @@
                                 </div>
                                 <div class="container">
                                     <div class="row g-2">
-                                        <div class="col-md-12 ">
+                                        <div class="col-md-12">
                                             <label for="hasil_lab" style="color: green;">Hasil Laboratorium</label>
                                             <input type="text" class="form-control" id="hasil_lab"
-                                                name="hasil_lab" placeholder="Hasil Laboratorium">
+                                                name="hasil_lab" placeholder="Hasil Laboratorium"
+                                                data-role="{{ auth()->user()->role }}">
                                         </div>
                                     </div>
                                 </div>
@@ -499,13 +500,14 @@
                     </div>
 
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary">Simpan Data</button>
+                </form>
+            </div>
         </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-        <button type="submit" class="btn btn-primary">Simpan Data</button>
-        </form>
-    </div>
+
 </div>
 
 
@@ -566,6 +568,11 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById("hasil_lab");
+        const role = input.dataset.role;
+        if (role === "dokter") {
+            input.readOnly = true;
+        }
         // Display success message if session has a success
         @if (session('success'))
             Swal.fire({
