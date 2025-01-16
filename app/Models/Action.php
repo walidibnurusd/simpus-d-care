@@ -76,7 +76,7 @@ class Action extends Model
         'imunisasi_tt',
         'tablet_fe',
         'gravida',
-        'portus',
+        'partus',
         'abortus',
         'proteinuria',
         'hiv',

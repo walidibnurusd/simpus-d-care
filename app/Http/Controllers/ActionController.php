@@ -451,6 +451,27 @@ class ActionController extends Controller
                 'hasil_lab' => 'nullable|string|max:255',
                 'obat' => 'nullable',
                 'pemeriksaan_penunjang' => 'nullable',
+                'usia_kehamilan' => 'nullable',
+                'jenis_anc' => 'nullable',
+                'lingkar_lengan_atas' => 'nullable',
+                'tinggi_fundus_uteri' => 'nullable',
+                'presentasi_janin' => 'nullable',
+                'denyut_jantung' => 'nullable',
+                'kaki_bengkak' => 'nullable',
+                'imunisasi_tt' => 'nullable',
+                'tablet_fe' => 'nullable',
+                'gravida' => 'nullable',
+                'partus' => 'nullable',
+                'abortus' => 'nullable',
+                'proteinuria' => 'nullable',
+                'hiv' => 'nullable',
+                'sifilis' => 'nullable',
+                'hepatitis' => 'nullable',
+                'periksa_usg' => 'nullable',
+                'hasil_usg' => 'nullable',
+                'treatment_anc' => 'nullable',
+                'kesimpulan' => 'nullable',
+                'tanggal_kembali' => 'nullable',
             ]);
 
             // Update the action with the validated data
@@ -460,6 +481,8 @@ class ActionController extends Controller
                     $route = 'action.dokter.index';
                 } elseif ($action->tipe === 'poli-gigi') {
                     $route = 'action.dokter.gigi.index';
+                } elseif ($action->tipe === 'poli-kia') {
+                    $route = 'action.kia.dokter.index';
                 } else {
                     $route = 'action.dokter.ugd.index';
                 }
@@ -580,6 +603,27 @@ class ActionController extends Controller
                 'riwayat_pengobatan' => 'nullable',
                 'riwayat_alergi' => 'nullable',
                 'pemeriksaan_penunjang' => 'nullable',
+                'usia_kehamilan' => 'nullable',
+                'jenis_anc' => 'nullable',
+                'lingkar_lengan_atas' => 'nullable',
+                'tinggi_fundus_uteri' => 'nullable',
+                'presentasi_janin' => 'nullable',
+                'denyut_jantung' => 'nullable',
+                'kaki_bengkak' => 'nullable',
+                'imunisasi_tt' => 'nullable',
+                'tablet_fe' => 'nullable',
+                'gravida' => 'nullable',
+                'partus' => 'nullable',
+                'abortus' => 'nullable',
+                'proteinuria' => 'nullable',
+                'hiv' => 'nullable',
+                'sifilis' => 'nullable',
+                'hepatitis' => 'nullable',
+                'periksa_usg' => 'nullable',
+                'hasil_usg' => 'nullable',
+                'treatment_anc' => 'nullable',
+                'kesimpulan' => 'nullable',
+                'tanggal_kembali' => 'nullable',
             ]);
 
             // Update the action with the validated data
@@ -589,9 +633,12 @@ class ActionController extends Controller
                 $route = 'action.dokter.index';
             } elseif ($action->tipe === 'poli-gigi') {
                 $route = 'action.dokter.gigi.index';
+            } elseif ($action->tipe === 'poli-kia') {
+                $route = 'action.kia.dokter.index';
             } else {
                 $route = 'action.dokter.ugd.index';
             }
+
             return redirect()->route($route)->with('success', 'Action has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
@@ -657,6 +704,8 @@ class ActionController extends Controller
                     $route = 'action.dokter.index';
                 } elseif ($action->tipe === 'poli-gigi') {
                     $route = 'action.dokter.gigi.index';
+                } elseif ($action->tipe === 'poli-kia') {
+                    $route = 'action.kia.dokter.index';
                 } else {
                     $route = 'action.dokter.ugd.index';
                 }

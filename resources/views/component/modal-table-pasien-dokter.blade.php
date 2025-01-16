@@ -227,6 +227,7 @@
             $('#displayRmNumber').text(data.rm);
             console.log(data.tindakan);
             const actionId = data.id;
+
             const actionUrl = "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__',
                 actionId);
             $('#addPatientForm').attr('action', actionUrl);

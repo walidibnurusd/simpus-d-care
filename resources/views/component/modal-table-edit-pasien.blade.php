@@ -123,7 +123,7 @@
             $('#RmNumber{{ $action->id }}').text(data.rm);
 
             // Set nilai ID ke input form
-            console.log($('#nikEdit' + data.id));
+
 
             $('#nikEdit{{ $action->id }}').val(data.nik);
             $('#nomor_kartu{{ $action->id }}').val(data.nomor_kartu);

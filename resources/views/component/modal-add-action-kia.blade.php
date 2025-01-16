@@ -124,8 +124,8 @@
                                             <label for="wilayah_faskes">Wilayah Faskes</label>
                                             <select class="form-control" id="wilayah_faskes" name="faskes" required>
                                                 <option value="" disabled selected>Pilih Wilayah Faskes</option>
-                                                <option value="1">Ya</option>
-                                                <option value="0">Tidak</option>
+                                                <option value="ya">Ya</option>
+                                                <option value="tidak">Tidak</option>
 
                                             </select>
                                         </div>
@@ -218,7 +218,7 @@
                                         <label for="usia_hamil">Usia kehamilan </label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="usia_hamil"
-                                                name="usia_hamil" placeholder="Masukkan usia kehamilan">
+                                                name="usia_kehamilan" placeholder="Masukkan usia kehamilan">
                                             <span class="input-group-text">minggu</span>
                                         </div>
                                     </div>
@@ -261,7 +261,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="presentansi_janin">Presentasi janin</label>
-                                        <select class="form-control" id="presentansi_janin" name="presentansi_janin"
+                                        <select class="form-control" id="presentansi_janin" name="presentasi_janin"
                                             required>
                                             <option value="" disabled selected>Pilih presentasi janin
                                             </option>
@@ -498,7 +498,7 @@
 
 </div>
 
-</div>
+
 
 
 @include('component.modal-table-pasien-dokter')
@@ -516,14 +516,40 @@
         /* Pastikan dropdown Select2 berada di atas modal */
     }
 </style>
-=
 
 
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        // Display success message if session has a success
+        const selectElement = document.getElementById('riwayat_penyakit_dulu');
+        const selectPenyakitKeluargaElement = document.getElementById('riwayat_penyakit_keluarga');
+        const lainnyaContainer = document.getElementById('penyakit_lainnya_container');
+        const lainnyaTextarea = document.getElementById('penyakit_lainnya');
+        const lainnyaKeluargaContainer = document.getElementById('penyakit_lainnya_keluarga_container');
+        const lainnyaKeluargaTextarea = document.getElementById('penyakit_lainnya_keluarga');
+
+        if (selectElement && selectPenyakitKeluargaElement) {
+            selectElement.addEventListener('change', function() {
+                if (this.value === 'lainnya') {
+                    lainnyaContainer.style.display = 'block';
+                } else {
+                    lainnyaContainer.style.display = 'none';
+                    lainnyaTextarea.value = '';
+                }
+            });
+
+            selectPenyakitKeluargaElement.addEventListener('change', function() {
+                if (this.value === 'lainnya') {
+                    lainnyaKeluargaContainer.style.display = 'block';
+                } else {
+                    lainnyaKeluargaContainer.style.display = 'none';
+                    lainnyaKeluargaTextarea.value = '';
+                }
+            });
+        } else {
+            console.error("Elemen tidak ditemukan!");
+        }
         @if (session('success'))
             Swal.fire({
                 title: 'Success!',
@@ -547,4 +573,5 @@
             });
         @endif
     });
+    // Display success message if session has a success
 </script>

@@ -175,7 +175,7 @@
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
                                             </td>
-                                           
+
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
                                                     {{ ucwords($action->kunjungan) }}
@@ -194,7 +194,7 @@
                                                         data-bs-target="#editActionModal{{ $action->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    {{-- @include('component.modal-edit-action') --}}
+                                                    @include('component.modal-edit-action-kia')
                                                     <!-- Tombol Delete -->
                                                     <form action="{{ route('action.destroy', $action->id) }}"
                                                         method="POST" class="d-inline form-delete">
