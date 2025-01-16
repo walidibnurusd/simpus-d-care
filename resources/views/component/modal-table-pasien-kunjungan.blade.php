@@ -47,6 +47,12 @@
                 ajax: {
                     url: url, // Endpoint untuk mengambil data
                     type: 'GET',
+                    dataSrc: function(response) {
+                        // console.log('Response from server:', response); // Debug response
+                        // console.log(url);
+                        return response
+                            .data; // Pastikan 'data' adalah key yang mengandung array dari server
+                    },
 
                 },
                 columns: [{

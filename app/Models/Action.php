@@ -65,7 +65,27 @@ class Action extends Model
         'oralit',
         'zinc',
         'obat',
-        'pemeriksaan_penunjang'
+        'pemeriksaan_penunjang',
+        'usia_kehamilan',
+        'jenis_anc',
+        'lingkar_lengan_atas',
+        'tinggi_fundus_uteri',
+        'presentasi_janin',
+        'denyut_jantung',
+        'kaki_bengkak',
+        'imunisasi_tt',
+        'tablet_fe',
+        'gravida',
+        'portus',
+        'abortus',
+        'proteinuria',
+        'hiv',
+        'sifilis',
+        'hepatitis',
+        'periksa_usg',
+        'hasil_usg',
+        'treatment_anc',
+        'tanggal_kembali',
     ];
 
     protected $casts = [

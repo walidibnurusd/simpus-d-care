@@ -272,6 +272,8 @@
                                     <option value="poli-umum">Poli Umum</option>
                                     <option value="poli-gigi">Poli Gigi</option>
                                     <option value="ruang-tindakan">Ruang Tindakan</option>
+                                    <option value="poli-kia">Poli KIA</option>
+                                    <option value="poli-kb">Poli KB</option>
                                 </select>
                             </div>
                         </div>

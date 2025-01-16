@@ -103,15 +103,17 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             KELUHAN</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            DIAGNOSA</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            TINDAKAN</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            RUJUK RS</th>
+                                        @if ($routeName != 'action.kia.index')
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                DIAGNOSA</th>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                TINDAKAN</th>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                RUJUK RS</th>
+                                        @endif
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             KUNJ</th>
@@ -149,34 +151,65 @@
                                                 <!-- Ganti dengan perhitungan umur jika perlu -->
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->kartu }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">
+                                                    @switch($action->patient->jenis_kartu)
+                                                        @case('pbi')
+                                                            PBI (KIS)
+                                                        @break
+
+                                                        @case('askes')
+                                                            AKSES
+                                                        @break
+
+                                                        @case('jkn_mandiri')
+                                                            JKN Mandiri
+                                                        @break
+
+                                                        @case('umum')
+                                                            Umum
+                                                        @break
+
+                                                        @case('jkd')
+                                                            JKD
+                                                        @break
+
+                                                        @default
+                                                            Tidak Diketahui
+                                                    @endswitch
+                                                </p>
                                             </td>
+
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
                                             </td>
-                                            @php
+                                            @if ($routeName != 'action.kia.index')
+                                                @php
 
-                                                $diagnosaIds =
-                                                    is_array($action->diagnosa) ||
-                                                    $action->diagnosa instanceof \Countable
-                                                        ? $action->diagnosa
-                                                        : [];
-                                                $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
-                                            @endphp
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ $diagnosa->isNotEmpty() ? implode(', ', $diagnosa->pluck('name')->toArray()) : '' }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->tindakan) }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->hospitalReferral)->name }}</p>
-                                            </td>
+                                                    $diagnosaIds =
+                                                        is_array($action->diagnosa) ||
+                                                        $action->diagnosa instanceof \Countable
+                                                            ? $action->diagnosa
+                                                            : [];
+                                                    $diagnosa = App\Models\Diagnosis::whereIn(
+                                                        'id',
+                                                        $diagnosaIds,
+                                                    )->get();
+                                                @endphp
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $diagnosa->isNotEmpty() ? implode(', ', $diagnosa->pluck('name')->toArray()) : '' }}
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ ucwords($action->tindakan) }}
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ optional($action->hospitalReferral)->name }}</p>
+                                                </td>
+                                            @endif
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
                                                     {{ ucwords($action->kunjungan) }}
@@ -271,10 +304,7 @@
                 table.draw();
             });
 
-            // // Clear filters if either date is changed
-            // $('#start_date, #end_date').on('change', function() {
-            //     table.draw();
-            // });
+
         });
     </script>
 

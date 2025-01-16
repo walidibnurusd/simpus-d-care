@@ -32,7 +32,8 @@
     $(document).ready(function() {
 
         let table; // Deklarasi variabel DataTable
-
+        const tipe = $('#tipe').val(); // Ambil route name
+        const url = `/get-patients/${tipe}`;
         // Fungsi untuk menginisialisasi DataTable
         function initializeTable() {
             // if ($.fn.DataTable.isDataTable('#pasien')) {
@@ -41,8 +42,13 @@
 
             table = $('#pasien').DataTable({
                 ajax: {
-                    url: '/get-patients', // Endpoint untuk mengambil data
+                    url: url,
                     type: 'GET',
+                    dataSrc: function(response) {
+                        console.log('Response from server:', response); // Debug response
+                        return response
+                            .data; // Pastikan 'data' adalah key yang mengandung array dari server
+                    },
 
                 },
                 columns: [{

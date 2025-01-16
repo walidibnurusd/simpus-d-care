@@ -276,77 +276,83 @@
 
                                 </div>
                             </div>
-                            <div style="display: flex; align-items: center; text-align: center;">
-                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                                <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan</span>
-                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                            </div>
-
-                            <div class="col-12">
-                                <div class="row g-2">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="sistol">Sistol</label>
-                                            <input type="text" class="form-control" id="sistol" name="sistol"
-                                                placeholder="Masukkan Sistol" required value="{{ $action->sistol }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="diastol">Diastol</label>
-                                            <input type="text" class="form-control" id="diastol" name="diastol"
-                                                placeholder="Masukkan Diastol" required
-                                                value="{{ $action->diastol }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="berat_badan">Berat Badan</label>
-                                            <input type="text" class="form-control" id="berat_badan"
-                                                name="beratBadan" placeholder="Masukkan Berat Badan" required
-                                                value="{{ $action->beratBadan }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="tinggi_badan">Tinggi Badan</label>
-                                            <input type="text" class="form-control" id="tinggi_badan"
-                                                name="tinggiBadan" placeholder="Masukkan Tinggi Badan" required
-                                                value="{{ $action->tinggiBadan }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="ling_pinggang">Ling. Pinggang</label>
-                                            <input type="text" class="form-control" id="ling_pinggang"
-                                                name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang" required
-                                                value="{{ $action->lingkarPinggang }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="nadi">Nadi</label>
-                                            <input type="text" class="form-control" id="nadi" name="nadi"
-                                                placeholder="Masukkan Nadi" value="{{ $action->nadi }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="nafas">Pernafasan</label>
-                                            <input type="text" class="form-control" id="nafas" name="nafas"
-                                                placeholder="Masukkan Nafas" value="{{ $action->nafas }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="suhu">Suhu</label>
-                                            <input type="text" class="form-control" id="suhu" name="suhu"
-                                                placeholder="Masukkan Suhu" value="{{ $action->suhu }}"required>
-                                        </div>
-                                    </div>
-
+                            @if ($routeName != 'action.kia.index')
+                                <div style="display: flex; align-items: center; text-align: center;">
+                                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                    <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan</span>
+                                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                                 </div>
-                            </div>
+
+                                <div class="col-12">
+                                    <div class="row g-2">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="sistol">Sistol</label>
+                                                <input type="text" class="form-control" id="sistol"
+                                                    name="sistol" placeholder="Masukkan Sistol" required
+                                                    value="{{ $action->sistol }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="diastol">Diastol</label>
+                                                <input type="text" class="form-control" id="diastol"
+                                                    name="diastol" placeholder="Masukkan Diastol" required
+                                                    value="{{ $action->diastol }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="berat_badan">Berat Badan</label>
+                                                <input type="text" class="form-control" id="berat_badan"
+                                                    name="beratBadan" placeholder="Masukkan Berat Badan" required
+                                                    value="{{ $action->beratBadan }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="tinggi_badan">Tinggi Badan</label>
+                                                <input type="text" class="form-control" id="tinggi_badan"
+                                                    name="tinggiBadan" placeholder="Masukkan Tinggi Badan" required
+                                                    value="{{ $action->tinggiBadan }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="ling_pinggang">Ling. Pinggang</label>
+                                                <input type="text" class="form-control" id="ling_pinggang"
+                                                    name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang"
+                                                    required value="{{ $action->lingkarPinggang }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="nadi">Nadi</label>
+                                                <input type="text" class="form-control" id="nadi"
+                                                    name="nadi" placeholder="Masukkan Nadi"
+                                                    value="{{ $action->nadi }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="nafas">Pernafasan</label>
+                                                <input type="text" class="form-control" id="nafas"
+                                                    name="nafas" placeholder="Masukkan Nafas"
+                                                    value="{{ $action->nafas }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="suhu">Suhu</label>
+                                                <input type="text" class="form-control" id="suhu"
+                                                    name="suhu" placeholder="Masukkan Suhu"
+                                                    value="{{ $action->suhu }}"required>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            @endif
                             @if ($action->tipe == 'poli-umum' && Auth::user()->role == 'dokter')
                                 <div style="display: flex; align-items: center; text-align: center;">
                                     <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">

@@ -151,7 +151,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/tindakan/lab/poli-umum', [ActionController::class, 'indexLab'])->name('action.lab.index');
     Route::get('/tindakan/lab/poli-gigi', [ActionController::class, 'indexGigiLab'])->name('action.lab.gigi.index');
     Route::get('/tindakan/lab/ugd', [ActionController::class, 'indexUgdLab'])->name('action.lab.ugd.index');
-    Route::get('/tindakan/kia', [ActionController::class, 'indexKia'])->name('action.kia.index');
+    Route::get('/tindakan/kia', [ActionController::class, 'indexDokterKia'])->name('action.kia.dokter.index');
+    Route::get('/kajian-awal/kia', [ActionController::class, 'indexKia'])->name('action.kia.index');
     Route::post('/tindakan', [ActionController::class, 'store'])->name('action.store');
     Route::POST('/tindakan/{id}', [ActionController::class, 'update'])->name('action.update');
     Route::POST('/tindakan-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
@@ -394,9 +395,11 @@ Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('g
 Route::get('/get-skrining/{id}', [SkriningController::class, 'getSkriningPatient'])->name('get-skrining-patient');
 Route::get('/get-patients/poli-umum', [PatientsController::class, 'getPatientsPoliUmum'])->name('get-patients-poli-umum');
 Route::get('/get-patients/poli-gigi', [PatientsController::class, 'getPatientsPoliGigi'])->name('get-patients-poli-gigi');
+Route::get('/get-patients/poli-kia', [PatientsController::class, 'getPatientsPoliKia'])->name('get-patients-poli-kia');
 Route::get('/get-patients/ruang-tindakan', [PatientsController::class, 'getPatientsRuangTindakan'])->name('get-patients-ruang-tindakan');
 Route::get('/get-patients-dokter/poli-umum', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
 Route::get('/get-patients-dokter/poli-gigi', [PatientsController::class, 'getPatientsDokterGigi'])->name('get-patients-dokter-gigi');
+Route::get('/get-patients-dokter/poli-kia', [PatientsController::class, 'getPatientsDokterKia'])->name('get-patients-dokter-kia');
 Route::get('/get-patients-dokter/ruang-tindakan', [PatientsController::class, 'getPatientsDokterRuangTindakan'])->name('get-patients-dokter-ruang-tindakan');
 Route::get('/get-patients-lab/poli-umum', [PatientsController::class, 'getPatientsLab'])->name('get-patients-lab');
 Route::get('/get-patients-lab/poli-gigi', [PatientsController::class, 'getPatientsLabGigi'])->name('get-patients-lab-gigi');

@@ -179,11 +179,11 @@
 
                             <ul class="sidebar-submenu">
                                 @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
-                                    <li><a href="{{ route('action.kia.index') }}">Tindakan</a></li>
+                                    <li><a href="{{ route('action.kia.dokter.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @elseif(Auth::user()->role == 'admin-kajian-awal')
-                                    {{-- <li><a href="{{ route('action.index.ugd') }}">Kajian Awal</a></li>
-                                    <li><a href="{{ route('report.index.ugd') }}">Laporan</a></li> --}}
+                                    <li><a href="{{ route('action.kia.index') }}">Kajian Awal</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @else
                                     {{-- <li><a href="{{ route('action.lab.ugd.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li> --}}

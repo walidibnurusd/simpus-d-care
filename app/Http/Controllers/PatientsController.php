@@ -198,6 +198,68 @@ class PatientsController extends Controller
             'data' => $formattedData,
         ]);
     }
+    public function getPatientsPoliKia(Request $request)
+    {
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+
+        $page = $start / $length + 1;
+
+        $query = Patients::with([
+            'genderName',
+            'educations',
+            'occupations',
+            'kunjungans' => function ($q) {
+                $q->where('poli', 'poli-kia')->select('id', 'pasien', 'created_at');
+            },
+        ])->whereHas('kunjungans', function ($q) {
+            $q->where('poli', 'poli-kia');
+        });
+
+        if (!empty($searchValue)) {
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                    ->orWhereHas('genderName', function ($q) use ($searchValue) {
+                        $q->where('gender', 'LIKE', "%{$searchValue}%");
+                    });
+            });
+        }
+
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        $data = $patients->items();
+        $formattedData = [];
+        foreach ($data as $patient) {
+            $kunjunganCreatedAt = optional($patient->kunjungans->first())->created_at;
+            $formattedData[] = [
+                'id' => $patient->id,
+                'name' => $patient->name,
+                'nik' => $patient->nik,
+                'address' => $patient->address,
+                'jenis_kartu' => $patient->jenis_kartu,
+                'nomor_kartu' => $patient->nomor_kartu,
+                'blood_type' => $patient->blood_type,
+                'no_rm' => $patient->no_rm,
+                'dob' => $patient->dob,
+                'phone' => $patient->phone,
+                'gender' => $patient->genderName->gender ?? '-',
+                'education' => $patient->educations->name ?? '-',
+                'occupation' => $patient->occupations->name ?? '-',
+                'created_at' => $kunjunganCreatedAt ? $kunjunganCreatedAt->format('d-m-Y H:i:s') : '-',
+            ];
+        }
+
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $formattedData,
+        ]);
+    }
 
     public function getPatientsRuangTindakan(Request $request)
     {
@@ -341,6 +403,41 @@ class PatientsController extends Controller
         $page = $start / $length + 1;
 
         $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'ruang-tindakan');
+
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
+    }
+      public function getPatientsDokterKia(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kia');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);

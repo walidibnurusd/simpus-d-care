@@ -6,6 +6,7 @@ use App\Models\Action;
 use App\Models\Diagnosis;
 use App\Models\Disease;
 use App\Models\Doctor;
+use App\Models\Kia;
 use App\Models\User;
 use App\Models\Hospital;
 use App\Models\Patients;
@@ -255,17 +256,12 @@ class ActionController extends Controller
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
-    public function indexKia(Request $request)
+    public function indexDokterKia(Request $request)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
-
-        // $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
-
-        // $penyakit = Disease::all();
-        // $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'kia');
+        $actionsQuery = Action::where('tipe', 'poli-kia')->whereNotNull('usia_kehamilan');
 
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -278,6 +274,24 @@ class ActionController extends Controller
         $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
         return view('content.action.index-kia', compact('actions', 'dokter', 'routeName'));
+    }
+    public function indexKia(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dokter = User::where('role', 'dokter')->get();
+        $actionsQuery = Action::where('tipe', 'poli-kia');
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
+        $routeName = $request->route()->getName();
+        return view('content.action.index', compact('actions', 'dokter', 'routeName'));
     }
     public function actionReport(Request $request)
     {

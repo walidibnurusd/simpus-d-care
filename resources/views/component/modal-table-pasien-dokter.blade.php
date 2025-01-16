@@ -49,7 +49,7 @@
             const filterDate = $('#filterDate').val();
             table = $('#pasienDokter').DataTable({
                 ajax: {
-                    url: url, // Endpoint untuk mengambil data
+                    url: url,
                     type: 'GET',
                     data: function(d) {
                         d.filterDate = filterDate; // Kirim tanggal sebagai parameter tambahan
@@ -131,8 +131,13 @@
     data-rujukubm="${row.rujuk_ubm}" 
     data-kondisi="${row.kondisi}" 
     data-edukasi="${row.edukasi}" 
-    data-riwayatpenyakitkeluarga='${JSON.stringify(row.riwayat_penyakit_keluarga)}' 
-    data-riwayatpenyakittidakmenular='${JSON.stringify(row.riwayat_penyakit_tidak_menular)}' 
+    data-riwayatpenyakitsekarang='${row.riwayat_penyakit_sekarang}' 
+    data-riwayatpenyakitdulu='${row.riwayat_penyakit_dulu}' 
+    data-riwayatpengobatan='${row.riwayat_pengobatan}' 
+    data-riwayatalergi='${row.riwayat_alergi}' 
+    data-riwayatpenyakitlainnya='${row.riwayat_penyakit_lainnya}' 
+    data-riwayatpenyakitkeluarga='${row.riwayat_penyakit_keluarga}' 
+    data-riwayatpenyakitlainnyakeluarga='${row.riwayat_penyakit_lainnya_keluarga}' 
     data-keluhan="${row.keluhan}" 
     data-diagnosa='${JSON.stringify(row.diagnosa)}' 
     data-tindakan="${row.tindakan}" 
@@ -165,7 +170,7 @@
     data-turgor="${row.turgor}" 
     data-neurologis="${row.neurologis}" 
     data-hasillab="${row.hasil_lab}" 
-     data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}" 
+    data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}" 
     data-hamil="${row.hamil}" 
     data-tipe="${row.tipe}" 
     data-icd10="${row.icd10}" 
@@ -195,6 +200,7 @@
         $(document).on('click', '.btnPilihPasien', function() {
 
             const data = $(this).data();
+            console.log(data);
             // Assuming 'data.dob' contains the date of birth, e.g., "1990-01-01"
             var dob = data.age; // data.dob should be in the format 'YYYY-MM-DD'
 
@@ -293,18 +299,21 @@
             $('#turgor').val(data.turgor);
             $('#neurologis').val(data.neurologis);
             $('#hasil_lab').val(data.hasillab);
+            $('#riwayat_penyakit_sekarang').val(data.riwayatpenyakitsekarang).trigger('change');
+            $('#riwayat_penyakit_dulu').val(data.riwayatpenyakitdulu).trigger('change');
+            $('#riwayat_penyakit_lainnya').val(data.riwayatpenyakitlainnya).trigger('change');
             $('#riwayat_penyakit_keluarga').val(data.riwayatpenyakitkeluarga).trigger('change');
-            $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
-
-            $('#riwayat_penyakit_tidak_menular').val(data.riwayatpenyakittidakmenular).trigger(
+            $('#riwayat_penyakit_lainnya_keluarga').val(data.riwayatpenyakitlainnyakeluarga).trigger(
                 'change');
-
+            $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
             $('#keluhan').val(data.keluhan);
             $('#diagnosa').val(data.diagnosa).trigger('change');
             $('#icd10').val(data.icd10);
             $('#tindakan').val(data.tindakan).trigger('change');
             $('#rujuk_rs').val(data.rujukrs);
             $('#keterangan').val(data.keterangan);
+            $('#riwayat_pengobatan').val(data.riwayatpengobatan);
+            $('#riwayat_alergi').val(data.riwayatalergi);
 
 
             $('#patientDetails').show();
