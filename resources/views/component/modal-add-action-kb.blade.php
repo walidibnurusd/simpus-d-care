@@ -268,7 +268,11 @@
                                 </div>
                             </div>
                         </div>
+<<<<<<< HEAD
                         <div class="row mt-3">
+=======
+                        <div class="row">
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
                             <div class="row g-2">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -281,24 +285,48 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
+<<<<<<< HEAD
                                         <label for="jmlh_anak_laki">Jmlh. Anak Hidup (Laki-laki) </label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" id="jmlh_anak_laki"
                                                 name="jmlh_anak_laki" placeholder="0">
                                         </div>
+=======
+                                        <label for="kb_terakhir">Cara KB Terakhir</label>
+                                        <select class="form-control" id="kb_terakhir" name="kb_terakhir">
+                                            <option value="" disabled selected>Pilih</option>
+                                            <option value="1">Tidak Ada</option>
+                                            <option value="2">IUD</option>
+                                            <option value="3">MOP</option>
+                                            <option value="4">MOW
+                                            </option>
+                                            <option value="5">Kondom</option>
+                                            <option value="6">Implant</option>
+                                            <option value="7">Suntikan</option>
+                                            <option value="8">Pil</option>
+                                        </select>
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
+<<<<<<< HEAD
                                         <label for="jmlh_anak_perempuan">Jmlh. Anak Hidup (Perempuan) </label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" id="jmlh_anak_perempuan"
                                                 name="jmlh_anak_perempuan" placeholder="0">
+=======
+                                        <label for="tgl_kb_terakhir">Tgl.KB Terakhir</label>
+                                        <div class="input-group">
+                                            <input type="date" class="form-control" id="tgl_kb_terakhir"
+                                                name="tgl_kb_terakhir">
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
+<<<<<<< HEAD
                                         <label for="status_kb">Status Peserta KB</label>
                                         <select class="form-control" id="status_kb" name="status_kb">
                                             <option value="" disabled selected>Pilih</option>
@@ -312,6 +340,18 @@
                                         </select>
                                     </div>
                                 </div>
+=======
+                                        <label for="keadaan_umum">Keadaan Umum</label>
+                                        <select class="form-control" id="keadaan_umum" name="keadaan_umum">
+                                            <option value="" disabled selected>Pilih</option>
+                                            <option value="1">Baik</option>
+                                            <option value="2">Sedang</option>
+                                            <option value="3">Kurang</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -330,6 +370,7 @@
                                     </div>
                                 </div>
                             </div>
+<<<<<<< HEAD
                             <div class="col-md-4">
                                 <label>Kaki Bengkak</label>
                                 <div>
@@ -342,10 +383,25 @@
                                         <input class="form-check-input custom-radio" type="radio"
                                             name="kaki_bengkak" id="kaki_bengkak_tidak" value="0">
                                         <label class="form-check-label" for="kaki_bengkak_tidak">Tidak</label>
+=======
+                            <div class="col-md-3">
+                                <label>Hamil/Diduga hamil</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="hamil"
+                                            id="hamil_ya" value="1">
+                                        <label class="form-check-label" for="hamil_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="hamil"
+                                            id="hamil_tidak" value="0">
+                                        <label class="form-check-label" for="hamil_tidak">Tidak</label>
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
                                     </div>
                                 </div>
                             </div>
 
+<<<<<<< HEAD
                             <div class="col-md-4">
                                 <label>Diberikan Imunisasi TT</label>
                                 <div>
@@ -392,10 +448,25 @@
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="abortus" name="abortus"
                                             placeholder="Abortus">
+=======
+                            <div class="col-md-3">
+                                <label>Sakit Kuning</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="sakit_kuning" id="sakit_kuning_ya" value="1">
+                                        <label class="form-check-label" for="sakit_kuning_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="sakit_kuning" id="sakit_kuning_tidak" value="0">
+                                        <label class="form-check-label" for="sakit_kuning_tidak">Tidak</label>
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
                                     </div>
                                 </div>
                             </div>
 
+<<<<<<< HEAD
                             <div class="col-md-4 mt-3">
                                 <label>Nilai Hb</label>
                                 <div class="input-group">
@@ -518,17 +589,105 @@
                         <div class="col-md-6 mt-3">
                             <label for="treatment_anc">Treatment ANC</label>
                             <textarea class="form-control" id="treatment_anc" name="treatment_anc" placeholder="Treatment ANC"></textarea>
+=======
+                            <div class="col-md-3">
+                                <label>Pendarahan Pervaginaan</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="pendarahan_vagina" id="pendarahan_vagina_ya" value="1">
+                                        <label class="form-check-label" for="pendarahan_vagina_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="pendarahan_vagina" id="pendarahan_vagina_tidak" value="0">
+                                        <label class="form-check-label" for="pendarahan_vagina_tidak">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <label>Tumor</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="tumor"
+                                            id="tumor_ya" value="1">
+                                        <label class="form-check-label" for="tumor_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="tumor"
+                                            id="tumor_tidak" value="0">
+                                        <label class="form-check-label" for="tumor_tidak">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <label>IMS/HIV/AIDS</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="hiv"
+                                            id="hiv_ya" value="1">
+                                        <label class="form-check-label" for="hiv_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="hiv"
+                                            id="hiv_tidak" value="0">
+                                        <label class="form-check-label" for="hiv_tidak">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <label>Tanda Tanda Diabetes</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="diabetes"
+                                            id="diabetes_ya" value="1">
+                                        <label class="form-check-label" for="diabetes_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="diabetes"
+                                            id="diabetes_tidak" value="0">
+                                        <label class="form-check-label" for="diabetes_tidak">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <label>Kelainan Pembekuan Darah</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="pembekuan_darah" id="pembekuan_darah_ya" value="1">
+                                        <label class="form-check-label" for="pembekuan_darah_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="pembekuan_darah" id="pembekuan_darah_tidak" value="0">
+                                        <label class="form-check-label" for="pembekuan_darah_tidak">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mt-3">
+                            <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
+                            <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
+                                placeholder="Pemeriksaan penunjang"></textarea>
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
                         </div>
                         <div class="col-md-6 mt-3">
                             <label for="kesimpulan">Kesimpulan</label>
                             <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan"></textarea>
                         </div>
                         <div class="col-md-6 mt-3">
+<<<<<<< HEAD
                             <label for="tanggal_kembali">Tanggal kembali</label>
                             <input type="date" class="form-control" name="tanggal_kembali" id="tanggal_kembali"
                                 placeholder="Pilih Tanggal">
                         </div>
                         <div class="col-md-6 mt-3">
+=======
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
                             <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                             <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                         </div>

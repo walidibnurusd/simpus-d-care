@@ -488,6 +488,41 @@ class PatientsController extends Controller
             'data' => $patients->items(), // Data pasien yang dipaginasikan
         ]);
     }
+    public function getPatientsDokterKb(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kb');
+
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
+    }
     public function getPatientsDokterKia(Request $request)
     {
         // Ambil parameter DataTables
@@ -637,6 +672,41 @@ class PatientsController extends Controller
         $page = $start / $length + 1;
 
         $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kia')->whereNotNull('pemeriksaan_penunjang');
+
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(),
+        ]);
+    }
+    public function getPatientsLabKb(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kb')->whereNotNull('pemeriksaan_penunjang');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);

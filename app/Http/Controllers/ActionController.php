@@ -280,6 +280,54 @@ class ActionController extends Controller
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
+    public function indexKbLab(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dokter = User::where('role', 'dokter')->get();
+
+        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('hasil_lab');
+
+        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $actionsQuery = Action::where('tipe', 'poli-kia')->whereNotNull('hasil_lab');
+
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
+        $routeName = $request->route()->getName();
+        return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+    public function indexDokterKia(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dokter = User::where('role', 'dokter')->get();
+        $actionsQuery = Action::where('tipe', 'poli-kia')->where('usia_kehamilan', '!=', 0);
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
+        $routeName = $request->route()->getName();
+        return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
     public function indexDokterKia(Request $request)
     {
         $startDate = $request->input('start_date');
@@ -303,7 +351,7 @@ class ActionController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
-        $actionsQuery = Action::where('tipe', 'poli-kb')->where('usia_kehamilan', '!=', 0);
+        $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('layanan_kb');
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
         }
@@ -536,6 +584,20 @@ class ActionController extends Controller
                 'kesimpulan' => 'nullable',
                 'tanggal_kembali' => 'nullable',
                 'nilai_hb' => 'nullable',
+                'layanan_kb' => 'nullable',
+                'jmlh_anak_laki' => 'nullable',
+                'jmlh_anak_perempuan' => 'nullable',
+                'status_kb' => 'nullable',
+                'tgl_lahir_anak_bungsu' => 'nullable',
+                'kb_terakhir' => 'nullable',
+                'tgl_kb_terakhir' => 'nullable',
+                'keadaan_umum' => 'nullable',
+                'informed_concern' => 'nullable',
+                'sakit_kuning' => 'nullable',
+                'pendarahan_vagina' => 'nullable',
+                'tumor' => 'nullable',
+                'diabetes' => 'nullable',
+                'pembekuan_darah' => 'nullable',
             ]);
             $validatedData['lingkar_lengan_atas'] = $validatedData['lingkar_lengan_atas'] ?? 0;
             $validatedData['usia_kehamilan'] = $validatedData['usia_kehamilan'] ?? 0;
@@ -556,6 +618,8 @@ class ActionController extends Controller
                     $route = 'action.dokter.gigi.index';
                 } elseif ($action->tipe === 'poli-kia') {
                     $route = 'action.kia.dokter.index';
+                } elseif ($action->tipe === 'poli-kb') {
+                    $route = 'action.kb.dokter.index';
                 } else {
                     $route = 'action.dokter.ugd.index';
                 }
@@ -574,6 +638,8 @@ class ActionController extends Controller
                     $route = 'action.index.gigi';
                 } elseif ($action->tipe === 'poli-kia') {
                     $route = 'action.kia.index';
+                } elseif ($action->tipe === 'poli-kb') {
+                    $route = 'action.kb.index';
                 } else {
                     $route = 'action.index.ugd';
                 }
@@ -700,6 +766,20 @@ class ActionController extends Controller
                 'treatment_anc' => 'nullable',
                 'kesimpulan' => 'nullable',
                 'tanggal_kembali' => 'nullable',
+                'layanan_kb' => 'nullable',
+                'jmlh_anak_laki' => 'nullable',
+                'jmlh_anak_perempuan' => 'nullable',
+                'status_kb' => 'nullable',
+                'tgl_lahir_anak_bungsu' => 'nullable',
+                'kb_terakhir' => 'nullable',
+                'tgl_kb_terakhir' => 'nullable',
+                'keadaan_umum' => 'nullable',
+                'informed_concern' => 'nullable',
+                'sakit_kuning' => 'nullable',
+                'pendarahan_vagina' => 'nullable',
+                'tumor' => 'nullable',
+                'diabetes' => 'nullable',
+                'pembekuan_darah' => 'nullable',
             ]);
 
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
@@ -718,6 +798,8 @@ class ActionController extends Controller
                 $route = 'action.dokter.gigi.index';
             } elseif ($action->tipe === 'poli-kia') {
                 $route = 'action.kia.dokter.index';
+            } elseif ($action->tipe === 'poli-kb') {
+                $route = 'action.kb.dokter.index';
             } else {
                 $route = 'action.dokter.ugd.index';
             }
@@ -765,6 +847,8 @@ class ActionController extends Controller
                 $route = 'action.lab.gigi.index';
             } elseif ($action->tipe === 'poli-kia') {
                 $route = 'action.lab.kia.index';
+            } elseif ($action->tipe === 'poli-kb') {
+                $route = 'action.lab.kb.index';
             } else {
                 $route = 'action.lab.ugd.index';
             }
@@ -781,7 +865,6 @@ class ActionController extends Controller
     {
         try {
             $action = Action::findOrFail($id);
-
             $action->delete();
 
             if (Auth::user()->role == 'dokter') {

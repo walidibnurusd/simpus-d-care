@@ -214,7 +214,11 @@
                                     <li><a href="{{ route('action.kb.index') }}">Kajian Awal</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @else
+<<<<<<< HEAD
                                     <li><a href="{{ route('action.lab.kia.index') }}">Tindakan</a></li>
+=======
+                                    <li><a href="{{ route('action.lab.kb.index') }}">Tindakan</a></li>
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @endif
 

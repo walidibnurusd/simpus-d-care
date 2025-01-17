@@ -110,6 +110,12 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             OBAT</th>
+<<<<<<< HEAD
+=======
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            HASIL LAB</th>
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
 
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -183,6 +189,12 @@
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $action->obat }}</p>
                                             </td>
+<<<<<<< HEAD
+=======
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $action->hasil_lab }}</p>
+                                            </td>
+>>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
 
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
