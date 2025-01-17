@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -151,8 +150,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/tindakan/lab/poli-umum', [ActionController::class, 'indexLab'])->name('action.lab.index');
     Route::get('/tindakan/lab/poli-gigi', [ActionController::class, 'indexGigiLab'])->name('action.lab.gigi.index');
     Route::get('/tindakan/lab/ugd', [ActionController::class, 'indexUgdLab'])->name('action.lab.ugd.index');
-    Route::get('/tindakan/kia', [ActionController::class, 'indexDokterKia'])->name('action.kia.dokter.index');
+    Route::get('/tindakan/lab/kia', [ActionController::class, 'indexKiaLab'])->name('action.lab.kia.index');
+    Route::get('/tindakan/poli-kia', [ActionController::class, 'indexDokterKia'])->name('action.kia.dokter.index');
+    Route::get('/tindakan/poli-kb', [ActionController::class, 'indexDokterKb'])->name('action.kb.dokter.index');
     Route::get('/kajian-awal/kia', [ActionController::class, 'indexKia'])->name('action.kia.index');
+    Route::get('/kajian-awal/kb', [ActionController::class, 'indexKb'])->name('action.kb.index');
     Route::post('/tindakan', [ActionController::class, 'store'])->name('action.store');
     Route::POST('/tindakan/{id}', [ActionController::class, 'update'])->name('action.update');
     Route::POST('/tindakan-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
@@ -396,6 +398,7 @@ Route::get('/get-skrining/{id}', [SkriningController::class, 'getSkriningPatient
 Route::get('/get-patients/poli-umum', [PatientsController::class, 'getPatientsPoliUmum'])->name('get-patients-poli-umum');
 Route::get('/get-patients/poli-gigi', [PatientsController::class, 'getPatientsPoliGigi'])->name('get-patients-poli-gigi');
 Route::get('/get-patients/poli-kia', [PatientsController::class, 'getPatientsPoliKia'])->name('get-patients-poli-kia');
+Route::get('/get-patients/poli-kb', [PatientsController::class, 'getPatientsPoliKb'])->name('get-patients-poli-kb');
 Route::get('/get-patients/ruang-tindakan', [PatientsController::class, 'getPatientsRuangTindakan'])->name('get-patients-ruang-tindakan');
 Route::get('/get-patients-dokter/poli-umum', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
 Route::get('/get-patients-dokter/poli-gigi', [PatientsController::class, 'getPatientsDokterGigi'])->name('get-patients-dokter-gigi');
@@ -404,6 +407,7 @@ Route::get('/get-patients-dokter/ruang-tindakan', [PatientsController::class, 'g
 Route::get('/get-patients-lab/poli-umum', [PatientsController::class, 'getPatientsLab'])->name('get-patients-lab');
 Route::get('/get-patients-lab/poli-gigi', [PatientsController::class, 'getPatientsLabGigi'])->name('get-patients-lab-gigi');
 Route::get('/get-patients-lab/ruang-tindakan', [PatientsController::class, 'getPatientsLabRuangTindakan'])->name('get-patients-lab-ruang-tindakan');
+Route::get('/get-patients-lab/poli-kia', [PatientsController::class, 'getPatientsLabKia'])->name('get-patients-lab-kia');
 
 //Language Change
 Route::get('lang/{locale}', function ($locale) {

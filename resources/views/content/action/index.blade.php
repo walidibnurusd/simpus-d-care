@@ -103,7 +103,7 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             KELUHAN</th>
-                                        @if ($routeName != 'action.kia.index')
+                                        @if ($routeName != 'action.kia.index' && $routeName != 'action.kb.index')
                                             <th
                                                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                                 DIAGNOSA</th>
@@ -182,7 +182,7 @@
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
                                             </td>
-                                            @if ($routeName != 'action.kia.index')
+                                            @if ($routeName != 'action.kia.index' && $routeName != 'action.kb.index')
                                                 @php
 
                                                     $diagnosaIds =

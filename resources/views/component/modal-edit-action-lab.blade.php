@@ -15,7 +15,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('action.update', $action->id) }}" method="POST"
+                <form id="addPatientForm" action="{{ route('action.update.lab', $action->id) }}" method="POST"
                     class="px-3">
                     @csrf
                     @if ($routeName === 'action.lab.index')

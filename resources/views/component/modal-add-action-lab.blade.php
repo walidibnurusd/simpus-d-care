@@ -8,6 +8,8 @@
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
                 @elseif($routeName === 'action.lab.gigi.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
+                @elseif($routeName === 'action.lab.kia.index')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KIA</h5>
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
                 @endif
@@ -21,6 +23,8 @@
                         <input type="hidden" name="tipe" id="tipe" value="poli-umum">
                     @elseif($routeName === 'action.lab.gigi.index')
                         <input type="hidden" name="tipe" id="tipe" value="poli-gigi">
+                    @elseif($routeName === 'action.lab.kia.index')
+                        <input type="hidden" name="tipe" id="tipe" value="poli-kia">
                     @else
                         <input type="hidden" name="tipe" id="tipe" value="ruang-tindakan">
                     @endif

@@ -104,6 +104,10 @@
                                                     <p class="text-xs  mb-0">Poli Umum</p>
                                                 @elseif($k->poli == 'poli-gigi')
                                                     <p class="text-xs  mb-0">Poli Gigi</p>
+                                                @elseif($k->poli == 'poli-kia')
+                                                    <p class="text-xs  mb-0">Poli KIA</p>
+                                                @elseif($k->poli == 'poli-kb')
+                                                    <p class="text-xs  mb-0">Poli KB</p>
                                                 @else
                                                     <p class="text-xs  mb-0">UGD</p>
                                                 @endif

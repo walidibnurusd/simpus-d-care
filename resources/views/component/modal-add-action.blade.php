@@ -13,6 +13,9 @@
                 @elseif($routeName === 'action.kia.index')
                     <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI KIA</h5>
                     <input type="hidden" name="tipe" value="poli-kia">
+                @elseif($routeName === 'action.kb.index')
+                    <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI KB</h5>
+                    <input type="hidden" name="tipe" value="poli-kia">
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL UGD</h5>
                     <input type="hidden" name="tipe" value="ruang-tindakan">
@@ -29,6 +32,8 @@
                         <input type="hidden" name="tipe" id="tipe" value="poli-gigi">
                     @elseif($routeName === 'action.kia.index')
                         <input type="hidden" name="tipe" id="tipe" value="poli-kia">
+                    @elseif($routeName === 'action.kb.index')
+                        <input type="hidden" name="tipe" id="tipe" value="poli-kb">
                     @else
                         <input type="hidden" name="tipe" id="tipe" value="ruang-tindakan">
                     @endif
@@ -203,7 +208,7 @@
 
                                 </div>
                             </div>
-                            @if ($routeName != 'action.kia.index')
+                            @if ($routeName !== 'action.kia.index' && $routeName !== 'action.kb.index')
                                 <div style="display: flex; align-items: center; text-align: center;">
                                     <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                                     <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan</span>

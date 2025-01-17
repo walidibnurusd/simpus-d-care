@@ -86,6 +86,8 @@ class Action extends Model
         'hasil_usg',
         'treatment_anc',
         'tanggal_kembali',
+        'kesimpulan',
+        'nilai_hb',
     ];
 
     protected $casts = [

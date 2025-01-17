@@ -599,6 +599,10 @@
                                     id="tanggal_kembali" placeholder="Pilih Tanggal"
                                     value="{{ $action->tanggal_kembali }}">
                             </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
+                                <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
+                            </div>
                         </div>
 
                     </div>

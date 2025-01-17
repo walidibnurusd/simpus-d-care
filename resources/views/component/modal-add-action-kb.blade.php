@@ -23,7 +23,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary">
 
-                <h5 class="modal-title" id="exampleModalLabel">TINDAKAN KIA</h5>
+                <h5 class="modal-title" id="exampleModalLabel">TINDAKAN KB</h5>
 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -31,7 +31,7 @@
             <div class="modal-body">
                 <form id="addPatientForm" action="" method="POST" class="px-3">
                     @csrf
-                    <input type="hidden" name="tipe" id="tipe" value="poli-kia">
+                    <input type="hidden" name="tipe" id="tipe" value="poli-kb">
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
@@ -207,83 +207,129 @@
                         </div>
                         <div style="display: flex; align-items: center; text-align: center;">
                             <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                            <span style="margin: 0 10px; white-space: nowrap;">Pelayanan ANC</span>
+                            <span style="margin: 0 10px; white-space: nowrap;">Pelayanan KB</span>
                             <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                         </div>
 
-                        <div class="col-12">
+                        <div class="row mt-3">
                             <div class="row g-2">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="usia_hamil">Usia kehamilan </label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="usia_hamil"
-                                                name="usia_kehamilan" placeholder="Masukkan usia kehamilan">
-                                            <span class="input-group-text">minggu</span>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="jenis_anc">Jenis ANC</label>
-                                        <select class="form-control" id="jenis_anc" name="jenis_anc">
-                                            <option value="" disabled selected>Pilih jenis ANC</option>
-                                            <option value="anc1">ANC 1</option>
-                                            <option value="anc2">ANC II</option>
-                                            <option value="anc3">ANC III</option>
-                                            <option value="anc4">ANC IV</option>
-                                            <option value="anc5">ANC V</option>
-                                            <option value="anc6">ANC VI</option>
+                                        <label for="layanan_kb">Jenis Pelayanan KB</label>
+                                        <select class="form-control" id="layanan_kb" name="layanan_kb">
+                                            <option value="" disabled selected>Pilih</option>
+                                            <option value="1">Pelayanan KB : Suntik</option>
+                                            <option value="2">Pelayanan KB : Pencabutan IUD (AKDR)</option>
+                                            <option value="3">Pelayanan KB : Pemasangan IUD (AKDR)</option>
+                                            <option value="4">Pelayanan KB : Pemasangan dan Pencabutan IUD (AKDR)
+                                            </option>
+                                            <option value="5">Pelayanan KB : Pencabutan Implant</option>
+                                            <option value="6">Pelayanan KB : Pemasangan Implant</option>
+                                            <option value="7">Pelayanan KB : Pemasangan dan Pencabutan Implant
+                                            </option>
+                                            <option value="8">MOP / Vasektomi
+                                            </option>
 
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="lingkar_lengan_atas">Lingkar lengan atas </label>
+                                        <label for="jmlh_anak_laki">Jmlh. Anak Hidup (Laki-laki) </label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="lingkar_lengan_atas"
-                                                name="lingkar_lengan_atas" placeholder="Masukkan lingkar lengan atas">
-                                            <span class="input-group-text">cm</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="tinggi_fundus_uteri">Tinggi fundus uteri</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="tinggi_fundus_uteri"
-                                                name="tinggi_fundus_uteri" placeholder="Masukkan tinggi fundus uteri">
-                                            <span class="input-group-text">cm</span>
+                                            <input type="number" class="form-control" id="jmlh_anak_laki"
+                                                name="jmlh_anak_laki" placeholder="0">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="presentansi_janin">Presentasi janin</label>
-                                        <select class="form-control" id="presentansi_janin" name="presentasi_janin">
-                                            <option value="" disabled selected>Pilih presentasi janin
-                                            </option>
-                                            <option value="kepala">Kepala</option>
-                                            <option value="sungsang">Sungsang</option>
-                                            <option value="melintang">Melintang</option>
-                                            <option value="lain-lain">Lain-lain</option>
-                                        </select>
+                                        <label for="jmlh_anak_perempuan">Jmlh. Anak Hidup (Perempuan) </label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="jmlh_anak_perempuan"
+                                                name="jmlh_anak_perempuan" placeholder="0">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="denyut_jantung">Denyut nyantung </label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="denyut_jantung"
-                                                name="denyut_jantung" placeholder="Masukkan denyut jantung">
-                                            <span class="input-group-text">bpm</span>
-                                        </div>
+                                        <label for="status_kb">Status Peserta KB</label>
+                                        <select class="form-control" id="status_kb" name="status_kb">
+                                            <option value="" disabled selected>Pilih</option>
+                                            <option value="1">Baru Pertama Kali</option>
+                                            <option value="2">Sesudah Bersalin</option>
+                                            <option value="3">Pindah Tempat Pelayanan, Ganti Cara</option>
+                                            <option value="4">Pindah Tempat Pelayanan, Cara Sama
+                                            </option>
+                                            <option value="5">Tempat Pelayanan Sama, Ganti Cara</option>
+                                            <option value="6">Tempat Pelayanan Sama, Cara Sama/Lanjutkan</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-3">
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="tgl_lahir_anak_bungsu">Tgl.Lahir Anak Terkecil</label>
+                                        <div class="input-group">
+                                            <input type="date" class="form-control" id="tgl_lahir_anak_bungsu"
+                                                name="tgl_lahir_anak_bungsu">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="jmlh_anak_laki">Jmlh. Anak Hidup (Laki-laki) </label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="jmlh_anak_laki"
+                                                name="jmlh_anak_laki" placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="jmlh_anak_perempuan">Jmlh. Anak Hidup (Perempuan) </label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="jmlh_anak_perempuan"
+                                                name="jmlh_anak_perempuan" placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="status_kb">Status Peserta KB</label>
+                                        <select class="form-control" id="status_kb" name="status_kb">
+                                            <option value="" disabled selected>Pilih</option>
+                                            <option value="1">Baru Pertama Kali</option>
+                                            <option value="2">Sesudah Bersalin</option>
+                                            <option value="3">Pindah Tempat Pelayanan, Ganti Cara</option>
+                                            <option value="4">Pindah Tempat Pelayanan, Cara Sama
+                                            </option>
+                                            <option value="5">Tempat Pelayanan Sama, Ganti Cara</option>
+                                            <option value="6">Tempat Pelayanan Sama, Cara Sama/Lanjutkan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-3">
+                                <label>Informed Concern</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="informed_concern" id="informed_concern_ya" value="1">
+                                        <label class="form-check-label" for="informed_concern_ya">Ada</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="informed_concern" id="informed_concern_tidak" value="0">
+                                        <label class="form-check-label" for="informed_concern_tidak">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-4">
                                 <label>Kaki Bengkak</label>
                                 <div>
