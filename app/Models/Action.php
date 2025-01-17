@@ -88,8 +88,6 @@ class Action extends Model
         'tanggal_kembali',
         'kesimpulan',
         'nilai_hb',
-<<<<<<< HEAD
-=======
         'layanan_kb',
         'jmlh_anak_laki',
         'jmlh_anak_perempuan',
@@ -104,7 +102,6 @@ class Action extends Model
         'tumor',
         'diabetes',
         'pembekuan_darah',
->>>>>>> 0595c76c039f3798cbce2e9376ed19b367b0c3f8
     ];
 
     protected $casts = [

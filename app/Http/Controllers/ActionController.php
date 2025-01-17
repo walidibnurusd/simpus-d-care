@@ -310,24 +310,24 @@ class ActionController extends Controller
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
-    public function indexDokterKia(Request $request)
-    {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-        $dokter = User::where('role', 'dokter')->get();
-        $actionsQuery = Action::where('tipe', 'poli-kia')->where('usia_kehamilan', '!=', 0);
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
+    // public function indexDokterKia(Request $request)
+    // {
+    //     $startDate = $request->input('start_date');
+    //     $endDate = $request->input('end_date');
+    //     $dokter = User::where('role', 'dokter')->get();
+    //     $actionsQuery = Action::where('tipe', 'poli-kia')->where('usia_kehamilan', '!=', 0);
+    //     if ($startDate) {
+    //         $actionsQuery->whereDate('tanggal', '>=', $startDate);
+    //     }
 
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
+    //     if ($endDate) {
+    //         $actionsQuery->whereDate('tanggal', '<=', $endDate);
+    //     }
 
-        $actions = $actionsQuery->get();
-        $routeName = $request->route()->getName();
-        return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
-    }
+    //     $actions = $actionsQuery->get();
+    //     $routeName = $request->route()->getName();
+    //     return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    // }
     public function indexDokterKia(Request $request)
     {
         $startDate = $request->input('start_date');

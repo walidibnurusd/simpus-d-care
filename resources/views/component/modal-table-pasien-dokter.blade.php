@@ -300,12 +300,31 @@
             $('#turgor').val(data.turgor);
             $('#neurologis').val(data.neurologis);
             $('#hasil_lab').val(data.hasillab);
+            // Set nilai dari riwayat_penyakit_sekarang dan trigger 'change'
             $('#riwayat_penyakit_sekarang').val(data.riwayatpenyakitsekarang).trigger('change');
+
+            // Cek apakah nilai dari riwayat_penyakit_sekarang tidak kosong
+            if (data.riwayatpenyakitlainnya) {
+                $('#penyakit_lainnya_container').css('display', 'block'); // Tampilkan div
+            } else {
+                $('#penyakit_lainnya_container').css('display', 'none'); // Sembunyikan div
+            }
+
             $('#riwayat_penyakit_dulu').val(data.riwayatpenyakitdulu).trigger('change');
-            $('#riwayat_penyakit_lainnya').val(data.riwayatpenyakitlainnya).trigger('change');
+            $('#riwayat_penyakit_lainnya').val(data.riwayatpenyakitlainnya);
             $('#riwayat_penyakit_keluarga').val(data.riwayatpenyakitkeluarga).trigger('change');
-            $('#riwayat_penyakit_lainnya_keluarga').val(data.riwayatpenyakitlainnyakeluarga).trigger(
-                'change');
+            // Atur nilai untuk riwayat_penyakit_lainnya_keluarga
+            $('#riwayat_penyakit_lainnya_keluarga').val(data.riwayatpenyakitlainnyakeluarga);
+
+            // Cek apakah nilai riwayat_penyakit_lainnya_keluarga tidak kosong
+            if (data.riwayatpenyakitlainnyakeluarga) {
+                $('#penyakit_lainnya_keluarga_container').css('display',
+                'block'); // Tampilkan container
+            } else {
+                $('#penyakit_lainnya_keluarga_container').css('display',
+                'none'); // Sembunyikan container
+            }
+
             $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
             $('#keluhan').val(data.keluhan);
             $('#diagnosa').val(data.diagnosa).trigger('change');

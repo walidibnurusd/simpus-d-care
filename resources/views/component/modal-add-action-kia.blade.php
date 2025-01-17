@@ -164,7 +164,7 @@
                             <div class="col-md-12 mt-2" id="penyakit_lainnya_container" style="display: none;">
                                 <label for="penyakit_lainnya" style="color: rgb(241, 11, 11);">Sebutkan
                                     Penyakit Lainnya</label>
-                                <textarea class="form-control" id="penyakit_lainnya" name="riwayat_penyakit_lainnya"
+                                <textarea class="form-control" id="riwayat_penyakit_lainnya" name="riwayat_penyakit_lainnya"
                                     placeholder="Isi penyakit lainnya"></textarea>
                             </div>
                             <div class="col-md-12">
@@ -195,13 +195,23 @@
                                 style="display: none;">
                                 <label for="penyakit_lainnya_keluarga" style="color: rgb(241, 11, 11);">Sebutkan
                                     Penyakit Lainnya</label>
-                                <textarea class="form-control" id="penyakit_lainnya_keluarga" name="riwayat_penyakit_lainnya_keluarga"
+                                <textarea class="form-control" id="riwayat_penyakit_lainnya_keluarga" name="riwayat_penyakit_lainnya_keluarga"
                                     placeholder="Isi penyakit lainnya"></textarea>
                             </div>
                             <div class="col-md-12">
                                 <label for="riwayat_alergi" style="color: rgb(241, 11, 11);">Riwayat
                                     Alergi</label>
                                 <textarea class="form-control" id="riwayat_alergi" name="riwayat_alergi" placeholder="Riwayat Alergi"></textarea>
+                            </div>
+                            <div class="row mt-3">
+
+                                <div class="col-md-12">
+                                    <label for="alkohol" style="color: rgb(19, 11, 241);">KETERANGAN</label>
+                                    <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                        placeholder="Keterangan">
+                                </div>
+        
+        
                             </div>
 
                         </div>

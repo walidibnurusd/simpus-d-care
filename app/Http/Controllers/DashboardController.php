@@ -13,6 +13,7 @@ class DashboardController extends Controller
     // }
     public function profile() {
         $user = Auth::user(); // Get the currently authenticated user
+        // dd($user);
         return view('content.profile.index', ['user' => $user]);
     }
 }
