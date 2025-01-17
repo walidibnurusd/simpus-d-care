@@ -8,6 +8,8 @@
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
                 @elseif ($routeName === 'action.index.gigi')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
+                @elseif ($routeName === 'action.kia.index')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KIA</h5>
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
                 @endif
@@ -22,6 +24,8 @@
                         <input type="hidden" name="tipe" value="poli-umum">
                     @elseif($routeName === 'action.index.gigi')
                         <input type="hidden" name="tipe" value="poli-gigi">
+                    @elseif ($routeName === 'action.kia.index')
+                        <input type="hidden" name="tipe" value="poli-kia">
                     @else
                         <input type="hidden" name="tipe" value="ruang-tindakan">
                     @endif
@@ -60,7 +64,7 @@
                                             <div class="input-group">
                                                 <input readonly type="text" class="form-control"
                                                     id="nikEdit{{ $action->id }}" value="" name="nikEdit"
-                                                    placeholder="NIK" required>
+                                                    placeholder="NIK">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
                                                         data-bs-toggle="modal" data-bs-target="#modalPasienEdit">
@@ -74,14 +78,14 @@
                                         <div class="form-group">
                                             <label for="tanggal">Tanggal</label>
                                             <input type="date" class="form-control" id="tanggal" name="tanggal"
-                                                value="{{ $action->tanggal }}" placeholder="Pilih Tanggal" required>
+                                                value="{{ $action->tanggal }}" placeholder="Pilih Tanggal">
                                         </div>
                                     </div>
 
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="doctor">Dokter</label>
-                                            <select class="form-control" id="doctor" name="doctor" required>
+                                            <select class="form-control" id="doctor" name="doctor">
                                                 <option value="" disabled selected>Pilih Dokter</option>
                                                 @foreach ($dokter as $item)
                                                     <option value="{{ $item->name }}"
@@ -95,7 +99,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="kunjungan">Kunjungan</label>
-                                            <select class="form-control" id="kunjungan" name="kunjungan" required>
+                                            <select class="form-control" id="kunjungan" name="kunjungan">
                                                 <option value="" disabled
                                                     {{ empty($action->kunjungan) ? 'selected' : '' }}>Pilih Jenis
                                                     Kunjungan</option>
@@ -140,7 +144,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="wilayah_faskes">Wilayah Faskes</label>
-                                            <select class="form-control" id="wilayah_faskes" name="faskes" required>
+                                            <select class="form-control" id="wilayah_faskes" name="faskes">
                                                 <option value="" disabled
                                                     {{ empty($action->faskes) ? 'selected' : '' }}>Pilih Wilayah Faskes
                                                 </option>
@@ -169,7 +173,7 @@
                                                 <label for="riwayat_penyakit_dulu"
                                                     style="color: rgb(241, 11, 11);">Riwayat Penyakit Terdahulu</label>
                                                 <select class="form-control" id="riwayat_penyakit_dulu_edit"
-                                                    name="riwayat_penyakit_dulu" required>
+                                                    name="riwayat_penyakit_dulu">
                                                     <option value="" disabled
                                                         {{ empty($action->riwayat_penyakit_dulu) ? 'selected' : '' }}>
                                                         pilih
@@ -224,7 +228,7 @@
                                                 <label for="riwayat_penyakit_keluarga"
                                                     style="color: rgb(241, 11, 11);">Riwayat Penyakit Keluarga</label>
                                                 <select class="form-control" id="riwayat_penyakit_keluarga_edit"
-                                                    name="riwayat_penyakit_keluarga" required>
+                                                    name="riwayat_penyakit_keluarga">
                                                     <option value="" disabled
                                                         {{ empty($action->riwayat_penyakit_keluarga) ? 'selected' : '' }}>
                                                         Pilih</option>
@@ -289,7 +293,7 @@
                                             <div class="form-group">
                                                 <label for="sistol">Sistol</label>
                                                 <input type="text" class="form-control" id="sistol"
-                                                    name="sistol" placeholder="Masukkan Sistol" required
+                                                    name="sistol" placeholder="Masukkan Sistol"
                                                     value="{{ $action->sistol }}">
                                             </div>
                                         </div>
@@ -297,7 +301,7 @@
                                             <div class="form-group">
                                                 <label for="diastol">Diastol</label>
                                                 <input type="text" class="form-control" id="diastol"
-                                                    name="diastol" placeholder="Masukkan Diastol" required
+                                                    name="diastol" placeholder="Masukkan Diastol"
                                                     value="{{ $action->diastol }}">
                                             </div>
                                         </div>
@@ -305,7 +309,7 @@
                                             <div class="form-group">
                                                 <label for="berat_badan">Berat Badan</label>
                                                 <input type="text" class="form-control" id="berat_badan"
-                                                    name="beratBadan" placeholder="Masukkan Berat Badan" required
+                                                    name="beratBadan" placeholder="Masukkan Berat Badan"
                                                     value="{{ $action->beratBadan }}">
                                             </div>
                                         </div>
@@ -313,7 +317,7 @@
                                             <div class="form-group">
                                                 <label for="tinggi_badan">Tinggi Badan</label>
                                                 <input type="text" class="form-control" id="tinggi_badan"
-                                                    name="tinggiBadan" placeholder="Masukkan Tinggi Badan" required
+                                                    name="tinggiBadan" placeholder="Masukkan Tinggi Badan"
                                                     value="{{ $action->tinggiBadan }}">
                                             </div>
                                         </div>
@@ -322,7 +326,7 @@
                                                 <label for="ling_pinggang">Ling. Pinggang</label>
                                                 <input type="text" class="form-control" id="ling_pinggang"
                                                     name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang"
-                                                    required value="{{ $action->lingkarPinggang }}">
+                                                    value="{{ $action->lingkarPinggang }}">
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -330,7 +334,7 @@
                                                 <label for="nadi">Nadi</label>
                                                 <input type="text" class="form-control" id="nadi"
                                                     name="nadi" placeholder="Masukkan Nadi"
-                                                    value="{{ $action->nadi }}" required>
+                                                    value="{{ $action->nadi }}">
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -338,7 +342,7 @@
                                                 <label for="nafas">Pernafasan</label>
                                                 <input type="text" class="form-control" id="nafas"
                                                     name="nafas" placeholder="Masukkan Nafas"
-                                                    value="{{ $action->nafas }}" required>
+                                                    value="{{ $action->nafas }}">
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -346,7 +350,7 @@
                                                 <label for="suhu">Suhu</label>
                                                 <input type="text" class="form-control" id="suhu"
                                                     name="suhu" placeholder="Masukkan Suhu"
-                                                    value="{{ $action->suhu }}"required>
+                                                    value="{{ $action->suhu }}">
                                             </div>
                                         </div>
 
@@ -354,9 +358,12 @@
                                 </div>
                             @endif
                             @if ($action->tipe == 'poli-umum' && Auth::user()->role == 'dokter')
-                                <div style="display: flex; align-items: center; text-align: center;">
+                                <div
+                                    style="display:
+                                                    flex; align-items: center; text-align: center;">
                                     <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                                    <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Fisik</span>
+                                    <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan
+                                        Fisik</span>
                                     <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                                 </div>
                                 <div class="container">
@@ -426,7 +433,8 @@
                                         </div>
                                         <!-- Abdomen-Nyeri Tekan -->
                                         <div class="col-md-2">
-                                            <label for="nyeri_tekan" style="color: green;">Abdomen-Nyeri Tekan</label>
+                                            <label for="nyeri_tekan" style="color: green;">Abdomen-Nyeri
+                                                Tekan</label>
                                             <select class="form-control" id="nyeri_tekan" name="nyeri_tekan">
                                                 <option value="" disabled
                                                     {{ old('nyeri_tekan', $action->nyeri_tekan ?? '') == '' ? 'selected' : '' }}>
@@ -495,7 +503,8 @@
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <label for="thorax_bj" style="color: green;">Thorax-BJ I/II</label>
+                                            <label for="thorax_bj" style="color: green;">Thorax-BJ
+                                                I/II</label>
                                             <select class="form-control" id="thorax_bj" name="thorax_bj">
                                                 <option value="" disabled
                                                     {{ old('thorax_bj', $action->thorax_bj ?? '') == '' ? 'selected' : '' }}>
@@ -509,7 +518,8 @@
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <label for="suara_nafas" style="color: green;">Thorax-Suara Nafas</label>
+                                            <label for="suara_nafas" style="color: green;">Thorax-Suara
+                                                Nafas</label>
                                             <select class="form-control" id="suara_nafas" name="suara_nafas">
                                                 <option value="" disabled
                                                     {{ old('suara_nafas', $action->suara_nafas ?? '') == '' ? 'selected' : '' }}>
@@ -635,13 +645,15 @@
                                 </div>
                                 <div style="display: flex; align-items: center; text-align: center;">
                                     <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                                    <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Penunjang</span>
+                                    <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan
+                                        Penunjang</span>
                                     <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                                 </div>
                                 <div class="container">
                                     <div class="row g-2">
                                         <div class="col-md-12">
-                                            <label for="hasil_lab" style="color: green;">Hasil Laboratorium</label>
+                                            <label for="hasil_lab" style="color: green;">Hasil
+                                                Laboratorium</label>
                                             <input type="text" class="form-control" id="hasil_lab" readonly
                                                 name="hasil_lab"
                                                 value="{{ old('hasil_lab', $action->hasil_lab ?? '') }}"
@@ -846,8 +858,7 @@
                         <div class="col-md-4">
                             <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
                             <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                value="{{ old('keterangan', $action->keterangan ?? '') }}" placeholder="Keterangan"
-                                required>
+                                value="{{ old('keterangan', $action->keterangan ?? '') }}" placeholder="Keterangan">
                         </div>
                     </div>
 
@@ -949,11 +960,11 @@
     function toggleLainnya(select, container, textarea) {
         if (select.value === 'lainnya') {
             container.style.display = 'block';
-            textarea.required = true;
+            textarea = true;
         } else {
             container.style.display = 'none';
             textarea.value = '';
-            textarea.required = false;
+            textarea = false;
         }
     }
 

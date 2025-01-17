@@ -10,7 +10,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    @if ($routeName === 'action.index')
+    @if ($routeName === 'action.kia.dokter.index')
         <h3>Tindakan Dokter</h3>
     @else
         <h3>Kajian Awal</h3>
@@ -79,7 +79,7 @@
 
                 <div class="card mb-4">
                     <div class="card-header pb-0">
-                        <h6>Daftar Data KIA</h6>
+                        <h6>Daftar Data Tindakan</h6>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-4">
@@ -107,6 +107,12 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             KELUHAN</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            OBAT</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            HASIL LAB</th>
 
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -114,9 +120,11 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             FASKES</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            AKSI
-                                        </th>
+                                        @if (Auth::user()->role == 'dokter')
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                AKSI
+                                            </th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -175,6 +183,12 @@
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
                                             </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $action->obat }}</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $action->hasil_lab }}</p>
+                                            </td>
 
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
@@ -185,29 +199,31 @@
                                                 <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->faskes) }}
                                                 </p>
                                             </td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <!-- Tombol Edit -->
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-sm text-white font-weight-bold"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#editActionModal{{ $action->id }}">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    @include('component.modal-edit-action-kia')
-                                                    <!-- Tombol Delete -->
-                                                    <form action="{{ route('action.destroy', $action->id) }}"
-                                                        method="POST" class="d-inline form-delete">
-                                                        @csrf
-                                                        @method('DELETE')
+                                            @if (Auth::user()->role == 'dokter')
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        <!-- Tombol Edit -->
                                                         <button type="button"
-                                                            class="btn btn-danger btn-delete btn-sm text-white font-weight-bold">
-                                                            <i class="fas fa-trash-alt"></i>
+                                                            class="btn btn-primary btn-sm text-white font-weight-bold"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editActionModal{{ $action->id }}">
+                                                            <i class="fas fa-edit"></i>
                                                         </button>
-                                                    </form>
+                                                        @include('component.modal-edit-action-kia')
+                                                        <!-- Tombol Delete -->
+                                                        <form action="{{ route('action.destroy', $action->id) }}"
+                                                            method="POST" class="d-inline form-delete">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-delete btn-sm text-white font-weight-bold">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
 
-                                                </div>
-                                            </td>
+                                                    </div>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

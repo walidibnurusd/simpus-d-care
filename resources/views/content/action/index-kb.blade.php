@@ -1,5 +1,5 @@
 @extends('layouts.simple.master')
-@section('title', 'Tindakan Laboratorium')
+@section('title', 'Tindakan KIA')
 
 @section('css')
 
@@ -10,12 +10,16 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>Tindakan Laboratorium</h3>
+    @if ($routeName === 'action.kb.dokter.index')
+        <h3>Tindakan Dokter</h3>
+    @else
+        <h3>Kajian Awal</h3>
+    @endif
 @endsection
 
 @section('breadcrumb-items')
     <li class="breadcrumb-item">{{ Auth::user()->name }}</li>
-    <li class="breadcrumb-item active">Tindakan</li>
+    <li class="breadcrumb-item active">Tindakan KB</li>
 @endsection
 
 @section('content')
@@ -31,12 +35,10 @@
             <div class="col-12 mb-4">
                 <div class="button-container">
                     <!-- Tombol Tambah -->
-
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addActionModal">
                         Tambah
                         <i class="fas fa-plus ms-2"></i> <!-- Ikon Tambah -->
                     </button>
-
                     <!-- Form untuk Print dan Filter -->
                     <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3">
                         <div class="row">
@@ -73,7 +75,7 @@
                 </div>
 
 
-                @include('component.modal-add-action-lab')
+                @include('component.modal-add-action-kb')
 
                 <div class="card mb-4">
                     <div class="card-header pb-0">
@@ -101,15 +103,28 @@
                                             UMUR</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            PEMERIKSAAN PENUNJANG</th>
+                                            KARTU</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            KELUHAN</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            OBAT</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             HASIL LAB</th>
 
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            AKSI
-                                        </th>
-
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            KUNJ</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            FASKES</th>
+                                        @if (Auth::user()->role == 'dokter')
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                AKSI
+                                            </th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -137,31 +152,78 @@
                                                     {{ \Carbon\Carbon::parse($action->patient->dob)->age }} Tahun</p>
                                                 <!-- Ganti dengan perhitungan umur jika perlu -->
                                             </td>
-
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->pemeriksaan_penunjang) }}
+                                                    @switch($action->patient->jenis_kartu)
+                                                        @case('pbi')
+                                                            PBI (KIS)
+                                                        @break
+
+                                                        @case('askes')
+                                                            AKSES
+                                                        @break
+
+                                                        @case('jkn_mandiri')
+                                                            JKN Mandiri
+                                                        @break
+
+                                                        @case('umum')
+                                                            Umum
+                                                        @break
+
+                                                        @case('jkd')
+                                                            JKD
+                                                        @break
+
+                                                        @default
+                                                            Tidak Diketahui
+                                                    @endswitch
                                                 </p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->hasil_lab) }}
-                                                </p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $action->obat }}</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $action->hasil_lab }}</p>
                                             </td>
 
                                             <td>
-                                                <div class="action-buttons">
-                                                    <!-- Tombol Edit -->
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-sm text-white font-weight-bold"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#editActionModal{{ $action->id }}">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    @include('component.modal-edit-action-lab')
-                                                </div>
+                                                <p class="text-xs font-weight-bold mb-0">
+                                                    {{ ucwords($action->kunjungan) }}
+                                                </p>
                                             </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->faskes) }}
+                                                </p>
+                                            </td>
+                                            @if (Auth::user()->role == 'dokter')
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        <!-- Tombol Edit -->
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-sm text-white font-weight-bold"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editActionModal{{ $action->id }}">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        @include('component.modal-edit-action-kb')
+                                                        <!-- Tombol Delete -->
+                                                        <form action="{{ route('action.destroy', $action->id) }}"
+                                                            method="POST" class="d-inline form-delete">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-delete btn-sm text-white font-weight-bold">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
 
+                                                    </div>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -264,11 +326,12 @@
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
 
-                    var formAction = this.getAttribute('data-form-action');
+                    // Ambil URL dari data-action
+                    var formAction = this.getAttribute('data-action');
 
                     Swal.fire({
                         title: 'Konfirmasi Penghapusan',
-                        text: 'Apakah Anda yakin ingin menghapus Tindakan ini?',
+                        text: 'Apakah Anda yakin ingin menghapus tindakan ini?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -280,25 +343,11 @@
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Create and submit the form
-                            var form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = formAction;
-
-                            var csrfToken = document.createElement('input');
-                            csrfToken.type = 'hidden';
-                            csrfToken.name = '_token';
-                            csrfToken.value = "{{ csrf_token() }}";
-                            form.appendChild(csrfToken);
-
-                            var methodField = document.createElement('input');
-                            methodField.type = 'hidden';
-                            methodField.name = '_method';
-                            methodField.value = 'DELETE';
-                            form.appendChild(methodField);
-
-                            document.body.appendChild(form);
-                            form.submit();
+                            // Submit form menggunakan fetch atau form asli
+                            var form = this.closest('form');
+                            if (form) {
+                                form.submit();
+                            }
                         }
                     });
                 });

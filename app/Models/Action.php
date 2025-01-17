@@ -86,6 +86,22 @@ class Action extends Model
         'hasil_usg',
         'treatment_anc',
         'tanggal_kembali',
+        'kesimpulan',
+        'nilai_hb',
+        'layanan_kb',
+        'jmlh_anak_laki',
+        'jmlh_anak_perempuan',
+        'status_kb',
+        'tgl_lahir_anak_bungsu',
+        'kb_terakhir',
+        'tgl_kb_terakhir',
+        'kedaaan_umum',
+        'informed_concern',
+        'sakit_kuning',
+        'pendarahan_vagina',
+        'tumor',
+        'diabetes',
+        'pembekuan_darah',
     ];
 
     protected $casts = [

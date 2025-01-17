@@ -256,13 +256,60 @@ class ActionController extends Controller
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
+    public function indexKiaLab(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dokter = User::where('role', 'dokter')->get();
+
+        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $actionsQuery = Action::where('tipe', 'poli-kia')->whereNotNull('hasil_lab');
+
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
+        $routeName = $request->route()->getName();
+        return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+    public function indexKbLab(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dokter = User::where('role', 'dokter')->get();
+
+        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('hasil_lab');
+
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
+        $routeName = $request->route()->getName();
+        return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
     public function indexDokterKia(Request $request)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
-        $actionsQuery = Action::where('tipe', 'poli-kia')->whereNotNull('usia_kehamilan');
-
+        $actionsQuery = Action::where('tipe', 'poli-kia')->where('usia_kehamilan', '!=', 0);
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
         }
@@ -275,12 +322,48 @@ class ActionController extends Controller
         $routeName = $request->route()->getName();
         return view('content.action.index-kia', compact('actions', 'dokter', 'routeName'));
     }
+    public function indexDokterKb(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dokter = User::where('role', 'dokter')->get();
+        $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('layanan_kb');
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
+        $routeName = $request->route()->getName();
+        return view('content.action.index-kb', compact('actions', 'dokter', 'routeName'));
+    }
     public function indexKia(Request $request)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
         $actionsQuery = Action::where('tipe', 'poli-kia');
+        if ($startDate) {
+            $actionsQuery->whereDate('tanggal', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $actionsQuery->whereDate('tanggal', '<=', $endDate);
+        }
+
+        $actions = $actionsQuery->get();
+        $routeName = $request->route()->getName();
+        return view('content.action.index', compact('actions', 'dokter', 'routeName'));
+    }
+    public function indexKb(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dokter = User::where('role', 'dokter')->get();
+        $actionsQuery = Action::where('tipe', 'poli-kb');
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
         }
@@ -366,6 +449,10 @@ class ActionController extends Controller
                 $route = 'action.index';
             } elseif ($action->tipe === 'poli-gigi') {
                 $route = 'action.index.gigi';
+            } elseif ($action->tipe === 'poli-kia') {
+                $route = 'action.kia.index';
+            } elseif ($action->tipe === 'poli-kb') {
+                $route = 'action.kb.index';
             } else {
                 $route = 'action.index.ugd';
             }
@@ -472,8 +559,32 @@ class ActionController extends Controller
                 'treatment_anc' => 'nullable',
                 'kesimpulan' => 'nullable',
                 'tanggal_kembali' => 'nullable',
+                'nilai_hb' => 'nullable',
+                'layanan_kb' => 'nullable',
+                'jmlh_anak_laki' => 'nullable',
+                'jmlh_anak_perempuan' => 'nullable',
+                'status_kb' => 'nullable',
+                'tgl_lahir_anak_bungsu' => 'nullable',
+                'kb_terakhir' => 'nullable',
+                'tgl_kb_terakhir' => 'nullable',
+                'keadaan_umum' => 'nullable',
+                'informed_concern' => 'nullable',
+                'sakit_kuning' => 'nullable',
+                'pendarahan_vagina' => 'nullable',
+                'tumor' => 'nullable',
+                'diabetes' => 'nullable',
+                'pembekuan_darah' => 'nullable',
             ]);
-
+            $validatedData['lingkar_lengan_atas'] = $validatedData['lingkar_lengan_atas'] ?? 0;
+            $validatedData['usia_kehamilan'] = $validatedData['usia_kehamilan'] ?? 0;
+            $validatedData['tinggi_fundus_uteri'] = $validatedData['tinggi_fundus_uteri'] ?? 0;
+            $validatedData['denyut_jantung'] = $validatedData['denyut_jantung'] ?? 0;
+            $validatedData['kaki_bengkak'] = $validatedData['kaki_bengkak'] ?? 0;
+            $validatedData['imunisasi_tt'] = $validatedData['imunisasi_tt'] ?? 0;
+            $validatedData['tablet_fe'] = $validatedData['tablet_fe'] ?? 0;
+            $validatedData['proteinuria'] = $validatedData['proteinuria'] ?? 0;
+            $validatedData['periksa_usg'] = $validatedData['periksa_usg'] ?? 0;
+            // Update the action with the validated data
             // Update the action with the validated data
             $action->update($validated);
             if (Auth::user()->role == 'dokter') {
@@ -483,6 +594,8 @@ class ActionController extends Controller
                     $route = 'action.dokter.gigi.index';
                 } elseif ($action->tipe === 'poli-kia') {
                     $route = 'action.kia.dokter.index';
+                } elseif ($action->tipe === 'poli-kb') {
+                    $route = 'action.kb.dokter.index';
                 } else {
                     $route = 'action.dokter.ugd.index';
                 }
@@ -499,6 +612,10 @@ class ActionController extends Controller
                     $route = 'action.index';
                 } elseif ($action->tipe === 'poli-gigi') {
                     $route = 'action.index.gigi';
+                } elseif ($action->tipe === 'poli-kia') {
+                    $route = 'action.kia.index';
+                } elseif ($action->tipe === 'poli-kb') {
+                    $route = 'action.kb.index';
                 } else {
                     $route = 'action.index.ugd';
                 }
@@ -605,6 +722,7 @@ class ActionController extends Controller
                 'pemeriksaan_penunjang' => 'nullable',
                 'usia_kehamilan' => 'nullable',
                 'jenis_anc' => 'nullable',
+                'nilai_hb' => 'nullable',
                 'lingkar_lengan_atas' => 'nullable',
                 'tinggi_fundus_uteri' => 'nullable',
                 'presentasi_janin' => 'nullable',
@@ -624,10 +742,31 @@ class ActionController extends Controller
                 'treatment_anc' => 'nullable',
                 'kesimpulan' => 'nullable',
                 'tanggal_kembali' => 'nullable',
+                'layanan_kb' => 'nullable',
+                'jmlh_anak_laki' => 'nullable',
+                'jmlh_anak_perempuan' => 'nullable',
+                'status_kb' => 'nullable',
+                'tgl_lahir_anak_bungsu' => 'nullable',
+                'kb_terakhir' => 'nullable',
+                'tgl_kb_terakhir' => 'nullable',
+                'keadaan_umum' => 'nullable',
+                'informed_concern' => 'nullable',
+                'sakit_kuning' => 'nullable',
+                'pendarahan_vagina' => 'nullable',
+                'tumor' => 'nullable',
+                'diabetes' => 'nullable',
+                'pembekuan_darah' => 'nullable',
             ]);
 
-            // Update the action with the validated data
-            // dd($validated);
+            $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
+            $validated['usia_kehamilan'] = $validated['usia_kehamilan'] ?? 0;
+            $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
+            $validated['denyut_jantung'] = $validated['denyut_jantung'] ?? 0;
+            $validated['kaki_bengkak'] = $validated['kaki_bengkak'] ?? 0;
+            $validated['imunisasi_tt'] = $validated['imunisasi_tt'] ?? 0;
+            $validated['tablet_fe'] = $validated['tablet_fe'] ?? 0;
+            $validated['proteinuria'] = $validated['proteinuria'] ?? 0;
+            $validated['periksa_usg'] = $validated['periksa_usg'] ?? 0;
             $action->update($validated);
             if ($action->tipe === 'poli-umum') {
                 $route = 'action.dokter.index';
@@ -635,6 +774,8 @@ class ActionController extends Controller
                 $route = 'action.dokter.gigi.index';
             } elseif ($action->tipe === 'poli-kia') {
                 $route = 'action.kia.dokter.index';
+            } elseif ($action->tipe === 'poli-kb') {
+                $route = 'action.kb.dokter.index';
             } else {
                 $route = 'action.dokter.ugd.index';
             }
@@ -650,10 +791,9 @@ class ActionController extends Controller
     public function updateLab(Request $request, $id)
     {
         try {
-            $action = Action::find($id);
-            if (!$action) {
-                return redirect()->back()->with('error', 'Action not found');
-            }
+            // Find the action record to be updated
+            $action = Action::findOrFail($id);
+
             // Fetch the patient ID based on the provided NIK
             $patient = Patients::where('nik', $request->nik)->first();
 
@@ -664,10 +804,11 @@ class ActionController extends Controller
                     ->withInput();
             }
 
-            // Merge the request with the formatted tanggal and id_patient
+            // Format the date and merge the patient ID into the request
             $request->merge([
                 'id_patient' => $patient->id,
             ]);
+
             // dd($request->);
             // Validate the request
             $validated = $request->validate([
@@ -680,6 +821,10 @@ class ActionController extends Controller
                 $route = 'action.lab.index';
             } elseif ($action->tipe === 'poli-gigi') {
                 $route = 'action.lab.gigi.index';
+            } elseif ($action->tipe === 'poli-kia') {
+                $route = 'action.lab.kia.index';
+            } elseif ($action->tipe === 'poli-kb') {
+                $route = 'action.lab.kb.index';
             } else {
                 $route = 'action.lab.ugd.index';
             }

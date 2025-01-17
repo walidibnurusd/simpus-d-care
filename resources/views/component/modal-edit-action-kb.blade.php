@@ -33,7 +33,7 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title" id="exampleModalLabel">TINDAKAN KIA</h5>
+                <h5 class="modal-title" id="exampleModalLabel">TINDAKAN KB</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -41,7 +41,7 @@
                 <form id="addPatientForm" action="{{ route('action.update', $action->id) }}" method="POST"
                     class="px-3">
                     @csrf
-                    <input type="hidden" name="tipe" id="tipe" value="poli-kia">
+                    <input type="hidden" name="tipe" id="tipe" value="poli-kb">
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
@@ -289,322 +289,305 @@
                         </div>
                         <div style="display: flex; align-items: center; text-align: center;">
                             <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                            <span style="margin: 0 10px; white-space: nowrap;">Pelayanan ANC</span>
+                            <span style="margin: 0 10px; white-space: nowrap;">Pelayanan KB</span>
                             <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                         </div>
 
-                        <div class="col-12">
+                        <div class="row mt-3">
                             <div class="row g-2">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="usia_hamil">Usia kehamilan </label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="usia_hamil"
-                                                name="usia_kehamilan" placeholder="Masukkan usia kehamilan"
-                                                value="{{ $action->usia_kehamilan }}">
-                                            <span class="input-group-text">minggu</span>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="jenis_anc">Jenis ANC</label>
-                                        <select class="form-control" id="jenis_anc" name="jenis_anc">
+                                        <label for="layanan_kb">Jenis Pelayanan KB</label>
+                                        <select class="form-control" id="layanan_kb" name="layanan_kb">
                                             <option value="" disabled
-                                                {{ empty($action->jenis_anc) ? 'selected' : '' }}>Pilih
-                                                jenis ANC</option>
-                                            <option value="anc1"
-                                                {{ $action->jenis_anc == 'anc1' ? 'selected' : '' }}>ANC 1</option>
-                                            <option value="anc2"
-                                                {{ $action->jenis_anc == 'anc2' ? 'selected' : '' }}>ANC II</option>
-                                            <option value="anc3"
-                                                {{ $action->jenis_anc == 'anc3' ? 'selected' : '' }}>ANC III</option>
-                                            <option value="anc4"
-                                                {{ $action->jenis_anc == 'anc4' ? 'selected' : '' }}>ANC IV</option>
-                                            <option value="anc5"
-                                                {{ $action->jenis_anc == 'anc5' ? 'selected' : '' }}>ANC V</option>
-                                            <option value="anc6"
-                                                {{ $action->jenis_anc == 'an6' ? 'selected' : '' }}>ANC VI</option>
+                                                {{ empty($action->layanan_kb) ? 'selected' : '' }}>Pilih</option>
+                                            <option value="1" {{ $action->layanan_kb == '1' ? 'selected' : '' }}>
+                                                Pelayanan KB :
+                                                Suntik</option>
+                                            <option value="2" {{ $action->layanan_kb == '2' ? 'selected' : '' }}>
+                                                Pelayanan KB : Pencabutan IUD (AKDR)</option>
+                                            <option value="3" {{ $action->layanan_kb == '3' ? 'selected' : '' }}>
+                                                Pelayanan KB : Pemasangan IUD (AKDR)</option>
+                                            <option value="4" {{ $action->layanan_kb == '4' ? 'selected' : '' }}>
+                                                Pelayanan KB : Pemasangan dan Pencabutan IUD (AKDR)
+                                            </option>
+                                            <option value="5" {{ $action->layanan_kb == '5' ? 'selected' : '' }}>
+                                                Pelayanan KB : Pencabutan Implant</option>
+                                            <option value="6" {{ $action->layanan_kb == '6' ? 'selected' : '' }}>
+                                                Pelayanan KB : Pemasangan Implant</option>
+                                            <option value="7" {{ $action->layanan_kb == '7' ? 'selected' : '' }}>
+                                                Pelayanan KB : Pemasangan dan Pencabutan Implant
+                                            </option>
+                                            <option value="8" {{ $action->layanan_kb == '8' ? 'selected' : '' }}>
+                                                MOP / Vasektomi
+                                            </option>
 
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="lingkar_lengan_atas">Lingkar lengan atas </label>
+                                        <label for="jmlh_anak_laki">Jmlh. Anak Hidup (Laki-laki) </label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="lingkar_lengan_atas"
-                                                name="lingkar_lengan_atas" placeholder="Masukkan lingkar lengan atas"
-                                                value="{{ $action->lingkar_lengan_atas }}">
-                                            <span class="input-group-text">cm</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="tinggi_fundus_uteri">Tinggi fundus uteri</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="tinggi_fundus_uteri"
-                                                name="tinggi_fundus_uteri" placeholder="Masukkan tinggi fundus uteri"
-                                                value="{{ $action->tinggi_fundus_uteri }}">
-                                            <span class="input-group-text">cm</span>
+                                            <input type="number" class="form-control" id="jmlh_anak_laki"
+                                                name="jmlh_anak_laki" placeholder="0"
+                                                value="{{ $action->jmlh_anak_laki }}">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="presentansi_janin">Presentasi janin</label>
-                                        <select class="form-control" id="presentasi_janin" name="presentasi_janin">
-                                            <option value="" disabled
-                                                {{ empty($action->presentasi_janin) ? 'selected' : '' }}>Pilih
-                                                presentasi janin
-                                            </option>
-                                            <option value="kepala"
-                                                {{ $action->presentasi_janin == 'kepala' ? 'selected' : '' }}>
-                                                Kepala</option>
-                                            <option value="sungsang"
-                                                {{ $action->presentasi_janin == 'sungsang' ? 'selected' : '' }}>
-                                                Sungsang</option>
-                                            <option value="melintang"
-                                                {{ $action->presentasi_janin == 'melintang' ? 'selected' : '' }}>
-                                                Melintang</option>
-                                            <option value="lain-lain"
-                                                {{ $action->presentasi_janin == 'lain-lain' ? 'selected' : '' }}>
-                                                Lain-lain</option>
-                                        </select>
+                                        <label for="jmlh_anak_perempuan">Jmlh. Anak Hidup (Perempuan) </label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="jmlh_anak_perempuan"
+                                                name="jmlh_anak_perempuan" placeholder="0"
+                                                value="{{ $action->jmlh_anak_perempuan }}">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="denyut_jantung">Denyut nyantung </label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="denyut_jantung"
-                                                name="denyut_jantung" placeholder="Masukkan denyut jantung"
-                                                value="{{ $action->denyut_jantung }}">
-                                            <span class="input-group-text">bpm</span>
-                                        </div>
+                                        <label for="status_kb">Status Peserta KB</label>
+                                        <select class="form-control" id="status_kb" name="status_kb">
+                                            <option value="" disabled
+                                                {{ empty($action->status_kb) ? 'selected' : '' }}>Pilih</option>
+                                            <option value="1" {{ $action->status_kb == '1' ? 'selected' : '' }}>
+                                                Baru Pertama Kali</option>
+                                            <option value="2" {{ $action->status_kb == '2' ? 'selected' : '' }}>
+                                                Sesudah Bersalin</option>
+                                            <option value="3" {{ $action->status_kb == '3' ? 'selected' : '' }}>
+                                                Pindah Tempat Pelayanan, Ganti Cara</option>
+                                            <option value="4" {{ $action->status_kb == '4' ? 'selected' : '' }}>
+                                                Pindah Tempat Pelayanan, Cara Sama
+                                            </option>
+                                            <option value="5" {{ $action->status_kb == '5' ? 'selected' : '' }}>
+                                                Tempat Pelayanan Sama, Ganti Cara</option>
+                                            <option value="6" {{ $action->status_kb == '6' ? 'selected' : '' }}>
+                                                Tempat Pelayanan Sama, Cara Sama/Lanjutkan</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="tgl_lahir_anak_bungsu">Tgl.Lahir Anak Terkecil</label>
+                                        <div class="input-group">
+                                            <input type="date" class="form-control" id="tgl_lahir_anak_bungsu"
+                                                name="tgl_lahir_anak_bungsu"
+                                                value="{{ $action->tgl_lahir_anak_bungsu }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="kb_terakhir">Cara KB Terakhir</label>
+                                        <select class="form-control" id="kb_terakhir" name="kb_terakhir">
+                                            <option value="" disabled
+                                                {{ empty($action->kb_terakhir) ? 'selected' : '' }}>Pilih</option>
+                                            <option value="1"
+                                                {{ $action->kb_terakhir == '1' ? 'selected' : '' }}>
+                                                Tidak Ada</option>
+                                            <option value="2"
+                                                {{ $action->kb_terakhir == '2' ? 'selected' : '' }}>
+                                                IUD</option>
+                                            <option value="3"
+                                                {{ $action->kb_terakhir == '3' ? 'selected' : '' }}>
+                                                MOP</option>
+                                            <option value="4"
+                                                {{ $action->kb_terakhir == '4' ? 'selected' : '' }}>
+                                                MOW
+                                            </option>
+                                            <option value="5"
+                                                {{ $action->kb_terakhir == '5' ? 'selected' : '' }}>
+                                                Kondom</option>
+                                            <option value="6"
+                                                {{ $action->kb_terakhir == '6' ? 'selected' : '' }}>
+                                                Implant</option>
+                                            <option value="7"
+                                                {{ $action->kb_terakhir == '7' ? 'selected' : '' }}>
+                                                Suntikan</option>
+                                            <option value="8"
+                                                {{ $action->kb_terakhir == '8' ? 'selected' : '' }}>
+                                                Pil</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="tgl_kb_terakhir">Tgl.KB Terakhir</label>
+                                        <div class="input-group">
+                                            <input type="date" class="form-control" id="tgl_kb_terakhir"
+                                                name="tgl_kb_terakhir" value="{{ $action->tgl_kb_terakhir }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="keadaan_umum">Keadaan Umum</label>
+                                        <select class="form-control" id="keadaan_umum" name="keadaan_umum">
+                                            <option value="" disabled
+                                                {{ empty($action->keadaan_umum) ? 'selected' : '' }}>Pilih</option>
+                                            <option value="1"
+                                                {{ $action->keadaan_umum == '1' ? 'selected' : '' }}>Baik</option>
+                                            <option value="2"
+                                                {{ $action->keadaan_umum == '2' ? 'selected' : '' }}>Sedang</option>
+                                            <option value="3"
+                                                {{ $action->keadaan_umum == '3' ? 'selected' : '' }}>Kurang</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                         <div class="row mt-3">
-                            <div class="col-md-4">
-                                <label>Kaki Bengkak</label>
-                                <div class="custom-radio-container">
-                                    <label class="custom-radio-wrapper">
-                                        <input class="custom-radio" type="radio" name="kaki_bengkak"
-                                            id="kaki_bengkak_ya" value="1"
-                                            {{ $action->kaki_bengkak == 1 ? 'checked' : '' }}>
-                                        <span class="custom-radio-label">Ya</span>
-                                    </label>
-                                    <label class="custom-radio-wrapper">
-                                        <input class="custom-radio" type="radio" name="kaki_bengkak"
-                                            id="kaki_bengkak_tidak" value="0"
-                                            {{ $action->kaki_bengkak == 0 ? 'checked' : '' }}>
-                                        <span class="custom-radio-label">Tidak</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label>Diberikan Imunisasi TT</label>
-                                <div class="custom-radio-container">
-                                    <label class="custom-radio-wrapper">
-                                        <input class="custom-radio" type="radio" name="imunisasi_tt"
-                                            id="imunisasi_tt_ya" value="1"
-                                            {{ $action->imunisasi_tt == 1 ? 'checked' : '' }}>
-                                        <span class="custom-radio-label">Ya</span>
-                                    </label>
-                                    <label class="custom-radio-wrapper">
-                                        <input class="custom-radio" type="radio" name="imunisasi_tt"
-                                            id="imunisasi_tt_tidak" value="0"
-                                            {{ $action->imunisasi_tt == 0 ? 'checked' : '' }}>
-                                        <span class="custom-radio-label">Tidak</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label>Diberikan Tablet FEk</label>
-                                <div class="custom-radio-container">
-                                    <label class="custom-radio-wrapper">
-                                        <input class="custom-radio" type="radio" name="tablet_fe"
-                                            id="tablet_fe_ya" value="1"
-                                            {{ $action->tablet_fe == 1 ? 'checked' : '' }}>
-                                        <span class="custom-radio-label">Ya</span>
-                                    </label>
-                                    <label class="custom-radio-wrapper">
-                                        <input class="custom-radio" type="radio" name="tablet_fe"
-                                            id="tablet_fe_tidak" value="0"
-                                            {{ $action->tablet_fe == 0 ? 'checked' : '' }}>
-                                        <span class="custom-radio-label">Tidak</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 mt-3">
-                                <label>Status Kehamilan</label>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control" id="gravida" name="gravida"
-                                            placeholder="Gravida" value="{{ $action->gravida }}">
+                            <div class="col-md-3">
+                                <label>Informed Concern</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="informed_concern" id="informed_concern_ya"
+                                            value="1"{{ $action->informed_concern == 1 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="informed_concern_ya">Ada</label>
                                     </div>
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control" id="partus" name="partus"
-                                            placeholder="Partus" value="{{ $action->partus }}">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="informed_concern" id="informed_concern_tidak" value="0"
+                                            {{ $action->informed_concern == 0 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="informed_concern_tidak">Tidak</label>
                                     </div>
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control" id="abortus" name="abortus"
-                                            placeholder="Abortus" value="{{ $action->abortus }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Hamil/Diduga hamil</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="hamil"
+                                            id="hamil_ya" value="1" {{ $action->hamil == 1 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="hamil_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="hamil"
+                                            id="hamil_tidak" value="0"
+                                            {{ $action->hamil == 0 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="hamil_tidak">Tidak</label>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 mt-3">
-                                <label>Nilai Hb</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="nilai_hb" name="nilai_hb"
-                                        placeholder="Masukkan Nilai Hb" value="{{ $action->nilai_hb }}">
-                                    <span class="input-group-text">g/dl</span>
+                            <div class="col-md-3">
+                                <label>Sakit Kuning</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="sakit_kuning" id="sakit_kuning_ya" value="1"
+                                            {{ $action->sakit_kuning == 1 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="sakit_kuning_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="sakit_kuning" id="sakit_kuning_tidak" value="0"
+                                            {{ $action->sakit_kuning == 0 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="sakit_kuning_tidak">Tidak</label>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 mt-3">
-                                <label>Proteinuria</label>
-                                <div class="custom-radio-container">
-                                    <label class="custom-radio-wrapper">
-                                        <input class="custom-radio" type="radio" name="proteinura"
-                                            id="proteinura_ya" value="1"
-                                            {{ $action->proteinura == 1 ? 'checked' : '' }}>
-                                        <span class="custom-radio-label">Positif</span>
-                                    </label>
-                                    <label class="custom-radio-wrapper">
-                                        <input class="custom-radio" type="radio" name="proteinura"
-                                            id="proteinura_tidak" value="0"
-                                            {{ $action->proteinura == 0 ? 'checked' : '' }}>
-                                        <span class="custom-radio-label">Negatif</span>
-                                    </label>
+                            <div class="col-md-3">
+                                <label>Pendarahan Pervaginaan</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="pendarahan_vagina" id="pendarahan_vagina_ya" value="1"
+                                            {{ $action->pendarahan_vagina == 1 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="pendarahan_vagina_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="pendarahan_vagina" id="pendarahan_vagina_tidak" value="0"
+                                            {{ $action->pendarahan_vagina == 0 ? 'checked' : '' }}>>
+                                        <label class="form-check-label" for="pendarahan_vagina_tidak">Tidak</label>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div style="display: flex; align-items: center; text-align: center;">
-                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                                <span style="margin: 0 10px; white-space: nowrap;">Hasil Test Triple Eliminasi</span>
-                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                            <div class="col-md-3 mt-3">
+                                <label>Tumor</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="tumor"
+                                            id="tumor_ya" value="1">
+                                        <label class="form-check-label" for="tumor_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="tumor"
+                                            id="tumor_tidak" value="0">
+                                        <label class="form-check-label" for="tumor_tidak">Tidak</label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-md-3">
-                                    <label>HIV</label>
-                                    <div class="custom-radio-container">
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="hiv" id="hiv_ya"
-                                                value="reaktif" {{ $action->hiv == 'reaktif' ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Reaktif</span>
-                                        </label>
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="hiv" id="hiv_tidak"
-                                                value="non-reaktif"
-                                                {{ $action->hiv == 'non-reaktif' ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Non-Reaktif</span>
-                                        </label>
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="hiv"
-                                                id="hiv_lain_lain" value="tidak_tersedia"
-                                                {{ $action->hiv == 'tidak_tersedia' ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Tidak Tersedia</span>
-                                        </label>
+                            <div class="col-md-3 mt-3">
+                                <label>IMS/HIV/AIDS</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="hiv"
+                                            id="hiv_ya" value="1">
+                                        <label class="form-check-label" for="hiv_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="hiv"
+                                            id="hiv_tidak" value="0">
+                                        <label class="form-check-label" for="hiv_tidak">Tidak</label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label>Sifilis</label>
-                                    <div class="custom-radio-container">
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="sifilis"
-                                                id="sifilis_ya" value="reaktif"
-                                                {{ $action->sifilis == 'reaktif' ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Reaktif</span>
-                                        </label>
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="sifilis"
-                                                id="sifilis_tidak" value="non-reaktif"
-                                                {{ $action->sifilis == 'non-reaktif' ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Non-Reaktif</span>
-                                        </label>
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="sifilis"
-                                                id="sifilis_lain_lain" value="tidak_tersedia"
-                                                {{ $action->sifilis == 'tidak_tersedia' ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Tidak Tersedia</span>
-                                        </label>
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <label>Tanda Tanda Diabetes</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="diabetes"
+                                            id="diabetes_ya" value="1">
+                                        <label class="form-check-label" for="diabetes_ya">Ya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio" name="diabetes"
+                                            id="diabetes_tidak" value="0">
+                                        <label class="form-check-label" for="diabetes_tidak">Tidak</label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label>Hepatitis</label>
-                                    <div class="custom-radio-container">
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="hepatitis"
-                                                id="hepatitis_ya" value="reaktif"
-                                                {{ $action->hepatitis == 'reaktif' ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Reaktif</span>
-                                        </label>
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="hepatitis"
-                                                id="hepatitis_tidak" value="non-reaktif"
-                                                {{ $action->hepatitis == 'non-reaktif' ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Non-Reaktif</span>
-                                        </label>
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="hepatitis"
-                                                id="hepatitis_lain_lain" value="tidak_tersedia"
-                                                {{ $action->hepatitis == 'tidak_tersedia' ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Tidak Tersedia</span>
-                                        </label>
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <label>Kelainan Pembekuan Darah</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="pembekuan_darah" id="pembekuan_darah_ya" value="1">
+                                        <label class="form-check-label" for="pembekuan_darah_ya">Ya</label>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label>Dengan pemeriksaan USG</label>
-                                    <div class="custom-radio-container">
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="periksa_usg"
-                                                id="periksa_usg_ya" value="1"
-                                                {{ $action->periksa_usg == 1 ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Ya</span>
-                                        </label>
-                                        <label class="custom-radio-wrapper">
-                                            <input class="custom-radio" type="radio" name="periksa_usg"
-                                                id="periksa_usg_tidak" value="0"
-                                                {{ $action->periksa_usg == 0 ? 'checked' : '' }}>
-                                            <span class="custom-radio-label">Tidak</span>
-                                        </label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input custom-radio" type="radio"
+                                            name="pembekuan_darah" id="pembekuan_darah_tidak" value="0">
+                                        <label class="form-check-label" for="pembekuan_darah_tidak">Tidak</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mt-3">
-                                <label for="hasil_usg">Hasil USG</label>
-                                <textarea class="form-control" id="hasil_usg" name="hasil_usg" placeholder="Hasil USG">{{ old('hasil_usg', $action->hasil_usg ?? '') }}</textarea>
-                            </div>
-                            <div class="col-md-6 mt-3">
-                                <label for="treatment_anc">Treatment ANC</label>
-                                <textarea class="form-control" id="treatment_anc" name="treatment_anc" placeholder="Treatment ANC">{{ old('treatment_anc', $action->treatment_anc ?? '') }}</textarea>
+                                <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
+                                <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
+                                    placeholder="Pemeriksaan penunjang"></textarea>
                             </div>
                             <div class="col-md-6 mt-3">
                                 <label for="kesimpulan">Kesimpulan</label>
-                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $action->kesimpulan ?? '') }}</textarea>
-                            </div>
-                            <div class="col-md-6 mt-3">
-                                <label for="tanggal_kembali">Tanggal kembali</label>
-                                <input type="date" class="form-control" name="tanggal_kembali"
-                                    id="tanggal_kembali" placeholder="Pilih Tanggal"
-                                    value="{{ $action->tanggal_kembali }}">
+                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan"></textarea>
                             </div>
                             <div class="col-md-6 mt-3">
                                 <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
-                                <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
+                                <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
