@@ -35,10 +35,13 @@
             <div class="col-12 mb-4">
                 <div class="button-container">
                     <!-- Tombol Tambah -->
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addActionModal">
-                        Tambah
-                        <i class="fas fa-plus ms-2"></i> <!-- Ikon Tambah -->
-                    </button>
+                    @if (Auth::user()->role == 'dokter')
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#addActionModal">
+                            Tambah
+                            <i class="fas fa-plus ms-2"></i> <!-- Ikon Tambah -->
+                        </button>
+                    @endif
                     <!-- Form untuk Print dan Filter -->
                     <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3">
                         <div class="row">
