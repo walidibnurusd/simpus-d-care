@@ -210,8 +210,8 @@
                                     <input type="text" class="form-control" id="keterangan" name="keterangan"
                                         placeholder="Keterangan">
                                 </div>
-        
-        
+
+
                             </div>
 
                         </div>
@@ -482,6 +482,11 @@
                         <div class="col-md-6 mt-3">
                             <label for="treatment_anc">Treatment ANC</label>
                             <textarea class="form-control" id="treatment_anc" name="treatment_anc" placeholder="Treatment ANC"></textarea>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
+                            <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
+                                placeholder="Pemeriksaan penunjang"></textarea>
                         </div>
                         <div class="col-md-6 mt-3">
                             <label for="kesimpulan">Kesimpulan</label>

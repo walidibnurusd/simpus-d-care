@@ -819,7 +819,7 @@ class ActionController extends Controller
             $action = Action::findOrFail($id);
 
             // Fetch the patient ID based on the provided NIK
-            $patient = Patients::where('nik', $request->nikEdit)->first();
+            $patient = Patients::where('nik', $request->nik)->first();
 
             if (!$patient) {
                 return redirect()
