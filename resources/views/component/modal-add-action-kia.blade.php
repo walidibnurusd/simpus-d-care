@@ -214,6 +214,7 @@
 
                             </div>
 
+
                         </div>
                         <div style="display: flex; align-items: center; text-align: center;">
                             <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
@@ -484,11 +485,6 @@
                             <textarea class="form-control" id="treatment_anc" name="treatment_anc" placeholder="Treatment ANC"></textarea>
                         </div>
                         <div class="col-md-6 mt-3">
-                            <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
-                            <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
-                                placeholder="Pemeriksaan penunjang"></textarea>
-                        </div>
-                        <div class="col-md-6 mt-3">
                             <label for="kesimpulan">Kesimpulan</label>
                             <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan"></textarea>
                         </div>
@@ -501,7 +497,17 @@
                             <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                             <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                         </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
+                            <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
+                                placeholder="Pemeriksaan penunjang"></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="hasil_lab" style="color: rgb(19, 11, 241);">Hasil Laboratorium</label>
+                            <textarea class="form-control" id="hasil_lab" name="hasil_lab" placeholder="Hasil Laboratorium"></textarea>
+                        </div>
                     </div>
+
 
 
             </div>
@@ -544,9 +550,9 @@
         const selectElement = document.getElementById('riwayat_penyakit_dulu');
         const selectPenyakitKeluargaElement = document.getElementById('riwayat_penyakit_keluarga');
         const lainnyaContainer = document.getElementById('penyakit_lainnya_container');
-        const lainnyaTextarea = document.getElementById('penyakit_lainnya');
+        const lainnyaTextarea = document.getElementById('riwayat_penyakit_lainnya');
         const lainnyaKeluargaContainer = document.getElementById('penyakit_lainnya_keluarga_container');
-        const lainnyaKeluargaTextarea = document.getElementById('penyakit_lainnya_keluarga');
+        const lainnyaKeluargaTextarea = document.getElementById('riwayat_penyakit_lainnya_keluarga');
 
         if (selectElement && selectPenyakitKeluargaElement) {
             selectElement.addEventListener('change', function() {

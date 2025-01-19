@@ -183,9 +183,9 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="riwayat_penyakit_dulu" style="color: rgb(241, 11, 11);">Riwayat
+                                    <label for="riwayat_penyakit_dulu_edit" style="color: rgb(241, 11, 11);">Riwayat
                                         Penyakit Terdahulu</label>
-                                    <select class="form-control" id="riwayat_penyakit_dulu"
+                                    <select class="form-control" id="riwayat_penyakit_dulu_edit"
                                         name="riwayat_penyakit_dulu">
                                         <option value="" disabled
                                             {{ empty($action->riwayat_penyakit_dulu) ? 'selected' : '' }}>
@@ -223,10 +223,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-12 mt-2" id="penyakit_lainnya_container" style="display: none;">
+                            <div class="col-md-12 mt-2" id="penyakit_lainnya_container_edit" style="display: none;">
                                 <label for="penyakit_lainnya" style="color: rgb(241, 11, 11);">Sebutkan
                                     Penyakit Lainnya</label>
-                                <textarea class="form-control" id="penyakit_lainnya" name="riwayat_penyakit_lainnya"
+                                <textarea class="form-control" id="penyakit_lainnya_edit" name="riwayat_penyakit_lainnya"
                                     placeholder="Isi penyakit lainnya">{{ old('penyakit_lainnya', $action->riwayat_penyakit_lainnya ?? '') }}</textarea>
                             </div>
                             <div class="col-md-12">
@@ -238,7 +238,7 @@
                                 <div class="form-group">
                                     <label for="riwayat_penyakit_keluarga" style="color: rgb(241, 11, 11);">Riwayat
                                         Penyakit Keluarga</label>
-                                    <select class="form-control" id="riwayat_penyakit_keluarga"
+                                    <select class="form-control" id="riwayat_penyakit_keluarga_edit"
                                         name="riwayat_penyakit_keluarga">
                                         <option value="" disabled
                                             {{ empty($action->riwayat_penyakit_keluarga) ? 'selected' : '' }}>
@@ -273,17 +273,25 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-12 mt-2" id="penyakit_lainnya_keluarga_container"
+                            <div class="col-md-12 mt-2" id="penyakit_lainnya_keluarga_container_edit"
                                 style="display: none;">
                                 <label for="penyakit_lainnya_keluarga" style="color: rgb(241, 11, 11);">Sebutkan
                                     Penyakit Lainnya</label>
-                                <textarea class="form-control" id="penyakit_lainnya_keluarga" name="riwayat_penyakit_lainnya_keluarga"
+                                <textarea class="form-control" id="penyakit_lainnya_keluarga_edit" name="riwayat_penyakit_lainnya_keluarga"
                                     placeholder="Isi penyakit lainnya">{{ old('riwayat_penyakit_lainnya_keluarga', $action->riwayat_penyakit_lainnya_keluarga ?? '') }}</textarea>
                             </div>
                             <div class="col-md-12">
                                 <label for="riwayat_alergi" style="color: rgb(241, 11, 11);">Riwayat
                                     Alergi</label>
                                 <textarea class="form-control" id="riwayat_alergi" name="riwayat_alergi" placeholder="Riwayat Alergi">{{ old('riwayat_alergi', $action->riwayat_alergi ?? '') }}</textarea>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
+                                    <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                        placeholder="Keterangan"
+                                        value="{{ isset($action->keterangan) ? $action->keterangan : '' }}">
+                                </div>
                             </div>
 
                         </div>
@@ -424,6 +432,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="keadaan_umum">Keadaan Umum</label>
@@ -501,13 +510,13 @@
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio"
                                             name="pendarahan_vagina" id="pendarahan_vagina_ya" value="1"
-                                            {{ $action->pendarahan_vagina == 1 ? 'checked' : '' }}>
+                                            {{ isset($action->pendarahan_vagina) && $action->pendarahan_vagina == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="pendarahan_vagina_ya">Ya</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio"
                                             name="pendarahan_vagina" id="pendarahan_vagina_tidak" value="0"
-                                            {{ $action->pendarahan_vagina == 0 ? 'checked' : '' }}>>
+                                            {{ isset($action->pendarahan_vagina) && $action->pendarahan_vagina == 0 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="pendarahan_vagina_tidak">Tidak</label>
                                     </div>
                                 </div>
@@ -517,12 +526,14 @@
                                 <div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio" name="tumor"
-                                            id="tumor_ya" value="1">
+                                            id="tumor_ya" value="1"
+                                            {{ isset($action->tumor) && $action->tumor == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="tumor_ya">Ya</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio" name="tumor"
-                                            id="tumor_tidak" value="0">
+                                            id="tumor_tidak" value="0"
+                                            {{ isset($action->tumor) && $action->tumor == 0 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="tumor_tidak">Tidak</label>
                                     </div>
                                 </div>
@@ -532,12 +543,14 @@
                                 <div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio" name="hiv"
-                                            id="hiv_ya" value="1">
+                                            id="hiv_ya" value="1"
+                                            {{ isset($action->hiv) && $action->hiv == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="hiv_ya">Ya</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio" name="hiv"
-                                            id="hiv_tidak" value="0">
+                                            id="hiv_tidak" value="0"
+                                            {{ isset($action->hiv) && $action->hiv == 0 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="hiv_tidak">Tidak</label>
                                     </div>
                                 </div>
@@ -547,12 +560,14 @@
                                 <div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio" name="diabetes"
-                                            id="diabetes_ya" value="1">
+                                            id="diabetes_ya" value="1"
+                                            {{ isset($action->diabetes) && $action->diabetes == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="diabetes_ya">Ya</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio" name="diabetes"
-                                            id="diabetes_tidak" value="0">
+                                            id="diabetes_tidak" value="0"
+                                            {{ isset($action->diabetes) && $action->diabetes == 0 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="diabetes_tidak">Tidak</label>
                                     </div>
                                 </div>
@@ -562,33 +577,47 @@
                                 <div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio"
-                                            name="pembekuan_darah" id="pembekuan_darah_ya" value="1">
+                                            name="pembekuan_darah" id="pembekuan_darah_ya" value="1"
+                                            {{ isset($action->pembekuan_darah) && $action->pembekuan_darah == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="pembekuan_darah_ya">Ya</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input custom-radio" type="radio"
-                                            name="pembekuan_darah" id="pembekuan_darah_tidak" value="0">
+                                            name="pembekuan_darah" id="pembekuan_darah_tidak" value="0"
+                                            {{ isset($action->pembekuan_darah) && $action->pembekuan_darah == 0 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="pembekuan_darah_tidak">Tidak</label>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mt-3">
-                                <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
-                                <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
-                                    placeholder="Pemeriksaan penunjang"></textarea>
-                            </div>
-                            <div class="col-md-6 mt-3">
-                                <label for="kesimpulan">Kesimpulan</label>
-                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan"></textarea>
-                            </div>
-                            <div class="col-md-6 mt-3">
-                                <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
-                                <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
+
+                            <div class="row">
+                                <div class="col-md-6 mt-3">
+                                    <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
+                                    <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
+                                        placeholder="Pemeriksaan penunjang">{{ isset($action->pemeriksaan_penunjang) ? $action->pemeriksaan_penunjang : '' }}</textarea>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <label for="kesimpulan">Kesimpulan</label>
+                                    <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ isset($action->kesimpulan) ? $action->kesimpulan : '' }}</textarea>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
+                                    <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ isset($action->obat) ? $action->obat : '' }}</textarea>
+                                </div>
+                                {{-- <div class="col-md-12">
+                                    <label for="hasil_lab" style="color: rgb(19, 11, 241);">Hasil Laboratorium</label>
+                                    <textarea class="form-control" id="hasil_lab" name="hasil_lab" placeholder="Hasil Laboratorium">
+                                        {{ isset($action->hasil_lab) ? $action->hasil_lab : '' }}
+                                    </textarea>
+                                </div> --}}
+
+
                             </div>
                         </div>
                     </div>
+
+
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Simpan Data</button>

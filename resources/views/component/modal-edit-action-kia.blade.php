@@ -185,7 +185,7 @@
                                 <div class="form-group">
                                     <label for="riwayat_penyakit_dulu" style="color: rgb(241, 11, 11);">Riwayat
                                         Penyakit Terdahulu</label>
-                                    <select class="form-control" id="riwayat_penyakit_dulu"
+                                    <select class="form-control" id="riwayat_penyakit_dulu_edit"
                                         name="riwayat_penyakit_dulu">
                                         <option value="" disabled
                                             {{ empty($action->riwayat_penyakit_dulu) ? 'selected' : '' }}>
@@ -223,10 +223,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-12 mt-2" id="penyakit_lainnya_container" style="display: none;">
+                            <div class="col-md-12 mt-2" id="penyakit_lainnya_container_edit" style="display: none;">
                                 <label for="penyakit_lainnya" style="color: rgb(241, 11, 11);">Sebutkan
                                     Penyakit Lainnya</label>
-                                <textarea class="form-control" id="penyakit_lainnya" name="riwayat_penyakit_lainnya"
+                                <textarea class="form-control" id="penyakit_lainnya_edit" name="riwayat_penyakit_lainnya"
                                     placeholder="Isi penyakit lainnya">{{ old('penyakit_lainnya', $action->riwayat_penyakit_lainnya ?? '') }}</textarea>
                             </div>
                             <div class="col-md-12">
@@ -238,7 +238,7 @@
                                 <div class="form-group">
                                     <label for="riwayat_penyakit_keluarga" style="color: rgb(241, 11, 11);">Riwayat
                                         Penyakit Keluarga</label>
-                                    <select class="form-control" id="riwayat_penyakit_keluarga"
+                                    <select class="form-control" id="riwayat_penyakit_keluarga_edit"
                                         name="riwayat_penyakit_keluarga">
                                         <option value="" disabled
                                             {{ empty($action->riwayat_penyakit_keluarga) ? 'selected' : '' }}>
@@ -273,17 +273,25 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-12 mt-2" id="penyakit_lainnya_keluarga_container"
+                            <div class="col-md-12 mt-2" id="penyakit_lainnya_keluarga_container_edit"
                                 style="display: none;">
                                 <label for="penyakit_lainnya_keluarga" style="color: rgb(241, 11, 11);">Sebutkan
                                     Penyakit Lainnya</label>
-                                <textarea class="form-control" id="penyakit_lainnya_keluarga" name="riwayat_penyakit_lainnya_keluarga"
+                                <textarea class="form-control" id="penyakit_lainnya_keluarga_edit" name="riwayat_penyakit_lainnya_keluarga"
                                     placeholder="Isi penyakit lainnya">{{ old('riwayat_penyakit_lainnya_keluarga', $action->riwayat_penyakit_lainnya_keluarga ?? '') }}</textarea>
                             </div>
                             <div class="col-md-12">
                                 <label for="riwayat_alergi" style="color: rgb(241, 11, 11);">Riwayat
                                     Alergi</label>
                                 <textarea class="form-control" id="riwayat_alergi" name="riwayat_alergi" placeholder="Riwayat Alergi">{{ old('riwayat_alergi', $action->riwayat_alergi ?? '') }}</textarea>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
+                                    <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                        placeholder="Keterangan"
+                                        value="{{ isset($action->keterangan) ? $action->keterangan : '' }}">
+                                </div>
                             </div>
 
                         </div>
@@ -590,11 +598,6 @@
                                 <textarea class="form-control" id="treatment_anc" name="treatment_anc" placeholder="Treatment ANC">{{ old('treatment_anc', $action->treatment_anc ?? '') }}</textarea>
                             </div>
                             <div class="col-md-6 mt-3">
-                                <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
-                                <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
-                                    placeholder="Pemeriksaan penunjang">{{ old('pemeriksaan_penunjang', $action->pemeriksaan_penunjang ?? '') }}</textarea>
-                            </div>
-                            <div class="col-md-6 mt-3">
                                 <label for="kesimpulan">Kesimpulan</label>
                                 <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ old('kesimpulan', $action->kesimpulan ?? '') }}</textarea>
                             </div>
@@ -608,6 +611,20 @@
                                 <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                 <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
                             </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
+                                <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
+                                    placeholder="Pemeriksaan penunjang">{{ isset($action->pemeriksaan_penunjang) ? $action->pemeriksaan_penunjang : '' }}</textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="hasil_lab" style="color: rgb(19, 11, 241);">Hasil Laboratorium</label>
+                                <textarea class="form-control" id="hasil_lab" name="hasil_lab" placeholder="Hasil Laboratorium">
+                                    {{ isset($action->hasil_lab) ? $action->hasil_lab : '' }}
+                                </textarea>
+                            </div>
+
+
+
                         </div>
 
                     </div>

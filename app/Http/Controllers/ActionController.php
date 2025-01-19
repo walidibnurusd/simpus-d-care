@@ -296,7 +296,7 @@ class ActionController extends Controller
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'poli-kia')->whereNotNull('hasil_lab');
+        $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('hasil_lab');
 
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -628,6 +628,10 @@ class ActionController extends Controller
                     $route = 'action.lab.index';
                 } elseif ($action->tipe === 'poli-gigi') {
                     $route = 'action.lab.gigi.index';
+                } elseif ($action->tipe === 'poli-kia') {
+                    $route = 'action.lab.kia.index';
+                } elseif ($action->tipe === 'poli-kb') {
+                    $route = 'action.lab.kb.index';
                 } else {
                     $route = 'action.lab.ugd.index';
                 }
@@ -882,6 +886,10 @@ class ActionController extends Controller
                     $route = 'action.index';
                 } elseif ($action->tipe === 'poli-gigi') {
                     $route = 'action.index.gigi';
+                } elseif ($action->tipe === 'poli-kia') {
+                    $route = 'action.kia.index';
+                } elseif ($action->tipe === 'poli-kb') {
+                    $route = 'action.kb.index';
                 } else {
                     $route = 'action.index.ugd';
                 }
