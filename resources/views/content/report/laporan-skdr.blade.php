@@ -1,57 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LAPORAN MINGGUAN (W2)
-        PUSKESMAS TAMANGAPA KECAMATAN MANGGALA 
+        PUSKESMAS TAMANGAPA KECAMATAN MANGGALA
         KOTA MAKASSAR
-        </title>
+    </title>
     <style>
         body {
             font-family: "Times New Roman", Times, serif;
             font-size: 12px;
         }
+
         .header {
             text-align: center;
         }
+
         .header img {
             width: 80px;
             height: auto;
         }
-        .header h1, .header h2, .header p {
+
+        .header h1,
+        .header h2,
+        .header p {
             margin: 0;
             line-height: 1.2;
         }
+
         .table-container {
             margin-top: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        table th, table td {
+
+        table th,
+        table td {
             border: 1px solid #000;
             padding: 5px;
             text-align: center;
         }
+
         table th {
             background-color: #f0f0f0;
         }
+
         @media print {
-    @page {
-        size: legal; /* Ukuran kertas Letter */
-        margin: 10px; /* Margin dalam inci */
-    }
+            @page {
+                size: legal;
+                /* Ukuran kertas Letter */
+                margin: 10px;
+                /* Margin dalam inci */
+            }
 
-    table th {
-        background-color: #f0f0f0;
-    }
-}
-
+            table th {
+                background-color: #f0f0f0;
+            }
+        }
     </style>
-    
+
 </head>
+
 <body>
     <div class="header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -60,17 +74,17 @@
                 <h1>PEMERINTAH KOTA MAKASSAR</h1>
                 <h2 style="margin: 0px">DINAS KESEHATAN</h2>
                 <h3 style="margin:0px">UPT Puskesmas Tamangapa</h3>
-                <p>Jl. xx yy No.264 Kode Pos : 90235 Makassar</p>
-                <p>Telp. 0411-494014 Call Center : 081245194368</p>
-                <p>Email: pkmmakassar@gmail.com | Situs: puskesmasmakassar.or.id</p>
+                <p>Jl.Tamangapa Raya No.264 Kode Pos : 90235 Makassar</p>
+                <p>Telp.0411-494014 Call Center : 081245193468</p>
+                <p>email: Pkmtamangapa@gmail.com https://puskesmastamangapa.or.id</p>
             </div>
             <img src="../assets/assets/img/logo-puskesmas.png" alt="Logo Right">
         </div>
         <hr>
         <h3 style="margin-top: 20px;">LAPORAN MINGGUAN (W2)
-            PUSKESMAS TAMANGAPA KECAMATAN MANGGALA 
+            PUSKESMAS TAMANGAPA KECAMATAN MANGGALA
             KOTA MAKASSAR
-            </h3>
+        </h3>
         <p>TANGGAL S/D</p>
     </div>
 
@@ -83,7 +97,7 @@
                     <th>KASUS</th>
                     <th>KEMATIAN</th>
                     <th>DIPERIKSA LABORATORIUM</th>
-                   
+
                 </tr>
             </thead>
             <tbody>
@@ -256,14 +270,14 @@
                     <td></td>
                 </tr>
                 <tr>
-                    
+
                     <td colspan="2" style="text-align: left"><strong>TOTAL (JUMLAH KUNJUNGAN)</strong></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
-         
-              
+
+
             </tbody>
         </table>
         <div style="margin-top: 30px;">
@@ -275,7 +289,7 @@
                     <br><br><br>
                     <p><strong>(___________________)</strong></p>
                 </div>
-        
+
                 <!-- Bagian Kanan -->
                 <div style="text-align: left; width: 40%; padding-left: 50%;">
                     <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
@@ -286,8 +300,9 @@
                 </div>
             </div>
         </div>
-        
-        
+
+
     </div>
 </body>
+
 </html>

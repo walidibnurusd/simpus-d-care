@@ -121,6 +121,92 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
+                                        <textarea class="form-control" id="keluhan" name="keluhan" placeholder="Keluhan"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="riwayat_penyakit_sekarang"
+                                            style="color: rgb(241, 11, 11);">Riwayat
+                                            Penyakit Sekarang</label>
+                                        <textarea class="form-control" id="riwayat_penyakit_sekarang" name="riwayat_penyakit_sekarang"
+                                            placeholder="Riwayat Penyakit Sekarang"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="riwayat_penyakit_dulu"
+                                                style="color: rgb(241, 11, 11);">Riwayat
+                                                Penyakit Terdahulu</label>
+                                            <select class="form-control" id="riwayat_penyakit_dulu"
+                                                name="riwayat_penyakit_dulu">
+                                                <option value="" disabled selected>Pilih</option>
+                                                <option value="hipertensi">Hipertensi</option>
+                                                <option value="dm">DM</option>
+                                                <option value="jantung">Jantung</option>
+                                                <option value="stroke">Stroke</option>
+                                                <option value="asma">Asma</option>
+                                                <option value="liver">Liver</option>
+                                                <option value="ginjal">Ginjal</option>
+                                                <option value="tb">TB</option>
+                                                <option value="lainnya">Lainnya</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mt-2" id="penyakit_lainnya_container"
+                                        style="display: none;">
+                                        <label for="penyakit_lainnya" style="color: rgb(241, 11, 11);">Sebutkan
+                                            Penyakit Lainnya</label>
+                                        <textarea class="form-control" id="riwayat_penyakit_lainnya" name="riwayat_penyakit_lainnya"
+                                            placeholder="Isi penyakit lainnya"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="riwayat_pengobatan" style="color: rgb(241, 11, 11);">Riwayat
+                                            Pengobatan</label>
+                                        <textarea class="form-control" id="riwayat_pengobatan" name="riwayat_pengobatan" placeholder="Riwayat Pengobatan"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="riwayat_penyakit_keluarga"
+                                                style="color: rgb(241, 11, 11);">Riwayat
+                                                Penyakit Keluarga</label>
+                                            <select class="form-control" id="riwayat_penyakit_keluarga"
+                                                name="riwayat_penyakit_keluarga">
+                                                <option value="" disabled selected>Pilih</option>
+                                                <option value="hipertensi">Hipertensi</option>
+                                                <option value="dm">DM</option>
+                                                <option value="jantung">Jantung</option>
+                                                <option value="stroke">Stroke</option>
+                                                <option value="asma">Asma</option>
+                                                <option value="liver">Liver</option>
+                                                <option value="ginjal">Ginjal</option>
+                                                <option value="tb">TB</option>
+                                                <option value="lainnya">Lainnya</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mt-2" id="penyakit_lainnya_keluarga_container"
+                                        style="display: none;">
+                                        <label for="penyakit_lainnya_keluarga"
+                                            style="color: rgb(241, 11, 11);">Sebutkan
+                                            Penyakit Lainnya</label>
+                                        <textarea class="form-control" id="riwayat_penyakit_lainnya_keluarga" name="riwayat_penyakit_lainnya_keluarga"
+                                            placeholder="Isi penyakit lainnya"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="riwayat_alergi" style="color: rgb(241, 11, 11);">Riwayat
+                                            Alergi</label>
+                                        <textarea class="form-control" id="riwayat_alergi" name="riwayat_alergi" placeholder="Riwayat Alergi"></textarea>
+                                    </div>
+                                    <div class="row mt-3">
+
+                                        <div class="col-md-12">
+                                            <label for="alkohol" style="color: rgb(19, 11, 241);">KETERANGAN</label>
+                                            <input type="text" class="form-control" id="keterangan"
+                                                name="keterangan" placeholder="Keterangan">
+                                        </div>
+
+
+                                    </div>
 
                                 </div>
                             </div>
@@ -372,7 +458,8 @@
                             <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                             <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
                                 @foreach ($diagnosa as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>

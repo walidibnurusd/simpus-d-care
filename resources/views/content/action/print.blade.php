@@ -58,14 +58,14 @@
                 <h1>PEMERINTAH KOTA MAKASSAR</h1>
                 <h2 style="margin: 0px">DINAS KESEHATAN</h2>
                 <h3 style="margin:0px">UPT Puskesmas Tamangapa</h3>
-                <p>Jl. xx yy No.264 Kode Pos : 90235 Makassar</p>
-                <p>Telp. 0411-494014 Call Center : 081245194368</p>
-                <p>Email: pkmmakassar@gmail.com | Situs: puskesmasmakassar.or.id</p>
+                <p>Jl.Tamangapa Raya No.264 Kode Pos : 90235 Makassar</p>
+                <p>Telp.0411-494014 Call Center : 081245193468</p>
+                <p>email: Pkmtamangapa@gmail.com https://puskesmastamangapa.or.id</p>
             </div>
             <img src="../assets/assets/img/logo-puskesmas.png" alt="Logo Right">
         </div>
         <hr>
-        <h3 style="margin-top: 20px;">PENCATATAN POLI UMUM</h3>
+        <h3 style="margin-top: 20px;">REKAPAN KUNJUNGAN PASIEN</h3>
         <p>TANGGAL S/D</p>
     </div>
 

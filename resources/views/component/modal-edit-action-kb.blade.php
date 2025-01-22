@@ -604,12 +604,11 @@
                                     <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                     <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ isset($action->obat) ? $action->obat : '' }}</textarea>
                                 </div>
-                                {{-- <div class="col-md-12">
+                                <div class="col-md-12">
                                     <label for="hasil_lab" style="color: rgb(19, 11, 241);">Hasil Laboratorium</label>
-                                    <textarea class="form-control" id="hasil_lab" name="hasil_lab" placeholder="Hasil Laboratorium">
-                                        {{ isset($action->hasil_lab) ? $action->hasil_lab : '' }}
-                                    </textarea>
-                                </div> --}}
+                                    <textarea class="form-control" id="hasil_lab" name="hasil_lab" placeholder="Hasil Laboratorium">{{ isset($action->hasil_lab) ? $action->hasil_lab : '' }}</textarea>
+                                </div>
+
 
 
                             </div>

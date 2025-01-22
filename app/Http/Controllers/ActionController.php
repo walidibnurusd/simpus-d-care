@@ -27,7 +27,7 @@ class ActionController extends Controller
 
         // Retrieve all doctors, actions, diagnoses, diseases, and hospitals
         $dokter = User::where('role', 'dokter')->get();
-        $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
+        $diagnosa = Diagnosis::all();
         $penyakit = Disease::all();
         $rs = Hospital::all();
 
@@ -57,7 +57,7 @@ class ActionController extends Controller
 
         $dokter = User::where('role', 'dokter')->get();
 
-        $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -84,7 +84,7 @@ class ActionController extends Controller
 
         $dokter = User::where('role', 'dokter')->get();
 
-        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -110,7 +110,7 @@ class ActionController extends Controller
         $endDate = $request->input('end_date');
 
         $dokter = User::where('role', 'dokter')->get();
-        $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -135,7 +135,7 @@ class ActionController extends Controller
         $endDate = $request->input('end_date');
 
         $dokter = User::where('role', 'dokter')->get();
-        $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -162,7 +162,7 @@ class ActionController extends Controller
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
 
-        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -186,7 +186,7 @@ class ActionController extends Controller
         $endDate = $request->input('end_date');
 
         $dokter = User::where('role', 'dokter')->get();
-        $diagnosa = Diagnosis::where('tipe', 'poli-umum')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -211,7 +211,7 @@ class ActionController extends Controller
         $endDate = $request->input('end_date');
 
         $dokter = User::where('role', 'dokter')->get();
-        $diagnosa = Diagnosis::where('tipe', 'poli-gigi')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -238,7 +238,7 @@ class ActionController extends Controller
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
 
-        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -262,7 +262,7 @@ class ActionController extends Controller
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
 
-        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -286,13 +286,13 @@ class ActionController extends Controller
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
 
-        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('hasil_lab');
 
-        $diagnosa = Diagnosis::where('tipe', 'ruang-tindakan')->get();
+        $diagnosa = Diagnosis::all();
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
@@ -334,6 +334,7 @@ class ActionController extends Controller
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
         $actionsQuery = Action::where('tipe', 'poli-kia')->where('usia_kehamilan', '!=', 0);
+        $diagnosa = Diagnosis::all();
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
         }
@@ -344,13 +345,14 @@ class ActionController extends Controller
 
         $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
-        return view('content.action.index-kia', compact('actions', 'dokter', 'routeName'));
+        return view('content.action.index-kia', compact('actions', 'dokter', 'routeName', 'diagnosa'));
     }
     public function indexDokterKb(Request $request)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
         $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('layanan_kb');
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -362,7 +364,7 @@ class ActionController extends Controller
 
         $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
-        return view('content.action.index-kb', compact('actions', 'dokter', 'routeName'));
+        return view('content.action.index-kb', compact('actions', 'dokter', 'routeName', 'diagnosa'));
     }
     public function indexKia(Request $request)
     {

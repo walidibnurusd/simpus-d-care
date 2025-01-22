@@ -477,6 +477,15 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mt-3">
+                            <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                            <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
+                                @foreach ($diagnosa as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-3">
                             <label for="hasil_usg">Hasil USG</label>
                             <textarea class="form-control" id="hasil_usg" name="hasil_usg" placeholder="Hasil USG"></textarea>
                         </div>
@@ -502,7 +511,7 @@
                             <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
                                 placeholder="Pemeriksaan penunjang"></textarea>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6 mt-3">
                             <label for="hasil_lab" style="color: rgb(19, 11, 241);">Hasil Laboratorium</label>
                             <textarea class="form-control" id="hasil_lab" name="hasil_lab" placeholder="Hasil Laboratorium"></textarea>
                         </div>
@@ -545,6 +554,13 @@
 
 
 <script>
+    $(document).ready(function() {
+        $('#diagnosa').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
     document.addEventListener('DOMContentLoaded', function() {
 
         const selectElement = document.getElementById('riwayat_penyakit_dulu');
