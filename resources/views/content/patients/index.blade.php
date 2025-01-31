@@ -32,7 +32,11 @@
                         Print
                         <i class="fas fa-print ms-2"></i> <!-- Ikon print dengan margin -->
                     </a>
-
+                    <!-- Tombol Import -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+                        Import
+                        <i class="fas fa-file-import ms-2"></i> <!-- Ikon dengan margin -->
+                    </button>
 
                 </div>
 
@@ -84,75 +88,7 @@
                                             AKSI</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($patients as $index => $patient)
-                                        @include('component.modal-edit-patient')
-                                        <tr>
-                                            <td>
-                                                <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Row number -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $patient->nik }}</p>
-                                                <!-- NIK -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $patient->name }}</p>
-                                                <!-- Name -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $patient->address }}</p>
-                                                <!-- Address -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $patient->place_birth }}</p>
-                                                <p class="text-xs  mb-0">{{ $patient->dob }}
-                                                    <span class="age-red">({{ $patient->getAgeAttribute() }}-thn)</span>
-                                                </p>
-                                                <!-- Date of Birth -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">
-                                                    {{ $patient->genderName->name }}</p>
-                                                <!-- Gender -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $patient->phone }}</p>
-                                                <!-- Phone -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">
-                                                    {{ $patient->marritalStatus->name }}</p>
-                                                <!-- Marital Status -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $patient->no_rm }}</p>
-                                                <!-- No RM -->
-                                            </td>
-
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $patient->created_at }}</p>
-                                                <!-- Place of Birth -->
-                                            </td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <button type="button"
-                                                        class="mb-0 btn btn-primary btn-sm text-white font-weight-bold text-xs"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#editPatientModal{{ $patient->id }}">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button type="button"
-                                                        class="btn btn-danger btn-sm text-white font-weight-bold d-flex align-items-center btn-delete"
-                                                        data-form-action="{{ route('patient.destroy', $patient->id) }}">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                </div>
-
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                             
                             </table>
 
                         </div>
@@ -163,28 +99,70 @@
 
 
     </div>
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel">Import Data Pasien</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{route('patient.import')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <label for="fileImport" class="form-label">Pilih File</label>
+                        <input type="file" id="fileImport" name="file" class="form-control" accept=".csv, .xls, .xlsx" required>
+                        <small class="text-muted">Format file yang didukung: .csv, .xls, .xlsx</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
 @section('script')
-    <script>
-        $(document).ready(function() {
-            $('#patient').DataTable({
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-                "language": {
-                    "info": "_PAGE_ dari _PAGES_ halaman",
-                    "paginate": {
-                        "previous": "<",
-                        "next": ">",
-                        "first": "<<",
-                        "last": ">>"
-                    }
-                },
-                "responsive": true,
-                "lengthMenu": [10, 25, 50, 100] // Set the number of rows per page
-            });
+<script>
+    $(document).ready(function() {
+        $('#patient').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('patient.data') }}", // URL for AJAX request
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, orderable: false }, // Row number
+                { data: 'nik', name: 'nik' },
+                { data: 'name', name: 'name' },
+                { data: 'address', name: 'address' },
+                { data: 'dob', name: 'dob' },
+                { data: 'gender', name: 'gender' },
+                { data: 'phone', name: 'phone' },
+                { data: 'marrital_status', name: 'marrital_status' },
+                { data: 'no_rm', name: 'no_rm' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'action', name: 'action', orderable: false, searchable: false }, // Action buttons
+            ],
+            language: {
+                search: "Cari:", // You can change the search box label text
+                info: "_PAGE_ dari _PAGES_ halaman",
+                paginate: {
+                    previous: "<",
+                    next: ">",
+                    first: "<<",
+                    last: ">>"
+                }
+            },
+            responsive: true, // Make the table responsive on smaller screens
+            lengthMenu: [10, 25, 50, 100], // Define how many rows per page
         });
-    </script>
+    });
+</script>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Check for success message
@@ -212,51 +190,111 @@
             @endif
         });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.btn-delete').forEach(function(button) {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Attach event listener to each delete button
+        document.querySelectorAll('.btn-delete').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default button action
 
-                    var formAction = this.getAttribute('data-form-action');
+                // Get patient ID from the button's ID
+                var buttonId = this.id; // 'delete-button-{id}'
+                var patientId = buttonId.split('-').pop(); // Extract the patient ID from the button's id
 
-                    Swal.fire({
-                        title: 'Konfirmasi Penghapusan',
-                        text: 'Apakah Anda yakin ingin menghapus pasien ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Hapus',
-                        cancelButtonText: 'Batal',
-                        customClass: {
-                            popup: 'swal2-popup-custom'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Create and submit the form
-                            var form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = formAction;
+                // Build the delete URL dynamically
+                var formAction = '{{ route('patient.destroy', '') }}' + '/' + patientId;
 
-                            var csrfToken = document.createElement('input');
-                            csrfToken.type = 'hidden';
-                            csrfToken.name = '_token';
-                            csrfToken.value = "{{ csrf_token() }}";
-                            form.appendChild(csrfToken);
+                // Show SweetAlert2 confirmation popup
+                Swal.fire({
+                    title: 'Konfirmasi Penghapusan',
+                    text: 'Apakah Anda yakin ingin menghapus pasien ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Hapus',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Create a form for DELETE request
+                        var form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = formAction;
 
-                            var methodField = document.createElement('input');
-                            methodField.type = 'hidden';
-                            methodField.name = '_method';
-                            methodField.value = 'DELETE';
-                            form.appendChild(methodField);
+                        // Add CSRF token to the form
+                        var csrfToken = document.createElement('input');
+                        csrfToken.type = 'hidden';
+                        csrfToken.name = '_token';
+                        csrfToken.value = "{{ csrf_token() }}";
+                        form.appendChild(csrfToken);
 
-                            document.body.appendChild(form);
-                            form.submit();
-                        }
-                    });
+                        // Add DELETE method (Laravel uses _method to simulate DELETE)
+                        var methodField = document.createElement('input');
+                        methodField.type = 'hidden';
+                        methodField.name = '_method';
+                        methodField.value = 'DELETE';
+                        form.appendChild(methodField);
+
+                        // Append form to the body and submit
+                        document.body.appendChild(form);
+                        form.submit(); // Trigger form submission to delete the patient
+                    }
                 });
             });
         });
-    </script>
+    });
+</script>
+
+<script>
+    document.addEventListener('click', function (event) {
+        // Check if the clicked element has the class 'btn-delete'
+        if (event.target.closest('.btn-delete')) {
+            event.preventDefault();
+
+            const button = event.target.closest('.btn-delete');
+            const buttonId = button.id;
+            const patientId = buttonId.split('-').pop();
+
+            // Build the delete URL
+            const deleteUrl = `{{ url('/patients/') }}/${patientId}`;
+
+            // Show SweetAlert2 confirmation
+            Swal.fire({
+                title: 'Konfirmasi Penghapusan',
+                text: 'Apakah Anda yakin ingin menghapus pasien ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Create a form element dynamically for deletion
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = deleteUrl;
+
+                    // Add CSRF token
+                    const csrfField = document.createElement('input');
+                    csrfField.type = 'hidden';
+                    csrfField.name = '_token';
+                    csrfField.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfField);
+
+                    // Add DELETE method
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'DELETE';
+                    form.appendChild(methodField);
+
+                    // Append and submit the form
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
+    });
+</script>
 @endsection

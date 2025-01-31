@@ -130,106 +130,7 @@
                                         @endif
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($actions as $index => $action)
-                                        <tr>
-                                            <td>
-                                                <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Nomor urut -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ \Carbon\Carbon::parse($action->tanggal)->format('Y-m-d') }}</p>
-                                            </td>
-
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->patient)->nik }}/{{ optional($action->patient)->no_rm }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->patient)->name }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ \Carbon\Carbon::parse($action->patient->dob)->age }} Tahun</p>
-                                                <!-- Ganti dengan perhitungan umur jika perlu -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    @switch($action->patient->jenis_kartu)
-                                                        @case('pbi')
-                                                            PBI (KIS)
-                                                        @break
-
-                                                        @case('askes')
-                                                            AKSES
-                                                        @break
-
-                                                        @case('jkn_mandiri')
-                                                            JKN Mandiri
-                                                        @break
-
-                                                        @case('umum')
-                                                            Umum
-                                                        @break
-
-                                                        @case('jkd')
-                                                            JKD
-                                                        @break
-
-                                                        @default
-                                                            Tidak Diketahui
-                                                    @endswitch
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->obat }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->hasil_lab }}</p>
-                                            </td>
-
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->kunjungan) }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->faskes) }}
-                                                </p>
-                                            </td>
-                                            @if (Auth::user()->role == 'dokter')
-                                                <td>
-                                                    <div class="action-buttons">
-                                                        <!-- Tombol Edit -->
-                                                        <button type="button"
-                                                            class="btn btn-primary btn-sm text-white font-weight-bold"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editActionModal{{ $action->id }}">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        @include('component.modal-edit-action-kb')
-                                                        <!-- Tombol Delete -->
-                                                        <form action="{{ route('action.destroy', $action->id) }}"
-                                                            method="POST" class="d-inline form-delete">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="button"
-                                                                class="btn btn-danger btn-delete btn-sm text-white font-weight-bold">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
-
-                                                    </div>
-                                                </td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                               
                             </table>
 
 
@@ -250,49 +151,36 @@
     <script>
         $(document).ready(function() {
             var table = $('#actionTable').DataTable({
-                "language": {
-                    "info": "_PAGE_ dari _PAGES_ halaman",
-                    "paginate": {
-                        "previous": "<",
-                        "next": ">",
-                        "first": "<<",
-                        "last": ">>"
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('action.kb.dokter.index') }}", // Your AJAX route
+                    data: function(d) {
+                        d.start_date = $('#start_date').val();  // Optional: Get input field values
+                        d.end_date = $('#end_date').val();      // Optional: Get input field values
                     }
                 },
-                "responsive": true,
-                "lengthMenu": [10, 25, 50, 100], // Set the number of rows per page
-                "initComplete": function() {
-                    // Custom search function for date range
-                    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                        var startDate = $('#start_date').val();
-                        var endDate = $('#end_date').val();
-                        var actionDate = data[
-                            1]; // Assumes the 'Tanggal' column is the second column (index 1)
-
-                        // If startDate and endDate are provided, compare with the actionDate
-                        if (startDate && endDate) {
-                            // Format both dates as YYYY-MM-DD for comparison
-                            var actionDateFormatted = moment(actionDate, 'YYYY-MM-DD').format(
-                                'YYYY-MM-DD');
-
-                            return actionDateFormatted >= startDate && actionDateFormatted <=
-                                endDate;
-                        }
-
-                        return true;
-                    });
-                }
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    { data: 'tanggal', name: 'tanggal' },
+                    { data: 'patient_nik', name: 'patient_nik' },
+                    { data: 'patient_name', name: 'patient_name' },
+                    { data: 'patient_age', name: 'patient_age' },
+                    { data: 'kartu', name: 'kartu' },
+                    { data: 'keluhan', name: 'keluhan' },
+                    { data: 'obat', name: 'obat' },
+                    { data: 'hasil_lab', name: 'hasil_lab' },
+                    { data: 'kunjungan', name: 'kunjungan' },
+                    { data: 'faskes', name: 'faskes' },
+                    @if (Auth::user()->role == 'dokter')
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                    @endif
+                ]
             });
-
-            // Event listener for the filter button
             $('#filterButton').on('click', function() {
-                table.draw();
-            });
-
-            // // Clear filters if either date is changed
-            // $('#start_date, #end_date').on('change', function() {
-            //     table.draw();
-            // });
+                    console.log('Filter button clicked');
+                    table.ajax.reload(); // Corrected reload function
+                });
         });
     </script>
 

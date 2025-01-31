@@ -19,11 +19,13 @@
                 <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5> <!-- Updated the title -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form  action="{{ route('patient.update', $patient->id) }}" method="POST"
+                class="px-3">
+                @csrf
+                @method('PUT')
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('patient.update', $patient->id) }}" method="POST"
-                    class="px-3">
-                    @csrf
-                    @method('PUT')
+              
+           
                     <div class="row g-2"> <!-- Reduced gutter space between columns -->
                         <div class="col-md-6">
                             <div class="form-group">
@@ -324,13 +326,15 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 <button type="submit" class="btn btn-primary">Simpan Data</button>
-                </form>
+              
             </div>
+        </form>
         </div>
     </div>
 </div>
 
 <script>
+    
     function updateVillageEdit() {
         const district = document.getElementById('district').value;
         const village = document.getElementById('village');

@@ -25,18 +25,32 @@ class ReportController extends Controller
         $routeName = $request->route()->getName();
         return view('content.report.index', compact('routeName'));
     }
-    public function printTifoid()
+    public function printTifoid(Request $request)
     {
-        $tifoid = Action::with('patient.villages')
+        // Get the selected month and year from the request
+        $month = $request->input('bulan');
+        $year = $request->input('tahun');
+    
+        // Build the query
+        $query = Action::with('patient.villages')
             ->whereIn('diagnosa', [265, 39])
             ->orWhere(function ($query) {
                 $query->whereJsonContains('diagnosa', '265')->orWhereJsonContains('diagnosa', '39');
-            })
-            ->get();
+            });
+    
+        // Add filters for month and year if provided
+        if ($month && $year) {
+            $query->whereYear('created_at', $year)
+                  ->whereMonth('created_at', $month);
+        }
+    
+        // Execute the query
+        $tifoid = $query->get();
         $tifoid->load('patient.villages');
-
+    
         return view('content.report.print-tifoid', compact('tifoid'));
     }
+    
     public function printDiare()
     {
         return view('content.report.print-diare');
@@ -85,8 +99,12 @@ class ReportController extends Controller
         return view('content.report.report-diare', compact('diare'));
     }
 
-    public function reportSTP()
+    public function reportSTP(Request $request)
     {
+        // Ambil bulan dan tahun dari parameter request (dengan default bulan dan tahun saat ini)
+        $month = $request->input('month', Carbon::now()->month);  // default ke bulan saat ini
+        $year = $request->input('year', Carbon::now()->year);    // default ke tahun saat ini
+    
         $diagnosaNames = [
             37 => 'Kolera',
             38 => 'Diare',
@@ -120,11 +138,13 @@ class ReportController extends Controller
             110 => 'Filariasis',
             142 => 'Influensa',
         ];
-
-        // Ambil data dengan diagnosa yang valid berdasarkan diagnosaNames
+    
+        // Ambil data dengan diagnosa yang valid berdasarkan diagnosaNames dan filter berdasarkan bulan dan tahun
         $stp = Action::with(['patient'])
             ->whereIn('diagnosa', array_keys($diagnosaNames))
-            ->orWhere(function ($query) use ($diagnosaNames) {
+            ->whereYear('created_at', $year)  // Filter berdasarkan tahun
+            ->whereMonth('created_at', $month)  // Filter berdasarkan bulan
+            ->orWhere(function ($query) use ($diagnosaNames, $year, $month) {
                 foreach (array_keys($diagnosaNames) as $id) {
                     $query->orWhereJsonContains('diagnosa', (string) $id);
                 }
@@ -144,12 +164,12 @@ class ReportController extends Controller
                 }
                 return $action;
             });
-
+    
         // Kelompokkan data berdasarkan rentang usia
         $groupedData = $stp->groupBy(function ($action) {
             $ageInDays = $action->ageInDays;
             $age = $action->age;
-
+    
             if ($ageInDays <= 7) {
                 return '0-7 hr';
             } elseif ($ageInDays <= 28) {
@@ -176,7 +196,7 @@ class ReportController extends Controller
                 return '70+ tahun';
             }
         });
-
+    
         // Siapkan laporan awal dengan semua nilai nol
         $ageGroups = ['0-7 hr', '8-28 hr', '0-1 tahun', '1-4 tahun', '5-9 tahun', '10-14 tahun', '15-19 tahun', '20-44 tahun', '45-54 tahun', '55-59 tahun', '60-69 tahun', '70+ tahun'];
         $report = [];
@@ -189,7 +209,7 @@ class ReportController extends Controller
                 ];
             }
         }
-
+    
         // Isi laporan berdasarkan data yang dikelompokkan
         foreach ($groupedData as $ageGroup => $actions) {
             foreach ($actions->groupBy('diagnosa') as $diagnosaId => $cases) {
@@ -203,22 +223,23 @@ class ReportController extends Controller
                         return $case->patient->gender === 1;
                     })
                     ->count();
-
+    
                 $femaleCount = $cases
                     ->filter(function ($case) {
                         return $case->patient->gender === 2;
                     })
                     ->count();
-
+    
                 $report[$diagnosaName][$ageGroup]['total'] += $cases->count();
                 $report[$diagnosaName][$ageGroup]['male'] += $maleCount;
                 $report[$diagnosaName][$ageGroup]['female'] += $femaleCount;
             }
         }
-
-        // Kirim data ke tampilan
-        return view('content.report.laporan-stp', compact('report', 'ageGroups'));
+    
+        // Kirim data ke tampilan dengan parameter bulan dan tahun untuk digunakan di filter
+        return view('content.report.laporan-stp', compact('report', 'ageGroups', 'month', 'year'));
     }
+    
 
     public function reportAFP()
     {
@@ -866,49 +887,80 @@ class ReportController extends Controller
     {
         return view('content.report.laporan-lkrj');
     }
-    public function reportRRT()
-    {
-        $rujukan = Action::select('rujuk_rs', DB::raw('COUNT(*) as count'))->where('rujuk_rs', '!=', '1')->groupBy('rujuk_rs')->orderBy('count', 'desc')->take(10)->get();
-        $actions = Action::select('diagnosa', 'icd10')->get();
+    public function reportRRT(Request $request)
+{
+    // Get the selected month and year from the request
+    $bulan = $request->input('bulan');
+    $tahun = $request->input('tahun');
 
-        $diagnosisData = [];
+    // Build the query to get the top 10 references (rujukan)
+    $rujukanQuery = Action::select('rujuk_rs', DB::raw('COUNT(*) as count'))
+                        ->where('rujuk_rs', '!=', '1');
 
-        foreach ($actions as $action) {
-            $diagnosisIds = [];
-            if (is_array($action->diagnosa)) {
-                $diagnosisIds = $action->diagnosa;
-            } elseif (is_string($action->diagnosa)) {
-                $decoded = json_decode($action->diagnosa, true);
-                if (is_array($decoded)) {
-                    $diagnosisIds = $decoded;
-                }
-            }
+    // Apply month and year filter if provided
+    if ($bulan && $tahun) {
+        $rujukanQuery->whereMonth('created_at', $bulan)
+                     ->whereYear('created_at', $tahun);
+    }
 
-            if (empty($diagnosisIds)) {
-                continue;
-            }
+    $rujukan = $rujukanQuery->groupBy('rujuk_rs')
+                            ->orderBy('count', 'desc')
+                            ->take(10)
+                            ->get();
 
-            foreach ($diagnosisIds as $diagnosisId) {
-                $key = $diagnosisId . '-' . ($action->icd10 ?? 'Unknown');
+    // Get the actions with diagnosis data
+    $actionsQuery = Action::select('diagnosa', 'icd10');
 
-                if (!isset($diagnosisData[$key])) {
-                    $diagnosisData[$key] = [
-                        'name' => Diagnosis::find($diagnosisId)?->name ?? 'Unknown',
-                        'icd10' => $action->icd10,
-                        'count' => 0,
-                    ];
-                }
+    // Apply month and year filter for actions if provided
+    if ($bulan && $tahun) {
+        $actionsQuery->whereMonth('created_at', $bulan)
+                     ->whereYear('created_at', $tahun);
+    }
 
-                $diagnosisData[$key]['count']++;
+    $actions = $actionsQuery->get();
+
+    // Process the diagnosis data
+    $diagnosisData = [];
+
+    foreach ($actions as $action) {
+        $diagnosisIds = [];
+        if (is_array($action->diagnosa)) {
+            $diagnosisIds = $action->diagnosa;
+        } elseif (is_string($action->diagnosa)) {
+            $decoded = json_decode($action->diagnosa, true);
+            if (is_array($decoded)) {
+                $diagnosisIds = $decoded;
             }
         }
 
-        usort($diagnosisData, fn($a, $b) => $b['count'] - $a['count']);
+        if (empty($diagnosisIds)) {
+            continue;
+        }
 
-        $topDiagnoses = array_slice($diagnosisData, 0, 10);
+        foreach ($diagnosisIds as $diagnosisId) {
+            $key = $diagnosisId . '-' . ($action->icd10 ?? 'Unknown');
 
-        return view('content.report.laporan-rrt', compact('rujukan', 'diagnosisData'));
+            if (!isset($diagnosisData[$key])) {
+                $diagnosisData[$key] = [
+                    'name' => Diagnosis::find($diagnosisId)?->name ?? 'Unknown',
+                    'icd10' => $action->icd10,
+                    'count' => 0,
+                ];
+            }
+
+            $diagnosisData[$key]['count']++;
+        }
     }
+
+    // Sort the diagnosis data by count
+    usort($diagnosisData, fn($a, $b) => $b['count'] - $a['count']);
+
+    // Get top 10 diagnoses
+    $topDiagnoses = array_slice($diagnosisData, 0, 10);
+
+    return view('content.report.laporan-rrt', compact('rujukan', 'diagnosisData'));
+}
+
     public function reportLL()
     {
         return view('content.report.laporan-ll');
@@ -930,12 +982,24 @@ class ReportController extends Controller
     {
         return view('content.report.laporan-lr');
     }
-    public function reportUP()
+    public function reportUP(Request $request)
     {
-        $patients = Action::whereHas('patient', function ($query) {
+        // Get the selected month and year from the request
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
+    
+        // Build the query
+        $patients = Action::whereHas('patient', function ($query) use ($bulan, $tahun) {
             $query->whereBetween(DB::raw('TIMESTAMPDIFF(YEAR, dob, CURDATE())'), [15, 59]);
+    
+            // Filter by month and year if provided
+            if ($bulan && $tahun) {
+                $query->whereMonth('created_at', $bulan)
+                      ->whereYear('created_at', $tahun);
+            }
         })->get();
-
+    
         return view('content.report.laporan-up', compact('patients'));
     }
+    
 }

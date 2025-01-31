@@ -35,9 +35,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PatientImport;
+
 
 class PatientsController extends Controller
 {
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        Excel::import(new PatientImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'Data pasien berhasil diimport.');
+    }
     public function getPatients(Request $request)
     {
         // Ambil parameter pagination dari DataTables
@@ -729,11 +742,236 @@ class PatientsController extends Controller
             'data' => $patients->items(),
         ]);
     }
+     public function getPatientsApotik(Request $request)
+    {
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-umum')->whereNotNull('obat');
+
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(),
+        ]);
+    }
+
+    public function getPatientsApotikGigi(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-gigi')->whereNotNull('obat');
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
+    }
+    public function getPatientsApotikRuangTindakan(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'ruang-tindakan')->whereNotNull('obat');
+
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
+    }
+    public function getPatientsApotikKia(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kia')->whereNotNull('obat');
+
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(),
+        ]);
+    }
+    public function getPatientsApotikKb(Request $request)
+    {
+        // Ambil parameter DataTables
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        // Hitung halaman berdasarkan DataTables `start` dan `length`
+        $page = $start / $length + 1;
+
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kb')->whereNotNull('obat');
+
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        // Format data untuk DataTables
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(),
+        ]);
+    }
     public function index()
     {
-        $patients = Patients::all();
+        $patients = Patients::paginate(10); // Ambil data dengan paginasi 10 per halaman
         return view('content.patients.index', compact('patients'));
     }
+    public function getPatientIndex(Request $request)
+    {
+        // Get the query builder for Patients model
+        $patients = Patients::query();
+    
+        // Check if there's a search query
+        if ($search = $request->get('search')['value']) {
+            $patients->where(function($query) use ($search) {
+                // Filter by any relevant columns (you can add more columns here)
+                $query->where('nik', 'like', "%$search%")
+                    ->orWhere('name', 'like', "%$search%")
+                    ->orWhere('address', 'like', "%$search%")
+                    ->orWhere('dob', 'like', "%$search%")
+                    ->orWhere('phone', 'like', "%$search%");
+            });
+        }
+    
+        // Return the datatables response
+        return datatables()->of($patients)
+            ->addIndexColumn() // Add index column for row number
+            ->editColumn('dob', function ($row) {
+                return $row->place_birth . ' / ' . $row->dob . ' (' . $row->getAgeAttribute() . '-thn)';
+            })
+            ->editColumn('gender', function ($row) {
+                return $row->genderName->name ?? '';
+            })
+            ->editColumn('marrital_status', function ($row) {
+                return $row->marritalStatus->name ?? '';
+            })
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d-m-Y');
+            })
+            ->addColumn('action', function ($row) {
+                // Render the modal HTML for this specific row
+                $modal = view('component.modal-edit-patient', ['patient' => $row])->render();
+            
+                return '<div class="action-buttons">
+                            <!-- Edit Button -->
+                            <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editPatientModal' . $row->id . '">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            
+                            <!-- Delete Button with a Unique ID -->
+                            <button type="button" class="btn btn-danger btn-sm text-white font-weight-bold d-flex align-items-center btn-delete" id="delete-button-' . $row->id . '">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>'
+                         . $modal;
+            })
+            ->make(true);
+            
+    }
+    
+
     public function store(Request $request)
     {
         try {

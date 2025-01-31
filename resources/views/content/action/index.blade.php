@@ -79,7 +79,7 @@
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-4">
-                            <table id="actionTable" class="table align-items-center mb-0">
+                            <table id="actions-table" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -125,128 +125,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($actions as $index => $action)
-                                        <tr>
-                                            <td>
-                                                <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Nomor urut -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ \Carbon\Carbon::parse($action->tanggal)->format('Y-m-d') }}</p>
-                                            </td>
-
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->patient)->nik }}/{{ optional($action->patient)->no_rm }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->patient)->name }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ \Carbon\Carbon::parse($action->patient->dob)->age }} Tahun</p>
-                                                <!-- Ganti dengan perhitungan umur jika perlu -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    @switch($action->patient->jenis_kartu)
-                                                        @case('pbi')
-                                                            PBI (KIS)
-                                                        @break
-
-                                                        @case('askes')
-                                                            AKSES
-                                                        @break
-
-                                                        @case('jkn_mandiri')
-                                                            JKN Mandiri
-                                                        @break
-
-                                                        @case('umum')
-                                                            Umum
-                                                        @break
-
-                                                        @case('jkd')
-                                                            JKD
-                                                        @break
-
-                                                        @default
-                                                            Tidak Diketahui
-                                                    @endswitch
-                                                </p>
-                                            </td>
-
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
-                                            </td>
-                                            @if ($routeName != 'action.kia.index' && $routeName != 'action.kb.index')
-                                                @php
-
-                                                    $diagnosaIds =
-                                                        is_array($action->diagnosa) ||
-                                                        $action->diagnosa instanceof \Countable
-                                                            ? $action->diagnosa
-                                                            : [];
-                                                    $diagnosa = App\Models\Diagnosis::whereIn(
-                                                        'id',
-                                                        $diagnosaIds,
-                                                    )->get();
-                                                @endphp
-                                                <td>
-                                                    <p class="text-xs font-weight-bold mb-0">
-                                                        {{ $diagnosa->isNotEmpty() ? implode(', ', $diagnosa->pluck('name')->toArray()) : '' }}
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <p class="text-xs font-weight-bold mb-0">
-                                                        {{ ucwords($action->tindakan) }}
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <p class="text-xs font-weight-bold mb-0">
-                                                        {{ optional($action->hospitalReferral)->name }}</p>
-                                                </td>
-                                            @endif
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->kunjungan) }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->faskes) }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <!-- Tombol Edit -->
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-sm text-white font-weight-bold"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#editActionModal{{ $action->id }}">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    @include('component.modal-edit-action')
-                                                    <!-- Tombol Delete -->
-                                                    <form action="{{ route('action.destroy', $action->id) }}"
-                                                        method="POST" class="d-inline form-delete">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="button"
-                                                            class="btn btn-danger btn-delete btn-sm text-white font-weight-bold">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
-                                                    </form>
-
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
-
 
                         </div>
                     </div>
@@ -262,51 +141,288 @@
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var table = $('#actionTable').DataTable({
-                "language": {
-                    "info": "_PAGE_ dari _PAGES_ halaman",
-                    "paginate": {
-                        "previous": "<",
-                        "next": ">",
-                        "first": "<<",
-                        "last": ">>"
-                    }
-                },
-                "responsive": true,
-                "lengthMenu": [10, 25, 50, 100], // Set the number of rows per page
-                "initComplete": function() {
-                    // Custom search function for date range
-                    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                        var startDate = $('#start_date').val();
-                        var endDate = $('#end_date').val();
-                        var actionDate = data[
-                            1]; // Assumes the 'Tanggal' column is the second column (index 1)
-
-                        // If startDate and endDate are provided, compare with the actionDate
-                        if (startDate && endDate) {
-                            // Format both dates as YYYY-MM-DD for comparison
-                            var actionDateFormatted = moment(actionDate, 'YYYY-MM-DD').format(
-                                'YYYY-MM-DD');
-
-                            return actionDateFormatted >= startDate && actionDateFormatted <=
-                                endDate;
-                        }
-
-                        return true;
-                    });
+@if ($routeName == 'action.index')
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable with pagination
+        var table = $('#actions-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route('action.index.data') }}',
+                data: function (d) {
+                    // Send filter data along with the request
+                    d.start_date = $('#start_date').val();
+                    d.end_date = $('#end_date').val();
                 }
-            });
-
-            // Event listener for the filter button
-            $('#filterButton').on('click', function() {
-                table.draw();
-            });
-
-
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                { data: 'tanggal', name: 'tanggal' },
+                { data: 'patient_nik', name: 'patient_nik' },
+                { data: 'patient_name', name: 'patient_name' },
+                { data: 'patient_age', name: 'patient_age' },
+                { data: 'kartu', name: 'kartu' },
+                { data: 'keluhan', name: 'keluhan' },
+                { data: 'diagnosa', name: 'diagnosa' },
+                { data: 'tindakan', name: 'tindakan' },
+                    {
+                            data: 'hospital_referral.name',
+                            name: 'hospitalReferral.name'
+                        },
+                        {
+                            data: 'kunjungan',
+                            name: 'kunjungan'
+                        },
+                        {
+                            data: 'faskes',
+                            name: 'faskes'
+                        },
+                    
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            pageLength: 10, // Set default page size
+            lengthMenu: [10, 25, 50, 100], // Set available page sizes
+            drawCallback: function(settings) {
+                // You can adjust the pagination here if needed, for example:
+                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                console.log('Total Pages:', totalPages);
+            }
         });
+
+        // Filter Form Submission (on change)
+        $('#filter-form').on('submit', function (e) {
+            e.preventDefault();  // Prevent default form submission
+            table.draw();  // Redraw DataTable with new filters
+        });
+    });
+</script>
+@elseif ($routeName == 'action.index.gigi')
+    <script>
+       $(document).ready(function () {
+        // Initialize DataTable with pagination
+        var table = $('#actions-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route('action.index.gigi') }}',
+                data: function (d) {
+                    // Send filter data along with the request
+                    d.start_date = $('#start_date').val();
+                    d.end_date = $('#end_date').val();
+                }
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                { data: 'tanggal', name: 'tanggal' },
+                { data: 'patient_nik', name: 'patient_nik' },
+                { data: 'patient_name', name: 'patient_name' },
+                { data: 'patient_age', name: 'patient_age' },
+                { data: 'kartu', name: 'kartu' },
+                { data: 'keluhan', name: 'keluhan' },
+                { data: 'diagnosa', name: 'diagnosa' },
+                { data: 'tindakan', name: 'tindakan' },
+                    {
+                            data: 'hospital_referral.name',
+                            name: 'hospitalReferral.name'
+                        },
+                        {
+                            data: 'kunjungan',
+                            name: 'kunjungan'
+                        },
+                        {
+                            data: 'faskes',
+                            name: 'faskes'
+                        },
+                    
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            pageLength: 10, // Set default page size
+            lengthMenu: [10, 25, 50, 100], // Set available page sizes
+            drawCallback: function(settings) {
+                // You can adjust the pagination here if needed, for example:
+                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                console.log('Total Pages:', totalPages);
+            }
+        });
+
+        // Filter Form Submission (on change)
+        $('#filter-form').on('submit', function (e) {
+            e.preventDefault();  // Prevent default form submission
+            table.draw();  // Redraw DataTable with new filters
+        });
+    });
     </script>
+@elseif ($routeName == 'action.index.ugd')
+    <script>
+       $(document).ready(function () {
+        // Initialize DataTable with pagination
+        var table = $('#actions-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route('action.index.ugd') }}',
+                data: function (d) {
+                    // Send filter data along with the request
+                    d.start_date = $('#start_date').val();
+                    d.end_date = $('#end_date').val();
+                }
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                { data: 'tanggal', name: 'tanggal' },
+                { data: 'patient_nik', name: 'patient_nik' },
+                { data: 'patient_name', name: 'patient_name' },
+                { data: 'patient_age', name: 'patient_age' },
+                { data: 'kartu', name: 'kartu' },
+                { data: 'keluhan', name: 'keluhan' },
+                { data: 'diagnosa', name: 'diagnosa' },
+                { data: 'tindakan', name: 'tindakan' },
+                    {
+                            data: 'hospital_referral.name',
+                            name: 'hospitalReferral.name'
+                        },
+                        {
+                            data: 'kunjungan',
+                            name: 'kunjungan'
+                        },
+                        {
+                            data: 'faskes',
+                            name: 'faskes'
+                        },
+                    
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            pageLength: 10, // Set default page size
+            lengthMenu: [10, 25, 50, 100], // Set available page sizes
+            drawCallback: function(settings) {
+                // You can adjust the pagination here if needed, for example:
+                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                console.log('Total Pages:', totalPages);
+            }
+        });
+
+        // Filter Form Submission (on change)
+        $('#filter-form').on('submit', function (e) {
+            e.preventDefault();  // Prevent default form submission
+            table.draw();  // Redraw DataTable with new filters
+        });
+    });
+    </script>
+@elseif ($routeName == 'action.kia.index')
+    <script>
+       $(document).ready(function () {
+        // Initialize DataTable with pagination
+        var table = $('#actions-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route('action.kia.index') }}',
+                data: function (d) {
+                    // Send filter data along with the request
+                    d.start_date = $('#start_date').val();
+                    d.end_date = $('#end_date').val();
+                }
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                { data: 'tanggal', name: 'tanggal' },
+                { data: 'patient_nik', name: 'patient_nik' },
+                { data: 'patient_name', name: 'patient_name' },
+                { data: 'patient_age', name: 'patient_age' },
+                { data: 'kartu', name: 'kartu' },
+                { data: 'keluhan', name: 'keluhan' },
+                // { data: 'diagnosa', name: 'diagnosa' },
+                // { data: 'tindakan', name: 'tindakan' },
+                //     {
+                //             data: 'hospital_referral.name',
+                //             name: 'hospitalReferral.name'
+                //         },
+                        {
+                            data: 'kunjungan',
+                            name: 'kunjungan'
+                        },
+                        {
+                            data: 'faskes',
+                            name: 'faskes'
+                        },
+                    
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            pageLength: 10, // Set default page size
+            lengthMenu: [10, 25, 50, 100], // Set available page sizes
+            drawCallback: function(settings) {
+                // You can adjust the pagination here if needed, for example:
+                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                console.log('Total Pages:', totalPages);
+            }
+        });
+
+        // Filter Form Submission (on change)
+        $('#filter-form').on('submit', function (e) {
+            e.preventDefault();  // Prevent default form submission
+            table.draw();  // Redraw DataTable with new filters
+        });
+    });
+    </script>
+@elseif ($routeName == 'action.kb.index')
+    <script>
+       $(document).ready(function () {
+        // Initialize DataTable with pagination
+        var table = $('#actions-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route('action.kb.index') }}',
+                data: function (d) {
+                    // Send filter data along with the request
+                    d.start_date = $('#start_date').val();
+                    d.end_date = $('#end_date').val();
+                }
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                { data: 'tanggal', name: 'tanggal' },
+                { data: 'patient_nik', name: 'patient_nik' },
+                { data: 'patient_name', name: 'patient_name' },
+                { data: 'patient_age', name: 'patient_age' },
+                { data: 'kartu', name: 'kartu' },
+                { data: 'keluhan', name: 'keluhan' },
+                // { data: 'diagnosa', name: 'diagnosa' },
+                // { data: 'tindakan', name: 'tindakan' },
+                //     {
+                //             data: 'hospital_referral.name',
+                //             name: 'hospitalReferral.name'
+                //         },
+                        {
+                            data: 'kunjungan',
+                            name: 'kunjungan'
+                        },
+                        {
+                            data: 'faskes',
+                            name: 'faskes'
+                        },
+                    
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            pageLength: 10, // Set default page size
+            lengthMenu: [10, 25, 50, 100], // Set available page sizes
+            drawCallback: function(settings) {
+                // You can adjust the pagination here if needed, for example:
+                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                console.log('Total Pages:', totalPages);
+            }
+        });
+
+        // Filter Form Submission (on change)
+        $('#filter-form').on('submit', function (e) {
+            e.preventDefault();  // Prevent default form submission
+            table.draw();  // Redraw DataTable with new filters
+        });
+    });
+    </script>
+
+@endif
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

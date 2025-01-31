@@ -134,6 +134,8 @@ Route::prefix('lansia')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::post('/import/patients', [PatientsController::class, 'import'])->name('patient.import');
+    Route::get('/patients/data', [PatientsController::class, 'getPatientIndex'])->name('patient.data');
 
     Route::get('/patients', [PatientsController::class, 'index'])->name('patient.index');
     Route::post('/patients', [PatientsController::class, 'store'])->name('patient.store');
@@ -141,25 +143,43 @@ Route::middleware('auth')->group(function () {
     Route::delete('/patients/{id}', [PatientsController::class, 'destroy'])->name('patient.destroy');
     Route::get('/laporan/patients', [PatientsController::class, 'patientReport'])->name('patient.report');
 
-    Route::get('/kajian-awal/poli-umum', [ActionController::class, 'index'])->name('action.index');
-    Route::get('/kajian-awal/poli-gigi', [ActionController::class, 'indexPoliGigi'])->name('action.index.gigi');
-    Route::get('/kajian-awal/ugd', [ActionController::class, 'indexUgd'])->name('action.index.ugd');
-    Route::get('/tindakan/poli-umum', [ActionController::class, 'indexDokter'])->name('action.dokter.index');
-    Route::get('/tindakan/poli-gigi', [ActionController::class, 'indexGigiDokter'])->name('action.dokter.gigi.index');
-    Route::get('/tindakan/ugd', [ActionController::class, 'indexUgdDokter'])->name('action.dokter.ugd.index');
-    Route::get('/tindakan/lab/poli-umum', [ActionController::class, 'indexLab'])->name('action.lab.index');
-    Route::get('/tindakan/lab/poli-gigi', [ActionController::class, 'indexGigiLab'])->name('action.lab.gigi.index');
-    Route::get('/tindakan/lab/ugd', [ActionController::class, 'indexUgdLab'])->name('action.lab.ugd.index');
-    Route::get('/tindakan/lab/poli-kia', [ActionController::class, 'indexKiaLab'])->name('action.lab.kia.index');
-    Route::get('/tindakan/lab/poli-kb', [ActionController::class, 'indexKbLab'])->name('action.lab.kb.index');
-    Route::get('/tindakan/poli-kia', [ActionController::class, 'indexDokterKia'])->name('action.kia.dokter.index');
-    Route::get('/tindakan/poli-kb', [ActionController::class, 'indexDokterKb'])->name('action.kb.dokter.index');
-    Route::get('/kajian-awal/kia', [ActionController::class, 'indexKia'])->name('action.kia.index');
-    Route::get('/kajian-awal/kb', [ActionController::class, 'indexKb'])->name('action.kb.index');
+    Route::prefix('kajian-awal')
+        ->name('action.')
+        ->group(function () {
+            Route::get('/poli-umum', [ActionController::class, 'index'])->name('index');
+            Route::get('/poli-umum/data', [ActionController::class, 'indexData'])->name('index.data');
+            Route::get('/poli-gigi', [ActionController::class, 'indexPoliGigi'])->name('index.gigi');
+            Route::get('/ugd', [ActionController::class, 'indexUgd'])->name('index.ugd');
+            Route::get('/kia', [ActionController::class, 'indexKia'])->name('kia.index');
+            Route::get('/kb', [ActionController::class, 'indexKb'])->name('kb.index');
+        });
+    Route::prefix('tindakan')
+        ->name('action.')
+        ->group(function () {
+            Route::get('/poli-umum', [ActionController::class, 'indexDokter'])->name('dokter.index');
+            Route::get('/poli-gigi', [ActionController::class, 'indexGigiDokter'])->name('dokter.gigi.index');
+            Route::get('/ugd', [ActionController::class, 'indexUgdDokter'])->name('dokter.ugd.index');
+            Route::get('/poli-kia', [ActionController::class, 'indexDokterKia'])->name('kia.dokter.index');
+            Route::get('/poli-kb', [ActionController::class, 'indexDokterKb'])->name('kb.dokter.index');
+
+            Route::get('/lab/poli-umum', [ActionController::class, 'indexLab'])->name('lab.index');
+            Route::get('/lab/poli-gigi', [ActionController::class, 'indexGigiLab'])->name('lab.gigi.index');
+            Route::get('/lab/ugd', [ActionController::class, 'indexUgdLab'])->name('lab.ugd.index');
+            Route::get('/lab/poli-kia', [ActionController::class, 'indexKiaLab'])->name('lab.kia.index');
+            Route::get('/lab/poli-kb', [ActionController::class, 'indexKbLab'])->name('lab.kb.index');
+
+            Route::get('/apotik/poli-umum', [ActionController::class, 'indexApotik'])->name('apotik.index');
+            Route::get('/apotik/poli-gigi', [ActionController::class, 'indexGigiApotik'])->name('apotik.gigi.index');
+            Route::get('/apotik/ugd', [ActionController::class, 'indexUgdApotik'])->name('apotik.ugd.index');
+            Route::get('/apotik/poli-kia', [ActionController::class, 'indexKiaApotik'])->name('apotik.kia.index');
+            Route::get('/apotik/poli-kb', [ActionController::class, 'indexKbApotik'])->name('apotik.kb.index');
+        });
+
     Route::post('/tindakan', [ActionController::class, 'store'])->name('action.store');
     Route::POST('/tindakan/{id}', [ActionController::class, 'update'])->name('action.update');
     Route::POST('/tindakan-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
     Route::POST('/tindakan-lab/{id}', [ActionController::class, 'updateLab'])->name('action.update.lab');
+    Route::POST('/tindakan-apotik/{id}', [ActionController::class, 'updateApotik'])->name('action.update.apotik');
     Route::delete('/tindakan/{id}', [ActionController::class, 'destroy'])->name('action.destroy');
     Route::get('/laporan/tindakan', [ActionController::class, 'actionReport'])->name('action.report');
 
@@ -182,14 +202,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/lbkt', [ReportController::class, 'reportLBKT'])->name('report.lbkt');
     Route::get('/laporan/urt', [ReportController::class, 'reportURT'])->name('report.urt');
     Route::get('/laporan/lkrj', [ReportController::class, 'reportLKRJ'])->name('report.lkrj');
-    Route::get('/laporan/rrt', [ReportController::class, 'reportRRT'])->name('report.rrt');
+    Route::post('/laporan/rrt', [ReportController::class, 'reportRRT'])->name('report.rrt');
     Route::get('/laporan/ll', [ReportController::class, 'reportLL'])->name('report.ll');
     Route::get('/laporan/formulir10', [ReportController::class, 'reportFormulir10'])->name('report.formulir10');
     Route::get('/laporan/formulir11', [ReportController::class, 'reportFormulir11'])->name('report.formulir11');
     Route::get('/laporan/formulir12', [ReportController::class, 'reportFormulir12'])->name('report.formulir12');
     Route::get('/laporan/lr', [ReportController::class, 'reportLR'])->name('report.lr');
-    Route::get('/laporan/up', [ReportController::class, 'reportUP'])->name('report.up');
-
+    Route::post('/laporan/up', [ReportController::class, 'reportUP'])->name('report.up');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
     Route::prefix('skrining')->group(function () {
@@ -396,21 +415,30 @@ Route::get('districts/{cityId}', [DependentDropdownController::class, 'districts
 Route::get('villages/{districtId}', [DependentDropdownController::class, 'villagesData'])->name('villages');
 Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('get-patients');
 Route::get('/get-skrining/{id}', [SkriningController::class, 'getSkriningPatient'])->name('get-skrining-patient');
+
 Route::get('/get-patients/poli-umum', [PatientsController::class, 'getPatientsPoliUmum'])->name('get-patients-poli-umum');
 Route::get('/get-patients/poli-gigi', [PatientsController::class, 'getPatientsPoliGigi'])->name('get-patients-poli-gigi');
 Route::get('/get-patients/poli-kia', [PatientsController::class, 'getPatientsPoliKia'])->name('get-patients-poli-kia');
 Route::get('/get-patients/poli-kb', [PatientsController::class, 'getPatientsPoliKb'])->name('get-patients-poli-kb');
 Route::get('/get-patients/ruang-tindakan', [PatientsController::class, 'getPatientsRuangTindakan'])->name('get-patients-ruang-tindakan');
+
 Route::get('/get-patients-dokter/poli-umum', [PatientsController::class, 'getPatientsDokter'])->name('get-patients-dokter');
 Route::get('/get-patients-dokter/poli-gigi', [PatientsController::class, 'getPatientsDokterGigi'])->name('get-patients-dokter-gigi');
 Route::get('/get-patients-dokter/poli-kia', [PatientsController::class, 'getPatientsDokterKia'])->name('get-patients-dokter-kia');
 Route::get('/get-patients-dokter/poli-kb', [PatientsController::class, 'getPatientsDokterKb'])->name('get-patients-dokter-kb');
 Route::get('/get-patients-dokter/ruang-tindakan', [PatientsController::class, 'getPatientsDokterRuangTindakan'])->name('get-patients-dokter-ruang-tindakan');
+
 Route::get('/get-patients-lab/poli-umum', [PatientsController::class, 'getPatientsLab'])->name('get-patients-lab');
 Route::get('/get-patients-lab/poli-gigi', [PatientsController::class, 'getPatientsLabGigi'])->name('get-patients-lab-gigi');
 Route::get('/get-patients-lab/ruang-tindakan', [PatientsController::class, 'getPatientsLabRuangTindakan'])->name('get-patients-lab-ruang-tindakan');
 Route::get('/get-patients-lab/poli-kia', [PatientsController::class, 'getPatientsLabKia'])->name('get-patients-lab-kia');
 Route::get('/get-patients-lab/poli-kb', [PatientsController::class, 'getPatientsLabKb'])->name('get-patients-lab-kb');
+
+Route::get('/get-patients-apotik/poli-umum', [PatientsController::class, 'getPatientsApotik'])->name('get-patients-apotik');
+Route::get('/get-patients-apotik/poli-gigi', [PatientsController::class, 'getPatientsApotikGigi'])->name('get-patients-apotik-gigi');
+Route::get('/get-patients-apotik/ruang-tindakan', [PatientsController::class, 'getPatientsApotikRuangTindakan'])->name('get-patients-apotik-ruang-tindakan');
+Route::get('/get-patients-apotik/poli-kia', [PatientsController::class, 'getPatientsApotikKia'])->name('get-patients-apotik-kia');
+Route::get('/get-patients-apotik/poli-kb', [PatientsController::class, 'getPatientsApotikKb'])->name('get-patients-apotik-kb');
 
 //Language Change
 Route::get('lang/{locale}', function ($locale) {
@@ -441,197 +469,6 @@ Route::prefix('page-layouts')->group(function () {
     Route::view('footer-light', 'page-layout.footer-light')->name('footer-light');
     Route::view('footer-dark', 'page-layout.footer-dark')->name('footer-dark');
     Route::view('footer-fixed', 'page-layout.footer-fixed')->name('footer-fixed');
-});
-
-Route::prefix('project')->group(function () {
-    Route::view('projects', 'project.projects')->name('projects');
-    Route::view('projectcreate', 'project.projectcreate')->name('projectcreate');
-});
-
-Route::view('file-manager', 'file-manager')->name('file-manager');
-Route::view('kanban', 'kanban')->name('kanban');
-
-Route::prefix('ecommerce')->group(function () {
-    Route::view('product', 'apps.product')->name('product');
-    Route::view('page-product', 'apps.product-page')->name('product-page');
-    Route::view('list-products', 'apps.list-products')->name('list-products');
-    Route::view('payment-details', 'apps.payment-details')->name('payment-details');
-    Route::view('order-history', 'apps.order-history')->name('order-history');
-    Route::view('invoice-template', 'apps.invoice-template')->name('invoice-template');
-    Route::view('cart', 'apps.cart')->name('cart');
-    Route::view('list-wish', 'apps.list-wish')->name('list-wish');
-    Route::view('checkout', 'apps.checkout')->name('checkout');
-    Route::view('pricing', 'apps.pricing')->name('pricing');
-});
-
-Route::prefix('email')->group(function () {
-    Route::view('email-application', 'apps.email-application')->name('email-application');
-    Route::view('email-compose', 'apps.email-compose')->name('email-compose');
-});
-
-Route::prefix('chat')->group(function () {
-    Route::view('chat', 'apps.chat')->name('chat');
-    Route::view('video-chat', 'apps.video-chat')->name('chat-video');
-});
-
-Route::prefix('users')->group(function () {
-    Route::view('user-profile', 'apps.user-profile')->name('user-profile');
-    Route::view('edit-profile', 'apps.edit-profile')->name('edit-profile');
-    Route::view('user-cards', 'apps.user-cards')->name('user-cards');
-});
-
-Route::view('bookmark', 'apps.bookmark')->name('bookmark');
-Route::view('contacts', 'apps.contacts')->name('contacts');
-Route::view('task', 'apps.task')->name('task');
-Route::view('calendar-basic', 'apps.calendar-basic')->name('calendar-basic');
-Route::view('social-app', 'apps.social-app')->name('social-app');
-Route::view('to-do', 'apps.to-do')->name('to-do');
-Route::view('search', 'apps.search')->name('search');
-
-Route::prefix('ui-kits')->group(function () {
-    Route::view('state-color', 'ui-kits.state-color')->name('state-color');
-    Route::view('typography', 'ui-kits.typography')->name('typography');
-    Route::view('avatars', 'ui-kits.avatars')->name('avatars');
-    Route::view('helper-classes', 'ui-kits.helper-classes')->name('helper-classes');
-    Route::view('grid', 'ui-kits.grid')->name('grid');
-    Route::view('tag-pills', 'ui-kits.tag-pills')->name('tag-pills');
-    Route::view('progress-bar', 'ui-kits.progress-bar')->name('progress-bar');
-    Route::view('modal', 'ui-kits.modal')->name('modal');
-    Route::view('alert', 'ui-kits.alert')->name('alert');
-    Route::view('popover', 'ui-kits.popover')->name('popover');
-    Route::view('tooltip', 'ui-kits.tooltip')->name('tooltip');
-    Route::view('loader', 'ui-kits.loader')->name('loader');
-    Route::view('dropdown', 'ui-kits.dropdown')->name('dropdown');
-    Route::view('accordion', 'ui-kits.accordion')->name('accordion');
-    Route::view('tab-bootstrap', 'ui-kits.tab-bootstrap')->name('tab-bootstrap');
-    Route::view('tab-material', 'ui-kits.tab-material')->name('tab-material');
-    Route::view('box-shadow', 'ui-kits.box-shadow')->name('box-shadow');
-    Route::view('list', 'ui-kits.list')->name('list');
-});
-
-Route::prefix('bonus-ui')->group(function () {
-    Route::view('scrollable', 'bonus-ui.scrollable')->name('scrollable');
-    Route::view('tree', 'bonus-ui.tree')->name('tree');
-    Route::view('bootstrap-notify', 'bonus-ui.bootstrap-notify')->name('bootstrap-notify');
-    Route::view('rating', 'bonus-ui.rating')->name('rating');
-    Route::view('dropzone', 'bonus-ui.dropzone')->name('dropzone');
-    Route::view('tour', 'bonus-ui.tour')->name('tour');
-    Route::view('sweet-alert2', 'bonus-ui.sweet-alert2')->name('sweet-alert2');
-    Route::view('modal-animated', 'bonus-ui.modal-animated')->name('modal-animated');
-    Route::view('owl-carousel', 'bonus-ui.owl-carousel')->name('owl-carousel');
-    Route::view('ribbons', 'bonus-ui.ribbons')->name('ribbons');
-    Route::view('pagination', 'bonus-ui.pagination')->name('pagination');
-    Route::view('breadcrumb', 'bonus-ui.breadcrumb')->name('breadcrumb');
-    Route::view('range-slider', 'bonus-ui.range-slider')->name('range-slider');
-    Route::view('image-cropper', 'bonus-ui.image-cropper')->name('image-cropper');
-    Route::view('sticky', 'bonus-ui.sticky')->name('sticky');
-    Route::view('basic-card', 'bonus-ui.basic-card')->name('basic-card');
-    Route::view('creative-card', 'bonus-ui.creative-card')->name('creative-card');
-    Route::view('tabbed-card', 'bonus-ui.tabbed-card')->name('tabbed-card');
-    Route::view('dragable-card', 'bonus-ui.dragable-card')->name('dragable-card');
-    Route::view('timeline-v-1', 'bonus-ui.timeline-v-1')->name('timeline-v-1');
-    Route::view('timeline-v-2', 'bonus-ui.timeline-v-2')->name('timeline-v-2');
-    Route::view('timeline-small', 'bonus-ui.timeline-small')->name('timeline-small');
-});
-
-Route::prefix('builders')->group(function () {
-    Route::view('form-builder-1', 'builders.form-builder-1')->name('form-builder-1');
-    Route::view('form-builder-2', 'builders.form-builder-2')->name('form-builder-2');
-    Route::view('pagebuild', 'builders.pagebuild')->name('pagebuild');
-    Route::view('button-builder', 'builders.button-builder')->name('button-builder');
-});
-
-Route::prefix('animation')->group(function () {
-    Route::view('animate', 'animation.animate')->name('animate');
-    Route::view('scroll-reval', 'animation.scroll-reval')->name('scroll-reval');
-    Route::view('aos', 'animation.aos')->name('aos');
-    Route::view('tilt', 'animation.tilt')->name('tilt');
-    Route::view('wow', 'animation.wow')->name('wow');
-});
-
-Route::prefix('icons')->group(function () {
-    Route::view('flag-icon', 'icons.flag-icon')->name('flag-icon');
-    Route::view('font-awesome', 'icons.font-awesome')->name('font-awesome');
-    Route::view('ico-icon', 'icons.ico-icon')->name('ico-icon');
-    Route::view('themify-icon', 'icons.themify-icon')->name('themify-icon');
-    Route::view('feather-icon', 'icons.feather-icon')->name('feather-icon');
-    Route::view('whether-icon', 'icons.whether-icon')->name('whether-icon');
-    Route::view('simple-line-icon', 'icons.simple-line-icon')->name('simple-line-icon');
-    Route::view('material-design-icon', 'icons.material-design-icon')->name('material-design-icon');
-    Route::view('pe7-icon', 'icons.pe7-icon')->name('pe7-icon');
-    Route::view('typicons-icon', 'icons.typicons-icon')->name('typicons-icon');
-    Route::view('ionic-icon', 'icons.ionic-icon')->name('ionic-icon');
-});
-
-Route::prefix('buttons')->group(function () {
-    Route::view('buttons', 'buttons.buttons')->name('buttons');
-    Route::view('flat-buttons', 'buttons.flat-buttons')->name('flat-buttons');
-    Route::view('edge-buttons', 'buttons.buttons-edge')->name('buttons-edge');
-    Route::view('raised-button', 'buttons.raised-button')->name('raised-button');
-    Route::view('button-group', 'buttons.button-group')->name('button-group');
-});
-
-Route::prefix('forms')->group(function () {
-    Route::view('form-validation', 'forms.form-validation')->name('form-validation');
-    Route::view('base-input', 'forms.base-input')->name('base-input');
-    Route::view('radio-checkbox-control', 'forms.radio-checkbox-control')->name('radio-checkbox-control');
-    Route::view('input-group', 'forms.input-group')->name('input-group');
-    Route::view('megaoptions', 'forms.megaoptions')->name('megaoptions');
-    Route::view('datepicker', 'forms.datepicker')->name('datepicker');
-    Route::view('time-picker', 'forms.time-picker')->name('time-picker');
-    Route::view('datetimepicker', 'forms.datetimepicker')->name('datetimepicker');
-    Route::view('daterangepicker', 'forms.daterangepicker')->name('daterangepicker');
-    Route::view('touchspin', 'forms.touchspin')->name('touchspin');
-    Route::view('select2', 'forms.select2')->name('select2');
-    Route::view('switch', 'forms.switch')->name('switch');
-    Route::view('typeahead', 'forms.typeahead')->name('typeahead');
-    Route::view('clipboard', 'forms.clipboard')->name('clipboard');
-    Route::view('default-form', 'forms.default-form')->name('default-form');
-    Route::view('form-wizard', 'forms.form-wizard')->name('form-wizard');
-    Route::view('form-two-wizard', 'forms.form-wizard-two')->name('form-wizard-two');
-    Route::view('wizard-form-three', 'forms.form-wizard-three')->name('form-wizard-three');
-    Route::post('form-wizard-three', function () {
-        return redirect()->route('form-wizard-three');
-    })->name('form-wizard-three-post');
-});
-
-Route::prefix('tables')->group(function () {
-    Route::view('bootstrap-basic-table', 'tables.bootstrap-basic-table')->name('bootstrap-basic-table');
-    Route::view('bootstrap-sizing-table', 'tables.bootstrap-sizing-table')->name('bootstrap-sizing-table');
-    Route::view('bootstrap-border-table', 'tables.bootstrap-border-table')->name('bootstrap-border-table');
-    Route::view('bootstrap-styling-table', 'tables.bootstrap-styling-table')->name('bootstrap-styling-table');
-    Route::view('table-components', 'tables.table-components')->name('table-components');
-    Route::view('datatable-basic-init', 'tables.datatable-basic-init')->name('datatable-basic-init');
-    Route::view('datatable-advance', 'tables.datatable-advance')->name('datatable-advance');
-    Route::view('datatable-styling', 'tables.datatable-styling')->name('datatable-styling');
-    Route::view('datatable-ajax', 'tables.datatable-ajax')->name('datatable-ajax');
-    Route::view('datatable-server-side', 'tables.datatable-server-side')->name('datatable-server-side');
-    Route::view('datatable-plugin', 'tables.datatable-plugin')->name('datatable-plugin');
-    Route::view('datatable-api', 'tables.datatable-api')->name('datatable-api');
-    Route::view('datatable-data-source', 'tables.datatable-data-source')->name('datatable-data-source');
-    Route::view('datatable-ext-autofill', 'tables.datatable-ext-autofill')->name('datatable-ext-autofill');
-    Route::view('datatable-ext-basic-button', 'tables.datatable-ext-basic-button')->name('datatable-ext-basic-button');
-    Route::view('datatable-ext-col-reorder', 'tables.datatable-ext-col-reorder')->name('datatable-ext-col-reorder');
-    Route::view('datatable-ext-fixed-header', 'tables.datatable-ext-fixed-header')->name('datatable-ext-fixed-header');
-    Route::view('datatable-ext-html-5-data-export', 'tables.datatable-ext-html-5-data-export')->name('datatable-ext-html-5-data-export');
-    Route::view('datatable-ext-key-table', 'tables.datatable-ext-key-table')->name('datatable-ext-key-table');
-    Route::view('datatable-ext-responsive', 'tables.datatable-ext-responsive')->name('datatable-ext-responsive');
-    Route::view('datatable-ext-row-reorder', 'tables.datatable-ext-row-reorder')->name('datatable-ext-row-reorder');
-    Route::view('datatable-ext-scroller', 'tables.datatable-ext-scroller')->name('datatable-ext-scroller');
-    Route::view('jsgrid-table', 'tables.jsgrid-table')->name('jsgrid-table');
-});
-
-Route::prefix('charts')->group(function () {
-    Route::view('echarts', 'charts.echarts')->name('echarts');
-    Route::view('chart-apex', 'charts.chart-apex')->name('chart-apex');
-    Route::view('chart-google', 'charts.chart-google')->name('chart-google');
-    Route::view('chart-sparkline', 'charts.chart-sparkline')->name('chart-sparkline');
-    Route::view('chart-flot', 'charts.chart-flot')->name('chart-flot');
-    Route::view('chart-knob', 'charts.chart-knob')->name('chart-knob');
-    Route::view('chart-morris', 'charts.chart-morris')->name('chart-morris');
-    Route::view('chartjs', 'charts.chartjs')->name('chartjs');
-    Route::view('chartist', 'charts.chartist')->name('chartist');
-    Route::view('chart-peity', 'charts.chart-peity')->name('chart-peity');
 });
 
 Route::view('sample-page', 'pages.sample-page')->name('sample-page');

@@ -102,6 +102,7 @@ class Action extends Model
         'tumor',
         'diabetes',
         'pembekuan_darah',
+        'update_obat'
     ];
 
     protected $casts = [
@@ -144,10 +145,10 @@ class Action extends Model
     /**
      * Relasi ke model Diagnosis
      */
-    public function diagnosis()
-    {
-        return $this->belongsToMany(Diagnosis::class, 'diagnosa');
-    }
+    // public function diagnosis()
+    // {
+    //     return $this->belongsToMany(Diagnosis::class, 'diagnosa');
+    // }
 
     /**
      * Relasi ke model Hospital (Rujukan Rumah Sakit)

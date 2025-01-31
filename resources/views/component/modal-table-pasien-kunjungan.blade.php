@@ -27,6 +27,8 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap 5 (tanpa jQuery) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
@@ -37,10 +39,6 @@
 
         // Fungsi untuk menginisialisasi DataTable
         function initializeTable() {
-            // if ($.fn.DataTable.isDataTable('#pasien')) {
-            //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
-            // }
-
             const tipe = $('#tipe').val(); // Ambil route name
             const url = `/get-patients/${tipe}`;
             table = $('#pasienKunjungan').DataTable({
@@ -48,12 +46,8 @@
                     url: url, // Endpoint untuk mengambil data
                     type: 'GET',
                     dataSrc: function(response) {
-                        // console.log('Response from server:', response); // Debug response
-                        // console.log(url);
-                        return response
-                            .data; // Pastikan 'data' adalah key yang mengandung array dari server
+                        return response.data; // Pastikan 'data' adalah key yang mengandung array dari server
                     },
-
                 },
                 columns: [{
                         data: 'nik',
@@ -90,7 +84,7 @@
                                 data-blood="${row.blood_type}" 
                                 data-education="${row.education}" 
                                 data-job="${row.occupation}" 
-                                data-rm="${row.no_rm}">
+                                data-rm="${row.no_rm}"   data-bs-dismiss="modal" >
                                 Pilih
                             </button>
                         `;
@@ -105,9 +99,7 @@
 
         // Handle tombol "Pilih" diklik
         $(document).on('click', '.btnPilihPasien', function() {
-
             const data = $(this).data();
-            // Assuming 'data.dob' contains the date of birth, e.g., "1990-01-01"
             var dob = data.age; // data.dob should be in the format 'YYYY-MM-DD'
 
             // Function to calculate age from dob
@@ -136,7 +128,7 @@
             $('#nik').val(data.nik);
             $('#namePatient').val(data.name);
             $('#nomor_kartu').val(data.nomor_kartu);
-            console.log(data.nomor_kartu);
+
             let jenisKartu = data.jenis_kartu;
             if (jenisKartu === 'pbi') {
                 jenisKartu = 'PBI (KIS)';
@@ -151,20 +143,28 @@
             }
             $('#jenis_kartu').val(jenisKartu);
 
-
-
             $('#patientDetails').show();
-            console.log($('#patientDetails').show());
-
-
 
             // Tutup modal
             $('#modalPasienKunjungan').modal('hide');
         });
 
+        // Inisialisasi DataTable hanya sekali saat halaman pertama kali dimuat
+        if ($('#pasienKunjungan').length && !$.fn.DataTable.isDataTable('#pasienKunjungan')) {
+            initializeTable();
+        }
+
         // Inisialisasi ulang DataTables saat modal ditampilkan
         $('#modalPasienKunjungan').on('shown.bs.modal', function() {
+            // Jika DataTable sudah ada, hancurkan dulu sebelum diinisialisasi ulang
+            if ($.fn.DataTable.isDataTable('#pasienKunjungan')) {
+                $('#pasienKunjungan').DataTable().clear().destroy();
+            }
+            // Pastikan tabel baru diinisialisasi setelah modal muncul
             initializeTable();
         });
+
     });
 </script>
+
+

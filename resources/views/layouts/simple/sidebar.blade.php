@@ -91,11 +91,14 @@
 
                                 </svg><span>Poli Umum</span></a>
                             <ul class="sidebar-submenu">
-                                @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                                @if (Auth::user()->role == 'dokter')
                                     <li><a href="{{ route('action.dokter.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @elseif(Auth::user()->role == 'admin-kajian-awal')
                                     <li><a href="{{ route('action.index') }}">Kajian Awal</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                                @elseif(Auth::user()->role == 'apotik')
+                                    <li><a href="{{ route('action.apotik.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @else
                                     <li><a href="{{ route('action.lab.index') }}">Tindakan</a></li>
@@ -119,12 +122,15 @@
                                 </svg><span>Poli Gigi</span></a>
 
                             <ul class="sidebar-submenu">
-                                @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                                @if (Auth::user()->role == 'dokter')
                                     <li><a href="{{ route('action.dokter.gigi.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @elseif(Auth::user()->role == 'admin-kajian-awal')
                                     <li><a href="{{ route('action.index.gigi') }}">Kajian Awal</a></li>
                                     <li><a href="{{ route('report.index.gigi') }}">Laporan</a></li>
+                                @elseif(Auth::user()->role == 'apotik')
+                                    <li><a href="{{ route('action.apotik.gigi.index') }}">Tindakan</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @else
                                     <li><a href="{{ route('action.lab.gigi.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
@@ -149,12 +155,15 @@
                                 </svg><span>UGD</span></a>
 
                             <ul class="sidebar-submenu">
-                                @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                                @if (Auth::user()->role == 'dokter')
                                     <li><a href="{{ route('action.dokter.ugd.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @elseif(Auth::user()->role == 'admin-kajian-awal')
                                     <li><a href="{{ route('action.index.ugd') }}">Kajian Awal</a></li>
                                     <li><a href="{{ route('report.index.ugd') }}">Laporan</a></li>
+                                @elseif(Auth::user()->role == 'apotik')
+                                    <li><a href="{{ route('action.apotik.ugd.index') }}">Tindakan</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @else
                                     <li><a href="{{ route('action.lab.ugd.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
@@ -178,11 +187,14 @@
                                 </svg><span>Poli KIA</span></a>
 
                             <ul class="sidebar-submenu">
-                                @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                                @if (Auth::user()->role == 'dokter')
                                     <li><a href="{{ route('action.kia.dokter.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @elseif(Auth::user()->role == 'admin-kajian-awal')
                                     <li><a href="{{ route('action.kia.index') }}">Kajian Awal</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                                @elseif(Auth::user()->role == 'apotik')
+                                    <li><a href="{{ route('action.apotik.kia.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @else
                                     <li><a href="{{ route('action.lab.kia.index') }}">Tindakan</a></li>
@@ -207,11 +219,14 @@
                                 </svg><span>Poli KB</span></a>
 
                             <ul class="sidebar-submenu">
-                                @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                                @if (Auth::user()->role == 'dokter')
                                     <li><a href="{{ route('action.kb.dokter.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @elseif(Auth::user()->role == 'admin-kajian-awal')
                                     <li><a href="{{ route('action.kb.index') }}">Kajian Awal</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                                @elseif(Auth::user()->role == 'apotik')
+                                    <li><a href="{{ route('action.apotik.kb.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @else
                                     <li><a href="{{ route('action.lab.kb.index') }}">Tindakan</a></li>

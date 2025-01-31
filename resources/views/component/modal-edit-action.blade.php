@@ -1,9 +1,15 @@
 <!-- Modal Add Action -->
+@php
+    $diagnosa = App\Models\Diagnosis::all();
+    // dd($diagnosa);
+@endphp
+
 <div class="modal fade" style="z-index: 1050;" id="editActionModal{{ $action->id }}" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
+
                 @if ($routeName === 'action.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
                 @elseif ($routeName === 'action.index.gigi')
@@ -34,22 +40,29 @@
                             <h5>Detail Pasien</h5>
                             <div id="patientDetailsEdit" style=" margin-top: 10px; padding: 10px; border-radius: 5px;">
                                 <p><strong>N I K</strong> : <span
-                                        id="NIK{{ $action->id }}">{{ $action->patient->nik }}</span></p>
+                                        id="NIK{{ $action->id }}">{{ $action->patient->nik ?? '' }}</span></p>
                                 <p><strong>Nama Pasien</strong> : <span
-                                        id="Name{{ $action->id }}">{{ $action->patient->name }}</span></p>
+                                        id="Name{{ $action->id }}">{{ $action->patient->name ?? '' }}</span></p>
                                 {{-- <p><strong>J.Kelamin</strong> : <span id="Gender">{{ $action->patient->genderName->name }}</span></p> --}}
                                 <p><strong>Umur</strong> : <span id="Age"></span>
-                                    {{ \Carbon\Carbon::parse($action->patient->dob)->age }}</p>
+                                    @if (optional($action->patient)->dob)
+                                        {{ \Carbon\Carbon::parse($action->patient->dob)->age }}
+                                    @else
+                                        -
+                                    @endif
+                                </p>
                                 <p><strong>Telepon/WA</strong> : <span
-                                        id="Phone{{ $action->id }}">{{ $action->patient->phone }}</span></p>
-                                <p><strong>Alamat</strong> : <span id="Address">{{ $action->patient->address }}</span>
+                                        id="Phone{{ $action->id }}">{{ $action->patient->phone ?? '' }}</span></p>
+                                <p><strong>Alamat</strong> : <span
+                                        id="Address">{{ $action->patient->address ?? '' }}</span>
                                 </p>
                                 <p><strong>Darah</strong> : <span
-                                        id="Blood{{ $action->id }}">{{ $action->patient->blood_type }}</span></p>
+                                        id="Blood{{ $action->id }}">{{ $action->patient->blood_type ?? '' }}</span>
+                                </p>
                                 {{-- <p><strong>Pendidikan</strong> : <span id="Education">{{ $action->patient->educations->name }}</span></p> --}}
                                 {{-- <p><strong>Pekerjaan</strong> : <span id="Job"></span>{{ $action->patient->occupations->name }}</p> --}}
                                 <p><strong>Nomor RM</strong> : <span
-                                        id="RmNumber{{ $action->id }}">{{ $action->patient->no_rm }}</span>
+                                        id="RmNumber{{ $action->id }}">{{ $action->patient->no_rm ?? '' }}</span>
                                 </p>
                             </div>
 
@@ -67,7 +80,8 @@
                                                     placeholder="NIK">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
-                                                        data-bs-toggle="modal" data-bs-target="#modalPasienEdit">
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalPasienEdit{{ $action->id }}">
                                                         Cari
                                                     </button>
                                                 </div>
@@ -119,18 +133,16 @@
                                             <label for="kartu">Kartu</label>
                                             <input type="text" class="form-control" id="jenis_kartu"
                                                 name="jenis_kartu" readonly
-                                                value="{{ $action->patient->jenis_kartu == 'pbi'
-                                                    ? 'PBI (KIS)'
-                                                    : ($action->patient->jenis_kartu == 'askes'
-                                                        ? 'AKSES'
-                                                        : ($action->patient->jenis_kartu == 'jkn_mandiri'
-                                                            ? 'JKN Mandiri'
-                                                            : ($action->patient->jenis_kartu == 'umum'
-                                                                ? 'Umum'
-                                                                : ($action->patient->jenis_kartu == 'jkd'
-                                                                    ? 'JKD'
-                                                                    : 'Tidak Diketahui')))) }}">
+                                                value="{{ match (optional($action->patient)->jenis_kartu) {
+                                                    'pbi' => 'PBI (KIS)',
+                                                    'askes' => 'ASKES',
+                                                    'jkn_mandiri' => 'JKN Mandiri',
+                                                    'umum' => 'Umum',
+                                                    'jkd' => 'JKD',
+                                                    default => 'Tidak Diketahui',
+                                                } }}">
                                         </div>
+
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
@@ -138,7 +150,7 @@
                                             <input type="text" class="form-control"
                                                 id="nomor_kartu{{ $action->id }}" name="nomor"
                                                 placeholder="Masukkan Nomor"
-                                                value="{{ $action->patient->nomor_kartu }}" readonly>
+                                                value="{{ $action->patient->nomor_kartu ?? '' }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -649,7 +661,7 @@
                                         Penunjang</span>
                                     <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                                 </div>
-                                <div class="container">
+                                {{-- <div class="container">
                                     <div class="row g-2">
                                         <div class="col-md-12">
                                             <label for="hasil_lab" style="color: green;">Hasil
@@ -660,7 +672,7 @@
                                                 placeholder="Hasil Laboratorium">
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             @endif
                         </div>
                     </div>
@@ -678,29 +690,51 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row mt-3">
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                <select class="form-control" id="diagnosaEdit" name="diagnosa[]" multiple>
+                                <select class="form-control" id="diagnosaEdit{{ $action->id }}" name="diagnosa[]"
+                                    multiple>
+                                    @php
+                                        // Decode JSON if it exists
+                                        $selectedDiagnosa = is_string($action->diagnosa)
+                                            ? json_decode($action->diagnosa, true)
+                                            : $action->diagnosa;
+                                    @endphp
                                     @foreach ($diagnosa as $item)
                                         <option value="{{ $item->id }}"
-                                            {{ in_array($item->id, old('diagnosa', $diagnosa ? $diagnosa->pluck('id')->toArray() : [])) ? 'selected' : '' }}>
-                                            {{ $item->name }}
+                                            {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
+                                            {{ $item->name }}-{{ $item->icd10 }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="skrining" class="form-label">Hasil Skrining</label>
+                                    <button class="btn btn-primary w-100 mt-2" type="button"
+                                        id="btnCariskriningEdit" data-bs-toggle="modal"
+                                        data-bs-target="#modalSkriningEdit"
+                                        data-patient-id="{{ $action->id_patient }}">
+                                        <!-- Tambahkan data-patient-id -->
+                                        Hasil Skrining
+                                    </button>
+                                </div>
+                            </div>
 
-                            <div class="col-md-4">
+
+                            <div class="col-md-6">
                                 <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
                                     Penunjang</label>
                                 <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
                                     placeholder="Pemeriksaan penunjang">{{ old('pemeriksaan_penunjang', $action->pemeriksaan_penunjang ?? '') }}</textarea>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                                <select class="form-control" id="tindakanEdit" name="tindakan">
+                                <select class="form-control"
+                                    id="tindakanEdit{{ $action->id }}{{ $action->id }}" name="tindakan">
                                     <option value="" {{ empty($action->tindakan) ? 'selected' : '' }} disabled
                                         selected>pilih</option>
                                     @if ($action->tipe == 'poli-umum')
@@ -838,11 +872,11 @@
 
                     <div class="row mt-3">
                         @if (Auth::user()->role == 'dokter')
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                 <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
                                 <select class="form-control" id="rujuk_rs" name="rujuk_rs">
                                     <option value="" disabled selected>pilih</option>
@@ -855,26 +889,33 @@
                                 </select>
                             </div>
                         @endif
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
                             <input type="text" class="form-control" id="keterangan" name="keterangan"
                                 value="{{ old('keterangan', $action->keterangan ?? '') }}" placeholder="Keterangan">
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan Data</button>
+                    </div>
+                    </form>
+            </div>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary">Simpan Data</button>
-                </form>
-            </div>
-        </div>
+    
     </div>
-
+</div>
 </div>
 
-
 @include('component.modal-table-edit-pasien')
+@include('component.modal-skrining-edit')
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 
 <script>
     var nikValue = "{{ $action->patient->nik ?? '' }}";
@@ -883,14 +924,14 @@
 </script>
 <script>
     $(document).ready(function() {
-        $('#diagnosaEdit').select2({
+        $('#diagnosaEdit{{ $action->id }}').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0
         });
     });
     $(document).ready(function() {
-        $('#tindakanEdit').select2({
+        $('#tindakanEdit{{ $action->id }}').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0

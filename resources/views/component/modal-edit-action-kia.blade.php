@@ -80,7 +80,7 @@
                                                     placeholder="NIK">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
-                                                        data-bs-toggle="modal" data-bs-target="#modalPasienEdit">
+                                                        data-bs-toggle="modal" data-bs-target="#modalPasienEdit{{ $action->id }}">
                                                         Cari
                                                     </button>
                                                 </div>

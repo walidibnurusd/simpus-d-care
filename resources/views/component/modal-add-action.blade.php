@@ -303,7 +303,7 @@
 
 
 @include('component.modal-table-pasien-kunjungan')
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
     .select2-dropdown {
         z-index: 9999 !important;

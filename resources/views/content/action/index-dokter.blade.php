@@ -85,154 +85,26 @@
                             <table id="actionTable" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            No
-                                        </th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            TANGGAL</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            NIK/NO.RM</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            NAMA</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            UMUR</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            KARTU</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            KELUHAN</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            DIAGNOSA</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            TINDAKAN</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            HASIL LAB</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            OBAT</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            RUJUK RS</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            KUNJ</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            FASKES</th>
-                                        @if (Auth::user()->role == 'dokter')
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                AKSI
-                                            </th>
+                                        <th>No</th>
+                                        <th>TANGGAL</th>
+                                        <th>NIK/NO.RM</th>
+                                        <th>NAMA</th>
+                                        <th>UMUR</th>
+                                        <th>KARTU</th>
+                                        <th>KELUHAN</th>
+                                        <th>DIAGNOSA</th>
+                                        <th>TINDAKAN</th>
+                                        <th>HASIL LAB</th>
+                                        <th>OBAT</th>
+                                        <th>RUJUK RS</th>
+                                        <th>KUNJ</th>
+                                        <th>FASKES</th>
+                                        @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                                            <th>AKSI</th>
                                         @endif
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($actions as $index => $action)
-                                        <tr>
-                                            <td>
-                                                <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Nomor urut -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ \Carbon\Carbon::parse($action->tanggal)->format('Y-m-d') }}</p>
-                                            </td>
-
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->patient)->nik }}/{{ optional($action->patient)->no_rm }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->patient)->name }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ \Carbon\Carbon::parse($action->patient->dob)->age }} Tahun</p>
-                                                <!-- Ganti dengan perhitungan umur jika perlu -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->kartu }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $action->keluhan }}</p>
-                                            </td>
-                                            @php
-                                                // Assuming $actions->diagnosa is an array of Diagnosis IDs
-                                                $diagnosaIds = $action->diagnosa; // This should be an array of IDs.
-                                                $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get(); // Fetch the diagnoses by IDs
-                                            @endphp
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ implode(', ', $diagnosa->pluck('name')->toArray()) }} </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->tindakan) }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->hasil_lab) }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->obat) }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ optional($action->hospitalReferral)->name }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->kunjungan) }}
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ ucwords($action->faskes) }}
-                                                </p>
-                                            </td>
-                                            @if (Auth::user()->role == 'dokter')
-                                                <td>
-                                                    <div class="action-buttons">
-                                                        <!-- Tombol Edit -->
-                                                        <button type="button"
-                                                            class="btn btn-primary btn-sm text-white font-weight-bold"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editActionModal{{ $action->id }}">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        @include('component.modal-edit-action')
-                                                        <!-- Tombol Delete -->
-                                                        <form action="{{ route('action.destroy', $action->id) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                class="btn btn-danger btn-sm text-white font-weight-bold"
-                                                                onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
-
-
                         </div>
                     </div>
                 </div>
@@ -246,55 +118,291 @@
 
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            var table = $('#actionTable').DataTable({
-                "language": {
-                    "info": "_PAGE_ dari _PAGES_ halaman",
-                    "paginate": {
-                        "previous": "<",
-                        "next": ">",
-                        "first": "<<",
-                        "last": ">>"
-                    }
-                },
-                "responsive": true,
-                "lengthMenu": [10, 25, 50, 100], // Set the number of rows per page
-                "initComplete": function() {
-                    // Custom search function for date range
-                    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                        var startDate = $('#start_date').val();
-                        var endDate = $('#end_date').val();
-                        var actionDate = data[
-                            1]; // Assumes the 'Tanggal' column is the second column (index 1)
-
-                        // If startDate and endDate are provided, compare with the actionDate
-                        if (startDate && endDate) {
-                            // Format both dates as YYYY-MM-DD for comparison
-                            var actionDateFormatted = moment(actionDate, 'YYYY-MM-DD').format(
-                                'YYYY-MM-DD');
-
-                            return actionDateFormatted >= startDate && actionDateFormatted <=
-                                endDate;
+    @if ($routeName == 'action.dokter.index')
+        <script>
+            $(document).ready(function() {
+                const table = $('#actionTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route('action.dokter.index') }}",
+                        type: 'GET',
+                        data: function(d) {
+                            // Add date filters if available
+                            d.start_date = $('#start_date').val();
+                            d.end_date = $('#end_date').val();
                         }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tanggal',
+                            name: 'tanggal'
+                        },
+                        {
+                            data: 'patient_nik',
+                            name: 'patient.nik'
+                        },
+                        {
+                            data: 'patient_name',
+                            name: 'patient.name'
+                        },
+                        {
+                            data: 'patient_age',
+                            name: 'patient.dob'
+                        },
+                        {
+                            data: 'kartu',
+                            name: 'patient.jenis_kartu'
+                        },
+                        {
+                            data: 'keluhan',
+                            name: 'keluhan'
+                        },
+                        {
+                            data: 'diagnosa',
+                            name: 'diagnosa'
+                        },
+                        {
+                            data: 'tindakan',
+                            name: 'tindakan'
+                        },
+                        {
+                            data: 'hasil_lab',
+                            name: 'hasil_lab'
+                        },
+                        {
+                            data: 'obat',
+                            name: 'obat'
+                        },
+                        {
+                            data: 'hospital_referral.name',
+                            name: 'hospitalReferral.name'
+                        },
+                        {
+                            data: 'kunjungan',
+                            name: 'kunjungan'
+                        },
+                        {
+                            data: 'faskes',
+                            name: 'faskes'
+                        },
+                        @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
+                            }
+                        @endif
+                    ],
+                    order: [
+                        [1, 'desc']
+                    ]
+                });
 
-                        return true;
-                    });
-                }
+                $('#filterButton').on('click', function() {
+                    console.log('Filter button clicked');
+                    table.ajax.reload(); // Corrected reload function
+                });
             });
+        </script>
+    @elseif ($routeName == 'action.dokter.gigi.index')
+        <script>
+            $(document).ready(function() {
+                var table = $('#actionTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route('action.dokter.gigi.index') }}",
+                        type: 'GET',
+                        data: function(d) {
+                            // Add date filters if available
+                            d.start_date = $('#startDate').val();
+                            d.end_date = $('#endDate').val();
+                        }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tanggal',
+                            name: 'tanggal'
+                        },
+                        {
+                            data: 'patient_nik',
+                            name: 'patient.nik'
+                        },
+                        {
+                            data: 'patient_name',
+                            name: 'patient.name'
+                        },
+                        {
+                            data: 'patient_age',
+                            name: 'patient.dob'
+                        },
+                        {
+                            data: 'kartu',
+                            name: 'patient.jenis_kartu'
+                        },
+                        {
+                            data: 'keluhan',
+                            name: 'keluhan'
+                        },
+                        {
+                            data: 'diagnosa',
+                            name: 'diagnosa'
+                        },
+                        {
+                            data: 'tindakan',
+                            name: 'tindakan'
+                        },
+                        {
+                            data: 'hasil_lab',
+                            name: 'hasil_lab'
+                        },
+                        {
+                            data: 'obat',
+                            name: 'obat'
+                        },
+                        {
+                            data: 'hospital_referral.name',
+                            name: 'hospitalReferral.name'
+                        },
+                        {
+                            data: 'kunjungan',
+                            name: 'kunjungan'
+                        },
+                        {
+                            data: 'faskes',
+                            name: 'faskes'
+                        },
+                        @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
+                            }
+                        @endif
+                    ],
+                    order: [
+                        [1, 'desc']
+                    ]
+                });
 
-            // Event listener for the filter button
-            $('#filterButton').on('click', function() {
-                table.draw();
+                $('#filterButton').on('click', function() {
+                    console.log('Filter button clicked');
+                    table.ajax.reload(); // Corrected reload function
+                });
             });
+        </script>
+    @elseif ($routeName == 'action.dokter.ugd.index')
+        <script>
+            $(document).ready(function() {
+                var table = $('#actionTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route('action.dokter.ugd.index') }}",
+                        type: 'GET',
+                        data: function(d) {
+                            // Add date filters if available
+                            d.start_date = $('#startDate').val();
+                            d.end_date = $('#endDate').val();
+                        }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tanggal',
+                            name: 'tanggal'
+                        },
+                        {
+                            data: 'patient_nik',
+                            name: 'patient.nik'
+                        },
+                        {
+                            data: 'patient_name',
+                            name: 'patient.name'
+                        },
+                        {
+                            data: 'patient_age',
+                            name: 'patient.dob'
+                        },
+                        {
+                            data: 'kartu',
+                            name: 'patient.jenis_kartu'
+                        },
+                        {
+                            data: 'keluhan',
+                            name: 'keluhan'
+                        },
+                        {
+                            data: 'diagnosa',
+                            name: 'diagnosa'
+                        },
+                        {
+                            data: 'tindakan',
+                            name: 'tindakan'
+                        },
+                        {
+                            data: 'hasil_lab',
+                            name: 'hasil_lab'
+                        },
+                        {
+                            data: 'obat',
+                            name: 'obat'
+                        },
+                        {
+                            data: 'hospital_referral.name',
+                            name: 'hospitalReferral.name'
+                        },
+                        {
+                            data: 'kunjungan',
+                            name: 'kunjungan'
+                        },
+                        {
+                            data: 'faskes',
+                            name: 'faskes'
+                        },
+                        @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
+                            }
+                        @endif
+                    ],
+                    order: [
+                        [1, 'desc']
+                    ]
+                });
 
-            // // Clear filters if either date is changed
-            // $('#start_date, #end_date').on('change', function() {
-            //     table.draw();
-            // });
-        });
-    </script>
+                $('#filterButton').on('click', function() {
+                    console.log('Filter button clicked');
+                    table.ajax.reload(); // Corrected reload function
+                });
+            });
+        </script>
+    @endif
+
+
+
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

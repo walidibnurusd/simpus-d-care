@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalSkrining" tabindex="-1" aria-labelledby="modalSkriningLabel" aria-hidden="true">
+<div class="modal fade" id="modalSkriningEdit" tabindex="-1" aria-labelledby="modalSkriningLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-striped" id="skrining">
+                <table class="table table-striped" id="skriningEdit">
                     <thead>
                         <tr>
                             <th>Jenis</th>
@@ -29,17 +29,17 @@
 
 <script>
     $(document).ready(function() {
-        $('#btnCariskrining').on('click', function() {
-            const patientId = $(this).data('id'); // Ambil ID pasien dari tombol
+        $('#btnCariskriningEdit').on('click', function() {
+            const patientId = $(this).data('patient-id'); // Ambil ID pasien dari tombol
             console.log('data pasien', patientId);
 
             if (patientId) {
-                if ($.fn.DataTable.isDataTable('#skrining')) {
+                if ($.fn.DataTable.isDataTable('#skriningEdit')) {
                     // Jika DataTable sudah ada, perbarui URL dan reload data
-                    $('#skrining').DataTable().ajax.url(`/get-skrining/${patientId}`).load();
+                    $('#skriningEdit').DataTable().ajax.url(`/get-skrining/${patientId}`).load();
                 } else {
                     // Inisialisasi DataTable baru
-                    $('#skrining').DataTable({
+                    $('#skriningEdit').DataTable({
                         ajax: {
                             url: `/get-skrining/${patientId}`,
                             type: 'GET',

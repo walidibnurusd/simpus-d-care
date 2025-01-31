@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalPasienEdit" tabindex="-1" aria-labelledby="modalPasienLabel" aria-hidden="true">
+<div class="modal fade" id="modalPasienEdit{{ $action->id }}" tabindex="-1" aria-labelledby="modalPasienLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-striped" id="pasienEdit">
+                <table class="table table-striped" id="pasienEdit{{ $action->id }}">
                     <thead>
                         <tr>
                             <th>NIK</th>
@@ -24,21 +24,24 @@
     </div>
 </div>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
 
 <script>
     $(document).ready(function() {
         let table; // Deklarasi variabel DataTable
-
+    
         // Fungsi untuk menginisialisasi DataTable
         function initializeTable() {
-            if ($.fn.DataTable.isDataTable('#pasienEdit')) {
-                $('#pasienEdit').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
+            if ($.fn.DataTable.isDataTable('#pasienEdit{{ $action->id }}')) {
+                $('#pasienEdit{{ $action->id }}').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
             }
 
-            table = $('#pasienEdit').DataTable({
+            table = $('#pasienEdit{{ $action->id }}').DataTable({
                 ajax: {
                     url: '/get-patients', // Endpoint untuk mengambil data
                     type: 'GET',
@@ -68,7 +71,7 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `
-                            <button class="btn btn-success btnPilihPasienEdit" 
+                            <button class="btn btn-success btnPilihPasienEdit{{ $action->id }}" 
                                 data-id="${row.id}" 
                                 data-jenis_kartu="${row.jenis_kartu}" 
                                 data-nomor_kartu="${row.nomor_kartu}" 
@@ -81,7 +84,7 @@
                                 data-blood="${row.blood_type}" 
                                 data-education="${row.education}" 
                                 data-job="${row.occupation}" 
-                                data-rm="${row.no_rm}">
+                                data-rm="${row.no_rm}" data-bs-dismiss="modal" >
                                 Pilih
                             </button>
                         `;
@@ -93,9 +96,9 @@
                 serverSide: true,
             });
         }
-
+        initializeTable();
         // Handle tombol "Pilih" diklik
-        $(document).on('click', '.btnPilihPasienEdit', function() {
+        $(document).on('click', '.btnPilihPasienEdit{{ $action->id }}', function() {
             const data = $(this).data();
             var dob = data.age; // data.dob should be in the format 'YYYY-MM-DD'
 

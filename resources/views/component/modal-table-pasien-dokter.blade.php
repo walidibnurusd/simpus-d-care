@@ -31,7 +31,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 
 <script>
@@ -90,94 +90,94 @@
                         render: function(data, type, row) {
                             return `
                         <button class="btn btn-success btnPilihPasien" 
-    data-id-patient="${row.patient.id}" 
-    data-id="${row.id}" 
-    data-nik="${row.patient.nik}" 
-    data-name="${row.patient.name}" 
-    data-gender="${row.patient.gender}" 
-    data-age="${row.patient.dob}" 
-    data-phone="${row.patient.phone}" 
-    data-address="${row.patient.address}" 
-    data-blood="${row.patient.blood_type}" 
-    data-education="${row.patient.education}" 
-    data-job="${row.patient.occupation}" 
-    data-rm="${row.patient.no_rm}" 
-    data-tanggal="${row.tanggal}" 
-    data-doctor="${row.doctor}" 
-    data-kunjungan="${row.kunjungan}" 
-    data-kartu="${row.patient.jenis_kartu}" 
-    data-nomor="${row.patient.nomor_kartu}" 
-    data-faskes="${row.faskes}" 
-    data-sistol="${row.sistol}" 
-    data-diastol="${row.diastol}" 
-    data-beratbadan="${row.beratBadan}" 
-    data-tinggibadan="${row.tinggiBadan}" 
-    data-lingkarpinggang="${row.lingkarPinggang}" 
-    data-gula="${row.gula}" 
-    data-merokok="${row.merokok}" 
-    data-fisik="${row.fisik}" 
-    data-garam="${row.garam}" 
-    data-gulalebih="${row.gula_lebih}" 
-    data-lemak="${row.lemak}" 
-    data-alkohol="${row.alkohol}" 
-    data-hidup="${row.hidup}" 
-    data-buahsayur="${row.buah_sayur}" 
-    data-hasiliva="${row.hasil_iva}" 
-    data-tindakiva="${row.tindak_iva}" 
-    data-hasilsadanis="${row.hasil_sadanis}" 
-    data-tindaksadanis="${row.tindak_sadanis}" 
-    data-konseling="${row.konseling}" 
-    data-car="${row.car}" 
-    data-rujukubm="${row.rujuk_ubm}" 
-    data-kondisi="${row.kondisi}" 
-    data-edukasi="${row.edukasi}" 
-    data-riwayatpenyakitsekarang='${row.riwayat_penyakit_sekarang}' 
-    data-riwayatpenyakitdulu='${row.riwayat_penyakit_dulu}' 
-    data-riwayatpengobatan='${row.riwayat_pengobatan}' 
-    data-riwayatalergi='${row.riwayat_alergi}' 
-    data-riwayatpenyakitlainnya='${row.riwayat_penyakit_lainnya}' 
-    data-riwayatpenyakitkeluarga='${row.riwayat_penyakit_keluarga}' 
-    data-riwayatpenyakitlainnyakeluarga='${row.riwayat_penyakit_lainnya_keluarga}' 
-    data-keluhan="${row.keluhan}" 
-    data-diagnosa='${JSON.stringify(row.diagnosa)}' 
-    data-tindakan="${row.tindakan}" 
-    data-rujukrs="${row.rujuk_rs}" 
-    data-keterangan="${row.keterangan}" 
-    data-nadi="${row.nadi}" 
-    data-nafas="${row.nafas}" 
-    data-suhu="${row.suhu}" 
-    data-mataanemia="${row.mata_anemia}" 
-    data-pupil="${row.pupil}" 
-    data-ikterus="${row.ikterus}" 
-    data-udempalpebral="${row.udem_palpebral}" 
-    data-nyeritekan="${row.nyeri_tekan}" 
-    data-peristaltik="${row.peristaltik}" 
-    data-ascites="${row.ascites}" 
-    data-lokasiabdomen="${row.lokasi_abdomen}" 
-    data-thorax="${row.thorax}" 
-    data-thoraxbj="${row.thorax_bj}" 
-    data-paru="${row.paru}" 
-    data-suara-nafas="${row.suara_nafas}" 
-    data-ronchi="${row.ronchi}" 
-    data-wheezing="${row.wheezing}" 
-    data-ekstremitas="${row.ekstremitas}" 
-    data-edema="${row.edema}" 
-    data-tonsil="${row.tonsil}" 
-    data-fharing="${row.fharing}" 
-    data-kelenjar="${row.kelenjar}" 
-    data-genetalia="${row.genetalia}" 
-    data-warnakulit="${row.warna_kulit}" 
-    data-turgor="${row.turgor}" 
-    data-neurologis="${row.neurologis}" 
-    data-hasillab="${row.hasil_lab}" 
-    data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}" 
-    data-hamil="${row.hamil}" 
-    data-tipe="${row.tipe}" 
-    data-icd10="${row.icd10}" 
-    data-oralit="${row.oralit}" 
-    data-zinc="${row.zinc}">
-    Pilih
-</button>
+                        data-id-patient="${row.patient.id}" 
+                        data-id="${row.id}" 
+                        data-nik="${row.patient.nik}" 
+                        data-name="${row.patient.name}" 
+                        data-gender="${row.patient.gender}" 
+                        data-age="${row.patient.dob}" 
+                        data-phone="${row.patient.phone}" 
+                        data-address="${row.patient.address}" 
+                        data-blood="${row.patient.blood_type}" 
+                        data-education="${row.patient.education}" 
+                        data-job="${row.patient.occupation}" 
+                        data-rm="${row.patient.no_rm}" 
+                        data-tanggal="${row.tanggal}" 
+                        data-doctor="${row.doctor}" 
+                        data-kunjungan="${row.kunjungan}" 
+                        data-kartu="${row.patient.jenis_kartu}" 
+                        data-nomor="${row.patient.nomor_kartu}" 
+                        data-faskes="${row.faskes}" 
+                        data-sistol="${row.sistol}" 
+                        data-diastol="${row.diastol}" 
+                        data-beratbadan="${row.beratBadan}" 
+                        data-tinggibadan="${row.tinggiBadan}" 
+                        data-lingkarpinggang="${row.lingkarPinggang}" 
+                        data-gula="${row.gula}" 
+                        data-merokok="${row.merokok}" 
+                        data-fisik="${row.fisik}" 
+                        data-garam="${row.garam}" 
+                        data-gulalebih="${row.gula_lebih}" 
+                        data-lemak="${row.lemak}" 
+                        data-alkohol="${row.alkohol}" 
+                        data-hidup="${row.hidup}" 
+                        data-buahsayur="${row.buah_sayur}" 
+                        data-hasiliva="${row.hasil_iva}" 
+                        data-tindakiva="${row.tindak_iva}" 
+                        data-hasilsadanis="${row.hasil_sadanis}" 
+                        data-tindaksadanis="${row.tindak_sadanis}" 
+                        data-konseling="${row.konseling}" 
+                        data-car="${row.car}" 
+                        data-rujukubm="${row.rujuk_ubm}" 
+                        data-kondisi="${row.kondisi}" 
+                        data-edukasi="${row.edukasi}" 
+                        data-riwayatpenyakitsekarang='${row.riwayat_penyakit_sekarang}' 
+                        data-riwayatpenyakitdulu='${row.riwayat_penyakit_dulu}' 
+                        data-riwayatpengobatan='${row.riwayat_pengobatan}' 
+                        data-riwayatalergi='${row.riwayat_alergi}' 
+                        data-riwayatpenyakitlainnya='${row.riwayat_penyakit_lainnya}' 
+                        data-riwayatpenyakitkeluarga='${row.riwayat_penyakit_keluarga}' 
+                        data-riwayatpenyakitlainnyakeluarga='${row.riwayat_penyakit_lainnya_keluarga}' 
+                        data-keluhan="${row.keluhan}" 
+                        data-diagnosa='${JSON.stringify(row.diagnosa)}' 
+                        data-tindakan="${row.tindakan}" 
+                        data-rujukrs="${row.rujuk_rs}" 
+                        data-keterangan="${row.keterangan}" 
+                        data-nadi="${row.nadi}" 
+                        data-nafas="${row.nafas}" 
+                        data-suhu="${row.suhu}" 
+                        data-mataanemia="${row.mata_anemia}" 
+                        data-pupil="${row.pupil}" 
+                        data-ikterus="${row.ikterus}" 
+                        data-udempalpebral="${row.udem_palpebral}" 
+                        data-nyeritekan="${row.nyeri_tekan}" 
+                        data-peristaltik="${row.peristaltik}" 
+                        data-ascites="${row.ascites}" 
+                        data-lokasiabdomen="${row.lokasi_abdomen}" 
+                        data-thorax="${row.thorax}" 
+                        data-thoraxbj="${row.thorax_bj}" 
+                        data-paru="${row.paru}" 
+                        data-suara-nafas="${row.suara_nafas}" 
+                        data-ronchi="${row.ronchi}" 
+                        data-wheezing="${row.wheezing}" 
+                        data-ekstremitas="${row.ekstremitas}" 
+                        data-edema="${row.edema}" 
+                        data-tonsil="${row.tonsil}" 
+                        data-fharing="${row.fharing}" 
+                        data-kelenjar="${row.kelenjar}" 
+                        data-genetalia="${row.genetalia}" 
+                        data-warnakulit="${row.warna_kulit}" 
+                        data-turgor="${row.turgor}" 
+                        data-neurologis="${row.neurologis}" 
+                        data-hasillab="${row.hasil_lab}" 
+                        data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}" 
+                        data-hamil="${row.hamil}" 
+                        data-tipe="${row.tipe}" 
+                        data-icd10="${row.icd10}" 
+                        data-oralit="${row.oralit}" 
+                        data-zinc="${row.zinc}" data-bs-dismiss="modal" >
+                        Pilih
+                    </button>
 
                         `;
                         },
@@ -188,6 +188,7 @@
                 serverSide: true,
             });
         }
+
         $('#filterDate').on('change', function() {
             if ($.fn.DataTable.isDataTable('#pasienDokter')) {
                 table.destroy(); // Hancurkan DataTables yang ada
@@ -200,8 +201,6 @@
         $(document).on('click', '.btnPilihPasien', function() {
 
             const data = $(this).data();
-            console.log(data);
-            // Assuming 'data.dob' contains the date of birth, e.g., "1990-01-01"
             var dob = data.age; // data.dob should be in the format 'YYYY-MM-DD'
 
             // Function to calculate age from dob
@@ -225,7 +224,6 @@
             $('#displayEducation').text(data.education);
             $('#displayJob').text(data.job);
             $('#displayRmNumber').text(data.rm);
-            console.log(data.tindakan);
             const actionId = data.id;
 
             const actionUrl = "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__',
@@ -319,10 +317,10 @@
             // Cek apakah nilai riwayat_penyakit_lainnya_keluarga tidak kosong
             if (data.riwayatpenyakitlainnyakeluarga) {
                 $('#penyakit_lainnya_keluarga_container').css('display',
-                'block'); // Tampilkan container
+                    'block'); // Tampilkan container
             } else {
                 $('#penyakit_lainnya_keluarga_container').css('display',
-                'none'); // Sembunyikan container
+                    'none'); // Sembunyikan container
             }
 
             $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
@@ -338,17 +336,16 @@
 
             $('#patientDetails').show();
             const patientId = $(this).data('id-patient');
-            // console.log($('#patientDetails').show());
             $('#btnCariskrining').data('id', patientId);
-            console.log('id patient', patientId);
 
 
             // Tutup modal
             $('#modalPasien').modal('hide');
         });
+        initializeTable();
 
-        // Inisialisasi ulang DataTables saat modal ditampilkan
         $('#modalPasien').on('shown.bs.modal', function() {
+
             initializeTable();
         });
     });

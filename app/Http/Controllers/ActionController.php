@@ -16,52 +16,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class ActionController extends Controller
 {
     public function index(Request $request)
     {
-        // Get the filtering dates from the request
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-
-        // Retrieve all doctors, actions, diagnoses, diseases, and hospitals
         $dokter = User::where('role', 'dokter')->get();
         $diagnosa = Diagnosis::all();
         $penyakit = Disease::all();
         $rs = Hospital::all();
-
-        // Filter actions based on the date range
-        $actionsQuery = Action::where('tipe', 'poli-umum');
-
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $actions = $actionsQuery->get();
-
-        // Get the current route name
         $routeName = $request->route()->getName();
 
-        // Return the view with the data
-        return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
-    public function indexPoliGigi(Request $request)
+    public function indexData(Request $request)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        $dokter = User::where('role', 'dokter')->get();
-
-        $diagnosa = Diagnosis::all();
-
-        $penyakit = Disease::all();
-        $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'poli-gigi');
+        $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-umum'); // Ensure 'diagnosa' is not null
 
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -73,113 +48,434 @@ class ActionController extends Controller
 
         $actions = $actionsQuery->get();
 
+        return DataTables::of($actions)
+            ->addIndexColumn()
+            ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+            ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+            ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+            ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+            ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+            ->addColumn('diagnosa', function ($row) {
+                if (!is_string($row->diagnosa)) {
+                    return '-';
+                }
+                $diagnosaIds = explode(',', $row->diagnosa);
+                $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                return implode(', ', $diagnoses);
+            })
+            ->addColumn('action', function ($row) {
+                // Get the doctor list
+                $rs = Hospital::all();
+                $dokter = User::where('role', 'dokter')->get();
+                $routeName = request()->route()->getName();
+
+                // Render modal edit with route name
+                $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+
+                return '<div class="action-buttons">
+                                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                    $row->id .
+                    '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form action="' .
+                    route('action.destroy', $row->id) .
+                    '" method="POST" class="d-inline">
+                                    ' .
+                    csrf_field() .
+                    method_field('DELETE') .
+                    '
+                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>' .
+                    $editModal;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function indexPoliGigi(Request $request)
+    {
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-gigi'); // Ensure 'diagnosa' is not null
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('diagnosa', function ($row) {
+                    if (!is_string($row->diagnosa)) {
+                        return '-';
+                    }
+                    $diagnosaIds = explode(',', $row->diagnosa);
+                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                    return implode(', ', $diagnoses);
+                })
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $rs = Hospital::all();
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+
+                    return '<div class="action-buttons">
+                                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                    ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        $dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
         $routeName = $request->route()->getName();
 
-        return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
     public function indexUgd(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'ruang-tindakan'); // Ensure 'diagnosa' is not null
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('diagnosa', function ($row) {
+                    if (!is_string($row->diagnosa)) {
+                        return '-';
+                    }
+                    $diagnosaIds = explode(',', $row->diagnosa);
+                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                    return implode(', ', $diagnoses);
+                })
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $rs = Hospital::all();
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+
+                    return '<div class="action-buttons">
+                                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                    ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
 
         $dokter = User::where('role', 'dokter')->get();
-
         $diagnosa = Diagnosis::all();
-
         $penyakit = Disease::all();
         $rs = Hospital::all();
-
-        $actionsQuery = Action::where('tipe', 'ruang-tindakan');
-
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
 
-        return view('content.action.index', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
     public function indexDokter(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+                ->where('tipe', 'poli-umum')
+                ->whereNotNull('diagnosa');
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('diagnosa', function ($row) {
+                    if (!is_string($row->diagnosa)) {
+                        return '-';
+                    }
+                    $diagnosaIds = explode(',', $row->diagnosa);
+                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                    return implode(', ', $diagnoses);
+                })
+                ->addColumn('action', function ($row) {
+                    $dokter = User::where('role', 'dokter')->get();
+                    $rs = Hospital::all();
+                    // Menggunakan request() global untuk mendapatkan route name
+                    $routeName = request()->route()->getName();
+                    // Render modal edit dengan membawa routeName
+                    $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+                    return '<div class="action-buttons">
+                                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                    ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>' .
+                        $editModal;
+                })
+
+                ->rawColumns(['action'])
+                ->make(true);
+        }
 
         $dokter = User::where('role', 'dokter')->get();
         $diagnosa = Diagnosis::all();
-
         $penyakit = Disease::all();
         $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'poli-umum')->whereNotNull('diagnosa');
-
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $actions = $actionsQuery->get();
-
         $routeName = $request->route()->getName();
-        return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        // dd(  $routeName);
+
+        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
+
     public function indexGigiDokter(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
 
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+                ->where('tipe', 'poli-gigi') // Adjust the type to 'poli-gigi'
+                ->whereNotNull('diagnosa'); // Ensure 'diagnosa' is not null
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('diagnosa', function ($row) {
+                    if (!is_string($row->diagnosa)) {
+                        return '-';
+                    }
+                    $diagnosaIds = explode(',', $row->diagnosa);
+                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                    return implode(', ', $diagnoses);
+                })
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $rs = Hospital::all();
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+
+                    return '<div class="action-buttons">
+                                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                    ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // For the non-AJAX case, provide the necessary data for the view
         $dokter = User::where('role', 'dokter')->get();
         $diagnosa = Diagnosis::all();
-
         $penyakit = Disease::all();
         $rs = Hospital::all();
-
-        $actionsQuery = Action::where('tipe', 'poli-gigi')->whereNotNull('diagnosa');
-
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
 
-        return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
 
     public function indexUgdDokter(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+                ->where('tipe', 'ruang-tindakan') // Filter by type for UGDs
+                ->whereNotNull('diagnosa');
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('diagnosa', function ($row) {
+                    if (!is_string($row->diagnosa)) {
+                        return '-';
+                    }
+                    $diagnosaIds = explode(',', $row->diagnosa);
+                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                    return implode(', ', $diagnoses);
+                })
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    $rs = Hospital::all();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+
+                    return '<div class="action-buttons">
+                            <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // Non-AJAX request handling
         $dokter = User::where('role', 'dokter')->get();
-
         $diagnosa = Diagnosis::all();
-
         $penyakit = Disease::all();
         $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'ruang-tindakan')->whereNotNull('diagnosa');
-
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
-        return view('content.action.index-dokter', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+
+        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
+
     public function indexLab(Request $request)
     {
         $startDate = $request->input('start_date');
@@ -330,77 +626,307 @@ class ActionController extends Controller
     // }
     public function indexDokterKia(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+                ->where('tipe', 'poli-kia') // Filter by type for KIA
+                ->whereNotNull('diagnosa'); // Ensure diagnosa exists
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('diagnosa', function ($row) {
+                    if (!is_string($row->diagnosa)) {
+                        return '-';
+                    }
+                    $diagnosaIds = explode(',', $row->diagnosa);
+                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                    return implode(', ', $diagnoses);
+                })
+                ->addColumn('action', function ($row) {
+                    // Render action buttons
+                    $rs = Hospital::all();
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+
+                    // Render modal for edit
+                    $editModal = view('component.modal-edit-action-kia', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+
+                    return '<div class="action-buttons">
+                                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                    ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // Non-AJAX request handling
         $dokter = User::where('role', 'dokter')->get();
-        $actionsQuery = Action::where('tipe', 'poli-kia')->where('usia_kehamilan', '!=', 0);
         $diagnosa = Diagnosis::all();
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $actions = $actionsQuery->get();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        return view('content.action.index-kia', compact('actions', 'dokter', 'routeName', 'diagnosa'));
+
+        return view('content.action.index-kia', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
+
     public function indexDokterKb(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+                ->where('tipe', 'poli-kb') // Filter by type for KB
+                ->whereNotNull('diagnosa'); // Filter for actions that have 'layanan_kb'
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('diagnosa', function ($row) {
+                    if (!is_string($row->diagnosa)) {
+                        return '-';
+                    }
+                    $diagnosaIds = explode(',', $row->diagnosa);
+                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                    return implode(', ', $diagnoses);
+                })
+                ->addColumn('action', function ($row) {
+                    // Render action buttons
+                    $rs = Hospital::all();
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+
+                    // Render modal for edit
+                    $editModal = view('component.modal-edit-action-kb', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+
+                    return '<div class="action-buttons">
+                            <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // Non-AJAX request handling
         $dokter = User::where('role', 'dokter')->get();
         $diagnosa = Diagnosis::all();
-        $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('layanan_kb');
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $actions = $actionsQuery->get();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        return view('content.action.index-kb', compact('actions', 'dokter', 'routeName', 'diagnosa'));
+
+        return view('content.action.index-kb', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
+
     public function indexKia(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-kia'); // Ensure 'diagnosa' is not null
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('diagnosa', function ($row) {
+                    if (!is_string($row->diagnosa)) {
+                        return '-';
+                    }
+                    $diagnosaIds = explode(',', $row->diagnosa);
+                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                    return implode(', ', $diagnoses);
+                })
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $rs = Hospital::all();
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+
+                    return '<div class="action-buttons">
+                                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                    ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
         $dokter = User::where('role', 'dokter')->get();
-        $actionsQuery = Action::where('tipe', 'poli-kia');
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $actions = $actionsQuery->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        return view('content.action.index', compact('actions', 'dokter', 'routeName'));
+
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
     public function indexKb(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-kb'); // Ensure 'diagnosa' is not null
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('diagnosa', function ($row) {
+                    if (!is_string($row->diagnosa)) {
+                        return '-';
+                    }
+                    $diagnosaIds = explode(',', $row->diagnosa);
+                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                    return implode(', ', $diagnoses);
+                })
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $rs = Hospital::all();
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+
+                    return '<div class="action-buttons">
+                                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                    ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
         $dokter = User::where('role', 'dokter')->get();
-        $actionsQuery = Action::where('tipe', 'poli-kb');
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $actions = $actionsQuery->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        return view('content.action.index', compact('actions', 'dokter', 'routeName'));
+
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
     public function actionReport(Request $request)
     {
@@ -865,6 +1391,340 @@ class ActionController extends Controller
                 ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
                 ->withInput();
         }
+    }
+    public function updateApotik(Request $request, $id)
+    {
+        try {
+            // Find the action record to be updated
+            $action = Action::findOrFail($id);
+
+            $patient = Patients::where('nik', $request->nik)->first();
+
+            if (!$patient) {
+                return redirect()
+                    ->back()
+                    ->withErrors(['nik' => 'Patient with the provided NIK does not exist.'])
+                    ->withInput();
+            }
+
+            $request->merge([
+                'id_patient' => $patient->id,
+            ]);
+
+            $validated = $request->validate([
+                'id_patient' => 'required',
+                'update_obat' => 'nullable',
+            ]);
+
+            $action->update($validated);
+            if ($action->tipe === 'poli-umum') {
+                $route = 'action.apotik.index';
+            } elseif ($action->tipe === 'poli-gigi') {
+                $route = 'action.apotik.gigi.index';
+            } elseif ($action->tipe === 'poli-kia') {
+                $route = 'action.apotik.kia.index';
+            } elseif ($action->tipe === 'poli-kb') {
+                $route = 'action.apotik.kb.index';
+            } else {
+                $route = 'action.apotik.ugd.index';
+            }
+            return redirect()->route($route)->with('success', 'Action has been successfully updated.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
+                ->withInput();
+        }
+    }
+    public function indexApotik(Request $request)
+    {
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient'])
+                ->where('tipe', 'poli-umum')
+                ->whereNotNull('obat');
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('obat', fn($row) => $row->obat)
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    $rs = Hospital::all();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+
+                    return '<div class="action-buttons">
+                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                        <i class="fas fa-edit"></i>
+                    </button>
+            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // Non-AJAX request handling
+        $dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $routeName = $request->route()->getName();
+
+        return view('content.action.index-apotik', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+    public function indexGigiApotik(Request $request)
+    {
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient'])
+                ->where('tipe', 'poli-gigi')
+                ->whereNotNull('obat');
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('obat', fn($row) => $row->obat)
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    $rs = Hospital::all();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+
+                    return '<div class="action-buttons">
+                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                        <i class="fas fa-edit"></i>
+                    </button>
+            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // Non-AJAX request handling
+        $dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $routeName = $request->route()->getName();
+
+        return view('content.action.index-apotik', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+    public function indexUgdApotik(Request $request)
+    {
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient'])
+                ->where('tipe', 'ruang-tindakan')
+                ->whereNotNull('obat');
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('obat', fn($row) => $row->obat)
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    $rs = Hospital::all();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+
+                    return '<div class="action-buttons">
+                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                        <i class="fas fa-edit"></i>
+                    </button>
+            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // Non-AJAX request handling
+        $dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $routeName = $request->route()->getName();
+
+        return view('content.action.index-apotik', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+    public function indexKiaApotik(Request $request)
+    {
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient'])
+                ->where('tipe', 'poli-kia')
+                ->whereNotNull('obat');
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('obat', fn($row) => $row->obat)
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    $rs = Hospital::all();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+
+                    return '<div class="action-buttons">
+                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                        <i class="fas fa-edit"></i>
+                    </button>
+            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // Non-AJAX request handling
+        $dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $routeName = $request->route()->getName();
+
+        return view('content.action.index-apotik', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+    }
+    public function indexKbApotik(Request $request)
+    {
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $actionsQuery = Action::with(['patient'])
+                ->where('tipe', 'poli-kb')
+                ->whereNotNull('obat');
+
+            if ($startDate) {
+                $actionsQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $actionsQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $actions = $actionsQuery->get();
+
+            return DataTables::of($actions)
+                ->addIndexColumn()
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+                ->addColumn('obat', fn($row) => $row->obat)
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    $rs = Hospital::all();
+
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+
+                    return '<div class="action-buttons">
+                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                        $row->id .
+                        '">
+                        <i class="fas fa-edit"></i>
+                    </button>
+            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // Non-AJAX request handling
+        $dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $routeName = $request->route()->getName();
+
+        return view('content.action.index-apotik', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
 
     public function destroy($id)
