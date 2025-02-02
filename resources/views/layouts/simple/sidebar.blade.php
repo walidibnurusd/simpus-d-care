@@ -164,11 +164,43 @@
                                 @elseif(Auth::user()->role == 'apotik')
                                     <li><a href="{{ route('action.apotik.ugd.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
-                                @else
+                                    {{-- @else
                                     <li><a href="{{ route('action.lab.ugd.index') }}">Tindakan</a></li>
-                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li> --}}
                                 @endif
 
+                            </ul>
+                        </li>
+                    @endif
+                    @if (Auth::user()->role == 'tindakan')
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+                                class="sidebar-link sidebar-title" href="#">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+
+                                </svg><span>UGD</span></a>
+
+                            <ul class="sidebar-submenu">
+                                <li><a href="{{ route('action.dokter.ugd.index') }}">Tindakan</a></li>
+                                <li><a href="{{ route('report.index') }}">Laporan</a></li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+                                class="sidebar-link sidebar-title" href="#">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+
+                                </svg><span>Ruang Tindakan</span></a>
+
+                            <ul class="sidebar-submenu">
+                                <li><a href="{{ route('action.dokter.ruang.tindakan.index') }}">Tindakan</a></li>
+                                <li><a href="{{ route('report.index') }}">Laporan</a></li>
                             </ul>
                         </li>
                     @endif

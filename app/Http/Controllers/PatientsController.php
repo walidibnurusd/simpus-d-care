@@ -431,20 +431,20 @@ class PatientsController extends Controller
         $filterDate = $request->input('filterDate', null);
 
         $page = $start / $length + 1;
-         $query = DB::table('patients')
+        $query = DB::table('patients')
             ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
             ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
             ->select('patients.*', 'actions.*', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
             ->where(function ($query) {
-                $query->where('actions.tipe', 'poli-kia')->whereNull('actions.diagnosa');
+                $query->where('actions.tipe', 'poli-umum')->whereNull('actions.diagnosa');
             })
             ->orWhere(function ($query) {
-                $query->where('kunjungan.poli', 'poli-kia');
+                $query->where('kunjungan.poli', 'poli-umum');
             });
 
         if ($filterDate) {
-            $query->whereDate('tanggal', $filterDate);
+            $query->whereDate('actions.tanggal', $filterDate);
         }
 
         if (!empty($searchValue)) {
@@ -477,7 +477,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-         $query = DB::table('patients')
+        $query = DB::table('patients')
             ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
             ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
             ->select('patients.*', 'actions.*', 'kunjungan.*')
@@ -489,9 +489,8 @@ class PatientsController extends Controller
                 $query->where('kunjungan.poli', 'poli-gigi');
             });
 
-
         if ($filterDate) {
-            $query->whereDate('tanggal', $filterDate);
+            $query->whereDate('actions.tanggal', $filterDate);
         }
 
         if (!empty($searchValue)) {
@@ -522,7 +521,7 @@ class PatientsController extends Controller
 
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
-  $query = DB::table('patients')
+        $query = DB::table('patients')
             ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
             ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
             ->select('patients.*', 'actions.*', 'kunjungan.*')
@@ -534,9 +533,8 @@ class PatientsController extends Controller
                 $query->where('kunjungan.poli', 'ruang-tindakan');
             });
 
-
         if ($filterDate) {
-            $query->whereDate('tanggal', $filterDate);
+            $query->whereDate('actions.tanggal', $filterDate);
         }
 
         if (!empty($searchValue)) {
@@ -579,9 +577,8 @@ class PatientsController extends Controller
                 $query->where('kunjungan.poli', 'poli-kb');
             });
 
-
         if ($filterDate) {
-            $query->whereDate('tanggal', $filterDate);
+            $query->where('actions.tanggal', '=', $filterDate);
         }
 
         if (!empty($searchValue)) {
@@ -625,7 +622,7 @@ class PatientsController extends Controller
             });
 
         if ($filterDate) {
-            $query->whereDate('tanggal', $filterDate);
+            $query->where('actions.tanggal', '=', $filterDate);
         }
 
         if (!empty($searchValue)) {
@@ -643,6 +640,42 @@ class PatientsController extends Controller
             'recordsTotal' => $patients->total(),
             'recordsFiltered' => $patients->total(),
             'data' => $patients->items(), // Data pasien yang dipaginasikan
+        ]);
+    }
+    public function getPatientsTindakan(Request $request)
+    {
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
+
+        $page = $start / $length + 1;
+
+        $query = DB::table('patients')
+            ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
+            ->select('patients.*', 'actions.*')
+            ->where(function ($query) {
+                $query->where('actions.beri_tindakan', 1);
+            });
+
+        if ($filterDate) {
+            $query->whereDate('actions.tanggal', $filterDate);
+        }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(),
         ]);
     }
     public function getPatientsLab(Request $request)

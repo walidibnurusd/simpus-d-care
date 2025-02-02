@@ -159,6 +159,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/poli-umum', [ActionController::class, 'indexDokter'])->name('dokter.index');
             Route::get('/poli-gigi', [ActionController::class, 'indexGigiDokter'])->name('dokter.gigi.index');
             Route::get('/ugd', [ActionController::class, 'indexUgdDokter'])->name('dokter.ugd.index');
+            Route::get('/ruang-tindakan', [ActionController::class, 'indexRuangTindakanDokter'])->name('dokter.ruang.tindakan.index');
             Route::get('/poli-kia', [ActionController::class, 'indexDokterKia'])->name('kia.dokter.index');
             Route::get('/poli-kb', [ActionController::class, 'indexDokterKb'])->name('kb.dokter.index');
 
@@ -427,6 +428,7 @@ Route::get('/get-patients-dokter/poli-gigi', [PatientsController::class, 'getPat
 Route::get('/get-patients-dokter/poli-kia', [PatientsController::class, 'getPatientsDokterKia'])->name('get-patients-dokter-kia');
 Route::get('/get-patients-dokter/poli-kb', [PatientsController::class, 'getPatientsDokterKb'])->name('get-patients-dokter-kb');
 Route::get('/get-patients-dokter/ruang-tindakan', [PatientsController::class, 'getPatientsDokterRuangTindakan'])->name('get-patients-dokter-ruang-tindakan');
+Route::get('/get-patients-dokter/tindakan', [PatientsController::class, 'getPatientsTindakan'])->name('get-patients-tindakan');
 
 Route::get('/get-patients-lab/poli-umum', [PatientsController::class, 'getPatientsLab'])->name('get-patients-lab');
 Route::get('/get-patients-lab/poli-gigi', [PatientsController::class, 'getPatientsLabGigi'])->name('get-patients-lab-gigi');

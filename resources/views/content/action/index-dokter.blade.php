@@ -31,7 +31,7 @@
                 <div class="col-12 mb-4">
                     <div class="button-container">
                         <!-- Tombol Tambah -->
-                        @if (Auth::user()->role == 'dokter')
+                        @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'tindakan')
                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                 data-bs-target="#addActionModal">
                                 Tambah
@@ -100,7 +100,7 @@
                                             <th>RUJUK RS</th>
                                             <th>KUNJ</th>
                                             <th>FASKES</th>
-                                            @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                                            @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik' || Auth::user()->role == 'tindakan')
                                                 <th>AKSI</th>
                                             @endif
                                         </tr>
@@ -388,7 +388,103 @@
                                 data: 'faskes',
                                 name: 'faskes'
                             },
-                            @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                            @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik' || Auth::user()->role == 'tindakan')
+                                {
+                                    data: 'action',
+                                    name: 'action',
+                                    orderable: false,
+                                    searchable: false
+                                }
+                            @endif
+                        ],
+                        order: [
+                            [1, 'desc']
+                        ]
+                    });
+
+                    $('#filterButton').on('click', function() {
+                        console.log('Filter button clicked');
+                        table.ajax.reload(); // Corrected reload function
+                    });
+                });
+            </script>
+        @elseif ($routeName == 'action.dokter.ruang.tindakan.index')
+            <script>
+                $(document).ready(function() {
+                    var table = $('#actionTable').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "{{ route('action.dokter.ruang.tindakan.index') }}",
+                            type: 'GET',
+                            data: function(d) {
+                                // Add date filters if available
+                                d.start_date = $('#startDate').val();
+                                d.end_date = $('#endDate').val();
+                            }
+                        },
+                        columns: [{
+                                data: 'DT_RowIndex',
+                                name: 'DT_RowIndex',
+                                orderable: false,
+                                searchable: false
+                            },
+                            {
+                                data: 'tanggal',
+                                name: 'tanggal'
+                            },
+                            {
+                                data: 'patient_nik',
+                                name: 'patient.nik'
+                            },
+                            {
+                                data: 'patient_name',
+                                name: 'patient.name'
+                            },
+                            {
+                                data: 'patient_age',
+                                name: 'patient.dob'
+                            },
+                            {
+                                data: 'kartu',
+                                name: 'patient.jenis_kartu'
+                            },
+                            {
+                                data: 'keluhan',
+                                name: 'keluhan'
+                            },
+                            {
+                                data: 'diagnosa',
+                                name: 'diagnosa'
+                            },
+                            {
+                                data: 'tindakan',
+                                name: 'tindakan'
+                            },
+                            {
+                                data: 'hasil_lab',
+                                name: 'hasil_lab'
+                            },
+                            {
+                                data: 'obat',
+                                name: 'obat'
+                            }, {
+                                data: 'update_obat',
+                                name: 'update_obat'
+                            },
+                            {
+                                data: 'hospital_referral.name',
+                                name: 'hospitalReferral.name'
+                            },
+                            {
+                                data: 'kunjungan',
+                                name: 'kunjungan'
+                            },
+                            {
+                                data: 'faskes',
+                                name: 'faskes'
+                            },
+                            @if (Auth::user()->role == 'tindakan')
                                 {
                                     data: 'action',
                                     name: 'action',

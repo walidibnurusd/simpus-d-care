@@ -102,7 +102,8 @@ class Action extends Model
         'tumor',
         'diabetes',
         'pembekuan_darah',
-        'update_obat'
+        'update_obat',
+        'beri_tindakan'
     ];
 
     protected $casts = [

@@ -8,6 +8,8 @@
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
                 @elseif($routeName === 'action.dokter.gigi.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
+                @elseif($routeName === 'action.dokter.ruang.tindakan.index')
+                    <h5 class="modal-title" id="exampleModalLabel">RUANG TINDAKAN</h5>
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
                 @endif
@@ -21,6 +23,8 @@
                         <input type="hidden" name="tipe" id="tipe" value="poli-umum">
                     @elseif($routeName === 'action.dokter.gigi.index')
                         <input type="hidden" name="tipe" id="tipe" value="poli-gigi">
+                    @elseif($routeName === 'action.dokter.ruang.tindakan.index')
+                        <input type="hidden" name="tipe" id="tipe" value="tindakan">
                     @else
                         <input type="hidden" name="tipe" id="tipe" value="ruang-tindakan">
                     @endif
@@ -565,6 +569,14 @@
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
 
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang indakan</label>
+                            <select class="form-control" id="beri_tindakan" name="beri_tindakan">
+                                <option value="" disabled selected>pilih</option>
+                                <option value="1">Iya</option>
+                                <option value="0">Tidak</option>
                             </select>
                         </div>
                         <div class="col-md-4">

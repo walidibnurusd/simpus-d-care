@@ -56,7 +56,8 @@
                     type: 'GET',
                     data: function(d) {
                         d.filterDate = filterDate; // Kirim tanggal sebagai parameter tambahan
-                    }
+                    },
+
 
                 },
                 columns: [{
@@ -229,8 +230,11 @@
             $('#displayRmNumber').text(data.rm);
             const actionId = data.id;
 
-            const actionUrl = "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__',
-                actionId);
+
+            const actionUrl = actionId ?
+                "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__', actionId) :
+                "{{ route('action.store') }}";
+
             $('#addPatientForm').attr('action', actionUrl);
             // Set nilai ID ke input form
             $('#nik').val(data.nik);

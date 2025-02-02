@@ -168,7 +168,14 @@
                                             </select>
                                         </div>
                                     </div>
-                                    @if ($routeName == 'action.dokter.index' || Auth::user()->role == 'admin-kajian-awal')
+                                    @if (
+                                        $routeName == 'action.dokter.index' ||
+                                            Auth::user()->role == 'admin-kajian-awal' ||
+                                            $routeName == 'action.dokter.gigi.index' ||
+                                            $routeName == 'action.dokter.ruang.tindakan.index' ||
+                                            $routeName == 'action.kia.dokter.index' ||
+                                            $routeName == 'action.dokter.kb.index' ||
+                                            $routeName == 'action.dokter.ugd.index')
                                         <div class="col-md-12">
                                             <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
                                             <textarea class="form-control" id="keluhan" name="keluhan" placeholder="Keluhan">{{ old('keluhan', $action->keluhan ?? '') }}</textarea>
@@ -676,7 +683,7 @@
                             @endif
                         </div>
                     </div>
-                    @if (Auth::user()->role == 'dokter')
+                    @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'tindakan')
                         <div class="row mt-3">
                             <div class="container">
                                 <div class="row g-2">
@@ -899,12 +906,12 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Simpan Data</button>
                     </div>
-                    </form>
+                </form>
             </div>
 
-    
+
+        </div>
     </div>
-</div>
 </div>
 
 @include('component.modal-table-edit-pasien')
