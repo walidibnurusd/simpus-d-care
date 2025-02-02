@@ -6,6 +6,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="d-flex justify-content-end m-2">
+                    <button id="refreshTable" class="btn btn-primary btn-sm ms-2">Refresh</button>
+                </div>
                 <table class="table table-striped" id="pasien">
                     <thead>
                         <tr>
@@ -52,7 +55,8 @@
                 },
                 columns: [{
                         data: 'nik',
-                        name: 'nik'
+                        name: 'nik',
+                        searchable: true,
                     },
                     {
                         data: 'name',
@@ -127,7 +131,7 @@
             $('#nik').val(data.nik);
             $('#namePatient').val(data.name);
             $('#nomor_kartu').val(data.nomor_kartu);
-            console.log(data.nomor_kartu);
+
             let jenisKartu = data.jenis_kartu;
             if (jenisKartu === 'pbi') {
                 jenisKartu = 'PBI (KIS)';
@@ -145,8 +149,6 @@
 
 
             $('#patientDetails').show();
-            console.log($('#patientDetails').show());
-
 
 
             // Tutup modal
@@ -156,6 +158,10 @@
         // Inisialisasi ulang DataTables saat modal ditampilkan
         $('#modalPasien').on('shown.bs.modal', function() {
             initializeTable();
+        });
+        $('#refreshTable').on('click', function() {
+
+            table.ajax.reload(null, false);
         });
     });
 </script>

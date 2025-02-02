@@ -12,6 +12,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="d-flex justify-content-end m-2">
+                    <button id="refreshTable" class="btn btn-primary btn-sm ms-2">Refresh</button>
+                </div>
                 <table class="table table-striped" id="pasienDokter">
                     <thead>
                         <tr>
@@ -57,11 +60,11 @@
 
                 },
                 columns: [{
-                        data: 'patient.nik',
+                        data: 'nik',
                         name: 'nik'
                     },
                     {
-                        data: 'patient.name',
+                        data: 'name',
                         name: 'name'
                     },
                     {
@@ -90,23 +93,23 @@
                         render: function(data, type, row) {
                             return `
                         <button class="btn btn-success btnPilihPasien" 
-                        data-id-patient="${row.patient.id}" 
-                        data-id="${row.id}" 
-                        data-nik="${row.patient.nik}" 
-                        data-name="${row.patient.name}" 
-                        data-gender="${row.patient.gender}" 
-                        data-age="${row.patient.dob}" 
-                        data-phone="${row.patient.phone}" 
-                        data-address="${row.patient.address}" 
-                        data-blood="${row.patient.blood_type}" 
-                        data-education="${row.patient.education}" 
-                        data-job="${row.patient.occupation}" 
-                        data-rm="${row.patient.no_rm}" 
+                        data-id-patient="${row.id}" 
+                      data-id="${row.actions ? row.actions.id : null}"
+                        data-nik="${row.nik}" 
+                        data-name="${row.name}" 
+                        data-gender="${row.gender}" 
+                        data-age="${row.dob}" 
+                        data-phone="${row.phone}" 
+                        data-address="${row.address}" 
+                        data-blood="${row.blood_type}" 
+                        data-education="${row.education}" 
+                        data-job="${row.occupation}" 
+                        data-rm="${row.no_rm}" 
                         data-tanggal="${row.tanggal}" 
                         data-doctor="${row.doctor}" 
                         data-kunjungan="${row.kunjungan}" 
-                        data-kartu="${row.patient.jenis_kartu}" 
-                        data-nomor="${row.patient.nomor_kartu}" 
+                        data-kartu="${row.jenis_kartu}" 
+                        data-nomor="${row.nomor_kartu}" 
                         data-faskes="${row.faskes}" 
                         data-sistol="${row.sistol}" 
                         data-diastol="${row.diastol}" 
@@ -347,6 +350,10 @@
         $('#modalPasien').on('shown.bs.modal', function() {
 
             initializeTable();
+        });
+        $('#refreshTable').on('click', function() {
+
+            table.ajax.reload(null, false);
         });
     });
 </script>

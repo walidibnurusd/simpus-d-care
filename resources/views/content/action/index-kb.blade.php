@@ -1,5 +1,5 @@
 @extends('layouts.simple.master')
-@section('title', 'Tindakan KIA')
+@section('title', 'Tindakan KB')
 
 @section('css')
 
@@ -115,6 +115,9 @@
                                             OBAT</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            UPDATE APOTIK</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             HASIL LAB</th>
 
                                         <th
@@ -130,7 +133,7 @@
                                         @endif
                                     </tr>
                                 </thead>
-                               
+
                             </table>
 
 
@@ -156,31 +159,72 @@
                 ajax: {
                     url: "{{ route('action.kb.dokter.index') }}", // Your AJAX route
                     data: function(d) {
-                        d.start_date = $('#start_date').val();  // Optional: Get input field values
-                        d.end_date = $('#end_date').val();      // Optional: Get input field values
+                        d.start_date = $('#start_date').val(); // Optional: Get input field values
+                        d.end_date = $('#end_date').val(); // Optional: Get input field values
                     }
                 },
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                    { data: 'tanggal', name: 'tanggal' },
-                    { data: 'patient_nik', name: 'patient_nik' },
-                    { data: 'patient_name', name: 'patient_name' },
-                    { data: 'patient_age', name: 'patient_age' },
-                    { data: 'kartu', name: 'kartu' },
-                    { data: 'keluhan', name: 'keluhan' },
-                    { data: 'obat', name: 'obat' },
-                    { data: 'hasil_lab', name: 'hasil_lab' },
-                    { data: 'kunjungan', name: 'kunjungan' },
-                    { data: 'faskes', name: 'faskes' },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
+                    {
+                        data: 'patient_nik',
+                        name: 'patient_nik'
+                    },
+                    {
+                        data: 'patient_name',
+                        name: 'patient_name'
+                    },
+                    {
+                        data: 'patient_age',
+                        name: 'patient_age'
+                    },
+                    {
+                        data: 'kartu',
+                        name: 'kartu'
+                    },
+                    {
+                        data: 'keluhan',
+                        name: 'keluhan'
+                    },
+                    {
+                        data: 'obat',
+                        name: 'obat'
+                    },
+                    {
+                        data: 'update_obat',
+                        name: 'update_obat'
+                    },
+                    {
+                        data: 'hasil_lab',
+                        name: 'hasil_lab'
+                    },
+                    {
+                        data: 'kunjungan',
+                        name: 'kunjungan'
+                    },
+                    {
+                        data: 'faskes',
+                        name: 'faskes'
+                    },
                     @if (Auth::user()->role == 'dokter')
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
                     @endif
                 ]
             });
             $('#filterButton').on('click', function() {
-                    console.log('Filter button clicked');
-                    table.ajax.reload(); // Corrected reload function
-                });
+                console.log('Filter button clicked');
+                table.ajax.reload(); // Corrected reload function
+            });
         });
     </script>
 

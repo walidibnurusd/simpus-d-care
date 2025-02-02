@@ -1,4 +1,5 @@
-<div class="modal fade" id="modalPasienEdit{{ $action->id }}" tabindex="-1" aria-labelledby="modalPasienLabel" aria-hidden="true">
+<div class="modal fade" id="modalPasienEdit{{ $action->id }}" tabindex="-1" aria-labelledby="modalPasienLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,6 +7,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="d-flex justify-content-end m-2">
+                    <button id="refreshTable{{ $action->id }}" class="btn btn-primary btn-sm ms-2">Refresh</button>
+                </div>
                 <table class="table table-striped" id="pasienEdit{{ $action->id }}">
                     <thead>
                         <tr>
@@ -34,11 +38,12 @@
 <script>
     $(document).ready(function() {
         let table; // Deklarasi variabel DataTable
-    
+
         // Fungsi untuk menginisialisasi DataTable
         function initializeTable() {
             if ($.fn.DataTable.isDataTable('#pasienEdit{{ $action->id }}')) {
-                $('#pasienEdit{{ $action->id }}').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
+                $('#pasienEdit{{ $action->id }}').DataTable()
+                    .destroy(); // Hancurkan DataTables jika sudah ada
             }
 
             table = $('#pasienEdit{{ $action->id }}').DataTable({
@@ -154,6 +159,10 @@
         // Inisialisasi ulang DataTables saat modal ditampilkan
         $('#modalPasienEdit').on('shown.bs.modal', function() {
             initializeTable();
+        });
+        $('#refreshTable{{ $action->id }}').on('click', function() {
+            console.log('Tombol refresh diklik');
+            table.ajax.reload(null, false);
         });
     });
 </script>

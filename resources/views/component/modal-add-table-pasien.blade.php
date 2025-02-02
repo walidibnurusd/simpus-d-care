@@ -69,7 +69,6 @@
                                 data-nomor_kartu="${row.nomor_kartu}" 
                                 data-nik="${row.nik}" 
                                 data-poli="${row.poli}" 
-                                data-klaster="${row.klaster}" 
                                 data-name="${row.name}" 
                                 data-gender="${row.gender}" 
                                 data-age="${row.dob}" 
@@ -116,25 +115,11 @@
 
             // Get the age
             var age = calculateAge(dob);
-            // Tampilkan data pasien di elemen luar modal
-            // $('#displayNIK').text(data.nik);
-            // $('#idPatient').text(data.id);
-            // $('#displayName').text(data.name);
-            // $('#displayGender').text(data.gender);
-            // $('#displayAge').text(age);
-            // $('#displayPhone').text(data.phone);
-            // $('#displayAddress').text(data.address);
-            // $('#displayBlood').text(data.blood);
-            // $('#displayEducation').text(data.education);
-            // $('#displayJob').text(data.job);
-            // $('#displayRmNumber').text(data.rm);
-
             $('#nikAdd').val(data.nik);
             $('#name').val(data.name);
             $('#no_rm').val(data.rm);
             $('#marriage_status').val(data.marrital);
             $('#phone').val(data.phone);
-            $('#klaster').val(data.klaster);
             $('#blood_type').val(data.blood);
             $('#blood_type').val(data.blood);
             $('#education').val(data.education);
@@ -142,7 +127,7 @@
             $('#gender').val(data.gender);
             $('#nomor_kartu').val(data.nomor_kartu);
             $('#poli').val(data.poli);
-         
+
             $('#dob').val(data.age);
             $('#place_birth').val(data.place_birth);
             $('#province').val(data.province);
@@ -151,7 +136,7 @@
             $('#village').val(data.village);
             $('#rw').val(data.rw);
             $('#address').val(data.address);
-            console.log(data.jenis_kartu,data.poli);
+
             let jenisKartu = data.jenis_kartu;
             if (jenisKartu === 'pbi') {
                 jenisKartu = 'PBI (KIS)';
@@ -166,12 +151,16 @@
             }
             $('#jenis_kartu').val(data.jenis_kartu);
 
+            let klaster = null;
+            if (age > 18) {
+                klaster = 3
+            } else {
+                klaster = 2
+            }
+            $('#klaster').val(klaster);
 
 
             $('#patientDetails').show();
-            console.log($('#patientDetails').show());
-
-
 
             // Tutup modal
             $('#modalPasien').modal('hide');

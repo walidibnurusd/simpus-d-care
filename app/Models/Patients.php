@@ -42,4 +42,8 @@ class Patients extends Model
     {
         return $this->hasMany(Kunjungan::class, 'pasien', 'id');
     }
+    public function actions()
+    {
+        return $this->hasMany(Action::class, 'id_patient', 'id');
+    }
 }

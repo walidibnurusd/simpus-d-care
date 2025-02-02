@@ -7,6 +7,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="d-flex justify-content-end m-2">
+                    <button id="refreshTable" class="btn btn-primary btn-sm ms-2">Refresh</button>
+                </div>
                 <table class="table table-striped" id="pasienKunjungan">
                     <thead>
                         <tr>
@@ -46,7 +49,8 @@
                     url: url, // Endpoint untuk mengambil data
                     type: 'GET',
                     dataSrc: function(response) {
-                        return response.data; // Pastikan 'data' adalah key yang mengandung array dari server
+                        return response
+                            .data; // Pastikan 'data' adalah key yang mengandung array dari server
                     },
                 },
                 columns: [{
@@ -163,8 +167,9 @@
             // Pastikan tabel baru diinisialisasi setelah modal muncul
             initializeTable();
         });
+        $('#refreshTable').on('click', function() {
 
+            table.ajax.reload(null, false);
+        });
     });
 </script>
-
-

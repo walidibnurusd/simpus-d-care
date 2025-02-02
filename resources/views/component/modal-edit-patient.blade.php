@@ -1,5 +1,5 @@
 @php
-    $master = new App\Http\Controllers\DependentDropdownController();
+    $master = new App\Http\Controllers\DependentDropDownController();
     $provinces = $master->provinces();
     $cities = [];
     $marritals = $master->marritalStatusData();
@@ -19,13 +19,12 @@
                 <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5> <!-- Updated the title -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form  action="{{ route('patient.update', $patient->id) }}" method="POST"
-                class="px-3">
+            <form action="{{ route('patient.update', $patient->id) }}" method="POST" class="px-3">
                 @csrf
                 @method('PUT')
-            <div class="modal-body">
-              
-           
+                <div class="modal-body">
+
+
                     <div class="row g-2"> <!-- Reduced gutter space between columns -->
                         <div class="col-md-6">
                             <div class="form-group">
@@ -307,6 +306,9 @@
                                     </option>
                                     <option value="4B" {{ old('rw', $patient->rw) == '4B' ? 'selected' : '' }}>4B
                                         (TPA)</option>
+                                    <option value="luar-wilayah"
+                                        {{ old('rw', $patient->rw) == 'luar-wilayah' ? 'selected' : '' }}>Luar Wilayah
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -322,19 +324,18 @@
                     </div>
 
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary">Simpan Data</button>
-              
-            </div>
-        </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Simpan Data</button>
+
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <script>
-    
     function updateVillageEdit() {
         const district = document.getElementById('district').value;
         const village = document.getElementById('village');

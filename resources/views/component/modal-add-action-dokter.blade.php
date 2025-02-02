@@ -570,7 +570,7 @@
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">KETERANGAN</label>
                             <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                placeholder="Keterangan" required>
+                                placeholder="Keterangan">
                         </div>
 
 

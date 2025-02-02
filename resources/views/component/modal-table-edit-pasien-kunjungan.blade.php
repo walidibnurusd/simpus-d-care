@@ -6,6 +6,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="d-flex justify-content-end m-2">
+                    <button id="refreshTable{{ $action->id }}" class="btn btn-primary btn-sm ms-2">Refresh</button>
+                </div>
                 <table class="table table-striped" id="pasienEditKunjungan">
                     <thead>
                         <tr>
@@ -17,7 +20,7 @@
                     </thead>
                     <tbody>
 
-                </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -151,6 +154,9 @@
         // Inisialisasi ulang DataTables saat modal ditampilkan
         $('#modalPasienEditKunjungan').on('shown.bs.modal', function() {
             initializeTable();
+        });
+        $('#refreshTable{{ $action->id }}').on('click', function() {
+            table.ajax.reload(null, false);
         });
     });
 </script>

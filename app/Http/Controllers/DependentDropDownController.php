@@ -13,7 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Indonesia;
 
-class DependentDropdownController extends Controller
+class DependentDropDownController extends Controller
 {
     public function provinces()
     {

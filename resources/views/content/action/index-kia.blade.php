@@ -89,19 +89,44 @@
                             <table id="actionTable" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">TANGGAL</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">NIK/NO.RM</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">NAMA</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">UMUR</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">KARTU</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">KELUHAN</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">OBAT</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">HASIL LAB</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">KUNJ</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">FASKES</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No
+                                        </th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            TANGGAL</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            NIK/NO.RM</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            NAMA</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            UMUR</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            KARTU</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            KELUHAN</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            OBAT</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            UPDATE APOTIK</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            HASIL LAB</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            KUNJ</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            FASKES</th>
                                         @if (Auth::user()->role == 'dokter')
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">AKSI</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                AKSI</th>
                                         @endif
                                     </tr>
                                 </thead>
@@ -129,33 +154,73 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('action.kia.dokter.index') }}", // Your AJAX route
+                    url: "{{ route('action.kia.dokter.index') }}",
                     data: function(d) {
-                        d.start_date = $('#start_date').val();  // Optional: Get input field values
-                        d.end_date = $('#end_date').val();      // Optional: Get input field values
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
                     }
                 },
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                    { data: 'tanggal', name: 'tanggal' },
-                    { data: 'patient_nik', name: 'patient_nik' },
-                    { data: 'patient_name', name: 'patient_name' },
-                    { data: 'patient_age', name: 'patient_age' },
-                    { data: 'kartu', name: 'kartu' },
-                    { data: 'keluhan', name: 'keluhan' },
-                    { data: 'obat', name: 'obat' },
-                    { data: 'hasil_lab', name: 'hasil_lab' },
-                    { data: 'kunjungan', name: 'kunjungan' },
-                    { data: 'faskes', name: 'faskes' },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
+                    {
+                        data: 'patient_nik',
+                        name: 'patient_nik'
+                    },
+                    {
+                        data: 'patient_name',
+                        name: 'patient_name'
+                    },
+                    {
+                        data: 'patient_age',
+                        name: 'patient_age'
+                    },
+                    {
+                        data: 'kartu',
+                        name: 'kartu'
+                    },
+                    {
+                        data: 'keluhan',
+                        name: 'keluhan'
+                    },
+                    {
+                        data: 'obat',
+                        name: 'obat'
+                    }, {
+                        data: 'update_obat',
+                        name: 'update_obat'
+                    },
+                    {
+                        data: 'hasil_lab',
+                        name: 'hasil_lab'
+                    },
+                    {
+                        data: 'kunjungan',
+                        name: 'kunjungan'
+                    },
+                    {
+                        data: 'faskes',
+                        name: 'faskes'
+                    },
                     @if (Auth::user()->role == 'dokter')
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
                     @endif
                 ]
             });
             $('#filterButton').on('click', function() {
-                    console.log('Filter button clicked');
-                    table.ajax.reload(); // Corrected reload function
-                });
+                console.log('Filter button clicked');
+                table.ajax.reload(); // Corrected reload function
+            });
         });
     </script>
 

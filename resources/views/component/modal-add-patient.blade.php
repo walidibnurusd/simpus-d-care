@@ -62,7 +62,7 @@
                             <div class="form-group">
                                 <label for="phone">Telpon/WA</label>
                                 <input type="text" class="form-control" id="phone" name="phone"
-                                    placeholder="Telpon/WA" required>
+                                    placeholder="Telpon/WA">
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -247,6 +247,7 @@
                                     @endfor
                                     <option value="4A">4A</option>
                                     <option value="4B">4B (TPA)</option>
+                                    <option value="luar-wilayah">Luar Wilayah</option>
                                 </select>
                             </div>
                         </div>
@@ -287,6 +288,15 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="klaster">Klaster</label>
+                                <input type="text" class="form-control" id="klaster" name="klaster"
+                                    placeholder="Klaster" readonly>
+                            </div>
+                        </div>
+
                     </div>
             </div>
             <div class="modal-footer">
@@ -327,7 +337,6 @@
                     type: "GET",
                     dataType: "json",
                     success: function(data) {
-                        console.log(data);
                         citySelect.empty();
                         citySelect.append('<option value="">Pilih</option>');
                         $j.each(data, function(key, value) {
@@ -350,51 +359,59 @@
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const klasterSelect = document.getElementById('klaster'); // Dropdown klaster
-        const poliSelect = document.getElementById('poli'); // Dropdown poli
+        const dobInput = document.getElementById('dob');
+        const klasterSelect = document.getElementById('klaster');
+        const hamilInput = document.getElementById('hamil');
 
-        // Function to update poli options based on selected klaster
-        function updatePoliOptions(selectedPoli = '') {
-            const selectedKlaster = klasterSelect.value; // Get the selected klaster value
+        function calculateAge(dob) {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
 
-            // Clear all options in poli
-            poliSelect.innerHTML = '';
+        function updateKlaster() {
+            const dob = dobInput.value;
+            const hamil = hamilInput.value; 
 
-            // Logic to populate poli dropdown based on klaster
-            if (selectedKlaster === '2') {
-                // Options for Klaster 2
-                poliSelect.innerHTML += '<option value="kia">KIA</option>';
-                poliSelect.innerHTML += '<option value="mtbs">MTBS</option>';
-            } else if (selectedKlaster === '3') {
-                // Options for Klaster 3
-                poliSelect.innerHTML += '<option value="lansia">Lansia & Dewasa</option>';
+            if (dob) {
+                const age = calculateAge(dob);
+
+                let klaster = null;
+                if (age > 18 && hamil == 0) {
+                    klaster = 3;
+                } else if (hamil == 1) {
+                    klaster = 2;
+                } else {
+                    klaster = 2;
+                }
+
+              
+                klasterSelect.value = klaster;
+
+              
+              
             } else {
-                // If no klaster selected, add placeholder
-                poliSelect.innerHTML = '<option value="" disabled selected>Pilih</option>';
-            }
-
-            // If a specific poli value is provided, set it as selected
-            if (selectedPoli) {
-                poliSelect.value = selectedPoli;
+                console.log('Tanggal Lahir tidak diisi');
             }
         }
 
-        // Event listener for changes in the klaster dropdown
-        klasterSelect.addEventListener('change', () => updatePoliOptions());
+        dobInput.addEventListener('change', function() {
+            updateKlaster();
+        });
 
-        // Pre-fill data if available (e.g., for editing)
-        const preselectedKlaster =
-            "{{ old('klaster', $data->klaster ?? '') }}"; // Replace $data->klaster with your server-side variable
-        const preselectedPoli =
-            "{{ old('poli', $data->poli ?? '') }}"; // Replace $data->poli with your server-side variable
 
-        if (preselectedKlaster) {
-            klasterSelect.value = preselectedKlaster; // Set klaster dropdown value
-            updatePoliOptions(preselectedPoli); // Populate poli based on klaster and set selected poli
-        } else {
-            updatePoliOptions(); // Initialize the poli dropdown
+        hamilInput.addEventListener('change', function() {
+            updateKlaster();
+        });
+
+        if (dobInput.value) {
+            updateKlaster();
         }
-
         // Success notification using SweetAlert2
         @if (session('success'))
             Swal.fire({
