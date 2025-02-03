@@ -20,7 +20,7 @@
                         <tr>
                             <th>NIK</th>
                             <th>Nama</th>
-                            <th>Tanggal Kajian Awal</th>
+                            <th>Tanggal Kunjungan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -48,6 +48,7 @@
             //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
             // }
             const tipe = $('#tipe').val(); // Ambil route name
+            console.log(tipe);
             const url = `/get-patients-dokter/${tipe}`;
             const filterDate = $('#filterDate').val();
             table = $('#pasienDokter').DataTable({
@@ -69,8 +70,8 @@
                         name: 'name'
                     },
                     {
-                        data: 'created_at',
-                        name: 'created_at',
+                        data: 'tanggal',
+                        name: 'tanggal',
                         render: function(data) {
                             if (!data) return '-'; // Jika data kosong, tampilkan tanda "-"
 
@@ -92,10 +93,11 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
+                            console.log(data);
                             return `
                         <button class="btn btn-success btnPilihPasien" 
                         data-id-patient="${row.id}" 
-                      data-id="${row.actions ? row.actions.id : null}"
+                  data-id="${row.action_id ? row.action_id : null}"
                         data-nik="${row.nik}" 
                         data-name="${row.name}" 
                         data-gender="${row.gender}" 
@@ -194,10 +196,9 @@
         }
 
         $('#filterDate').on('change', function() {
-            if ($.fn.DataTable.isDataTable('#pasienDokter')) {
-                table.destroy(); // Hancurkan DataTables yang ada
-            }
-            initializeTable(); // Inisialisasi ulang dengan filter baru
+            table.destroy();
+            $('#pasienDokter tbody').empty();
+            initializeTable();
         });
 
 
@@ -217,6 +218,7 @@
 
             // Get the age
             var age = calculateAge(dob);
+            const tipe = $('#tipe').val(); // Ambil route name
             // Tampilkan data pasienDokter di elemen luar modal
             $('#displayNIK').text(data.nik);
             $('#displayName').text(data.name);
@@ -229,14 +231,23 @@
             $('#displayJob').text(data.job);
             $('#displayRmNumber').text(data.rm);
             const actionId = data.id;
+            let actionUrl;
 
 
-            const actionUrl = actionId ?
-                "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__', actionId) :
-                "{{ route('action.store') }}";
+            if (tipe == 'tindakan' && actionId) {
+                actionUrl = "{{ route('action.update.dokter.tindakan', '__ID__') }}".replace('__ID__',
+                    actionId);
+                console.log(actionUrl);
+            } else {
+                actionUrl = actionId ?
+                    "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__', actionId) :
+                    "{{ route('action.store') }}";
+            }
+
 
             $('#addPatientForm').attr('action', actionUrl);
             // Set nilai ID ke input form
+            $('#action_id').val(data.id);
             $('#nik').val(data.nik);
             $('#idAction').val(data.id);
             $('#tanggal').val(data.tanggal);

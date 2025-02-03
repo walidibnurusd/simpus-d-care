@@ -28,6 +28,7 @@
                     @else
                         <input type="hidden" name="tipe" id="tipe" value="ruang-tindakan">
                     @endif
+                    <input type="hidden" name="action_id" id="action_id">
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
@@ -457,76 +458,125 @@
                             @endif
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                            <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
-                                @foreach ($diagnosa as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="skrining" class="form-label">Hasil Skrining</label>
-                                <button class="btn btn-primary w-100 mt-2" type="button" id="btnCariskrining"
-                                    data-bs-toggle="modal" data-bs-target="#modalSkrining">
-                                    Hasil Skrining
-                                </button>
+                    @if (Auth::user()->role != 'tindakan')
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
+                                    @foreach ($diagnosa as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="skrining" class="form-label">Hasil Skrining</label>
+                                    <button class="btn btn-primary w-100 mt-2" type="button" id="btnCariskrining"
+                                        data-bs-toggle="modal" data-bs-target="#modalSkrining">
+                                        Hasil Skrining
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
+                                    Penunjang</label>
+                                <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
+                                    placeholder="Pemeriksaan Penunjang"></textarea>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
-                                Penunjang</label>
-                            <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
-                                placeholder="Pemeriksaan Penunjang"></textarea>
-                        </div>
-                    </div>
+                    @endif
                     <div class="row mt-3">
-                        <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                            <select class="form-control" id="tindakan" name="tindakan">
-                                <option value="" disabled selected>pilih</option>
-                                @if ($routeName === 'action.dokter.index')
-                                    <option value="Diberikan Obat">Diberikan Obat</option>
-                                    <option value="Dirujuk">Dirujuk</option>
-                                @elseif($routeName === 'action.dokter.gigi.index')
-                                    <option value="Gigi Sulung Tumpatan Sementara">Gigi Sulung Tumpatan Sementara
+
+                        @if ($routeName !== 'action.dokter.ruang.tindakan.index')
+                            <div class="col-md-4">
+                                <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                                <select class="form-control" id="tindakan" name="tindakan">
+                                    <option value="" disabled selected>pilih</option>
+                                    @if ($routeName === 'action.dokter.index')
+                                        <option value="Diberikan Obat">Diberikan Obat</option>
+                                        <option value="Dirujuk">Dirujuk</option>
+                                    @elseif($routeName === 'action.dokter.gigi.index')
+                                        <option value="Gigi Sulung Tumpatan Sementara">Gigi Sulung Tumpatan Sementara
+                                        </option>
+                                        <option value="Gigi Tetap Tumpatan Sementara">Gigi Tetap Tumpatan Sementara
+                                        </option>
+                                        <option value="Gigi Tetap Tumpatan Tetap">Gigi Tetap Tumpatan Tetap
+                                        </option>
+                                        <option value="Gigi Sulung Tumpatan Tetap">Gigi Sulung Tumpatan Tetap
+                                        </option>
+                                        <option value="Perawatan Saluran Akar">Perawatan Saluran Akar
+                                        </option>
+                                        <option value="Gigi Sulung Pencabutan">Gigi Sulung Pencabutan
+                                        </option>
+                                        <option value="Gigi Tetap Pencabutan">Gigi Tetap Pencabutan
+                                        </option>
+                                        <option value="Pembersihan Karang Gigi">Pembersihan Karang Gigi
+                                        </option>
+                                        <option value="Odontectomy">Odontectomy
+                                        </option>
+                                        <option value="Sebagian Prothesa">Sebagian Prothesa
+                                        </option>
+                                        <option value="Penuh Prothesa">Penuh Prothesa
+                                        </option>
+                                        <option value="Reparasi Prothesa">Reparasi Prothesa
+                                        </option>
+                                        <option value="Premedikasi/Pengobatan">Premedikasi/Pengobatan
+                                        </option>
+                                        </option>
+                                        <option value="Tindakan Lain">Tindakan Lain
+                                        </option>
+                                        <option value="Incici Abses Gigi">Incici Abses Gigi</option>
+                                    @else
+                                        <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan
+                                            Invasif
+                                        </option>
+                                        <option value="Observasi Dengan Tindakan Invasif">Observasi Dengan Tindakan
+                                            Invasif
+                                        </option>
+                                        <option value="Tidak Ada">Tidak Ada
+                                        </option>
+                                        <option value="Corpus Alineum">Corpus Alineum
+                                        </option>
+                                        <option value="Ekstraksi Kuku">Ekstraksi Kuku
+                                        </option>
+                                        <option value="Sircumsisi (Bedah Ringan)">Sircumsisi (Bedah Ringan)
+                                        </option>
+                                        <option value="Incisi Abses">Incisi Abses
+                                        </option>
+                                        <option value="Rawat Luka">Rawat Luka
+                                        </option>
+                                        <option value="Ganti Verban">Ganti Verban
+                                        </option>
+                                        <option value="Spooling">Spooling
+                                        </option>
+                                        <option value="Toilet Telinga">Toilet Telinga
+                                        </option>
+                                        <option value="Tetes Telinga">Tetes Telinga
+                                        </option>
+                                        <option value="Aff Hecting">Aff Hecting
+                                        </option>
+                                        </option>
+                                        <option value="Hecting (Jahit Luka)">Hecting (Jahit Luka)
+                                        </option>
+                                        <option value="Tampon/Off Tampon">Tampon/Off Tampon</option>
+                                    @endif
+                                </select>
+                            </div>
+                        @else
+                            <div class="col-md-4">
+                                <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                                <select class="form-control" id="tindakan_ruang_tindakan"
+                                    name="tindakan_ruang_tindakan">
+                                    <option value="" disabled selected>pilih</option>
+
+                                    <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan
+                                        Invasif
                                     </option>
-                                    <option value="Gigi Tetap Tumpatan Sementara">Gigi Tetap Tumpatan Sementara
-                                    </option>
-                                    <option value="Gigi Tetap Tumpatan Tetap">Gigi Tetap Tumpatan Tetap
-                                    </option>
-                                    <option value="Gigi Sulung Tumpatan Tetap">Gigi Sulung Tumpatan Tetap
-                                    </option>
-                                    <option value="Perawatan Saluran Akar">Perawatan Saluran Akar
-                                    </option>
-                                    <option value="Gigi Sulung Pencabutan">Gigi Sulung Pencabutan
-                                    </option>
-                                    <option value="Gigi Tetap Pencabutan">Gigi Tetap Pencabutan
-                                    </option>
-                                    <option value="Pembersihan Karang Gigi">Pembersihan Karang Gigi
-                                    </option>
-                                    <option value="Odontectomy">Odontectomy
-                                    </option>
-                                    <option value="Sebagian Prothesa">Sebagian Prothesa
-                                    </option>
-                                    <option value="Penuh Prothesa">Penuh Prothesa
-                                    </option>
-                                    <option value="Reparasi Prothesa">Reparasi Prothesa
-                                    </option>
-                                    <option value="Premedikasi/Pengobatan">Premedikasi/Pengobatan
-                                    </option>
-                                    </option>
-                                    <option value="Tindakan Lain">Tindakan Lain
-                                    </option>
-                                    <option value="Incici Abses Gigi">Incici Abses Gigi</option>
-                                @else
-                                    <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan Invasif
-                                    </option>
-                                    <option value="Observasi Dengan Tindakan Invasif">Observasi Dengan Tindakan Invasif
+                                    <option value="Observasi Dengan Tindakan Invasif">Observasi Dengan Tindakan
+                                        Invasif
                                     </option>
                                     <option value="Tidak Ada">Tidak Ada
                                     </option>
@@ -554,31 +604,38 @@
                                     <option value="Hecting (Jahit Luka)">Hecting (Jahit Luka)
                                     </option>
                                     <option value="Tampon/Off Tampon">Tampon/Off Tampon</option>
-                                @endif
-                            </select>
-                        </div>
+
+                                </select>
+                            </div>
+                        @endif
                         <div class="col-md-4">
                             <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                             <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                         </div>
-                        <div class="col-md-4">
-                            <label for="alkohol" style="color: rgb(19, 11, 241);">RUJUK RS</label>
-                            <select class="form-control" id="rujuk_rs" name="rujuk_rs">
-                                <option value="" disabled selected>pilih</option>
-                                @foreach ($rs as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
 
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang indakan</label>
-                            <select class="form-control" id="beri_tindakan" name="beri_tindakan">
-                                <option value="" disabled selected>pilih</option>
-                                <option value="1">Iya</option>
-                                <option value="0">Tidak</option>
-                            </select>
-                        </div>
+                        @if (Auth::user()->role != 'tindakan')
+                            <div class="col-md-4">
+                                <label for="alkohol" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                                <select class="form-control" id="rujuk_rs" name="rujuk_rs">
+                                    <option value="" disabled selected>pilih</option>
+                                    @foreach ($rs as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang
+                                    Tindakan</label>
+                                <select class="form-control" id="beri_tindakan" name="beri_tindakan">
+                                    <option value="" disabled selected>pilih</option>
+                                    <option value="1">Iya</option>
+                                    <option value="0">Tidak</option>
+                                </select>
+                            </div>
+                        @endif
+
+
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">KETERANGAN</label>
                             <input type="text" class="form-control" id="keterangan" name="keterangan"
@@ -641,15 +698,59 @@
 </style>
 <script>
     $(document).ready(function() {
-        // Set z-index for modalPasien to be higher than addActionModal
-        // $('#modalPasien').on('show.bs.modal', function() {
-        //     $(this).css('z-index', '2000'); // set a high z-index for modalPasien
-        // });
+        $('#addPatientForm').submit(function(e) {
+            e.preventDefault();
+            let formData = $('#addPatientForm').serialize();
+            formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
+            let actionId = $('#action_id').val() ?? null;
 
-        // // Remove backdrop when modalPasien is closed
-        // $('#modalPasien').on('hidden.bs.modal', function() {
-        //     $('.modal-backdrop').not('.modal-stack').remove();
-        // });
+            // Tentukan URL berdasarkan ada tidaknya actionId
+            let url = actionId ? `/tindakan-dokter/${actionId}` : '/tindakan';
+            // console.log(url);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Menggunakan SweetAlert2 untuk notifikasi
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.success || 'Data berhasil diproses!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#patientDetails').hide();
+                    $('#displayNIK').text('');
+                    $('#displayName').text('');
+                    $('#displayAge').text('');
+                    $('#displayPhone').text('');
+                    $('#displayAddress').text('');
+                    $('#displayBlood').text('');
+                    $('#displayRmNumber').text('');
+                    $('#diagnosa').text('');
+
+                    // Optionally reset the form fields (except for patient details)
+                    $('#addPatientForm')[0].reset();
+
+                    // Show the modal for searching a patient
+                    $('#modalPasien').modal('show');
+
+                    // Jika ingin menutup modal setelah sukses
+                    // $('#myModal').modal('hide');
+                },
+                error: function(xhr) {
+                    // Menampilkan pesan error menggunakan SweetAlert2 
+                    console.log(xhr);
+                    let errorMsg = xhr.responseJSON.error || "Terjadi kesalahan!";
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMsg,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
     });
 </script>
 

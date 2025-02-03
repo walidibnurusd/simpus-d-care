@@ -231,7 +231,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="province">Provinsi Asal</label>
-                                <select class="form-control" id="province" name="province" required>
+                                <select class="form-control" id="province" name="province" disabled>
                                     <option value=""></option>
                                     @foreach ($provinces as $province)
                                         <option value="{{ $province->id }}"
@@ -245,7 +245,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="city">Kabupaten/Kota</label>
-                                <select class="form-control" id="city" name="city" required>
+                                <select class="form-control" id="city" name="city" disabled>
                                     <option value=""></option>
                                     @foreach ($cities as $city)
                                         <option value="{{ $city->id }}"
@@ -348,92 +348,6 @@
             village.value = '';
         }
     }
-
-    $(document).ready(function() {
-        $('#province').change(function() {
-            var provinceId = $(this).val();
-            var citySelect = $('#city');
-
-            if (provinceId) {
-                $.ajax({
-                    url: "{{ url('/cities') }}/" + provinceId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        citySelect.empty();
-                        citySelect.append('<option value="">Pilih</option>');
-                        $.each(data, function(key, value) {
-                            citySelect.append('<option value="' + value.id + '">' +
-                                value.name + '</option>');
-                        });
-                        $('#district').empty().append('<option value="">Pilih</option>');
-                        $('#village').empty().append('<option value="">Pilih</option>');
-                    },
-                    error: function() {
-                        alert('Gagal mengambil data kota/kabupaten');
-                    }
-                });
-            } else {
-                citySelect.empty();
-                citySelect.append('<option value="">Pilih</option>');
-            }
-        });
-
-        $('#city').change(function() {
-            var cityId = $(this).val();
-            var districtSelect = $('#district');
-
-            if (cityId) {
-                $.ajax({
-                    url: "{{ url('/districts') }}/" + cityId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        districtSelect.empty();
-                        districtSelect.append('<option value="">Pilih</option>');
-                        $.each(data, function(key, value) {
-                            districtSelect.append('<option value="' + value.id +
-                                '">' + value.name + '</option>');
-                        });
-                        $('#village').empty().append('<option value="">Pilih</option>');
-                    },
-                    error: function() {
-                        alert('Gagal mengambil data kecamatan');
-                    }
-                });
-            } else {
-                districtSelect.empty();
-                districtSelect.append('<option value="">Pilih</option>');
-            }
-        });
-
-        $('#district').change(function() {
-            var districtId = $(this).val();
-            var villageSelect = $('#village');
-
-            if (districtId) {
-                $.ajax({
-                    url: "{{ url('/villages') }}/" + districtId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        villageSelect.empty();
-                        villageSelect.append('<option value="">Pilih</option>');
-                        $.each(data, function(key, value) {
-                            villageSelect.append('<option value="' + value.id +
-                                '">' + value.name + '</option>');
-                        });
-                    },
-                    error: function() {
-                        alert('Gagal mengambil data kelurahan/desa');
-                    }
-                });
-            } else {
-                villageSelect.empty();
-                villageSelect.append('<option value="">Pilih</option>');
-            }
-        });
-    });
 </script>
 
 <script>

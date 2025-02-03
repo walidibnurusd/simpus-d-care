@@ -519,6 +519,63 @@
 </style>
 
 
+<script>
+    $(document).ready(function() {
+        $('#addPatientForm').submit(function(e) {
+            e.preventDefault();
+            let formData = $('#addPatientForm').serialize();
+            formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
+            let actionId = $('#action_id').val() ?? null;
+
+            // Tentukan URL berdasarkan ada tidaknya actionId
+            let url = actionId ? `/tindakan-dokter/${actionId}` : '/tindakan';
+            // console.log(url);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Menggunakan SweetAlert2 untuk notifikasi
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.success || 'Data berhasil diproses!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#patientDetails').hide();
+                    $('#displayNIK').text('');
+                    $('#displayName').text('');
+                    $('#displayAge').text('');
+                    $('#displayPhone').text('');
+                    $('#displayAddress').text('');
+                    $('#displayBlood').text('');
+                    $('#displayRmNumber').text('');
+                    $('#diagnosa').text('');
+
+                    // Optionally reset the form fields (except for patient details)
+                    $('#addPatientForm')[0].reset();
+
+                    // Show the modal for searching a patient
+                    $('#modalPasien').modal('show');
+
+                    // Jika ingin menutup modal setelah sukses
+                    // $('#myModal').modal('hide');
+                },
+                error: function(xhr) {
+                    // Menampilkan pesan error menggunakan SweetAlert2 
+                    console.log(xhr);
+                    let errorMsg = xhr.responseJSON.error || "Terjadi kesalahan!";
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMsg,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {

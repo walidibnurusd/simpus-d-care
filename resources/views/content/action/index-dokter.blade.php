@@ -93,7 +93,11 @@
                                             <th>KARTU</th>
                                             <th>KELUHAN</th>
                                             <th>DIAGNOSA</th>
-                                            <th>TINDAKAN</th>
+                                            <th>TINDAKAN POLI</th>
+
+                                            @if ($routeName === 'action.dokter.ruang.tindakan.index')
+                                                <th>TINDAKAN RUANG TINDAKAN</th>
+                                            @endif
                                             <th>HASIL LAB</th>
                                             <th>OBAT</th>
                                             <th>UPDATE APOTIK</th>
@@ -460,6 +464,10 @@
                             {
                                 data: 'tindakan',
                                 name: 'tindakan'
+                            },
+                            {
+                                data: 'tindakan_ruang_tindakan',
+                                name: 'tindakan_ruang_tindakan'
                             },
                             {
                                 data: 'hasil_lab',

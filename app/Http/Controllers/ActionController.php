@@ -405,8 +405,8 @@ class ActionController extends Controller
             $endDate = $request->input('end_date');
 
             $actionsQuery = Action::with(['patient', 'hospitalReferral'])
-                ->where('tipe', 'ruang-tindakan') // Filter by type for UGDs
-                ->whereNotNull('diagnosa');
+                ->where('tipe', 'ruang-tindakan')
+                ->whereNotNull('tindakan');
 
             if ($startDate) {
                 $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -1030,15 +1030,10 @@ class ActionController extends Controller
             // Fetch the patient ID based on the provided NIK
             // dd($request->all());
             $patient = Patients::where('nik', $request->nik)->first();
-
             if (!$patient) {
-                return redirect()
-                    ->back()
-                    ->withErrors(['nik' => 'Patient with the provided NIK does not exist.'])
-                    ->withInput();
+                return response()->json(['error' => 'Patient with the provided NIK does not exist.'], 422);
             }
-
-            // Format the date and merge the patient ID into the request
+            // Merge the request with the formatted tanggal and id_patient
             $request->merge([
                 'id_patient' => $patient->id,
             ]);
@@ -1150,27 +1145,13 @@ class ActionController extends Controller
                 'tumor' => 'nullable',
                 'diabetes' => 'nullable',
                 'pembekuan_darah' => 'nullable',
+                'tipe' => 'nullable',
             ]);
 
-            // Save the validated data into the actions table
             $action = Action::create($validated);
-            if ($action->tipe === 'poli-umum') {
-                $route = 'action.index';
-            } elseif ($action->tipe === 'poli-gigi') {
-                $route = 'action.index.gigi';
-            } elseif ($action->tipe === 'poli-kia') {
-                $route = 'action.kia.index';
-            } elseif ($action->tipe === 'poli-kb') {
-                $route = 'action.kb.index';
-            } else {
-                $route = 'action.index.ugd';
-            }
-            return redirect()->route($route)->with('success', 'Action has been successfully created.');
+            return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
         } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
-                ->withInput();
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
 
@@ -1284,6 +1265,7 @@ class ActionController extends Controller
                 'diabetes' => 'nullable',
                 'pembekuan_darah' => 'nullable',
                 'beri_tindakan' => 'nullable',
+                'tindakan_ruang_tindakan' => 'nullable',
             ]);
             $validatedData['lingkar_lengan_atas'] = $validatedData['lingkar_lengan_atas'] ?? 0;
             $validatedData['usia_kehamilan'] = $validatedData['usia_kehamilan'] ?? 0;
@@ -1297,7 +1279,13 @@ class ActionController extends Controller
             // Update the action with the validated data
             // Update the action with the validated data
             $action->update($validated);
-            if (Auth::user()->role == 'dokter') {
+            if (Auth::user()->role == 'tindakan') {
+                if ($action->tipe === 'ruang-tindakan') {
+                    $route = 'action.dokter.ugd.index';
+                } else {
+                    $route = 'action.dokter.ruang.tindakan.index';
+                }
+            } elseif (Auth::user()->role == 'dokter') {
                 if ($action->tipe === 'poli-umum') {
                     $route = 'action.dokter.index';
                 } elseif ($action->tipe === 'poli-gigi') {
@@ -1342,13 +1330,186 @@ class ActionController extends Controller
                 ->withInput();
         }
     }
-    public function updateDokter(Request $request, $id)
+    public function updateDokter(Request $request, $id = null)
+    {
+        try {
+            $patient = Patients::where('nik', $request->nik)->first();
+            if (!$patient) {
+                return response()->json(['error' => 'Patient with the provided NIK does not exist.'], 422);
+            }
+            // Merge the request with the formatted tanggal and id_patient
+            $request->merge([
+                'id_patient' => $patient->id,
+            ]);
+            // dd($request->);
+            // Validate the request
+            $validated = $request->validate([
+                'id_patient' => 'required',
+                'tanggal' => 'required',
+                'doctor' => 'required',
+                'kunjungan' => 'nullable|string|max:255',
+                'faskes' => 'nullable|string|max:255',
+                'sistol' => 'nullable|numeric',
+                'diastol' => 'nullable|numeric',
+                'beratBadan' => 'nullable|numeric',
+                'tinggiBadan' => 'nullable|numeric',
+                'lingkarPinggang' => 'nullable|numeric',
+                'gula' => 'nullable|numeric',
+                'merokok' => 'nullable|string|max:255',
+                'fisik' => 'nullable|string|max:255',
+                'garam' => 'nullable|string|max:255',
+                'gula_lebih' => 'nullable|string|max:255',
+                'lemak' => 'nullable|string|max:255',
+                'alkohol' => 'nullable|string|max:255',
+                'hidup' => 'nullable|string|max:255',
+                'buah_sayur' => 'nullable|string|max:255',
+                'hasil_iva' => 'nullable|string|max:255',
+                'tindak_iva' => 'nullable|string|max:255',
+                'hasil_sadanis' => 'nullable|string|max:255',
+                'tindak_sadanis' => 'nullable|string|max:255',
+                'konseling' => 'nullable|string|max:255',
+                'car' => 'nullable|string|max:255',
+                'rujuk_ubm' => 'nullable|string|max:255',
+                'kondisi' => 'nullable|string|max:255',
+                'edukasi' => 'nullable|string|max:255',
+                'keluhan' => 'nullable|string|max:255',
+                'diagnosa' => 'nullable',
+                'tindakan' => 'nullable',
+                'beri_tindakan' => 'nullable',
+                'rujuk_rs' => 'nullable|exists:hospitals,id',
+                'keterangan' => 'nullable|string|max:255',
+                'nadi' => 'nullable|numeric',
+                'nafas' => 'nullable|numeric',
+                'suhu' => 'nullable|numeric',
+                'mata_anemia' => 'nullable|string|max:255',
+                'pupil' => 'nullable|string|max:255',
+                'ikterus' => 'nullable|string|max:255',
+                'udem_palpebral' => 'nullable|string|max:255',
+                'nyeri_tekan' => 'nullable|string|max:255',
+                'peristaltik' => 'nullable|string|max:255',
+                'ascites' => 'nullable|string|max:255',
+                'lokasi_abdomen' => 'nullable|string|max:255',
+                'thorax' => 'nullable|string|max:255',
+                'thorax_bj' => 'nullable|string|max:255',
+                'suara_nafas' => 'nullable|string|max:255',
+                'ronchi' => 'nullable|string|max:255',
+                'wheezing' => 'nullable|string|max:255',
+                'ekstremitas' => 'nullable|string|max:255',
+                'edema' => 'nullable|string|max:255',
+                'tonsil' => 'nullable|string|max:255',
+                'fharing' => 'nullable|string|max:255',
+                'kelenjar' => 'nullable|string|max:255',
+                'genetalia' => 'nullable|string|max:255',
+                'warna_kulit' => 'nullable|string|max:255',
+                'turgor' => 'nullable|string|max:255',
+                'neurologis' => 'nullable|string|max:255',
+                'hasil_lab' => 'nullable|string|max:255',
+                'obat' => 'nullable',
+                'riwayat_penyakit_sekarang' => 'nullable',
+                'riwayat_penyakit_keluarga' => 'nullable',
+                'riwayat_penyakit_dulu' => 'nullable',
+                'riwayat_penyakit_lainnya' => 'nullable',
+                'riwayat_penyakit_lainnya_keluarga' => 'nullable',
+                'riwayat_pengobatan' => 'nullable',
+                'riwayat_alergi' => 'nullable',
+                'pemeriksaan_penunjang' => 'nullable',
+                'usia_kehamilan' => 'nullable',
+                'jenis_anc' => 'nullable',
+                'nilai_hb' => 'nullable',
+                'lingkar_lengan_atas' => 'nullable',
+                'tinggi_fundus_uteri' => 'nullable',
+                'presentasi_janin' => 'nullable',
+                'denyut_jantung' => 'nullable',
+                'kaki_bengkak' => 'nullable',
+                'imunisasi_tt' => 'nullable',
+                'tablet_fe' => 'nullable',
+                'gravida' => 'nullable',
+                'partus' => 'nullable',
+                'abortus' => 'nullable',
+                'proteinuria' => 'nullable',
+                'hiv' => 'nullable',
+                'sifilis' => 'nullable',
+                'hepatitis' => 'nullable',
+                'periksa_usg' => 'nullable',
+                'hasil_usg' => 'nullable',
+                'treatment_anc' => 'nullable',
+                'kesimpulan' => 'nullable',
+                'tanggal_kembali' => 'nullable',
+                'layanan_kb' => 'nullable',
+                'jmlh_anak_laki' => 'nullable',
+                'jmlh_anak_perempuan' => 'nullable',
+                'status_kb' => 'nullable',
+                'tgl_lahir_anak_bungsu' => 'nullable',
+                'kb_terakhir' => 'nullable',
+                'tgl_kb_terakhir' => 'nullable',
+                'keadaan_umum' => 'nullable',
+                'informed_concern' => 'nullable',
+                'sakit_kuning' => 'nullable',
+                'pendarahan_vagina' => 'nullable',
+                'tumor' => 'nullable',
+                'diabetes' => 'nullable',
+                'pembekuan_darah' => 'nullable',
+                'tindakan_ruang_tindakan' => 'nullable',
+            ]);
+
+            $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
+            $validated['usia_kehamilan'] = $validated['usia_kehamilan'] ?? 0;
+            $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
+            $validated['denyut_jantung'] = $validated['denyut_jantung'] ?? 0;
+            $validated['kaki_bengkak'] = $validated['kaki_bengkak'] ?? 0;
+            $validated['imunisasi_tt'] = $validated['imunisasi_tt'] ?? 0;
+            $validated['tablet_fe'] = $validated['tablet_fe'] ?? 0;
+            $validated['proteinuria'] = $validated['proteinuria'] ?? 0;
+            $validated['periksa_usg'] = $validated['periksa_usg'] ?? 0;
+            //     $action->update($validated);
+
+            //     if ($action->tipe === 'poli-umum') {
+            //         $route = 'action.dokter.index';
+            //     } elseif ($action->tipe === 'poli-gigi') {
+            //         $route = 'action.dokter.gigi.index';
+            //     } elseif ($action->tipe === 'poli-kia') {
+            //         $route = 'action.kia.dokter.index';
+            //     } elseif ($action->tipe === 'poli-kb') {
+            //         $route = 'action.kb.dokter.index';
+            //     } elseif ($action->tipe == 'ruang-tindakan') {
+            //         $route = 'action.dokter.ugd.index';
+            //     } else {
+            //         $route = 'action.dokter.ruang.tindakan.index';
+            //     }
+
+            //     return redirect()->route($route)->with('success', 'Action has been successfully updated.');
+            // } catch (\Exception $e) {
+            //     return redirect()
+            //         ->back()
+            //         ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
+            //         ->withInput();
+            // }
+            if ($id != null) {
+                // Jika ID diberikan, update data yang sudah ada
+                $action = Action::find($id);
+                if (!$action) {
+                    return response()->json(['error' => 'Action not found'], 404);
+                }
+                $action->update($validated);
+                return response()->json(['success' => 'Action has been successfully updated.']);
+            } else {
+                // Jika tidak ada ID, buat data baru
+                $action = Action::create($validated);
+                return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+        }
+    }
+    public function updateTindakan(Request $request, $id)
     {
         try {
             $action = Action::find($id);
             if (!$action) {
+                Log::warning("Action dengan ID {$id} tidak ditemukan");
                 return redirect()->back()->with('error', 'Action not found');
             }
+
             // Fetch the patient ID based on the provided NIK
             $patient = Patients::where('nik', $request->nik)->first();
 
@@ -1483,21 +1644,15 @@ class ActionController extends Controller
             $validated['proteinuria'] = $validated['proteinuria'] ?? 0;
             $validated['periksa_usg'] = $validated['periksa_usg'] ?? 0;
             $action->update($validated);
-            if ($action->tipe === 'poli-umum') {
-                $route = 'action.dokter.index';
-            } elseif ($action->tipe === 'poli-gigi') {
-                $route = 'action.dokter.gigi.index';
-            } elseif ($action->tipe === 'poli-kia') {
-                $route = 'action.kia.dokter.index';
-            } elseif ($action->tipe === 'poli-kb') {
-                $route = 'action.kb.dokter.index';
-            } elseif ($action->tipe == 'ruang-tindakan') {
-                $route = 'action.dokter.ugd.index';
-            } else {
-                $route = 'action.dokter.ruang.tindakan.index';
-            }
+            // dd($validated);
 
-            return redirect()->route($route)->with('success', 'Action has been successfully updated.');
+            Log::info('Memulai update data tindakan', ['update_data' => $validated]);
+
+            $action->update($validated);
+
+            Log::info("Update berhasil untuk Action ID: $id");
+
+            return redirect()->route('action.dokter.ruang.tindakan.index')->with('success', 'Action has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()

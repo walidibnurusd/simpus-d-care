@@ -434,24 +434,24 @@ class PatientsController extends Controller
         $query = DB::table('patients')
             ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
             ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
-            ->select('patients.*', 'actions.*', 'kunjungan.*')
+            ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
             ->where(function ($query) {
-                $query->where('actions.tipe', 'poli-umum')->whereNull('actions.diagnosa');
+                $query->whereNull('actions.diagnosa');
             })
-            ->orWhere(function ($query) {
+            ->Where(function ($query) {
                 $query->where('kunjungan.poli', 'poli-umum');
             });
 
         if ($filterDate) {
-            $query->whereDate('actions.tanggal', $filterDate);
+            $query->whereBetween('kunjungan.created_at', [Carbon::parse($filterDate)->startOfDay(), Carbon::parse($filterDate)->endOfDay()]);
         }
 
         if (!empty($searchValue)) {
-            $query->whereHas('patient', function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('address', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('nik', 'LIKE', "%{$searchValue}%");
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('patients.name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
         }
 
@@ -464,7 +464,6 @@ class PatientsController extends Controller
             'data' => $patients->items(),
         ]);
     }
-
     public function getPatientsDokterGigi(Request $request)
     {
         // Ambil parameter DataTables
@@ -477,25 +476,27 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = DB::table('patients')
+      $query = DB::table('patients')
             ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
             ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
-            ->select('patients.*', 'actions.*', 'kunjungan.*')
+            ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
             ->where(function ($query) {
-                $query->where('actions.tipe', 'poli-gigi')->whereNull('actions.diagnosa');
+                $query->whereNull('actions.diagnosa');
             })
-            ->orWhere(function ($query) {
+            ->Where(function ($query) {
                 $query->where('kunjungan.poli', 'poli-gigi');
             });
 
         if ($filterDate) {
-            $query->whereDate('actions.tanggal', $filterDate);
+            $query->whereBetween('kunjungan.created_at', [Carbon::parse($filterDate)->startOfDay(), Carbon::parse($filterDate)->endOfDay()]);
         }
 
         if (!empty($searchValue)) {
-            $query->whereHas('patient', function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('patients.name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
         }
 
@@ -524,25 +525,27 @@ class PatientsController extends Controller
         $query = DB::table('patients')
             ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
             ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
-            ->select('patients.*', 'actions.*', 'kunjungan.*')
+            ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
             ->where(function ($query) {
-                $query->where('actions.tipe', 'ruang-tindakan')->whereNull('actions.diagnosa');
+                $query->whereNull('actions.tindakan');
             })
-            ->orWhere(function ($query) {
+            ->Where(function ($query) {
                 $query->where('kunjungan.poli', 'ruang-tindakan');
             });
 
         if ($filterDate) {
-            $query->whereDate('actions.tanggal', $filterDate);
+            $query->whereBetween('kunjungan.created_at', [Carbon::parse($filterDate)->startOfDay(), Carbon::parse($filterDate)->endOfDay()]);
         }
 
         if (!empty($searchValue)) {
-            $query->whereHas('patient', function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
-            });
+            $query
+                ->where('name', 'LIKE', "%{$searchValue}%")
+                ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                ->orWhere('nik', 'LIKE', "%{$searchValue}%");
         }
 
+        // dd($query->get());
         // Ambil data dengan pagination
         $patients = $query->paginate($length, ['*'], 'page', $page);
 
@@ -565,15 +568,15 @@ class PatientsController extends Controller
 
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
-        $query = DB::table('patients')
+       $query = DB::table('patients')
             ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
             ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
-            ->select('patients.*', 'actions.*', 'kunjungan.*')
+            ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
             ->where(function ($query) {
-                $query->where('actions.tipe', 'poli-kb')->whereNull('actions.diagnosa');
+                $query->whereNull('actions.diagnosa');
             })
-            ->orWhere(function ($query) {
+            ->Where(function ($query) {
                 $query->where('kunjungan.poli', 'poli-kb');
             });
 
@@ -582,11 +585,12 @@ class PatientsController extends Controller
         }
 
         if (!empty($searchValue)) {
-            $query->whereHas('patient', function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('patients.name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
         }
-
         // Ambil data dengan pagination
         $patients = $query->paginate($length, ['*'], 'page', $page);
 
@@ -609,15 +613,15 @@ class PatientsController extends Controller
 
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
-        $query = DB::table('patients')
+       $query = DB::table('patients')
             ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
             ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
-            ->select('patients.*', 'actions.*', 'kunjungan.*')
+            ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
             ->where(function ($query) {
-                $query->where('actions.tipe', 'poli-kia')->whereNull('actions.diagnosa');
+                $query->whereNull('actions.diagnosa');
             })
-            ->orWhere(function ($query) {
+            ->Where(function ($query) {
                 $query->where('kunjungan.poli', 'poli-kia');
             });
 
@@ -626,11 +630,12 @@ class PatientsController extends Controller
         }
 
         if (!empty($searchValue)) {
-            $query->whereHas('patient', function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('patients.name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
         }
-
         // Ambil data dengan pagination
         $patients = $query->paginate($length, ['*'], 'page', $page);
 
@@ -654,21 +659,21 @@ class PatientsController extends Controller
 
         $query = DB::table('patients')
             ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
-            ->select('patients.*', 'actions.*')
+            ->select('patients.*', 'actions.id as action_id', 'actions.*')
             ->where(function ($query) {
-                $query->where('actions.beri_tindakan', 1);
+                $query->where('actions.beri_tindakan', 1)->whereNull('tindakan_ruang_tindakan');
             });
 
         if ($filterDate) {
-            $query->whereDate('actions.tanggal', $filterDate);
+            $query->where('actions.tanggal', '=', $filterDate);
         }
-
         if (!empty($searchValue)) {
-            $query->whereHas('patient', function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('patients.name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
         }
-
         $patients = $query->paginate($length, ['*'], 'page', $page);
 
         return response()->json([
@@ -1064,20 +1069,20 @@ class PatientsController extends Controller
                 $modal = view('component.modal-edit-patient', ['patient' => $row])->render();
 
                 return '<div class="action-buttons">
-                            <!-- Edit Button -->
-                            <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editPatientModal' .
+                        <!-- Edit Button -->
+                        <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editPatientModal' .
                     $row->id .
                     '">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            
-                            <!-- Delete Button with a Unique ID -->
-                            <button type="button" class="btn btn-danger btn-sm text-white font-weight-bold d-flex align-items-center btn-delete" id="delete-button-' .
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        
+                        <!-- Delete Button with a Unique ID -->
+                        <button type="button" class="btn btn-danger btn-sm text-white font-weight-bold d-flex align-items-center btn-delete" id="delete-button-' .
                     $row->id .
                     '">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>' .
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>' .
                     $modal;
             })
             ->make(true);
@@ -1099,8 +1104,6 @@ class PatientsController extends Controller
                 'blood_type' => 'required|string',
                 'education' => 'required|integer',
                 'occupation' => 'required|integer',
-                'province' => 'required|integer',
-                'city' => 'required|integer',
                 'district' => 'required',
                 'village' => 'nullable',
                 'rw' => 'nullable',
@@ -1128,8 +1131,8 @@ class PatientsController extends Controller
                 $patient->blood_type = $validatedData['blood_type'];
                 $patient->education = $validatedData['education'];
                 $patient->occupation = $validatedData['occupation'];
-                $patient->indonesia_province_id = $validatedData['province'];
-                $patient->indonesia_city_id = $validatedData['city'];
+                $patient->indonesia_province_id = 27;
+                $patient->indonesia_city_id = 420;
                 $patient->indonesia_district = $validatedData['district'];
                 $patient->indonesia_village = $validatedData['village'] ?? null;
                 $patient->rw = $validatedData['rw'] ?? null;
@@ -1140,12 +1143,20 @@ class PatientsController extends Controller
                 $patient->nomor_kartu = $validatedData['nomor_kartu'];
                 $patient->save();
             }
-            Kunjungan::create([
-                'pasien' => $patient->id,
-                'poli' => $validatedData['poli_berobat'],
-                'hamil' => $validatedData['hamil'],
-                'tanggal' => now(),
-            ]);
+            $existingVisit = Kunjungan::where('pasien', $patient->id)
+                ->where('poli', $validatedData['poli_berobat'])
+                ->where('tanggal', now()->toDateString())
+                ->first();
+
+            if (!$existingVisit) {
+                // Create a new Kunjungan entry if it doesn't exist
+                Kunjungan::create([
+                    'pasien' => $patient->id,
+                    'poli' => $validatedData['poli_berobat'],
+                    'hamil' => $validatedData['hamil'],
+                    'tanggal' => now(),
+                ]);
+            }
 
             // Create a new Kunjungan entry
 
@@ -1176,8 +1187,6 @@ class PatientsController extends Controller
                 'blood_type' => 'required|string',
                 'education' => 'required|integer',
                 'occupation' => 'required|integer',
-                'province' => 'required|integer',
-                'city' => 'required|integer',
                 'district' => 'required',
                 'village' => 'nullable',
                 'rw' => 'nullable',
@@ -1203,8 +1212,8 @@ class PatientsController extends Controller
             $patient->blood_type = $validatedData['blood_type'];
             $patient->education = $validatedData['education'];
             $patient->occupation = $validatedData['occupation'];
-            $patient->indonesia_province_id = $validatedData['province'];
-            $patient->indonesia_city_id = $validatedData['city'];
+            $patient->indonesia_province_id = 27;
+            $patient->indonesia_city_id = 420;
             $patient->indonesia_district = $validatedData['district'];
             $patient->indonesia_village = $validatedData['village'] ?? null;
             $patient->rw = $validatedData['rw'] ?? null;

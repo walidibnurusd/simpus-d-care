@@ -185,7 +185,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="province">Provinsi Asal</label>
-                                <select class="form-control" id="province" name="province" required>
+                                <select class="form-control" id="province" name="province" disabled>
                                     <option value=""></option>
                                     @foreach ($provinces as $province)
                                         <option value="{{ $province->id }}"
@@ -199,7 +199,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="city">Kabupaten/Kota</label>
-                                <select class="form-control" id="city" name="city" required>
+                                <select class="form-control" id="city" name="city" disabled>
                                     <option value=""></option>
                                     @foreach ($cities as $city)
                                         <option value="{{ $city->id }}"
@@ -325,37 +325,6 @@
             village.value = 'Tamangapa';
         }
     }
-    var $j = jQuery.noConflict();
-    $j(document).ready(function() {
-        $j('#province').change(function() {
-            var provinceId = $j(this).val();
-            var citySelect = $j('#city');
-
-            if (provinceId) {
-                $j.ajax({
-                    url: "{{ url('/cities') }}/" + provinceId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        citySelect.empty();
-                        citySelect.append('<option value="">Pilih</option>');
-                        $j.each(data, function(key, value) {
-                            citySelect.append('<option value="' + value.id + '">' +
-                                value.name + '</option>');
-                        });
-                        $j('#district').empty().append('<option value="">Pilih</option>');
-                        $j('#village').empty().append('<option value="">Pilih</option>');
-                    },
-                    error: function() {
-                        alert('Gagal mengambil data kota/kabupaten');
-                    }
-                });
-            } else {
-                citySelect.empty();
-                citySelect.append('<option value="">Pilih</option>');
-            }
-        });
-    });
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -376,7 +345,7 @@
 
         function updateKlaster() {
             const dob = dobInput.value;
-            const hamil = hamilInput.value; 
+            const hamil = hamilInput.value;
 
             if (dob) {
                 const age = calculateAge(dob);
@@ -390,11 +359,11 @@
                     klaster = 2;
                 }
 
-              
+
                 klasterSelect.value = klaster;
 
-              
-              
+
+
             } else {
                 console.log('Tanggal Lahir tidak diisi');
             }

@@ -140,10 +140,7 @@
                         </li>
                     @endif
 
-                    @if (Auth::user()->role == 'dokter' ||
-                            Auth::user()->role == 'admin-kajian-awal' ||
-                            Auth::user()->role == 'apotik' ||
-                            Auth::user()->role == 'lab')
+                    @if (Auth::user()->role == 'admin-kajian-awal' || Auth::user()->role == 'apotik' || Auth::user()->role == 'lab')
                         <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
                                 class="sidebar-link sidebar-title" href="#">
                                 <svg class="stroke-icon">
@@ -155,10 +152,10 @@
                                 </svg><span>UGD</span></a>
 
                             <ul class="sidebar-submenu">
-                                @if (Auth::user()->role == 'dokter')
+                                {{-- @if (Auth::user()->role == 'dokter')
                                     <li><a href="{{ route('action.dokter.ugd.index') }}">Tindakan</a></li>
-                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
-                                @elseif(Auth::user()->role == 'admin-kajian-awal')
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li> --}}
+                                @if (Auth::user()->role == 'admin-kajian-awal')
                                     <li><a href="{{ route('action.index.ugd') }}">Kajian Awal</a></li>
                                     <li><a href="{{ route('report.index.ugd') }}">Laporan</a></li>
                                 @elseif(Auth::user()->role == 'apotik')

@@ -2,7 +2,7 @@
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DependentDropdownController;
+use App\Http\Controllers\DependentDropDownController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\IMTController;
 use App\Http\Controllers\KadarLemakController;
@@ -177,10 +177,11 @@ Route::middleware('auth')->group(function () {
         });
 
     Route::post('/tindakan', [ActionController::class, 'store'])->name('action.store');
-    Route::POST('/tindakan/{id}', [ActionController::class, 'update'])->name('action.update');
-    Route::POST('/tindakan-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
-    Route::POST('/tindakan-lab/{id}', [ActionController::class, 'updateLab'])->name('action.update.lab');
-    Route::POST('/tindakan-apotik/{id}', [ActionController::class, 'updateApotik'])->name('action.update.apotik');
+    Route::post('/tindakan/{id}', [ActionController::class, 'update'])->name('action.update');
+    Route::post('/tindakan-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
+    Route::post('/dokter-tindakan/{id}', [ActionController::class, 'updateTindakan'])->name('action.update.dokter.tindakan');
+    Route::post('/tindakan-lab/{id}', [ActionController::class, 'updateLab'])->name('action.update.lab');
+    Route::post('/tindakan-apotik/{id}', [ActionController::class, 'updateApotik'])->name('action.update.apotik');
     Route::delete('/tindakan/{id}', [ActionController::class, 'destroy'])->name('action.destroy');
     Route::get('/laporan/tindakan', [ActionController::class, 'actionReport'])->name('action.report');
 

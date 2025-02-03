@@ -10,12 +10,16 @@
         <div class="modal-content">
             <div class="modal-header bg-primary">
 
-                @if ($routeName === 'action.index')
+                @if ($routeName == 'action.dokter.ruang.tindakan.index')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN RUANG TINDAKAN</h5>
+                @elseif ($action->tipe == 'poli-umum')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
-                @elseif ($routeName === 'action.index.gigi')
+                @elseif ($action->tipe == 'poli-gigi')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
-                @elseif ($routeName === 'action.kia.index')
+                @elseif ($action->tipe == 'poli-kia')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KIA</h5>
+                @elseif ($action->tipe == 'poli-kb')
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KB</h5>
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
                 @endif
@@ -26,15 +30,7 @@
                 <form id="addPatientForm" action="{{ route('action.update', $action->id) }}" method="POST"
                     class="px-3">
                     @csrf
-                    @if ($routeName === 'action.index')
-                        <input type="hidden" name="tipe" value="poli-umum">
-                    @elseif($routeName === 'action.index.gigi')
-                        <input type="hidden" name="tipe" value="poli-gigi">
-                    @elseif ($routeName === 'action.kia.index')
-                        <input type="hidden" name="tipe" value="poli-kia">
-                    @else
-                        <input type="hidden" name="tipe" value="ruang-tindakan">
-                    @endif
+
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
@@ -683,7 +679,7 @@
                             @endif
                         </div>
                     </div>
-                    @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'tindakan')
+                    @if (Auth::user()->role == 'dokter')
                         <div class="row mt-3">
                             <div class="container">
                                 <div class="row g-2">
@@ -697,9 +693,10 @@
                                 </div>
                             </div>
                         </div>
+                    @endif
 
-                        <div class="row mt-3">
-
+                    <div class="row mt-3">
+                        @if (Auth::user()->role == 'dokter')
                             <div class="col-md-6">
                                 <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                 <select class="form-control" id="diagnosaEdit{{ $action->id }}" name="diagnosa[]"
@@ -738,6 +735,10 @@
                                 <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
                                     placeholder="Pemeriksaan penunjang">{{ old('pemeriksaan_penunjang', $action->pemeriksaan_penunjang ?? '') }}</textarea>
                             </div>
+                        @endif
+
+                        @if ($routeName !== 'action.dokter.ruang.tindakan.index' && $routeName !== 'action.dokter.ugd.index')
+
                             <div class="col-md-6">
                                 <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                                 <select class="form-control"
@@ -874,8 +875,91 @@
                                     @endif
                                 </select>
                             </div>
-                        </div>
-                    @endif
+                        @else
+                            <div class="col-md-4">
+                                <label for="tindakanRuangTindakanEdit"
+                                    style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                                <select class="form-control"
+                                    id="tindakanRuangTindakanEdit{{ $action->id }}{{ $action->id }}"
+                                    name="tindakan_ruang_tindakan">
+                                    <option value=""
+                                        {{ empty($action->tindakan_ruang_tindakan) ? 'selected' : '' }} disabled
+                                        selected>pilih</option>
+                                    <option value="Observasi Tanpa Tindakan Invasif"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Observasi Tanpa Tindakan Invasif' ? 'selected' : '' }}>
+                                        Observasi Tanpa Tindakan Invasif
+                                    </option>
+                                    <option value="Observasi Dengan Tindakan Invasif"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Observasi Dengan Tindakan Invasif' ? 'selected' : '' }}>
+                                        Observasi Dengan Tindakan Invasif
+                                    </option>
+                                    <option value="Tidak Ada"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Tidak Ada' ? 'selected' : '' }}>
+                                        Tidak Ada
+                                    </option>
+                                    <option value="Corpus Alineum"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Corpus Alineum' ? 'selected' : '' }}>
+                                        Corpus Alineum
+                                    </option>
+                                    <option value="Ekstraksi Kuku"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Ekstraksi Kuku' ? 'selected' : '' }}>
+                                        Ekstraksi Kuku
+                                    </option>
+                                    <option value="Sircumsisi (Bedah Ringan)"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Sircumsisi (Bedah Ringan)' ? 'selected' : '' }}>
+                                        Sircumsisi (Bedah Ringan)
+                                    </option>
+                                    <option value="Incisi Abses"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Incisi Abses' ? 'selected' : '' }}>
+                                        Incisi Abses
+                                    </option>
+                                    <option value="Rawat Luka"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Rawat Luka' ? 'selected' : '' }}>
+                                        Rawat Luka
+                                    </option>
+                                    <option value="Ganti Verban"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Ganti Verban' ? 'selected' : '' }}>
+                                        Ganti Verban
+                                    </option>
+                                    <option value="Spooling"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Spooling' ? 'selected' : '' }}>
+                                        Spooling
+                                    </option>
+                                    <option value="Toilet Telinga"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Toilet Telinga' ? 'selected' : '' }}>
+                                        Toilet Telinga
+                                    </option>
+                                    <option value="Tetes Telinga"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Tetes Telinga' ? 'selected' : '' }}>
+                                        Tetes Telinga
+                                    </option>
+                                    <option value="Aff Hecting"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Aff Hecting' ? 'selected' : '' }}>
+                                        Aff Hecting
+                                    </option>
+                                    <option value="Hecting (Jahit Luka)"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Hecting (Jahit Luka)' ? 'selected' : '' }}>
+                                        Hecting (Jahit Luka)</option>
+                                    <option value="Tampon/Off Tampon"
+                                        {{ old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? '') == 'Tampon/Off Tampon' ? 'selected' : '' }}>
+                                        Tampon/Off Tampon</option>
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
+                                <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
+                                <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                    value="{{ old('keterangan', $action->keterangan ?? '') }}"
+                                    placeholder="Keterangan">
+                            </div>
+
+                        @endif
+                    </div>
 
                     <div class="row mt-3">
                         @if (Auth::user()->role == 'dokter')
@@ -883,6 +967,8 @@
                                 <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                 <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
                             </div>
+                        @endif
+                        @if (Auth::user()->role != 'tindakan')
                             <div class="col-md-6">
                                 <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
                                 <select class="form-control" id="rujuk_rs" name="rujuk_rs">
@@ -895,12 +981,14 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="col-md-6">
+                                <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
+                                <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                    value="{{ old('keterangan', $action->keterangan ?? '') }}"
+                                    placeholder="Keterangan">
+                            </div>
                         @endif
-                        <div class="col-md-6">
-                            <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
-                            <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                value="{{ old('keterangan', $action->keterangan ?? '') }}" placeholder="Keterangan">
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
