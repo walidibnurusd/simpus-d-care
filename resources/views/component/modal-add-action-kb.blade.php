@@ -32,6 +32,7 @@
                 <form id="addPatientForm" action="" method="POST" class="px-3">
                     @csrf
                     <input type="hidden" name="tipe" id="tipe" value="poli-kb">
+                    <input type="hidden" name="action_id" id="action_id">
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
@@ -62,7 +63,7 @@
                                                     name="nik" placeholder="NIK">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
-                                                        data-bs-toggle="modal" data-bs-target="#modalPasien">
+                                                        data-bs-toggle="modal" data-bs-target="#modalPasienDokter">
                                                         Cari
                                                     </button>
                                                 </div>
@@ -88,17 +89,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="kunjungan">Kunjungan</label>
-                                            <select class="form-control" id="kunjungan" name="kunjungan">
-                                                <option value="" disabled selected>Pilih Jenis Kunjungan</option>
-                                                <option value="baru">Baru </option>
-                                                <option value="lama">Lama </option>
 
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -117,17 +108,6 @@
                                             <label for="nomor_kartu">Nomor Kartu</label>
                                             <input type="text" class="form-control" id="nomor_kartu"
                                                 name="nomor_kartu" placeholder="Masukkan Nomor" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="wilayah_faskes">Wilayah Faskes</label>
-                                            <select class="form-control" id="wilayah_faskes" name="faskes">
-                                                <option value="" disabled selected>Pilih Wilayah Faskes</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-
-                                            </select>
                                         </div>
                                     </div>
                                 </div>

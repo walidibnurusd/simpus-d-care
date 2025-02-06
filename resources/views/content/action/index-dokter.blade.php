@@ -194,12 +194,38 @@
                             },
                             {
                                 data: 'kunjungan',
-                                name: 'kunjungan'
+                                render: function(data, type, row) {
+
+                                    let kunjungan = data || row.patient.kunjungan ||
+                                        'Tidak Ada Kunjungan';
+
+
+                                    if (kunjungan === 1) {
+                                        return 'Ya';
+                                    } else if (kunjungan === 0) {
+                                        return 'Tidak';
+                                    } else {
+                                        return kunjungan;
+                                    }
+                                }
                             },
                             {
                                 data: 'faskes',
-                                name: 'faskes'
+                                render: function(data, type, row) {
+
+                                    let faskes = data || row.patient.wilayah_faskes || 'Tidak Ada Faskes';
+
+
+                                    if (faskes === 1) {
+                                        return 'Ya';
+                                    } else if (faskes === 0) {
+                                        return 'Tidak';
+                                    } else {
+                                        return faskes;
+                                    }
+                                }
                             },
+
                             @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
                                 {
                                     data: 'action',
@@ -215,7 +241,7 @@
                     });
 
                     $('#filterButton').on('click', function() {
-                        console.log('Filter button clicked');
+
                         table.ajax.reload(); // Corrected reload function
                     });
                 });
@@ -290,12 +316,38 @@
                             },
                             {
                                 data: 'kunjungan',
-                                name: 'kunjungan'
+                                render: function(data, type, row) {
+
+                                    let kunjungan = data || row.patient.kunjungan ||
+                                        'Tidak Ada Kunjungan';
+
+
+                                    if (kunjungan === 1) {
+                                        return 'Baru';
+                                    } else if (kunjungan === 0) {
+                                        return 'Lama';
+                                    } else {
+                                        return kunjungan;
+                                    }
+                                }
                             },
                             {
                                 data: 'faskes',
-                                name: 'faskes'
+                                render: function(data, type, row) {
+
+                                    let faskes = data || row.patient.wilayah_faskes || 'Tidak Ada Faskes';
+
+
+                                    if (faskes === 1) {
+                                        return 'Ya';
+                                    } else if (faskes === 0) {
+                                        return 'Tidak';
+                                    } else {
+                                        return faskes;
+                                    }
+                                }
                             },
+
                             @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
                                 {
                                     data: 'action',
@@ -311,7 +363,6 @@
                     });
 
                     $('#filterButton').on('click', function() {
-                        console.log('Filter button clicked');
                         table.ajax.reload(); // Corrected reload function
                     });
                 });
@@ -386,12 +437,38 @@
                             },
                             {
                                 data: 'kunjungan',
-                                name: 'kunjungan'
+                                render: function(data, type, row) {
+
+                                    let kunjungan = data || row.patient.kunjungan ||
+                                        'Tidak Ada Kunjungan';
+
+
+                                    if (kunjungan === 1) {
+                                        return 'Ya';
+                                    } else if (kunjungan === 0) {
+                                        return 'Tidak';
+                                    } else {
+                                        return kunjungan;
+                                    }
+                                }
                             },
                             {
                                 data: 'faskes',
-                                name: 'faskes'
+                                render: function(data, type, row) {
+
+                                    let faskes = data || row.patient.wilayah_faskes || 'Tidak Ada Faskes';
+
+
+                                    if (faskes === 1) {
+                                        return 'Ya';
+                                    } else if (faskes === 0) {
+                                        return 'Tidak';
+                                    } else {
+                                        return faskes;
+                                    }
+                                }
                             },
+
                             @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik' || Auth::user()->role == 'tindakan')
                                 {
                                     data: 'action',
@@ -486,12 +563,38 @@
                             },
                             {
                                 data: 'kunjungan',
-                                name: 'kunjungan'
+                                render: function(data, type, row) {
+
+                                    let kunjungan = data || row.patient.kunjungan ||
+                                        'Tidak Ada Kunjungan';
+
+
+                                    if (kunjungan === 1) {
+                                        return 'Ya';
+                                    } else if (kunjungan === 0) {
+                                        return 'Tidak';
+                                    } else {
+                                        return kunjungan;
+                                    }
+                                }
                             },
                             {
                                 data: 'faskes',
-                                name: 'faskes'
+                                render: function(data, type, row) {
+
+                                    let faskes = data || row.patient.wilayah_faskes || 'Tidak Ada Faskes';
+
+
+                                    if (faskes === 1) {
+                                        return 'Ya';
+                                    } else if (faskes === 0) {
+                                        return 'Tidak';
+                                    } else {
+                                        return faskes;
+                                    }
+                                }
                             },
+
                             @if (Auth::user()->role == 'tindakan')
                                 {
                                     data: 'action',

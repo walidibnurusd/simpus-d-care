@@ -91,7 +91,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    {{-- <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="kunjungan">Kunjungan</label>
                                             <select class="form-control" id="kunjungan" name="kunjungan">
@@ -100,7 +100,7 @@
                                                 <option value="lama">Lama </option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="col-12">
@@ -120,7 +120,7 @@
                                                 name="nomor_kartu" placeholder="Masukkan Nomor" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    {{-- <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="wilayah_faskes">Wilayah Faskes</label>
                                             <select class="form-control" id="wilayah_faskes" name="faskes">
@@ -130,7 +130,7 @@
 
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-12">
                                         <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
                                         <textarea class="form-control" id="keluhan" name="keluhan" placeholder="Keluhan"></textarea>
@@ -293,7 +293,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary">Simpan Data</button>
+                <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalPasienKunjungan">Simpan Data</button>
                 </form>
             </div>
         </div>

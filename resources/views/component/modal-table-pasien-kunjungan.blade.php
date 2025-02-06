@@ -171,5 +171,67 @@
 
             table.ajax.reload(null, false);
         });
+        $('#addPatientForm').submit(async function(e) {
+            e.preventDefault();
+            let formData = $('#addPatientForm').serialize();
+            formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
+            let actionId = $('#action_id').val() ?? null;
+
+            // Tentukan URL berdasarkan ada tidaknya actionId
+            let url = actionId ? `/tindakan-dokter/${actionId}` : '/tindakan';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: async function(response) {
+                    // Menampilkan notifikasi sukses
+                    await Swal.fire({
+                        title: 'Success!',
+                        text: response.success || 'Data berhasil diproses!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+
+                    // Sembunyikan detail pasien & reset form
+                    $('#patientDetails').hide();
+                    $('#displayNIK, #displayName, #displayAge, #displayPhone, #displayAddress, #displayBlood, #displayRmNumber, #diagnosa')
+                        .text('');
+                    $('#addPatientForm')[0].reset();
+
+                    // Reload DataTable dan tunggu sampai selesai
+                    await new Promise((resolve) => {
+                        table.ajax.reload(resolve, false);
+                        console.log('jalan');
+
+                    });
+
+                    // Perbarui daftar diagnosa
+                    await updateDiagnosaList();
+
+                    // Tunggu hingga data pasien benar-benar diperbarui sebelum menampilkan modal
+                    await refreshPatientData();
+
+                    // Cek apakah ada data dalam tabel sebelum menampilkan modal
+                    setTimeout(() => {
+                        if ($('#patientTableBody tr').length > 0) {
+                            $('#modalPasien').modal('show');
+                        } else {
+                            console.warn("Data pasien belum ter-refresh.");
+                        }
+                    }, 500); // Delay 500ms untuk memastikan data sudah ter-load
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    let errorMsg = xhr.responseJSON?.error || "Terjadi kesalahan!";
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMsg,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+
+        });
     });
 </script>

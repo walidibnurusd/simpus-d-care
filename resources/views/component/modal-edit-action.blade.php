@@ -106,20 +106,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="kunjungan">Kunjungan</label>
-                                            <select class="form-control" id="kunjungan" name="kunjungan">
-                                                <option value="" disabled
-                                                    {{ empty($action->kunjungan) ? 'selected' : '' }}>Pilih Jenis
-                                                    Kunjungan</option>
-                                                <option value="baru"
-                                                    {{ $action->kunjungan == 'baru' ? 'selected' : '' }}>Baru</option>
-                                                <option value="lama"
-                                                    {{ $action->kunjungan == 'lama' ? 'selected' : '' }}>Lama</option>
-                                            </select>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                             <div class="col-12">
@@ -150,19 +137,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="wilayah_faskes">Wilayah Faskes</label>
-                                            <select class="form-control" id="wilayah_faskes" name="faskes">
-                                                <option value="" disabled
-                                                    {{ empty($action->faskes) ? 'selected' : '' }}>Pilih Wilayah Faskes
-                                                </option>
-                                                <option value="ya"
-                                                    {{ $action->faskes == 'ya' ? 'selected' : '' }}>Ya</option>
-                                                <option value="tidak"
-                                                    {{ $action->faskes == 'tidak' ? 'selected' : '' }}>Tidak</option>
 
-                                            </select>
-                                        </div>
                                     </div>
                                     @if (
                                         $routeName == 'action.dokter.index' ||

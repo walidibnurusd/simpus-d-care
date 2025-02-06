@@ -46,6 +46,8 @@ class ActionController extends Controller
             $actionsQuery->whereDate('tanggal', '<=', $endDate);
         }
 
+        $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
         $actions = $actionsQuery->get();
 
         return DataTables::of($actions)
@@ -112,6 +114,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -122,12 +126,20 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -186,6 +198,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -196,12 +210,20 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -262,7 +284,10 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
+
             return DataTables::of($actions)
                 ->addIndexColumn()
                 ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
@@ -271,13 +296,22 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+
                 ->addColumn('action', function ($row) {
                     $dokter = User::where('role', 'dokter')->get();
                     $rs = Hospital::all();
@@ -338,6 +372,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -348,12 +384,20 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -416,6 +460,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -426,12 +472,20 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -491,6 +545,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -501,12 +557,20 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -571,6 +635,8 @@ class ActionController extends Controller
             $actionsQuery->whereDate('tanggal', '<=', $endDate);
         }
 
+        $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
         $actions = $actionsQuery->get();
 
         $routeName = $request->route()->getName();
@@ -596,6 +662,8 @@ class ActionController extends Controller
         if ($endDate) {
             $actionsQuery->whereDate('tanggal', '<=', $endDate);
         }
+
+        $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
         $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
@@ -623,6 +691,8 @@ class ActionController extends Controller
             $actionsQuery->whereDate('tanggal', '<=', $endDate);
         }
 
+        $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
         $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
@@ -646,6 +716,8 @@ class ActionController extends Controller
         if ($endDate) {
             $actionsQuery->whereDate('tanggal', '<=', $endDate);
         }
+
+        $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
         $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
@@ -677,6 +749,8 @@ class ActionController extends Controller
             $actionsQuery->whereDate('tanggal', '<=', $endDate);
         }
 
+        $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
         $actions = $actionsQuery->get();
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
@@ -695,7 +769,9 @@ class ActionController extends Controller
     //         $actionsQuery->whereDate('tanggal', '<=', $endDate);
     //     }
 
-    //     $actions = $actionsQuery->get();
+    //   $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
+    // $actions = $actionsQuery->get();
     //     $routeName = $request->route()->getName();
     //     return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     // }
@@ -717,6 +793,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -727,12 +805,20 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('action', function ($row) {
                     // Render action buttons
@@ -795,6 +881,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -805,12 +893,20 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('action', function ($row) {
                     // Render action buttons
@@ -871,6 +967,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -881,12 +979,20 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -945,6 +1051,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -955,12 +1063,20 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
-                    if (!is_string($row->diagnosa)) {
+                    $diagnosa = $row->diagnosa;
+
+                    if (is_string($diagnosa)) {
+                        $diagnosaIds = json_decode($diagnosa, true);
+                    } elseif (is_array($diagnosa)) {
+                        $diagnosaIds = $diagnosa;
+                    } else {
                         return '-';
                     }
-                    $diagnosaIds = explode(',', $row->diagnosa);
+
+                    $diagnosaIds = array_map('intval', $diagnosaIds);
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                    return implode(', ', $diagnoses);
+
+                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -1042,7 +1158,7 @@ class ActionController extends Controller
             $validated = $request->validate([
                 'id_patient' => 'required|exists:patients,id',
                 'tanggal' => 'required',
-                'doctor' => 'required',
+                'doctor' => 'nullable',
                 'kunjungan' => 'nullable|string|max:255',
                 'faskes' => 'nullable|string|max:255',
                 'sistol' => 'nullable|numeric',
@@ -1770,6 +1886,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -1827,6 +1945,8 @@ class ActionController extends Controller
             if ($endDate) {
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
+
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
             $actions = $actionsQuery->get();
 
@@ -1886,6 +2006,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -1944,6 +2066,8 @@ class ActionController extends Controller
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
 
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
             $actions = $actionsQuery->get();
 
             return DataTables::of($actions)
@@ -2001,6 +2125,8 @@ class ActionController extends Controller
             if ($endDate) {
                 $actionsQuery->whereDate('tanggal', '<=', $endDate);
             }
+
+            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
             $actions = $actionsQuery->get();
 

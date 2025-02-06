@@ -323,7 +323,37 @@
                         </div>
                     </div>
 
-
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="kunjungan">Kunjungan</label>
+                                <select class="form-control" id="kunjungan" name="kunjungan">
+                                    <option value="" disabled selected>Pilih</option>
+                                    <option value="1"
+                                        {{ old('kunjungan', $patient->kunjungan) == 1 ? 'selected' : '' }}>
+                                        Baru </option>
+                                    <option value="0"
+                                        {{ old('kunjungan', $patient->kunjungan) == 0 ? 'selected' : '' }}>Lama
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="wilayah_faskes">Wilayah Faskes</label>
+                                <select class="form-control" id="wilayah_faskes" name="wilayah_faskes">
+                                    <option value="" disabled selected>Pilih</option>
+                                    <option value="1"
+                                        {{ old('wilayah_faskes', $patient->wilayah_faskes) == 1 ? 'selected' : '' }}>Ya
+                                    </option>
+                                    <option value="0"
+                                        {{ old('wilayah_faskes', $patient->wilayah_faskes) == 1 ? 'selected' : '' }}>
+                                        Tidak
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

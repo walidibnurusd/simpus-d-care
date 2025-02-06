@@ -52,16 +52,16 @@
                         <div class="row g-2">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="no_rm">NOMOR RM</label>
-                                    <input type="text" class="form-control" id="no_rm" name="no_rm"
-                                        placeholder="Nomor RM" required>
+                                    <label for="no_family_folder">Nomor Family Folder</label>
+                                    <input type="text" class="form-control" id="no_family_folder"
+                                        name="no_family_folder" placeholder="Nomor Family Folder" required>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="phone">Telpon/WA</label>
-                                <input type="text" class="form-control" id="phone" name="phone"
+                                <input type="number" class="form-control" id="phone" name="phone"
                                     placeholder="Telpon/WA">
                             </div>
                         </div>
@@ -260,6 +260,28 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="kunjungan">Kunjungan</label>
+                                <select class="form-control" id="kunjungan" name="kunjungan">
+                                    <option value="" disabled selected>Pilih</option>
+                                    <option value="1">Baru </option>
+                                    <option value="0">Lama </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="wilayah_faskes">Wilayah Faskes</label>
+                                <select class="form-control" id="wilayah_faskes" name="wilayah_faskes">
+                                    <option value="" disabled selected>Pilih</option>
+                                    <option value="1">Ya</option>
+                                    <option value="0">Tidak</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Tambah Data Kunjungan</h5>
@@ -272,7 +294,7 @@
                                     <option value="">Pilih</option>
                                     <option value="poli-umum">Poli Umum</option>
                                     <option value="poli-gigi">Poli Gigi</option>
-                                    <option value="ruang-tindakan">Ruang Tindakan</option>
+                                    <option value="ruang-tindakan">UGD</option>
                                     <option value="poli-kia">Poli KIA</option>
                                     <option value="poli-kb">Poli KB</option>
                                 </select>
@@ -364,8 +386,6 @@
 
 
 
-            } else {
-                console.log('Tanggal Lahir tidak diisi');
             }
         }
 

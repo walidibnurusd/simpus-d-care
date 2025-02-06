@@ -140,7 +140,7 @@
                         </li>
                     @endif
 
-                    @if (Auth::user()->role == 'admin-kajian-awal' || Auth::user()->role == 'apotik' || Auth::user()->role == 'lab')
+                    @if (Auth::user()->role == 'apotik' || Auth::user()->role == 'lab')
                         <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
                                 class="sidebar-link sidebar-title" href="#">
                                 <svg class="stroke-icon">

@@ -1,6 +1,5 @@
 <!-- Modal Add Action -->
-<div class="modal fade" style="z-index: 1050;" id="addActionModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" style="z-index: 1050;" id="addActionModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
@@ -56,10 +55,10 @@
                                                 <input type="text" hidden id="idAction" name="idAction"
                                                     value="">
                                                 <input readonly type="text" class="form-control" id="nik"
-                                                    name="nik" placeholder="NIK" required>
+                                                    name="nik" placeholder="NIK">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
-                                                        data-bs-toggle="modal" data-bs-target="#modalPasien">
+                                                        data-bs-toggle="modal" data-bs-target="#modalPasienDokter">
                                                         Cari
                                                     </button>
                                                 </div>
@@ -70,13 +69,13 @@
                                         <div class="form-group">
                                             <label for="tanggal">Tanggal</label>
                                             <input type="date" class="form-control" id="tanggal" name="tanggal"
-                                                placeholder="Pilih Tanggal" required>
+                                                placeholder="Pilih Tanggal">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="doctor">Dokter</label>
-                                            <select class="form-control" id="doctor" name="doctor" required>
+                                            <select class="form-control" id="doctor" name="doctor">
                                                 <option value="" disabled selected>Pilih Dokter</option>
                                                 @foreach ($dokter as $item)
                                                     <option value="{{ $item['name'] }}">{{ $item['name'] }}</option>
@@ -85,17 +84,17 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    {{-- <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="kunjungan">Kunjungan</label>
-                                            <select class="form-control" id="kunjungan" name="kunjungan" required>
+                                            <select class="form-control" id="kunjungan" name="kunjungan">
                                                 <option value="" disabled selected>Pilih Jenis Kunjungan</option>
                                                 <option value="baru">Baru </option>
                                                 <option value="lama">Lama </option>
 
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="col-12">
@@ -115,17 +114,17 @@
                                                 name="nomor_kartu" placeholder="Masukkan Nomor" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    {{-- <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="wilayah_faskes">Wilayah Faskes</label>
-                                            <select class="form-control" id="wilayah_faskes" name="faskes" required>
+                                            <select class="form-control" id="wilayah_faskes" name="faskes">
                                                 <option value="" disabled selected>Pilih Wilayah Faskes</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
 
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-12">
                                         <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
                                         <textarea class="form-control" id="keluhan" name="keluhan" placeholder="Keluhan"></textarea>
@@ -227,35 +226,35 @@
                                         <div class="form-group">
                                             <label for="sistol">Sistol</label>
                                             <input type="text" class="form-control" id="sistol" name="sistol"
-                                                placeholder="Masukkan Sistol" required>
+                                                placeholder="Masukkan Sistol">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="diastol">Diastol</label>
                                             <input type="text" class="form-control" id="diastol" name="diastol"
-                                                placeholder="Masukkan Diastol" required>
+                                                placeholder="Masukkan Diastol">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="berat_badan">Berat Badan</label>
                                             <input type="text" class="form-control" id="berat_badan"
-                                                name="beratBadan" placeholder="Masukkan Berat Badan" required>
+                                                name="beratBadan" placeholder="Masukkan Berat Badan">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="tinggi_badan">Tinggi Badan</label>
                                             <input type="text" class="form-control" id="tinggi_badan"
-                                                name="tinggiBadan" placeholder="Masukkan Tinggi Badan" required>
+                                                name="tinggiBadan" placeholder="Masukkan Tinggi Badan">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="ling_pinggang">Ling. Pinggang</label>
                                             <input type="text" class="form-control" id="ling_pinggang"
-                                                name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang" required>
+                                                name="lingkarPinggang" placeholder="Masukkan Ling. Pinggang">
                                         </div>
                                     </div>
 
@@ -263,21 +262,21 @@
                                         <div class="form-group">
                                             <label for="nadi">Nadi</label>
                                             <input type="text" class="form-control" id="nadi" name="nadi"
-                                                placeholder="Masukkan Nadi" required>
+                                                placeholder="Masukkan Nadi">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="nafas">Pernafasan</label>
                                             <input type="text" class="form-control" id="nafas" name="nafas"
-                                                placeholder="Masukkan Nafas" required>
+                                                placeholder="Masukkan Nafas">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="suhu">Suhu</label>
                                             <input type="text" class="form-control" id="suhu" name="suhu"
-                                                placeholder="Masukkan Suhu" required>
+                                                placeholder="Masukkan Suhu">
                                         </div>
                                     </div>
                                 </div>
@@ -613,17 +612,32 @@
                             <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                         </div>
 
-                        @if (Auth::user()->role != 'tindakan')
+                        @if ($routeName == 'action.dokter.ruang.tindakan.index'){
                             <div class="col-md-4">
-                                <label for="alkohol" style="color: rgb(19, 11, 241);">RUJUK RS</label>
-                                <select class="form-control" id="rujuk_rs" name="rujuk_rs">
-                                    <option value="" disabled selected>pilih</option>
-                                    @foreach ($rs as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
+                                    @foreach ($diagnosa as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
+                                        </option>
                                     @endforeach
-
                                 </select>
                             </div>
+                            }
+                        @endif
+                        @if (Auth::user()->role != 'tindakan')
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                                    <select class="form-control" id="rujuk_rs" name="rujuk_rs"
+                                        data-placeholder="Pilih Rumah Sakit">
+                                        <option></option> <!-- Empty option to show placeholder -->
+                                        @foreach ($rs as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="col-md-4">
                                 <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang
                                     Tindakan</label>
@@ -648,7 +662,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary">Simpan Data</button>
+                <button type="submit" id="submit" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalPasien">Simpan Data</button>
                 </form>
             </div>
         </div>
@@ -663,32 +678,13 @@
 
 <script>
     $(document).ready(function() {
-        $('#riwayat_penyakit_keluarga').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#riwayat_penyakit_tidak_menular').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#diagnosa').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#tindakan').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
+        // Initialize select2 for all relevant elements
+        $('#diagnosa, #tindakan, #rujuk_rs')
+            .select2({
+                placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+            });
     });
 </script>
 <style>
@@ -696,64 +692,6 @@
         z-index: 9999 !important;
     }
 </style>
-<script>
-    $(document).ready(function() {
-        $('#addPatientForm').submit(function(e) {
-            e.preventDefault();
-            let formData = $('#addPatientForm').serialize();
-            formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
-            let actionId = $('#action_id').val() ?? null;
-
-            // Tentukan URL berdasarkan ada tidaknya actionId
-            let url = actionId ? `/tindakan-dokter/${actionId}` : '/tindakan';
-            // console.log(url);
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    // Menggunakan SweetAlert2 untuk notifikasi
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.success || 'Data berhasil diproses!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                    $('#patientDetails').hide();
-                    $('#displayNIK').text('');
-                    $('#displayName').text('');
-                    $('#displayAge').text('');
-                    $('#displayPhone').text('');
-                    $('#displayAddress').text('');
-                    $('#displayBlood').text('');
-                    $('#displayRmNumber').text('');
-                    $('#diagnosa').text('');
-
-                    // Optionally reset the form fields (except for patient details)
-                    $('#addPatientForm')[0].reset();
-
-                    // Show the modal for searching a patient
-                    $('#modalPasien').modal('show');
-
-                    // Jika ingin menutup modal setelah sukses
-                    // $('#myModal').modal('hide');
-                },
-                error: function(xhr) {
-                    // Menampilkan pesan error menggunakan SweetAlert2 
-                    console.log(xhr);
-                    let errorMsg = xhr.responseJSON.error || "Terjadi kesalahan!";
-                    Swal.fire({
-                        title: 'Error!',
-                        text: errorMsg,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            });
-        });
-    });
-</script>
-
 
 
 <script>

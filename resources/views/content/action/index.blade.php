@@ -141,32 +141,58 @@
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 
-@if ($routeName == 'action.index')
-<script>
-    $(document).ready(function () {
-        // Initialize DataTable with pagination
-        var table = $('#actions-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '{{ route('action.index.data') }}',
-                data: function (d) {
-                    // Send filter data along with the request
-                    d.start_date = $('#start_date').val();
-                    d.end_date = $('#end_date').val();
-                }
-            },
-            columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                { data: 'tanggal', name: 'tanggal' },
-                { data: 'patient_nik', name: 'patient_nik' },
-                { data: 'patient_name', name: 'patient_name' },
-                { data: 'patient_age', name: 'patient_age' },
-                { data: 'kartu', name: 'kartu' },
-                { data: 'keluhan', name: 'keluhan' },
-                { data: 'diagnosa', name: 'diagnosa' },
-                { data: 'tindakan', name: 'tindakan' },
-                    {
+    @if ($routeName == 'action.index')
+        <script>
+            $(document).ready(function() {
+                // Initialize DataTable with pagination
+                var table = $('#actions-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('action.index.data') }}',
+                        data: function(d) {
+                            // Send filter data along with the request
+                            d.start_date = $('#start_date').val();
+                            d.end_date = $('#end_date').val();
+                        }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex'
+                        },
+                        {
+                            data: 'tanggal',
+                            name: 'tanggal'
+                        },
+                        {
+                            data: 'patient_nik',
+                            name: 'patient_nik'
+                        },
+                        {
+                            data: 'patient_name',
+                            name: 'patient_name'
+                        },
+                        {
+                            data: 'patient_age',
+                            name: 'patient_age'
+                        },
+                        {
+                            data: 'kartu',
+                            name: 'kartu'
+                        },
+                        {
+                            data: 'keluhan',
+                            name: 'keluhan'
+                        },
+                        {
+                            data: 'diagnosa',
+                            name: 'diagnosa'
+                        },
+                        {
+                            data: 'tindakan',
+                            name: 'tindakan'
+                        },
+                        {
                             data: 'hospital_referral.name',
                             name: 'hospitalReferral.name'
                         },
@@ -178,51 +204,82 @@
                             data: 'faskes',
                             name: 'faskes'
                         },
-                    
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ],
-            pageLength: 10, // Set default page size
-            lengthMenu: [10, 25, 50, 100], // Set available page sizes
-            drawCallback: function(settings) {
-                // You can adjust the pagination here if needed, for example:
-                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
-                console.log('Total Pages:', totalPages);
-            }
-        });
 
-        // Filter Form Submission (on change)
-        $('#filter-form').on('submit', function (e) {
-            e.preventDefault();  // Prevent default form submission
-            table.draw();  // Redraw DataTable with new filters
-        });
-    });
-</script>
-@elseif ($routeName == 'action.index.gigi')
-    <script>
-       $(document).ready(function () {
-        // Initialize DataTable with pagination
-        var table = $('#actions-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '{{ route('action.index.gigi') }}',
-                data: function (d) {
-                    // Send filter data along with the request
-                    d.start_date = $('#start_date').val();
-                    d.end_date = $('#end_date').val();
-                }
-            },
-            columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                { data: 'tanggal', name: 'tanggal' },
-                { data: 'patient_nik', name: 'patient_nik' },
-                { data: 'patient_name', name: 'patient_name' },
-                { data: 'patient_age', name: 'patient_age' },
-                { data: 'kartu', name: 'kartu' },
-                { data: 'keluhan', name: 'keluhan' },
-                { data: 'diagnosa', name: 'diagnosa' },
-                { data: 'tindakan', name: 'tindakan' },
-                    {
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                    pageLength: 10, // Set default page size
+                    lengthMenu: [10, 25, 50, 100], // Set available page sizes
+                    drawCallback: function(settings) {
+                        // You can adjust the pagination here if needed, for example:
+                        var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                        console.log('Total Pages:', totalPages);
+                    }
+                });
+
+                // Filter Form Submission (on change)
+                $('#filter-form').on('submit', function(e) {
+                    e.preventDefault(); // Prevent default form submission
+                    table.draw(); // Redraw DataTable with new filters
+                });
+            });
+        </script>
+    @elseif ($routeName == 'action.index.gigi')
+        <script>
+            $(document).ready(function() {
+                // Initialize DataTable with pagination
+                var table = $('#actions-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('action.index.gigi') }}',
+                        data: function(d) {
+                            // Send filter data along with the request
+                            d.start_date = $('#start_date').val();
+                            d.end_date = $('#end_date').val();
+                        }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex'
+                        },
+                        {
+                            data: 'tanggal',
+                            name: 'tanggal'
+                        },
+                        {
+                            data: 'patient_nik',
+                            name: 'patient_nik'
+                        },
+                        {
+                            data: 'patient_name',
+                            name: 'patient_name'
+                        },
+                        {
+                            data: 'patient_age',
+                            name: 'patient_age'
+                        },
+                        {
+                            data: 'kartu',
+                            name: 'kartu'
+                        },
+                        {
+                            data: 'keluhan',
+                            name: 'keluhan'
+                        },
+                        {
+                            data: 'diagnosa',
+                            name: 'diagnosa'
+                        },
+                        {
+                            data: 'tindakan',
+                            name: 'tindakan'
+                        },
+                        {
                             data: 'hospital_referral.name',
                             name: 'hospitalReferral.name'
                         },
@@ -234,51 +291,82 @@
                             data: 'faskes',
                             name: 'faskes'
                         },
-                    
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ],
-            pageLength: 10, // Set default page size
-            lengthMenu: [10, 25, 50, 100], // Set available page sizes
-            drawCallback: function(settings) {
-                // You can adjust the pagination here if needed, for example:
-                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
-                console.log('Total Pages:', totalPages);
-            }
-        });
 
-        // Filter Form Submission (on change)
-        $('#filter-form').on('submit', function (e) {
-            e.preventDefault();  // Prevent default form submission
-            table.draw();  // Redraw DataTable with new filters
-        });
-    });
-    </script>
-@elseif ($routeName == 'action.index.ugd')
-    <script>
-       $(document).ready(function () {
-        // Initialize DataTable with pagination
-        var table = $('#actions-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '{{ route('action.index.ugd') }}',
-                data: function (d) {
-                    // Send filter data along with the request
-                    d.start_date = $('#start_date').val();
-                    d.end_date = $('#end_date').val();
-                }
-            },
-            columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                { data: 'tanggal', name: 'tanggal' },
-                { data: 'patient_nik', name: 'patient_nik' },
-                { data: 'patient_name', name: 'patient_name' },
-                { data: 'patient_age', name: 'patient_age' },
-                { data: 'kartu', name: 'kartu' },
-                { data: 'keluhan', name: 'keluhan' },
-                { data: 'diagnosa', name: 'diagnosa' },
-                { data: 'tindakan', name: 'tindakan' },
-                    {
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                    pageLength: 10, // Set default page size
+                    lengthMenu: [10, 25, 50, 100], // Set available page sizes
+                    drawCallback: function(settings) {
+                        // You can adjust the pagination here if needed, for example:
+                        var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                        console.log('Total Pages:', totalPages);
+                    }
+                });
+
+                // Filter Form Submission (on change)
+                $('#filter-form').on('submit', function(e) {
+                    e.preventDefault(); // Prevent default form submission
+                    table.draw(); // Redraw DataTable with new filters
+                });
+            });
+        </script>
+    @elseif ($routeName == 'action.index.ugd')
+        <script>
+            $(document).ready(function() {
+                // Initialize DataTable with pagination
+                var table = $('#actions-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('action.index.ugd') }}',
+                        data: function(d) {
+                            // Send filter data along with the request
+                            d.start_date = $('#start_date').val();
+                            d.end_date = $('#end_date').val();
+                        }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex'
+                        },
+                        {
+                            data: 'tanggal',
+                            name: 'tanggal'
+                        },
+                        {
+                            data: 'patient_nik',
+                            name: 'patient_nik'
+                        },
+                        {
+                            data: 'patient_name',
+                            name: 'patient_name'
+                        },
+                        {
+                            data: 'patient_age',
+                            name: 'patient_age'
+                        },
+                        {
+                            data: 'kartu',
+                            name: 'kartu'
+                        },
+                        {
+                            data: 'keluhan',
+                            name: 'keluhan'
+                        },
+                        {
+                            data: 'diagnosa',
+                            name: 'diagnosa'
+                        },
+                        {
+                            data: 'tindakan',
+                            name: 'tindakan'
+                        },
+                        {
                             data: 'hospital_referral.name',
                             name: 'hospitalReferral.name'
                         },
@@ -290,54 +378,79 @@
                             data: 'faskes',
                             name: 'faskes'
                         },
-                    
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ],
-            pageLength: 10, // Set default page size
-            lengthMenu: [10, 25, 50, 100], // Set available page sizes
-            drawCallback: function(settings) {
-                // You can adjust the pagination here if needed, for example:
-                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
-                console.log('Total Pages:', totalPages);
-            }
-        });
 
-        // Filter Form Submission (on change)
-        $('#filter-form').on('submit', function (e) {
-            e.preventDefault();  // Prevent default form submission
-            table.draw();  // Redraw DataTable with new filters
-        });
-    });
-    </script>
-@elseif ($routeName == 'action.kia.index')
-    <script>
-       $(document).ready(function () {
-        // Initialize DataTable with pagination
-        var table = $('#actions-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '{{ route('action.kia.index') }}',
-                data: function (d) {
-                    // Send filter data along with the request
-                    d.start_date = $('#start_date').val();
-                    d.end_date = $('#end_date').val();
-                }
-            },
-            columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                { data: 'tanggal', name: 'tanggal' },
-                { data: 'patient_nik', name: 'patient_nik' },
-                { data: 'patient_name', name: 'patient_name' },
-                { data: 'patient_age', name: 'patient_age' },
-                { data: 'kartu', name: 'kartu' },
-                { data: 'keluhan', name: 'keluhan' },
-                // { data: 'diagnosa', name: 'diagnosa' },
-                // { data: 'tindakan', name: 'tindakan' },
-                //     {
-                //             data: 'hospital_referral.name',
-                //             name: 'hospitalReferral.name'
-                //         },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                    pageLength: 10, // Set default page size
+                    lengthMenu: [10, 25, 50, 100], // Set available page sizes
+                    drawCallback: function(settings) {
+                        // You can adjust the pagination here if needed, for example:
+                        var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                        console.log('Total Pages:', totalPages);
+                    }
+                });
+
+                // Filter Form Submission (on change)
+                $('#filter-form').on('submit', function(e) {
+                    e.preventDefault(); // Prevent default form submission
+                    table.draw(); // Redraw DataTable with new filters
+                });
+            });
+        </script>
+    @elseif ($routeName == 'action.kia.index')
+        <script>
+            $(document).ready(function() {
+                // Initialize DataTable with pagination
+                var table = $('#actions-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('action.kia.index') }}',
+                        data: function(d) {
+                            // Send filter data along with the request
+                            d.start_date = $('#start_date').val();
+                            d.end_date = $('#end_date').val();
+                        }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex'
+                        },
+                        {
+                            data: 'tanggal',
+                            name: 'tanggal'
+                        },
+                        {
+                            data: 'patient_nik',
+                            name: 'patient_nik'
+                        },
+                        {
+                            data: 'patient_name',
+                            name: 'patient_name'
+                        },
+                        {
+                            data: 'patient_age',
+                            name: 'patient_age'
+                        },
+                        {
+                            data: 'kartu',
+                            name: 'kartu'
+                        },
+                        {
+                            data: 'keluhan',
+                            name: 'keluhan'
+                        },
+                        // { data: 'diagnosa', name: 'diagnosa' },
+                        // { data: 'tindakan', name: 'tindakan' },
+                        //     {
+                        //             data: 'hospital_referral.name',
+                        //             name: 'hospitalReferral.name'
+                        //         },
                         {
                             data: 'kunjungan',
                             name: 'kunjungan'
@@ -346,54 +459,79 @@
                             data: 'faskes',
                             name: 'faskes'
                         },
-                    
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ],
-            pageLength: 10, // Set default page size
-            lengthMenu: [10, 25, 50, 100], // Set available page sizes
-            drawCallback: function(settings) {
-                // You can adjust the pagination here if needed, for example:
-                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
-                console.log('Total Pages:', totalPages);
-            }
-        });
 
-        // Filter Form Submission (on change)
-        $('#filter-form').on('submit', function (e) {
-            e.preventDefault();  // Prevent default form submission
-            table.draw();  // Redraw DataTable with new filters
-        });
-    });
-    </script>
-@elseif ($routeName == 'action.kb.index')
-    <script>
-       $(document).ready(function () {
-        // Initialize DataTable with pagination
-        var table = $('#actions-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '{{ route('action.kb.index') }}',
-                data: function (d) {
-                    // Send filter data along with the request
-                    d.start_date = $('#start_date').val();
-                    d.end_date = $('#end_date').val();
-                }
-            },
-            columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                { data: 'tanggal', name: 'tanggal' },
-                { data: 'patient_nik', name: 'patient_nik' },
-                { data: 'patient_name', name: 'patient_name' },
-                { data: 'patient_age', name: 'patient_age' },
-                { data: 'kartu', name: 'kartu' },
-                { data: 'keluhan', name: 'keluhan' },
-                // { data: 'diagnosa', name: 'diagnosa' },
-                // { data: 'tindakan', name: 'tindakan' },
-                //     {
-                //             data: 'hospital_referral.name',
-                //             name: 'hospitalReferral.name'
-                //         },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                    pageLength: 10, // Set default page size
+                    lengthMenu: [10, 25, 50, 100], // Set available page sizes
+                    drawCallback: function(settings) {
+                        // You can adjust the pagination here if needed, for example:
+                        var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                        console.log('Total Pages:', totalPages);
+                    }
+                });
+
+                // Filter Form Submission (on change)
+                $('#filter-form').on('submit', function(e) {
+                    e.preventDefault(); // Prevent default form submission
+                    table.draw(); // Redraw DataTable with new filters
+                });
+            });
+        </script>
+    @elseif ($routeName == 'action.kb.index')
+        <script>
+            $(document).ready(function() {
+                // Initialize DataTable with pagination
+                var table = $('#actions-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('action.kb.index') }}',
+                        data: function(d) {
+                            // Send filter data along with the request
+                            d.start_date = $('#start_date').val();
+                            d.end_date = $('#end_date').val();
+                        }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex'
+                        },
+                        {
+                            data: 'tanggal',
+                            name: 'tanggal'
+                        },
+                        {
+                            data: 'patient_nik',
+                            name: 'patient_nik'
+                        },
+                        {
+                            data: 'patient_name',
+                            name: 'patient_name'
+                        },
+                        {
+                            data: 'patient_age',
+                            name: 'patient_age'
+                        },
+                        {
+                            data: 'kartu',
+                            name: 'kartu'
+                        },
+                        {
+                            data: 'keluhan',
+                            name: 'keluhan'
+                        },
+                        // { data: 'diagnosa', name: 'diagnosa' },
+                        // { data: 'tindakan', name: 'tindakan' },
+                        //     {
+                        //             data: 'hospital_referral.name',
+                        //             name: 'hospitalReferral.name'
+                        //         },
                         {
                             data: 'kunjungan',
                             name: 'kunjungan'
@@ -402,27 +540,31 @@
                             data: 'faskes',
                             name: 'faskes'
                         },
-                    
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ],
-            pageLength: 10, // Set default page size
-            lengthMenu: [10, 25, 50, 100], // Set available page sizes
-            drawCallback: function(settings) {
-                // You can adjust the pagination here if needed, for example:
-                var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
-                console.log('Total Pages:', totalPages);
-            }
-        });
 
-        // Filter Form Submission (on change)
-        $('#filter-form').on('submit', function (e) {
-            e.preventDefault();  // Prevent default form submission
-            table.draw();  // Redraw DataTable with new filters
-        });
-    });
-    </script>
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                    pageLength: 10, // Set default page size
+                    lengthMenu: [10, 25, 50, 100], // Set available page sizes
+                    drawCallback: function(settings) {
+                        // You can adjust the pagination here if needed, for example:
+                        var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                        console.log('Total Pages:', totalPages);
+                    }
+                });
 
-@endif
+                // Filter Form Submission (on change)
+                $('#filter-form').on('submit', function(e) {
+                    e.preventDefault(); // Prevent default form submission
+                    table.draw(); // Redraw DataTable with new filters
+                });
+            });
+        </script>
+    @endif
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

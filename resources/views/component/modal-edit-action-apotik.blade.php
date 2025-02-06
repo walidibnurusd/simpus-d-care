@@ -122,8 +122,8 @@
                             <textarea class="form-control" id="obat" name="obat" readonly placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
                         </div>
                         <div class="col-md-12">
-                            <label for="update_obat" style="color: rgb(19, 11, 241);">Hasil Laboratorium</label>
-                            <textarea class="form-control" id="update_obat" name="update_obat" placeholder="Hasil Laboratorium">{{ old('update_obat', $action->update_obat ?? '') }}</textarea>
+                            <label for="update_obat" style="color: rgb(19, 11, 241);">Update Obat</label>
+                            <textarea class="form-control" id="update_obat" name="update_obat" placeholder="Update Obat">{{ old('update_obat', $action->update_obat ?? '') }}</textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

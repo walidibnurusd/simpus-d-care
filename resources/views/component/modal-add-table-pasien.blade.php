@@ -12,6 +12,7 @@
                             <th>NIK</th>
                             <th>Nama</th>
                             <th>Alamat</th>
+                            <th>Tanggal Lahir</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -58,6 +59,11 @@
                         name: 'address'
                     },
                     {
+                        data: 'dob',
+                        data: 'dob',
+
+                    },
+                    {
                         data: null,
                         orderable: false,
                         searchable: false,
@@ -85,6 +91,8 @@
                                 data-rw="${row.rw}" 
                                 data-address="${row.address}" 
                                 data-job="${row.occupation}" 
+                                data-wilayahfaskes="${row.wilayah_faskes}" 
+                                data-kunjungan="${row.kunjungan}" 
                                 data-rm="${row.no_rm}">
                                 Pilih
                             </button>
@@ -136,6 +144,8 @@
             $('#village').val(data.village);
             $('#rw').val(data.rw);
             $('#address').val(data.address);
+            $('#wilayah_faskes').val(data.wilayah_faskes);
+            $('#kunjungan').val(data.kunjungan);
 
             let jenisKartu = data.jenis_kartu;
             if (jenisKartu === 'pbi') {

@@ -1,9 +1,9 @@
-<div class="modal fade" id="modalPasien" tabindex="-1" aria-labelledby="modalPasienLabel" aria-hidden="true">
+<div class="modal fade" id="modalPasienDokter" tabindex="-1" aria-labelledby="modalPasienDokterLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="w-100">
-                    <h5 class="modal-title" id="modalPasienLabel">Cari Pasien</h5>
+                    <h5 class="modal-title" id="modalPasienDokterLabel">Cari Pasien</h5>
                     <div class="form-group mt-2">
                         <label for="filterDate" class="form-label">Filter Tanggal</label>
                         <input type="date" id="filterDate" class="form-control">
@@ -48,7 +48,7 @@
             //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
             // }
             const tipe = $('#tipe').val(); // Ambil route name
-            console.log(tipe);
+            // console.log(tipe);
             const url = `/get-patients-dokter/${tipe}`;
             const filterDate = $('#filterDate').val();
             table = $('#pasienDokter').DataTable({
@@ -97,7 +97,7 @@
                             return `
                         <button class="btn btn-success btnPilihPasien" 
                         data-id-patient="${row.id}" 
-                  data-id="${row.action_id ? row.action_id : null}"
+                        data-id="${row.action_id ? row.action_id : null}"
                         data-nik="${row.nik}" 
                         data-name="${row.name}" 
                         data-gender="${row.gender}" 
@@ -237,7 +237,6 @@
             if (tipe == 'tindakan' && actionId) {
                 actionUrl = "{{ route('action.update.dokter.tindakan', '__ID__') }}".replace('__ID__',
                     actionId);
-                console.log(actionUrl);
             } else {
                 actionUrl = actionId ?
                     "{{ route('action.update.dokter', '__ID__') }}".replace('__ID__', actionId) :
@@ -343,7 +342,19 @@
 
             $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
             $('#keluhan').val(data.keluhan);
-            $('#diagnosa').val(data.diagnosa).trigger('change');
+            var diagnosaArray = JSON.parse(data.diagnosa); // Parse the diagnosa data
+            console.log("Diagnosa Array:", diagnosaArray); // Debugging step
+
+            // Manually select options in the dropdown
+            $('#diagnosaEdit option').each(function() {
+                if (diagnosaArray.includes($(this).val())) {
+                    $(this).prop('selected', true); // Mark the option as selected
+                }
+            });
+
+            // If using Select2, reinitialize it after setting the values
+            $('#diagnosaEdit').trigger('change');
+
             $('#icd10').val(data.icd10);
             $('#tindakan').val(data.tindakan).trigger('change');
             $('#rujuk_rs').val(data.rujukrs);
@@ -358,11 +369,15 @@
 
 
             // Tutup modal
-            $('#modalPasien').modal('hide');
+            $('#modalPasienDokter').modal('hide');
+
         });
+        // table.ajax.reload(null, false);
+
         initializeTable();
 
-        $('#modalPasien').on('shown.bs.modal', function() {
+        $('#modalPasienDokter').on('shown.bs.modal', function() {
+
 
             initializeTable();
         });
@@ -370,5 +385,245 @@
 
             table.ajax.reload(null, false);
         });
+        $('#addPatientForm').submit(async function(e) {
+            e.preventDefault();
+            let formData = $('#addPatientForm').serialize();
+            formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
+            let actionId = $('#action_id').val() ?? null;
+
+            // Tentukan URL berdasarkan ada tidaknya actionId
+            let url = actionId ? `/tindakan-dokter/${actionId}` : '/tindakan';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: async function(response) {
+                    // Menampilkan notifikasi sukses
+                    await Swal.fire({
+                        title: 'Success!',
+                        text: response.success || 'Data berhasil diproses!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+
+                    // Sembunyikan detail pasien & reset form
+                    $('#patientDetails').hide();
+                    $('#displayNIK, #displayName, #displayAge, #displayPhone, #displayAddress, #displayBlood, #displayRmNumber, #diagnosa')
+                        .text('');
+                    $('#addPatientForm')[0].reset();
+
+                    // Reload DataTable dan tunggu sampai selesai
+                    await new Promise((resolve) => {
+                        table.ajax.reload(resolve, false);
+                    });
+
+                    // Perbarui daftar diagnosa
+                    await updateDiagnosaList();
+
+                    // Tunggu hingga data pasien benar-benar diperbarui sebelum menampilkan modal
+                    await refreshPatientData();
+
+                    // Cek apakah ada data dalam tabel sebelum menampilkan modal
+                    setTimeout(() => {
+                        if ($('#patientTableBody tr').length > 0) {
+                            // Tampilkan modal hanya setelah data pasien berhasil diperbarui
+                            $('#modalPasienDokter').modal('show');
+                        } else {
+                            console.warn("Data pasien belum ter-refresh.");
+                        }
+                    }, 500); // Delay 500ms untuk memastikan data sudah ter-load
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    let errorMsg = xhr.responseJSON?.error || "Terjadi kesalahan!";
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMsg,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+
     });
+
+
+
+    // Ubah function refreshPatientData agar mengembalikan Promise
+    function refreshPatientData() {
+        return new Promise((resolve, reject) => {
+            const tipe = $('#tipe').val();
+            $.ajax({
+                url: `/get-patient-dokter/${tipe}`,
+                type: 'GET',
+                success: function(response) {
+                    $('#patientTableBody').html('');
+
+                    // Cek apakah ada pasien
+                    if (response.patients && response.patients.length > 0) {
+                        response.patients.forEach(patient => {
+                            $('#patientTableBody').append(`
+                            <tr>
+                                <td>${patient.nik}</td>
+                                <td>${patient.name}</td>
+                                <td>${patient.age}</td>
+                                <td>${patient.phone}</td>
+                                <td>
+                                    <button class="btn btn-primary pilih-pasien" data-id="${patient.id}">Pilih</button>
+                                </td>
+                            </tr>
+                        `);
+                        });
+                        resolve(); // Selesai, lanjut ke modal
+                    } else {
+                        console.warn("Tidak ada pasien ditemukan.");
+                        reject(); // Jika gagal, modal tidak akan muncul
+                    }
+                },
+                error: function() {
+                    console.error('Gagal memuat data pasien.');
+                    reject(); // Jika gagal, modal tidak akan muncul
+                }
+            });
+        });
+    }
+
+    // Perbarui daftar diagnosa
+    function updateDiagnosaList() {
+        $.ajax({
+            url: '/get-diagnosa',
+            type: 'GET',
+            success: function(response) {
+                if (response.diagnosa && response.diagnosa.length > 0) {
+                    let diagnosaOptions = response.diagnosa.map(item =>
+                        `<option value="${item.id}">${item.name} - ${item.icd10}</option>`
+                    ).join('');
+                    $('#diagnosa').html(diagnosaOptions);
+                } else {
+                    $('#diagnosa').html('<option value="">Tidak ada diagnosa tersedia</option>');
+                }
+            },
+            error: function() {
+                $('#diagnosa').html('<option value="">Gagal memuat diagnosa</option>');
+            }
+        });
+    }
 </script>
+{{-- <script>
+    $(document).ready(function() {
+        $('#addPatientForm').submit(async function(e) {
+            e.preventDefault();
+            let formData = $('#addPatientForm').serialize();
+            formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
+            let actionId = $('#action_id').val() ?? null;
+
+            // Tentukan URL berdasarkan ada tidaknya actionId
+            let url = actionId ? `/tindakan-dokter/${actionId}` : '/tindakan';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: async function(response) {
+                    // Notifikasi sukses
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.success || 'Data berhasil diproses!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+
+                    // Sembunyikan detail pasien & reset form
+                    $('#patientDetails').hide();
+                    $('#displayNIK, #displayName, #displayAge, #displayPhone, #displayAddress, #displayBlood, #displayRmNumber, #diagnosa')
+                        .text('');
+                    $('#addPatientForm')[0].reset();
+                    table.ajax.reload(null, false);
+                    // Perbarui daftar diagnosa
+                    updateDiagnosaList();
+
+                    // Tunggu hingga data pasien benar-benar diperbarui sebelum menampilkan modal
+                    await refreshPatientData();
+                    // Pastikan data sudah dimuat sebelum menampilkan modal
+                    if ($('#patientTableBody tr').length > 0) {
+                        $('#modalPasienDokter').modal('show');
+                    } else {
+                        console.warn("Data pasien belum ter-refresh.");
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr);
+                    let errorMsg = xhr.responseJSON?.error || "Terjadi kesalahan!";
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMsg,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+    });
+
+    // Ubah function refreshPatientData agar mengembalikan Promise
+    function refreshPatientData() {
+        return new Promise((resolve, reject) => {
+            const tipe = $('#tipe').val();
+            $.ajax({
+                url: `/get-patient-dokter/${tipe}`,
+                type: 'GET',
+                success: function(response) {
+                    $('#patientTableBody').html('');
+
+                    // Cek apakah ada pasien
+                    if (response.patients && response.patients.length > 0) {
+                        response.patients.forEach(patient => {
+                            $('#patientTableBody').append(`
+                            <tr>
+                                <td>${patient.nik}</td>
+                                <td>${patient.name}</td>
+                                <td>${patient.age}</td>
+                                <td>${patient.phone}</td>
+                                <td>
+                                    <button class="btn btn-primary pilih-pasien" data-id="${patient.id}">Pilih</button>
+                                </td>
+                            </tr>
+                        `);
+                        });
+                        resolve(); // Selesai, lanjut ke modal
+                    } else {
+                        console.warn("Tidak ada pasien ditemukan.");
+                        reject(); // Jika gagal, modal tidak akan muncul
+                    }
+                },
+                error: function() {
+                    console.error('Gagal memuat data pasien.');
+                    reject(); // Jika gagal, modal tidak akan muncul
+                }
+            });
+        });
+    }
+
+    // Perbarui daftar diagnosa
+    function updateDiagnosaList() {
+        $.ajax({
+            url: '/get-diagnosa',
+            type: 'GET',
+            success: function(response) {
+                if (response.diagnosa && response.diagnosa.length > 0) {
+                    let diagnosaOptions = response.diagnosa.map(item =>
+                        `<option value="${item.id}">${item.name} - ${item.icd10}</option>`
+                    ).join('');
+                    $('#diagnosa').html(diagnosaOptions);
+                } else {
+                    $('#diagnosa').html('<option value="">Tidak ada diagnosa tersedia</option>');
+                }
+            },
+            error: function() {
+                $('#diagnosa').html('<option value="">Gagal memuat diagnosa</option>');
+            }
+        });
+    }
+</script> --}}

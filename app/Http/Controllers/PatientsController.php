@@ -95,20 +95,14 @@ class PatientsController extends Controller
         $searchValue = $request->input('search.value', '');
 
         $page = $start / $length + 1;
-        $today = Carbon::today();
-        // Query data pasien dengan filter kunjungan poli-umum
-        $query = Patients::with([
-            'genderName',
-            'educations',
-            'occupations',
-            'kunjungans' => function ($q) use ($today): void {
-                $q->where('poli', 'poli-umum')->whereDate('created_at', $today)->select('id', 'pasien', 'created_at');
-            },
-        ])
+        $today = Carbon::now()->toDateString();
+        $query = Patients::with(['genderName', 'educations', 'occupations'])
             ->whereHas('kunjungans', function ($q) use ($today) {
-                $q->where('poli', 'poli-umum')->whereDate('created_at', $today);
+                $q->where('poli', 'poli-umum')->where('tanggal', $today);
             })
-            ->whereDoesntHave('actions');
+            ->whereDoesntHave('actions', function ($q) use ($today) {
+                $q->where('tipe', 'poli-umum')->where('tanggal', $today);
+            });
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -128,7 +122,7 @@ class PatientsController extends Controller
         $data = $patients->items();
         $formattedData = [];
         foreach ($data as $patient) {
-            $kunjunganCreatedAt = optional($patient->kunjungans->first())->created_at;
+            $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
             $formattedData[] = [
                 'id' => $patient->id,
                 'name' => $patient->name,
@@ -162,21 +156,14 @@ class PatientsController extends Controller
         $searchValue = $request->input('search.value', '');
 
         $page = $start / $length + 1;
-        $today = Carbon::today();
-        // Query data pasien dengan filter kunjungan poli-umum
-        $query = Patients::with([
-            'genderName',
-            'educations',
-            'occupations',
-            'kunjungans' => function ($q) use ($today): void {
-                $q->where('poli', 'poli-gigi')->whereDate('created_at', $today)->select('id', 'pasien', 'created_at');
-            },
-        ])
+        $today = Carbon::now()->toDateString();
+        $query = Patients::with(['genderName', 'educations', 'occupations'])
             ->whereHas('kunjungans', function ($q) use ($today) {
-                $q->where('poli', 'poli-gigi')->whereDate('created_at', $today); // Hanya pasien yang memiliki kunjungan poli-gigi
+                $q->where('poli', 'poli-gigi')->where('tanggal', $today);
             })
-            ->whereDoesntHave('actions');
-
+            ->whereDoesntHave('actions', function ($q) use ($today) {
+                $q->where('tipe', 'poli-gigi')->where('tanggal', $today);
+            });
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('name', 'LIKE', "%{$searchValue}%")
@@ -195,7 +182,7 @@ class PatientsController extends Controller
         $data = $patients->items();
         $formattedData = [];
         foreach ($data as $patient) {
-            $kunjunganCreatedAt = optional($patient->kunjungans->first())->created_at;
+            $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
             $formattedData[] = [
                 'id' => $patient->id,
                 'name' => $patient->name,
@@ -229,19 +216,14 @@ class PatientsController extends Controller
         $searchValue = $request->input('search.value', '');
 
         $page = $start / $length + 1;
-        $today = Carbon::today();
-        $query = Patients::with([
-            'genderName',
-            'educations',
-            'occupations',
-            'kunjungans' => function ($q) use ($today) {
-                $q->where('poli', 'poli-kia')->whereDate('created_at', $today)->select('id', 'pasien', 'created_at');
-            },
-        ])
+        $today = Carbon::now()->toDateString();
+        $query = Patients::with(['genderName', 'educations', 'occupations'])
             ->whereHas('kunjungans', function ($q) use ($today) {
-                $q->where('poli', 'poli-kia')->whereDate('created_at', $today);
+                $q->where('poli', 'poli-kia')->where('tanggal', $today);
             })
-            ->whereDoesntHave('actions');
+            ->whereDoesntHave('actions', function ($q) use ($today) {
+                $q->where('tipe', 'poli-kia')->where('tanggal', $today);
+            });
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -261,7 +243,7 @@ class PatientsController extends Controller
         $data = $patients->items();
         $formattedData = [];
         foreach ($data as $patient) {
-            $kunjunganCreatedAt = optional($patient->kunjungans->first())->created_at;
+            $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
             $formattedData[] = [
                 'id' => $patient->id,
                 'name' => $patient->name,
@@ -296,21 +278,14 @@ class PatientsController extends Controller
         $searchValue = $request->input('search.value', '');
 
         $page = $start / $length + 1;
-        $today = Carbon::today();
-
-        $query = Patients::with([
-            'genderName',
-            'educations',
-            'occupations',
-            'kunjungans' => function ($q) use ($today) {
-                $q->where('poli', 'poli-kb')->whereDate('created_at', $today)->select('id', 'pasien', 'created_at');
-            },
-        ])
+        $today = Carbon::now()->toDateString();
+        $query = Patients::with(['genderName', 'educations', 'occupations'])
             ->whereHas('kunjungans', function ($q) use ($today) {
-                $q->where('poli', 'poli-kb')->whereDate('created_at', $today);
+                $q->where('poli', 'poli-kb')->where('tanggal', $today);
             })
-            ->whereDoesntHave('actions');
-
+            ->whereDoesntHave('actions', function ($q) use ($today) {
+                $q->where('tipe', 'poli-kb')->where('tanggal', $today);
+            });
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('name', 'LIKE', "%{$searchValue}%")
@@ -328,7 +303,7 @@ class PatientsController extends Controller
         $data = $patients->items();
         $formattedData = [];
         foreach ($data as $patient) {
-            $kunjunganCreatedAt = optional($patient->kunjungans->first())->created_at;
+            $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
             $formattedData[] = [
                 'id' => $patient->id,
                 'name' => $patient->name,
@@ -363,22 +338,14 @@ class PatientsController extends Controller
         $searchValue = $request->input('search.value', '');
 
         $page = $start / $length + 1;
-        $today = Carbon::today();
-
-        // Query data pasien dengan filter kunjungan poli-umum
-        $query = Patients::with([
-            'genderName',
-            'educations',
-            'occupations',
-            'kunjungans' => function ($q) use ($today) {
-                $q->where('poli', 'ruang-tindakan')->whereDate('created_at', $today)->select('id', 'pasien', 'created_at');
-            },
-        ])
+        $today = Carbon::now()->toDateString();
+        $query = Patients::with(['genderName', 'educations', 'occupations'])
             ->whereHas('kunjungans', function ($q) use ($today) {
-                $q->where('poli', 'ruang-tindakan')->whereDate('created_at', $today); // Hanya pasien yang memiliki kunjungan ruang-tindakan
+                $q->where('poli', 'ruang-tindakan')->where('tanggal', $today);
             })
-            ->whereDoesntHave('actions');
-
+            ->whereDoesntHave('actions', function ($q) use ($today) {
+                $q->where('tipe', 'ruang-tindakan')->where('tanggal', $today);
+            });
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('name', 'LIKE', "%{$searchValue}%")
@@ -396,7 +363,7 @@ class PatientsController extends Controller
         $data = $patients->items();
         $formattedData = [];
         foreach ($data as $patient) {
-            $kunjunganCreatedAt = optional($patient->kunjungans->first())->created_at;
+            $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
             $formattedData[] = [
                 'id' => $patient->id,
                 'name' => $patient->name,
@@ -431,32 +398,49 @@ class PatientsController extends Controller
         $filterDate = $request->input('filterDate', null);
 
         $page = $start / $length + 1;
-        $query = DB::table('patients')
-            ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
-            ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
+        // $query = DB::table('patients')
+        // ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
+        // ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
+        // ->select(
+        //     'patients.id as patient_id', 'patients.*',
+        //     'actions.id as action_id', 'actions.*',
+        //     'kunjungan.id as kunjungan_id', 'kunjungan.*'
+        // )
+        // ->whereNotNull('kunjungan.id')
+        // ->whereNull('actions.diagnosa')
+        // ->where('kunjungan.poli', 'poli-umum');
+        $query = DB::table('kunjungan')
+            ->leftJoin('actions', function ($join) {
+                $join->on('kunjungan.pasien', '=', 'actions.id_patient')->whereRaw('DATE(kunjungan.tanggal) = DATE(actions.tanggal)'); // Pastikan tanggal sama
+            })
+            ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
-            ->where(function ($query) {
-                $query->whereNull('actions.diagnosa');
-            })
-            ->Where(function ($query) {
-                $query->where('kunjungan.poli', 'poli-umum');
-            });
+            ->whereNull('actions.diagnosa')
+            ->where('kunjungan.poli', 'poli-umum');
 
+        // $query = Kunjungan::with(['patient', 'patient.actions']) // ✅ Ambil relasi pasien & tindakan
+        // ->whereHas('patient.actions', function ($query) {
+        //     $query->whereNull('diagnosa'); // ✅ Filter yang belum punya diagnosa
+        // })
+        // ->where('poli', 'poli-umum');
+
+        // if ($filterDate) {
+        //     $query->whereBetween('kunjungan.created_at', [Carbon::parse($filterDate)->startOfDay(), Carbon::parse($filterDate)->endOfDay()]);
+        // }
         if ($filterDate) {
-            $query->whereBetween('kunjungan.created_at', [Carbon::parse($filterDate)->startOfDay(), Carbon::parse($filterDate)->endOfDay()]);
+            $query->where('kunjungan.tanggal', '=', $filterDate);
         }
 
         if (!empty($searchValue)) {
-            $query->where(function ($q) use ($searchValue) {
-                $q->where('patients.name', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
-            });
+            $query
+                ->where('name', 'LIKE', "%{$searchValue}%")
+                ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                ->orWhere('nik', 'LIKE', "%{$searchValue}%");
         }
 
         $patients = $query->paginate($length, ['*'], 'page', $page);
-
+        // dd($patients);
         return response()->json([
             'draw' => (int) $draw,
             'recordsTotal' => $patients->total(),
@@ -476,20 +460,18 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-      $query = DB::table('patients')
-            ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
-            ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
+        $query = DB::table('kunjungan')
+            ->leftJoin('actions', function ($join) {
+                $join->on('kunjungan.pasien', '=', 'actions.id_patient')->whereRaw('DATE(kunjungan.tanggal) = DATE(actions.tanggal)'); // Pastikan tanggal sama
+            })
+            ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
-            ->where(function ($query) {
-                $query->whereNull('actions.diagnosa');
-            })
-            ->Where(function ($query) {
-                $query->where('kunjungan.poli', 'poli-gigi');
-            });
+            ->whereNull('actions.diagnosa')
+            ->where('kunjungan.poli', 'poli-gigi');
 
         if ($filterDate) {
-            $query->whereBetween('kunjungan.created_at', [Carbon::parse($filterDate)->startOfDay(), Carbon::parse($filterDate)->endOfDay()]);
+            $query->where('kunjungan.tanggal', '=', $filterDate);
         }
 
         if (!empty($searchValue)) {
@@ -522,20 +504,17 @@ class PatientsController extends Controller
 
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
-        $query = DB::table('patients')
-            ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
-            ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
+        $query = DB::table('kunjungan')
+            ->leftJoin('actions', function ($join) {
+                $join->on('kunjungan.pasien', '=', 'actions.id_patient')->whereRaw('DATE(kunjungan.tanggal) = DATE(actions.tanggal)'); // Pastikan tanggal sama
+            })
+            ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
-            ->where(function ($query) {
-                $query->whereNull('actions.tindakan');
-            })
-            ->Where(function ($query) {
-                $query->where('kunjungan.poli', 'ruang-tindakan');
-            });
-
+            ->whereNull('actions.tindakan')
+            ->where('kunjungan.poli', 'ruang-tindakan');
         if ($filterDate) {
-            $query->whereBetween('kunjungan.created_at', [Carbon::parse($filterDate)->startOfDay(), Carbon::parse($filterDate)->endOfDay()]);
+            $query->where('kunjungan.tanggal', '=', $filterDate);
         }
 
         if (!empty($searchValue)) {
@@ -568,22 +547,18 @@ class PatientsController extends Controller
 
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
-       $query = DB::table('patients')
-            ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
-            ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
+        $query = DB::table('kunjungan')
+            ->leftJoin('actions', function ($join) {
+                $join->on('kunjungan.pasien', '=', 'actions.id_patient')->whereRaw('DATE(kunjungan.tanggal) = DATE(actions.tanggal)'); // Pastikan tanggal sama
+            })
+            ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
-            ->where(function ($query) {
-                $query->whereNull('actions.diagnosa');
-            })
-            ->Where(function ($query) {
-                $query->where('kunjungan.poli', 'poli-kb');
-            });
-
+            ->whereNull('actions.diagnosa')
+            ->where('kunjungan.poli', 'poli-kb');
         if ($filterDate) {
-            $query->where('actions.tanggal', '=', $filterDate);
+            $query->where('kunjungan.tanggal', '=', $filterDate);
         }
-
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('patients.name', 'LIKE', "%{$searchValue}%")
@@ -613,20 +588,18 @@ class PatientsController extends Controller
 
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
-       $query = DB::table('patients')
-            ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
-            ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
+        $query = DB::table('kunjungan')
+            ->leftJoin('actions', function ($join) {
+                $join->on('kunjungan.pasien', '=', 'actions.id_patient')->whereRaw('DATE(kunjungan.tanggal) = DATE(actions.tanggal)'); // Pastikan tanggal sama
+            })
+            ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
-            ->where(function ($query) {
-                $query->whereNull('actions.diagnosa');
-            })
-            ->Where(function ($query) {
-                $query->where('kunjungan.poli', 'poli-kia');
-            });
+            ->whereNull('actions.diagnosa')
+            ->where('kunjungan.poli', 'poli-kia');
 
         if ($filterDate) {
-            $query->where('actions.tanggal', '=', $filterDate);
+            $query->where('kunjungan.tanggal', '=', $filterDate);
         }
 
         if (!empty($searchValue)) {
@@ -665,7 +638,7 @@ class PatientsController extends Controller
             });
 
         if ($filterDate) {
-            $query->where('actions.tanggal', '=', $filterDate);
+            $query->where('kunjungan.tanggal', '=', $filterDate);
         }
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -693,7 +666,7 @@ class PatientsController extends Controller
 
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-umum')->whereNotNull('pemeriksaan_penunjang');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-umum')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -727,7 +700,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-gigi')->whereNotNull('pemeriksaan_penunjang');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-gigi')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
         }
@@ -761,7 +734,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'ruang-tindakan')->whereNotNull('pemeriksaan_penunjang');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'ruang-tindakan')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -796,7 +769,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kia')->whereNotNull('pemeriksaan_penunjang');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kia')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -831,7 +804,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kb')->whereNotNull('pemeriksaan_penunjang');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kb')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -864,7 +837,7 @@ class PatientsController extends Controller
 
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-umum')->whereNotNull('obat');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-umum')->whereNotNull('obat')->whereNull('update_obat');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -898,7 +871,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-gigi')->whereNotNull('obat');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-gigi')->whereNotNull('obat')->whereNull('update_obat');
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
         }
@@ -932,7 +905,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'ruang-tindakan')->whereNotNull('obat');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'ruang-tindakan')->whereNotNull('obat')->whereNull('update_obat');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -967,7 +940,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kia')->whereNotNull('obat');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kia')->whereNotNull('obat')->whereNull('update_obat');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -1002,7 +975,7 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kb')->whereNotNull('obat');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kb')->whereNotNull('obat')->whereNull('update_obat');
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -1034,6 +1007,15 @@ class PatientsController extends Controller
     {
         // Get the query builder for Patients model
         $patients = Patients::query();
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        if ($startDate) {
+            $patients->whereDate('created_at', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $patients->whereDate('created_at', '<=', $endDate);
+        }
 
         // Check if there's a search query
         if ($search = $request->get('search')['value']) {
@@ -1099,7 +1081,7 @@ class PatientsController extends Controller
                 'gender' => 'required|integer',
                 'place_birth' => 'required|string|max:255',
                 'dob' => 'required|date',
-                'no_rm' => 'required|string|max:255',
+                'no_family_folder' => 'required|string|max:255',
                 'marriage_status' => 'required|integer',
                 'blood_type' => 'required|string',
                 'education' => 'required|integer',
@@ -1112,8 +1094,10 @@ class PatientsController extends Controller
                 'address' => 'required|string|max:255',
                 'jenis_kartu' => 'required|string|max:255',
                 'nomor_kartu' => 'required|string|max:255',
+                'kunjungan' => 'nullable',
+                'wilayah_faskes' => 'nullable',
             ]);
-
+            // \Log::info($validatedData);
             // Check if patient with NIK exists
             $patient = Patients::where('nik', $validatedData['nik'])->first();
 
@@ -1126,7 +1110,6 @@ class PatientsController extends Controller
                 $patient->gender = $validatedData['gender'];
                 $patient->place_birth = $validatedData['place_birth'];
                 $patient->dob = $validatedData['dob'];
-                $patient->no_rm = $validatedData['no_rm'];
                 $patient->marrital_status = $validatedData['marriage_status'];
                 $patient->blood_type = $validatedData['blood_type'];
                 $patient->education = $validatedData['education'];
@@ -1141,6 +1124,13 @@ class PatientsController extends Controller
                 $patient->address = $validatedData['address'];
                 $patient->jenis_kartu = $validatedData['jenis_kartu'];
                 $patient->nomor_kartu = $validatedData['nomor_kartu'];
+                $patient->kunjungan = $validatedData['kunjungan'];
+                $patient->wilayah_faskes = $validatedData['wilayah_faskes'];
+                $patient->no_family_folder = $validatedData['no_family_folder'];
+                $lastPatient = Patients::whereRaw('LENGTH(no_rm) = 5 AND no_rm LIKE "0000%"')->orderByRaw('CAST(no_rm AS UNSIGNED) DESC')->first();
+                $lastNoRm = $lastPatient ? intval($lastPatient->no_rm) : 0;
+                $nextNoRm = str_pad($lastNoRm + 1, 5, '0', STR_PAD_LEFT);
+                $patient->no_rm = $nextNoRm;
                 $patient->save();
             }
             $existingVisit = Kunjungan::where('pasien', $patient->id)
@@ -1195,6 +1185,8 @@ class PatientsController extends Controller
                 'address' => 'required|string|max:255',
                 'jenis_kartu' => 'required|string|max:255',
                 'nomor_kartu' => 'required|string|max:255',
+                'kunjungan' => 'nullable',
+                'wilayah_faskes' => 'nullable',
             ]);
 
             // Find the patient record by ID
@@ -1222,6 +1214,8 @@ class PatientsController extends Controller
             $patient->address = $validatedData['address'];
             $patient->jenis_kartu = $validatedData['jenis_kartu'];
             $patient->nomor_kartu = $validatedData['nomor_kartu'];
+            $patient->kunjungan = $validatedData['kunjungan'];
+            $patient->wilayah_faskes = $validatedData['wilayah_faskes'];
 
             // Save the updated patient record
             $patient->save();

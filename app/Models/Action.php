@@ -108,8 +108,6 @@ class Action extends Model
     ];
 
     protected $casts = [
-        'riwayat_penyakit_keluarga' => 'array',
-        'riwayat_penyakit_tidak_menular' => 'array',
         'diagnosa' => 'array',
     ];
     /**

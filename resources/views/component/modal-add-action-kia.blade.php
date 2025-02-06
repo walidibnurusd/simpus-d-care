@@ -17,8 +17,7 @@
     }
 </style>
 <!-- Modal Add Action -->
-<div class="modal fade" style="z-index: 1050;" id="addActionModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" style="z-index: 1050;" id="addActionModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
@@ -32,6 +31,7 @@
                 <form id="addPatientForm" action="" method="POST" class="px-3">
                     @csrf
                     <input type="hidden" name="tipe" id="tipe" value="poli-kia">
+                    <input type="hidden" name="action_id" id="action_id">
                     <div class="row">
                         <div class="col-4">
                             <h5>Detail Pasien</h5>
@@ -62,7 +62,7 @@
                                                     name="nik" placeholder="NIK">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
-                                                        data-bs-toggle="modal" data-bs-target="#modalPasien">
+                                                        data-bs-toggle="modal" data-bs-target="#modalPasienDokter">
                                                         Cari
                                                     </button>
                                                 </div>
@@ -88,17 +88,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="kunjungan">Kunjungan</label>
-                                            <select class="form-control" id="kunjungan" name="kunjungan">
-                                                <option value="" disabled selected>Pilih Jenis Kunjungan</option>
-                                                <option value="baru">Baru </option>
-                                                <option value="lama">Lama </option>
 
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -119,17 +109,7 @@
                                                 name="nomor_kartu" placeholder="Masukkan Nomor" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="wilayah_faskes">Wilayah Faskes</label>
-                                            <select class="form-control" id="wilayah_faskes" name="faskes">
-                                                <option value="" disabled selected>Pilih Wilayah Faskes</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
 
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -551,63 +531,7 @@
     }
 </style>
 
-<script>
-    $(document).ready(function() {
-        $('#addPatientForm').submit(function(e) {
-            e.preventDefault();
-            let formData = $('#addPatientForm').serialize();
-            formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
-            let actionId = $('#action_id').val() ?? null;
 
-            // Tentukan URL berdasarkan ada tidaknya actionId
-            let url = actionId ? `/tindakan-dokter/${actionId}` : '/tindakan';
-            // console.log(url);
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    // Menggunakan SweetAlert2 untuk notifikasi
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.success || 'Data berhasil diproses!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                    $('#patientDetails').hide();
-                    $('#displayNIK').text('');
-                    $('#displayName').text('');
-                    $('#displayAge').text('');
-                    $('#displayPhone').text('');
-                    $('#displayAddress').text('');
-                    $('#displayBlood').text('');
-                    $('#displayRmNumber').text('');
-                    $('#diagnosa').text('');
-
-                    // Optionally reset the form fields (except for patient details)
-                    $('#addPatientForm')[0].reset();
-
-                    // Show the modal for searching a patient
-                    $('#modalPasien').modal('show');
-
-                    // Jika ingin menutup modal setelah sukses
-                    // $('#myModal').modal('hide');
-                },
-                error: function(xhr) {
-                    // Menampilkan pesan error menggunakan SweetAlert2 
-                    console.log(xhr);
-                    let errorMsg = xhr.responseJSON.error || "Terjadi kesalahan!";
-                    Swal.fire({
-                        title: 'Error!',
-                        text: errorMsg,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            });
-        });
-    });
-</script>
 
 <script>
     $(document).ready(function() {

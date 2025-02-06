@@ -10,6 +10,7 @@ use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SkriningController;
 use App\Http\Controllers\KunjunganController;
+use App\Http\Controllers\DiagnosaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -219,6 +220,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('kunjungan')->group(function () {
         Route::get('/', [App\Http\Controllers\KunjunganController::class, 'index'])->name('kunjungan.index');
         Route::post('/', [App\Http\Controllers\KunjunganController::class, 'store'])->name('kunjungan.store');
+        Route::put('/{id}', [App\Http\Controllers\KunjunganController::class, 'update'])->name('kunjungan.update');
+        Route::delete('/{id}', [App\Http\Controllers\KunjunganController::class, 'destroy'])->name('kunjungan.delete');
     });
     Route::prefix('admin')->group(function () {
         Route::prefix('kia')->group(function () {
@@ -443,6 +446,8 @@ Route::get('/get-patients-apotik/ruang-tindakan', [PatientsController::class, 'g
 Route::get('/get-patients-apotik/poli-kia', [PatientsController::class, 'getPatientsApotikKia'])->name('get-patients-apotik-kia');
 Route::get('/get-patients-apotik/poli-kb', [PatientsController::class, 'getPatientsApotikKb'])->name('get-patients-apotik-kb');
 
+//diagnosa
+Route::get('/get-diagnosa', [DiagnosaController::class, 'getDiagnosa']);
 //Language Change
 Route::get('lang/{locale}', function ($locale) {
     if (!in_array($locale, ['en', 'de', 'es', 'fr', 'pt', 'cn', 'ae'])) {

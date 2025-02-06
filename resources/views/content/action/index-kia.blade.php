@@ -111,6 +111,9 @@
                                             KELUHAN</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            DIAGNOSA</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             OBAT</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -187,6 +190,10 @@
                     {
                         data: 'keluhan',
                         name: 'keluhan'
+                    },
+                    {
+                        data: 'diagnosa',
+                        name: 'diagnosa'
                     },
                     {
                         data: 'obat',

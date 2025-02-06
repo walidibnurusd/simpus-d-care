@@ -30,7 +30,31 @@
                         <i class="fas fa-plus ms-2"></i> <!-- Icon with margin to the left -->
                     </button>
                 </div> --}}
+                <div class="button-container">
 
+                    <div class="row">
+                        <!-- Start Date -->
+                        <div class="col-md-4">
+                            <label for="start_date" class="form-label">Start Date</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control">
+                        </div>
+
+                        <!-- End Date -->
+                        <div class="col-md-4">
+                            <label for="end_date" class="form-label">End Date</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control">
+                        </div>
+
+                        <!-- Tombol Print -->
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" id="filterButton" class="btn btn-primary w-100">
+                                Cari <i class="fas fa-search ms-2"></i> <!-- Ikon Cari -->
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <h6>Daftar Data Kunjungan</h6>
@@ -40,7 +64,8 @@
                             <table id="patient" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            No
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -68,6 +93,9 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             TANGGAL INPUT</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            EDIT</th>
 
                                         {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             AKSI</th> --}}
@@ -133,7 +161,8 @@
                                                 <p class="text-xs mb-0">{{ $k->created_at->format('d-m-Y H:i:s') }}</p>
 
                                             </td>
-                                            {{-- <td>
+
+                                            <td>
                                                 <div class="action-buttons">
                                                     <button type="button"
                                                         class="mb-0 btn btn-primary btn-sm text-white font-weight-bold text-xs"
@@ -141,14 +170,16 @@
                                                         data-bs-target="#editKunjunganModal{{ $k->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
+
+                                                    @include('component.modal-edit-kunjungan')
                                                     <button type="button"
                                                         class="btn btn-danger btn-sm text-white font-weight-bold d-flex align-items-center btn-delete"
-                                                        data-form-action="{{ route('patient.destroy', $k->id) }}">
+                                                        data-form-action="{{ route('kunjungan.delete', $k->id) }}">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 </div>
 
-                                            </td> --}}
+                                            </td>
 
                                         </tr>
                                     @endforeach
@@ -168,9 +199,19 @@
 
 @section('script')
     <script>
-        $(document).ready(function() {
-            $('#patient').DataTable({
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('filterButton').addEventListener('click', function() {
+                // Get the values of the start and end dates
+                var startDate = document.getElementById('start_date').value;
+                var endDate = document.getElementById('end_date').value;
 
+                // Redirect the page with the selected date filters as query parameters
+                window.location.href = '{{ route('kunjungan.index') }}?start_date=' + startDate +
+                    '&end_date=' + endDate;
+            });
+
+            // DataTable initialization
+            $('#patient').DataTable({
                 "language": {
                     "info": "_PAGE_ dari _PAGES_ halaman",
                     "paginate": {
