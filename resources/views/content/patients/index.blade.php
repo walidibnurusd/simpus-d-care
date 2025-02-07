@@ -104,6 +104,9 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             No RM</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            No FAMILY FOLDER</th>
 
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -209,6 +212,10 @@
                     {
                         data: 'no_rm',
                         name: 'no_rm'
+                    },
+                    {
+                        data: 'no_family_folder',
+                        name: 'no_family_folder'
                     },
                     {
                         data: 'created_at',

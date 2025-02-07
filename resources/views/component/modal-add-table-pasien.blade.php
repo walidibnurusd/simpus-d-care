@@ -10,6 +10,8 @@
                     <thead>
                         <tr>
                             <th>NIK</th>
+                            <th>NO RM</th>
+                            <th>NO Family Folder</th>
                             <th>Nama</th>
                             <th>Alamat</th>
                             <th>Tanggal Lahir</th>
@@ -49,6 +51,13 @@
                 columns: [{
                         data: 'nik',
                         name: 'nik'
+                    },
+                    {
+                        data: 'no_rm',
+                        name: 'no_rm'
+                    }, {
+                        data: 'no_family_folder',
+                        name: 'no_family_folder'
                     },
                     {
                         data: 'name',

@@ -61,7 +61,7 @@
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-4">
-                            <table id="patient" class="table align-items-center mb-0">
+                            <table id="kunjungan-table" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -95,95 +95,13 @@
                                             TANGGAL INPUT</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            EDIT</th>
+                                            AKSI</th>
 
                                         {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             AKSI</th> --}}
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($kunjungan as $index => $k)
-                                        <tr>
-                                            <td>
-                                                <h6 class="mb-0 text-sm">{{ $index + 1 }}</h6> <!-- Row number -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $k->patient->nik }}</p>
-                                                <!-- NIK -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $k->patient->no_rm }}</p>
-                                                <!-- No RM -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $k->patient->name }}</p>
-                                                <!-- Name -->
-                                            </td>
-                                            <td>
-                                                <p class="text-xs  mb-0">{{ $k->patient->place_birth }}</p>
-                                                <p class="text-xs  mb-0">{{ $k->patient->dob }}
-                                                    <span class="age-red">({{ $k->patient->getAgeAttribute() }}-thn)</span>
-                                                </p>
-                                                <!-- Date of Birth -->
-                                            </td>
 
-                                            <td>
-                                                @if ($k->poli == 'poli-umum')
-                                                    <p class="text-xs  mb-0">Poli Umum</p>
-                                                @elseif($k->poli == 'poli-gigi')
-                                                    <p class="text-xs  mb-0">Poli Gigi</p>
-                                                @elseif($k->poli == 'poli-kia')
-                                                    <p class="text-xs  mb-0">Poli KIA</p>
-                                                @elseif($k->poli == 'poli-kb')
-                                                    <p class="text-xs  mb-0">Poli KB</p>
-                                                @else
-                                                    <p class="text-xs  mb-0">UGD</p>
-                                                @endif
-                                                <!-- No RM -->
-                                            </td>
-                                            <td>
-                                                @if ($k->hamil == '1')
-                                                    <p class="text-xs  mb-0">Ya</p>
-                                                @else
-                                                    <p class="text-xs  mb-0">Tidak</p>
-                                                @endif
-                                                <!-- No RM -->
-                                            </td>
-                                            <td>
-                                                @if ($k->patient->getAgeAttribute() < 18 || $k->hamil == '1')
-                                                    <p class="text-xs mb-0">Klaster 2</p>
-                                                @else
-                                                    <p class="text-xs mb-0">Klaster 3</p>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                <p class="text-xs mb-0">{{ $k->created_at->format('d-m-Y H:i:s') }}</p>
-
-                                            </td>
-
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <button type="button"
-                                                        class="mb-0 btn btn-primary btn-sm text-white font-weight-bold text-xs"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#editKunjunganModal{{ $k->id }}">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-
-                                                    @include('component.modal-edit-kunjungan')
-                                                    <button type="button"
-                                                        class="btn btn-danger btn-sm text-white font-weight-bold d-flex align-items-center btn-delete"
-                                                        data-form-action="{{ route('kunjungan.delete', $k->id) }}">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                </div>
-
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
 
                         </div>
@@ -199,30 +117,74 @@
 
 @section('script')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('filterButton').addEventListener('click', function() {
-                // Get the values of the start and end dates
-                var startDate = document.getElementById('start_date').value;
-                var endDate = document.getElementById('end_date').value;
-
-                // Redirect the page with the selected date filters as query parameters
-                window.location.href = '{{ route('kunjungan.index') }}?start_date=' + startDate +
-                    '&end_date=' + endDate;
-            });
-
-            // DataTable initialization
-            $('#patient').DataTable({
-                "language": {
-                    "info": "_PAGE_ dari _PAGES_ halaman",
-                    "paginate": {
-                        "previous": "<",
-                        "next": ">",
-                        "first": "<<",
-                        "last": ">>"
+        $(document).ready(function() {
+            // Initialize DataTable with pagination
+            var table = $('#kunjungan-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('kunjungan.index') }}',
+                    data: function(d) {
+                        // Send filter data along with the request
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
                     }
                 },
-                "responsive": true,
-                "lengthMenu": [10, 25, 50, 100] // Set the number of rows per page
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'patient_nik',
+                        name: 'patient_nik'
+                    },
+                    {
+                        data: 'patient_no_rm',
+                        name: 'patient_no_rm'
+                    },
+                    {
+                        data: 'patient_name',
+                        name: 'patient_name'
+                    },
+                    {
+                        data: 'patient_age',
+                        name: 'patient_age'
+                    },
+                    {
+                        data: 'poli',
+                        name: 'poli'
+                    },
+                    {
+                        data: 'hamil',
+                        name: 'hamil'
+                    },
+                    {
+                        data: 'patient_klaster',
+                        name: 'patient_klaster'
+                    },
+                    {
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                pageLength: 10, // Set default page size
+                lengthMenu: [10, 25, 50, 100], // Set available page sizes
+                drawCallback: function(settings) {
+                    // You can adjust the pagination here if needed, for example:
+                    var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                }
+            });
+
+            // Filter Form Submission (on change)
+            $('#filter-form').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+                table.draw(); // Redraw DataTable with new filters
             });
         });
     </script>
@@ -254,50 +216,55 @@
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.btn-delete').forEach(function(button) {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
+        document.addEventListener('click', function(event) {
+            // Check if the clicked element has the class 'btn-delete'
+            if (event.target.closest('.btn-delete')) {
+                event.preventDefault();
 
-                    var formAction = this.getAttribute('data-form-action');
+                const button = event.target.closest('.btn-delete');
+                const buttonId = button.id;
+                const kunjunganId = buttonId.split('-').pop();
 
-                    Swal.fire({
-                        title: 'Konfirmasi Penghapusan',
-                        text: 'Apakah Anda yakin ingin menghapus pasien ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Hapus',
-                        cancelButtonText: 'Batal',
-                        customClass: {
-                            popup: 'swal2-popup-custom'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Create and submit the form
-                            var form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = formAction;
+                // Build the delete URL
+                const deleteUrl = `{{ url('/kunjungan/') }}/${kunjunganId}`;
 
-                            var csrfToken = document.createElement('input');
-                            csrfToken.type = 'hidden';
-                            csrfToken.name = '_token';
-                            csrfToken.value = "{{ csrf_token() }}";
-                            form.appendChild(csrfToken);
+                // Show SweetAlert2 confirmation
+                Swal.fire({
+                    title: 'Konfirmasi Penghapusan',
+                    text: 'Apakah Anda yakin ingin menghapus pasien ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Hapus',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Create a form element dynamically for deletion
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = deleteUrl;
 
-                            var methodField = document.createElement('input');
-                            methodField.type = 'hidden';
-                            methodField.name = '_method';
-                            methodField.value = 'DELETE';
-                            form.appendChild(methodField);
+                        // Add CSRF token
+                        const csrfField = document.createElement('input');
+                        csrfField.type = 'hidden';
+                        csrfField.name = '_token';
+                        csrfField.value = '{{ csrf_token() }}';
+                        form.appendChild(csrfField);
 
-                            document.body.appendChild(form);
-                            form.submit();
-                        }
-                    });
+                        // Add DELETE method
+                        const methodField = document.createElement('input');
+                        methodField.type = 'hidden';
+                        methodField.name = '_method';
+                        methodField.value = 'DELETE';
+                        form.appendChild(methodField);
+
+                        // Append and submit the form
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
                 });
-            });
+            }
         });
     </script>
 @endsection

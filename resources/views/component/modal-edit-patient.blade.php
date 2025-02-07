@@ -44,9 +44,10 @@
                     <div class="row g-2">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="no_rm">NOMOR RM</label>
-                                <input type="text" class="form-control" id="no_rm" name="no_rm"
-                                    placeholder="Nomor RM" value="{{ old('no_rm', $patient->no_rm) }}" required>
+                                <label for="no_family_folder">Nomor Family Folder</label>
+                                <input type="text" class="form-control" id="no_family_folder" name="no_family_folder"
+                                    placeholder="Nomor Family Folder"
+                                    value="{{ old('no_family_folder', $patient->no_family_folder) }}" required>
                             </div>
                         </div>
                     </div>
@@ -54,7 +55,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="phone">Telpon/WA</label>
-                                <input type="text" class="form-control" id="phone" name="phone"
+                                <input type="number" class="form-control" id="phone" name="phone"
                                     placeholder="Telpon/WA" value="{{ old('phone', $patient->phone) }}" required>
                             </div>
                         </div>

@@ -85,17 +85,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="kunjungan">Kunjungan</label>
-                                            <select class="form-control" id="kunjungan" name="kunjungan" disabled>
-                                                <option value="" disabled selected>Pilih Jenis Kunjungan</option>
-                                                <option value="baru">Baru </option>
-                                                <option value="lama">Lama </option>
-
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>

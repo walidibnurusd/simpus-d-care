@@ -1263,6 +1263,10 @@ class ActionController extends Controller
                 'pembekuan_darah' => 'nullable',
                 'tipe' => 'nullable',
             ]);
+            $existingAction = Action::where('id_patient', $validated['id_patient'])->where('tanggal', $validated['tanggal'])->where('tipe', $validated['tipe'])->first();
+ if ($existingAction) {
+            return; 
+        }
 
             $action = Action::create($validated);
             return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);

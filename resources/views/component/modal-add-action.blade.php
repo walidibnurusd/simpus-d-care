@@ -312,7 +312,8 @@
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString('en-CA');
+
         document.getElementById('tanggal').value = today;
         const selectElement = document.getElementById('riwayat_penyakit_dulu');
         const selectPenyakitKeluargaElement = document.getElementById('riwayat_penyakit_keluarga');

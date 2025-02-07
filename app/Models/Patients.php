@@ -46,4 +46,5 @@ class Patients extends Model
     {
         return $this->hasMany(Action::class, 'id_patient', 'id');
     }
+    
 }

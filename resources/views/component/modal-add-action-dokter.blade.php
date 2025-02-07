@@ -637,7 +637,8 @@
                                     </select>
                                 </div>
                             </div>
-
+                        @endif
+                        @if ($routeName === 'action.dokter.index')
                             <div class="col-md-4">
                                 <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang
                                     Tindakan</label>
@@ -648,7 +649,6 @@
                                 </select>
                             </div>
                         @endif
-
 
                         <div class="col-md-4">
                             <label for="alkohol" style="color: rgb(19, 11, 241);">KETERANGAN</label>

@@ -290,7 +290,7 @@
                         <div class="col-md-4 mt-2">
                             <div class="form-group">
                                 <label for="poli">Poli Tujuan Berobat</label>
-                                <select class="form-control" id="poli_berobat" name="poli_berobat">
+                                <select class="form-control" id="poli_berobat" name="poli_berobat" required>
                                     <option value="">Pilih</option>
                                     <option value="poli-umum">Poli Umum</option>
                                     <option value="poli-gigi">Poli Gigi</option>
@@ -303,7 +303,7 @@
                         <div class="col-md-4 mt-2">
                             <div class="form-group">
                                 <label for="hamil">Hamil?</label>
-                                <select class="form-control" id="hamil" name="hamil">
+                                <select class="form-control" id="hamil" name="hamil" required>
                                     <option value="">Pilih</option>
                                     <option value="1">Ya</option>
                                     <option value="0">Tidak</option>

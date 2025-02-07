@@ -70,7 +70,8 @@ class PatientsController extends Controller
                 ->where('name', 'LIKE', "%{$searchValue}%")
                 ->orWhere('address', 'LIKE', "%{$searchValue}%")
                 ->orWhere('nik', 'LIKE', "%{$searchValue}%")
-                ->orWhere('nik', 'LIKE', "%{$searchValue}%")
+                ->orWhere('no_rm', 'LIKE', "%{$searchValue}%")
+                ->orWhere('no_family_folder', 'LIKE', "%{$searchValue}%")
                 ->orWhereHas('genderName', function ($q) use ($searchValue) {
                     $q->where('gender', 'LIKE', "%{$searchValue}%");
                 });
@@ -1172,7 +1173,7 @@ class PatientsController extends Controller
                 'gender' => 'required|integer',
                 'place_birth' => 'required|string|max:255',
                 'dob' => 'required|date',
-                'no_rm' => 'required|string|max:255',
+                'no_family_folder' => 'required|string|max:255',
                 'marriage_status' => 'required|integer',
                 'blood_type' => 'required|string',
                 'education' => 'required|integer',
@@ -1199,7 +1200,7 @@ class PatientsController extends Controller
             $patient->gender = $validatedData['gender'];
             $patient->place_birth = $validatedData['place_birth'];
             $patient->dob = $validatedData['dob'];
-            $patient->no_rm = $validatedData['no_rm'];
+            $patient->no_family_folder = $validatedData['no_family_folder'];
             $patient->marrital_status = $validatedData['marriage_status'];
             $patient->blood_type = $validatedData['blood_type'];
             $patient->education = $validatedData['education'];

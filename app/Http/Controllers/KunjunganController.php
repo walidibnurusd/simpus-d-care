@@ -8,59 +8,160 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Facades\DataTables;
 
 class KunjunganController extends Controller
 {
     public function index(Request $request)
     {
-        // Get the filtering dates from the request
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->ajax()) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
 
-        $kunjungan = Kunjungan::with('patient');
+            $kunjungansQuery = Kunjungan::with('patient');
 
-        if ($startDate) {
-            $kunjungan->whereDate('tanggal', '>=', $startDate);
+            if ($startDate) {
+                $kunjungansQuery->whereDate('tanggal', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $kunjungansQuery->whereDate('tanggal', '<=', $endDate);
+            }
+
+            $kunjungansQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
+            $kunjungans = $kunjungansQuery->get();
+
+            return DataTables::of($kunjungans)
+                ->addIndexColumn()
+                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+                ->addColumn('patient_no_rm', fn($row) => optional($row->patient)->no_rm)
+                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+                ->addColumn('patient_age', function ($row) {
+                    $patient = $row->patient;
+                    if ($patient) {
+                        return $patient->place_birth . ' / ' . $patient->dob . ' (' . $patient->getAgeAttribute() . '-thn)';
+                    }
+                    return '-';
+                })
+                ->editColumn('poli', function ($row) {
+                    // Check the value of 'poli' and return the corresponding string
+                    if ($row->poli == 'poli-umum') {
+                        return 'Poli Umum';
+                    } elseif ($row->poli == 'poli-gigi') {
+                        return 'Poli Gigi';
+                    } elseif ($row->poli == 'poli-kia') {
+                        return 'Poli KIA';
+                    } elseif ($row->poli == 'poli-kb') {
+                        return 'Poli KB';
+                    } else {
+                        return 'UGD';
+                    }
+                })
+                ->editColumn('hamil', function ($row) {
+                    // Check the value of 'poli' and return the corresponding string
+                    if ($row->hamil == 1) {
+                        return 'Ya';
+                    } else {
+                        return 'Tidak';
+                    }
+                })
+                ->addColumn('patient_klaster', function ($row) {
+                    $patient = $row->patient;
+                    if ($patient) {
+                        if ($patient->getAgeAttribute() < 18 || $row->hamil == 1) {
+                            return 'Klaster 2';
+                        } else {
+                            return 'Klaster 3';
+                        }
+                    }
+                })
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->addColumn('action', function ($row) {
+                    // Get the doctor list
+                    // Render modal edit with route name
+                    $editModal = view('component.modal-edit-kunjungan', ['k' => $row])->render();
+
+                    return '<div class="action-buttons">
+                                <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editKunjunganModal' .
+                        $row->id .
+                        '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form action="' .
+                        route('action.destroy', $row->id) .
+                        '" method="POST" class="d-inline">
+                                    ' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '
+                                     <!-- Delete Button with a Unique ID -->
+                        <button type="button" class="btn btn-danger btn-sm text-white font-weight-bold d-flex align-items-center btn-delete" id="delete-button-' .
+                        $row->id .
+                        '">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                                </form>
+                            </div>' .
+                        $editModal;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
 
-        if ($endDate) {
-            $kunjungan->whereDate('tanggal', '<=', $endDate);
-        }
-
-        $kunjungan = $kunjungan->get();
-        // Return the view with the data
-        return view('content.kunjungan.index', compact('kunjungan'));
+        return view('content.kunjungan.index');
     }
 
     public function update(Request $request, $id)
     {
         try {
-            // Find the action record to be updated
             $kunjungan = Kunjungan::findOrFail($id);
-            // Validate the request
+
             $validated = $request->validate([
                 'poli' => 'nullable',
                 'hamil' => 'nullable',
             ]);
+
             $kunjungan->update([
                 'poli' => $validated['poli'] ?? $kunjungan->poli,
                 'hamil' => $validated['hamil'] ?? $kunjungan->hamil,
             ]);
 
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => 'Kunjungan berhasil diperbarui']);
+            }
+
             return redirect()->route('kunjungan.index')->with('success', 'Kunjungan Berhasil Diedit');
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+            }
+
             return redirect()
                 ->back()
-                ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
-                ->withInput();
+                ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
-    public function destroy($id)
-    {
-        $kunjungan = Kunjungan::findOrFail($id);
-        $kunjungan->delete();
 
-        // Redirect with a success message
-        return redirect()->route('kunjungan.index')->with('success', 'Kunjungan berhasil dihapus');
+    public function destroy(Request $request, $id)
+    {
+        try {
+            $kunjungan = Kunjungan::findOrFail($id);
+            $kunjungan->delete();
+
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => 'Kunjungan berhasil dihapus']);
+            }
+
+            return redirect()->route('kunjungan.index')->with('success', 'Kunjungan berhasil dihapus');
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+            }
+
+            return redirect()
+                ->route('kunjungan.index')
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }
