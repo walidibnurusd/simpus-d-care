@@ -93,7 +93,7 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            console.log(data);
+
                             return `
                         <button class="btn btn-success btnPilihPasien" 
                         data-id-patient="${row.id}" 
@@ -343,18 +343,26 @@
             $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
             $('#keluhan').val(data.keluhan);
             var diagnosaArray = JSON.parse(data.diagnosa); // Parse the diagnosa data
-            console.log("Diagnosa Array:", diagnosaArray); // Debugging step
 
-            // Manually select options in the dropdown
+            // Clear previous selections before setting new ones
+            $('#diagnosaEdit').val([]).trigger('change'); // Clear previous selections
+
+            // Ensure the select element has the 'multiple' attribute for multi-selection
+            $('#diagnosaEdit').attr('multiple', 'multiple'); // Ensure it's a multi-select dropdown
+
+            // Manually mark options as selected based on diagnosaArray
             $('#diagnosaEdit option').each(function() {
-                if (diagnosaArray.includes($(this).val())) {
+                if (diagnosaArray.includes(parseInt($(this).val()))) {
                     $(this).prop('selected', true); // Mark the option as selected
                 }
             });
 
-            // If using Select2, reinitialize it after setting the values
-            $('#diagnosaEdit').trigger('change');
+            // Trigger the change event to update Select2 after manually selecting options
+            $('#diagnosaEdit').trigger('change'); // This should update Select2 if it's used
 
+            // Reinitialize Select2 if necessary to ensure the selected options are displayed
+
+            $('#diagnosaEdit').select2();
             $('#icd10').val(data.icd10);
             $('#tindakan').val(data.tindakan).trigger('change');
             $('#rujuk_rs').val(data.rujukrs);
@@ -430,7 +438,7 @@
                             // Tampilkan modal hanya setelah data pasien berhasil diperbarui
                             $('#modalPasienDokter').modal('show');
                         } else {
-                            console.warn("Data pasien belum ter-refresh.");
+                            // console.warn("Data pasien belum ter-refresh.");
                         }
                     }, 500); // Delay 500ms untuk memastikan data sudah ter-load
                 },

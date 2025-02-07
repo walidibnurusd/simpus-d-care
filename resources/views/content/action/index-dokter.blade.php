@@ -484,7 +484,7 @@
                     });
 
                     $('#filterButton').on('click', function() {
-                        console.log('Filter button clicked');
+
                         table.ajax.reload(); // Corrected reload function
                     });
                 });
@@ -610,7 +610,7 @@
                     });
 
                     $('#filterButton').on('click', function() {
-                        console.log('Filter button clicked');
+
                         table.ajax.reload(); // Corrected reload function
                     });
                 });

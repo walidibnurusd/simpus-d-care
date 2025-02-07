@@ -612,17 +612,18 @@
                             <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                         </div>
 
-                        @if ($routeName == 'action.dokter.ruang.tindakan.index'){
+                        @if ($routeName == 'action.dokter.ruang.tindakan.index')
                             <div class="col-md-4">
                                 <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
+                                <select class="form-control" id="diagnosaEdit" name="diagnosa[]" disabled>
+                                    <option value="" disabled selected>Pilih</option>
                                     @foreach ($diagnosa as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
-                            }
+
                         @endif
                         @if (Auth::user()->role != 'tindakan')
                             <div class="col-md-4">
