@@ -456,11 +456,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div style="display: flex; align-items: center; text-align: center;">
+                                    {{-- <div style="display: flex; align-items: center; text-align: center;">
                                         <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                                         <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Penunjang</span>
                                         <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
-                                    </div>
+                                    </div> --}}
                                 @endif
                             </div>
                         </div>
@@ -487,12 +487,12 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                {{-- <div class="col-md-4">
                                     <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
                                         Penunjang</label>
                                     <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
                                         placeholder="Pemeriksaan Penunjang"></textarea>
-                                </div>
+                                </div> --}}
                             </div>
                         @endif
                         <div class="row mt-3">

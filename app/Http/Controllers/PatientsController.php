@@ -1103,6 +1103,7 @@ class PatientsController extends Controller
                 'nomor_kartu' => 'required|string|max:255',
                 'kunjungan' => 'nullable',
                 'wilayah_faskes' => 'nullable',
+                'tanggal' => 'nullable',
             ]);
             // \Log::info($validatedData);
             // Check if patient with NIK exists
@@ -1141,10 +1142,7 @@ class PatientsController extends Controller
                 $patient->no_rm = $nextNoRm;
                 $patient->save();
             }
-            $existingVisit = Kunjungan::where('pasien', $patient->id)
-                ->where('poli', $validatedData['poli_berobat'])
-                ->where('tanggal', now()->toDateString())
-                ->first();
+            $existingVisit = Kunjungan::where('pasien', $patient->id)->where('poli', $validatedData['poli_berobat'])->where('tanggal', $validatedData['tanggal'])->first();
 
             if (!$existingVisit) {
                 // Create a new Kunjungan entry if it doesn't exist
@@ -1152,7 +1150,7 @@ class PatientsController extends Controller
                     'pasien' => $patient->id,
                     'poli' => $validatedData['poli_berobat'],
                     'hamil' => $validatedData['hamil'],
-                    'tanggal' => now(),
+                    'tanggal' => $validatedData['tanggal'],
                 ]);
             }
 

@@ -289,6 +289,13 @@
                     <div class="row g-2 mt-2">
                         <div class="col-md-4 mt-2">
                             <div class="form-group">
+                                <label for="tanggal">Tanggal Berobat</label>
+                                <input type="date" class="form-control" name="tanggal" id="tanggal"
+                                    placeholder="Pilih Tanggal">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
                                 <label for="poli">Poli Tujuan Berobat</label>
                                 <select class="form-control" id="poli_berobat" name="poli_berobat" required>
                                     <option value="">Pilih</option>
@@ -350,6 +357,9 @@
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toLocaleDateString('en-CA');
+
+        document.getElementById('tanggal').value = today;
         const dobInput = document.getElementById('dob');
         const klasterSelect = document.getElementById('klaster');
         const hamilInput = document.getElementById('hamil');
