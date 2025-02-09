@@ -212,11 +212,35 @@
                     },
                     {
                         data: 'kunjungan',
-                        name: 'kunjungan'
+                        render: function(data, type, row) {
+
+                            let kunjungan = data || row.patient.kunjungan;
+
+
+                            if (kunjungan === 1 || kunjungan === 'baru') {
+                                return 'Baru';
+                            } else if (kunjungan === 0 || kunjungan === 'lama') {
+                                return 'Lama';
+                            } else {
+                                return kunjungan;
+                            }
+                        }
                     },
                     {
                         data: 'faskes',
-                        name: 'faskes'
+                        render: function(data, type, row) {
+
+                            let faskes = data || row.patient.wilayah_faskes;
+
+
+                            if (faskes === 1 || faskes === 'ya') {
+                                return 'Ya';
+                            } else if (faskes === 0 || faskes === 'tidak') {
+                                return 'Luar Wilayah';
+                            } else {
+                                return faskes;
+                            }
+                        }
                     },
                     @if (Auth::user()->role == 'dokter')
                         {

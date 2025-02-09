@@ -140,14 +140,77 @@
 
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->pemeriksaan_penunjang) }}
+                                                    {{ ucwords($action->pemeriksaan_penunjang ?? implode(', ', json_decode($action->hasilLab->jenis_pemeriksaan, true) ?? [])) }}
                                                 </p>
                                             </td>
+
+
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->hasil_lab) }}
+                                                    @if (!empty($action->hasil_lab))
+                                                        {{ ucwords($action->hasil_lab) }}
+                                                    @elseif (!empty($action->hasilLab))
+                                                        @php
+                                                            $jenis_pemeriksaan = is_array(
+                                                                $action->hasilLab->jenis_pemeriksaan,
+                                                            )
+                                                                ? $action->hasilLab->jenis_pemeriksaan
+                                                                : json_decode(
+                                                                    $action->hasilLab->jenis_pemeriksaan,
+                                                                    true,
+                                                                );
+                                                            $hasilLabValues = [];
+
+                                                            if (in_array('GDS', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'GDS: ' . ($action->hasilLab->gds ?? '-');
+                                                            }
+                                                            if (in_array('GDP', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'GDP: ' . ($action->hasilLab->gdp ?? '-');
+                                                            }
+                                                            if (in_array('GDP 2 Jam PP', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'GDP 2 Jam PP: ' .
+                                                                    ($action->hasilLab->gdp_2_jam_pp ?? '-');
+                                                            }
+                                                            if (in_array('Cholesterol', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Cholesterol: ' .
+                                                                    ($action->hasilLab->cholesterol ?? '-');
+                                                            }
+                                                            if (in_array('Asam Urat', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Asam Urat: ' .
+                                                                    ($action->hasilLab->asam_urat ?? '-');
+                                                            }
+                                                            if (in_array('Leukosit', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Leukosit: ' . ($action->hasilLab->leukosit ?? '-');
+                                                            }
+                                                            if (in_array('Eritrosit', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Eritrosit: ' .
+                                                                    ($action->hasilLab->eritrosit ?? '-');
+                                                            }
+                                                            if (in_array('Trombosit', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Trombosit: ' .
+                                                                    ($action->hasilLab->trombosit ?? '-');
+                                                            }
+                                                            if (in_array('Hemoglobin', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Hemoglobin: ' .
+                                                                    ($action->hasilLab->hemoglobin ?? '-');
+                                                            }
+                                                        @endphp
+                                                        {{ implode(', ', $hasilLabValues) }}
+                                                    @else
+                                                        -
+                                                    @endif
                                                 </p>
                                             </td>
+
 
                                             <td>
                                                 <div class="action-buttons">

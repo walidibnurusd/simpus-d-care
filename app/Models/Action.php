@@ -117,7 +117,10 @@ class Action extends Model
     {
         return $this->belongsTo(Patients::class, 'id_patient');
     }
-
+    public function hasilLab()
+    {
+        return $this->hasOne(HasilLab::class, 'id_action','id');
+    }
     /**
      * Relasi ke model Doctor
      */

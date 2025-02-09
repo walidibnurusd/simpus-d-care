@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Hospital;
 use App\Models\Patients;
 use App\Models\Kunjungan;
+use App\Models\HasilLab;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -272,7 +273,7 @@ class ActionController extends Controller
             $startDate = $request->input('start_date');
             $endDate = $request->input('end_date');
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab'])
                 ->where('tipe', 'poli-umum')
                 ->whereNotNull('diagnosa');
 
@@ -625,7 +626,12 @@ class ActionController extends Controller
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'poli-umum')->whereNotNull('hasil_lab');
+        $actionsQuery = Action::with('hasilLab')
+            ->where('tipe', 'poli-umum')
+            ->whereNotNull('hasil_lab')
+            ->orWhereHas('hasilLab', function ($q) {
+                $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid');
+            });
 
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -634,8 +640,6 @@ class ActionController extends Controller
         if ($endDate) {
             $actionsQuery->whereDate('tanggal', '<=', $endDate);
         }
-
-        $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
         $actions = $actionsQuery->get();
 
@@ -653,7 +657,12 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
 
-        $actionsQuery = Action::where('tipe', 'poli-gigi')->whereNotNull('hasil_lab');
+        $actionsQuery = Action::with('hasilLab')
+            ->where('tipe', 'poli-gigi')
+            ->whereNotNull('hasil_lab')
+            ->orWhereHas('hasilLab', function ($q) {
+                $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid');
+            });
 
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -681,7 +690,12 @@ class ActionController extends Controller
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'ruang-tindakan')->whereNotNull('hasil_lab');
+        $actionsQuery = Action::with('hasilLab')
+            ->where('tipe', 'ruang-tindakan')
+            ->whereNotNull('hasil_lab')
+            ->orWhereHas('hasilLab', function ($q) {
+                $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid');
+            });
 
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -707,7 +721,12 @@ class ActionController extends Controller
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'poli-kia')->whereNotNull('hasil_lab');
+        $actionsQuery = Action::with('hasilLab')
+            ->where('tipe', 'poli-kia')
+            ->whereNotNull('hasil_lab')
+            ->orWhereHas('hasilLab', function ($q) {
+                $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid');
+            });
 
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -733,13 +752,12 @@ class ActionController extends Controller
 
         $penyakit = Disease::all();
         $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('hasil_lab');
-
-        $diagnosa = Diagnosis::all();
-
-        $penyakit = Disease::all();
-        $rs = Hospital::all();
-        $actionsQuery = Action::where('tipe', 'poli-kb')->whereNotNull('hasil_lab');
+        $actionsQuery = Action::with('hasilLab')
+            ->where('tipe', 'poli-kb')
+            ->whereNotNull('hasil_lab')
+            ->orWhereHas('hasilLab', function ($q) {
+                $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid');
+            });
 
         if ($startDate) {
             $actionsQuery->whereDate('tanggal', '>=', $startDate);
@@ -1264,11 +1282,15 @@ class ActionController extends Controller
                 'tipe' => 'nullable',
             ]);
             $existingAction = Action::where('id_patient', $validated['id_patient'])->where('tanggal', $validated['tanggal'])->where('tipe', $validated['tipe'])->first();
- if ($existingAction) {
-            return; 
-        }
+            if ($existingAction) {
+                return;
+            }
 
             $action = Action::create($validated);
+            HasilLab::create([
+                'id_action' => $action->id,
+                'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan),
+            ]);
             return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
@@ -1461,7 +1483,7 @@ class ActionController extends Controller
             $request->merge([
                 'id_patient' => $patient->id,
             ]);
-            // dd($request->);
+
             // Validate the request
             $validated = $request->validate([
                 'id_patient' => 'required',
@@ -1581,32 +1603,15 @@ class ActionController extends Controller
             $validated['tablet_fe'] = $validated['tablet_fe'] ?? 0;
             $validated['proteinuria'] = $validated['proteinuria'] ?? 0;
             $validated['periksa_usg'] = $validated['periksa_usg'] ?? 0;
-            //     $action->update($validated);
 
-            //     if ($action->tipe === 'poli-umum') {
-            //         $route = 'action.dokter.index';
-            //     } elseif ($action->tipe === 'poli-gigi') {
-            //         $route = 'action.dokter.gigi.index';
-            //     } elseif ($action->tipe === 'poli-kia') {
-            //         $route = 'action.kia.dokter.index';
-            //     } elseif ($action->tipe === 'poli-kb') {
-            //         $route = 'action.kb.dokter.index';
-            //     } elseif ($action->tipe == 'ruang-tindakan') {
-            //         $route = 'action.dokter.ugd.index';
-            //     } else {
-            //         $route = 'action.dokter.ruang.tindakan.index';
-            //     }
-
-            //     return redirect()->route($route)->with('success', 'Action has been successfully updated.');
-            // } catch (\Exception $e) {
-            //     return redirect()
-            //         ->back()
-            //         ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
-            //         ->withInput();
-            // }
             if ($id != null) {
                 // Jika ID diberikan, update data yang sudah ada
                 $action = Action::find($id);
+                HasilLab::create([
+                    'id_action' => $action->id,
+                    'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                ]);
+
                 if (!$action) {
                     return response()->json(['error' => 'Action not found'], 404);
                 }
@@ -1615,12 +1620,17 @@ class ActionController extends Controller
             } else {
                 // Jika tidak ada ID, buat data baru
                 $action = Action::create($validated);
+                HasilLab::create([
+                    'id_action' => $action->id,
+                    'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                ]);
                 return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
             }
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
+
     public function updateTindakan(Request $request, $id)
     {
         try {
@@ -1805,8 +1815,100 @@ class ActionController extends Controller
             // Validate the request
             $validated = $request->validate([
                 'id_patient' => 'required',
-                'hasil_lab' => 'nullable',
+                'hasil_lab' => 'nullable|string',
+                'gds' => 'nullable|string',
+                'gdp' => 'nullable|string',
+                'gdp_2_jam_pp' => 'nullable|string',
+                'cholesterol' => 'nullable|string',
+                'asam_urat' => 'nullable|string',
+                'leukosit' => 'nullable|string',
+                'eritrosit' => 'nullable|string',
+                'trombosit' => 'nullable|string',
+                'hemoglobin' => 'nullable|string',
+                'sifilis' => 'nullable|string',
+                'hiv' => 'nullable|string',
+                'golongan_darah' => 'nullable|string',
+                'widal' => 'nullable|string',
+                'malaria' => 'nullable|string',
+                'albumin' => 'nullable|string',
+                'reduksi' => 'nullable|string',
+                'urinalisa' => 'nullable|string',
+                'tes_kehamilan' => 'nullable|string',
+                'telur_cacing' => 'nullable|string',
+                'bta' => 'nullable|string',
+                'igm_dbd' => 'nullable|string',
+                'igm_typhoid' => 'nullable|string',
             ]);
+            $hasilLab = HasilLab::where('id_action', $id)->first();
+
+            if ($request->has('gds')) {
+                $hasilLab->gds = $request->gds;
+            }
+            if ($request->has('gdp')) {
+                $hasilLab->gdp = $request->gdp;
+            }
+            if ($request->has('gdp_2_jam_pp')) {
+                $hasilLab->gdp_2_jam_pp = $request->gdp_2_jam_pp;
+            }
+            if ($request->has('cholesterol')) {
+                $hasilLab->cholesterol = $request->cholesterol;
+            }
+            if ($request->has('asam_urat')) {
+                $hasilLab->asam_urat = $request->asam_urat;
+            }
+            if ($request->has('leukosit')) {
+                $hasilLab->leukosit = $request->leukosit;
+            }
+            if ($request->has('eritrosit')) {
+                $hasilLab->eritrosit = $request->eritrosit;
+            }
+            if ($request->has('trombosit')) {
+                $hasilLab->trombosit = $request->trombosit;
+            }
+            if ($request->has('hemoglobin')) {
+                $hasilLab->hemoglobin = $request->hemoglobin;
+            }
+            if ($request->has('sifilis')) {
+                $hasilLab->sifilis = $request->sifilis;
+            }
+            if ($request->has('hiv')) {
+                $hasilLab->hiv = $request->hiv;
+            }
+            if ($request->has('golongan_darah')) {
+                $hasilLab->golongan_darah = $request->golongan_darah;
+            }
+            if ($request->has('widal')) {
+                $hasilLab->widal = $request->widal;
+            }
+            if ($request->has('malaria')) {
+                $hasilLab->malaria = $request->malaria;
+            }
+            if ($request->has('albumin')) {
+                $hasilLab->albumin = $request->albumin;
+            }
+            if ($request->has('reduksi')) {
+                $hasilLab->reduksi = $request->reduksi;
+            }
+            if ($request->has('urinalisa')) {
+                $hasilLab->urinalisa = $request->urinalisa;
+            }
+            if ($request->has('tes_kehamilan')) {
+                $hasilLab->tes_kehamilan = $request->tes_kehamilan;
+            }
+            if ($request->has('telur_cacing')) {
+                $hasilLab->telur_cacing = $request->telur_cacing;
+            }
+            if ($request->has('bta')) {
+                $hasilLab->bta = $request->bta;
+            }
+            if ($request->has('igm_dbd')) {
+                $hasilLab->igm_dbd = $request->igm_dbd;
+            }
+            if ($request->has('igm_typhoid')) {
+                $hasilLab->igm_typhoid = $request->igm_typhoid;
+            }
+
+            $hasilLab->save();
 
             $action->update($validated);
             if ($action->tipe === 'poli-umum') {

@@ -348,7 +348,7 @@
                                         {{ old('wilayah_faskes', $patient->wilayah_faskes) == 1 ? 'selected' : '' }}>Ya
                                     </option>
                                     <option value="0"
-                                        {{ old('wilayah_faskes', $patient->wilayah_faskes) == 1 ? 'selected' : '' }}>
+                                        {{ old('wilayah_faskes', $patient->wilayah_faskes) == 0 ? 'selected' : '' }}>
                                         Tidak
                                     </option>
                                 </select>

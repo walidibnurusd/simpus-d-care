@@ -173,18 +173,23 @@
                         searchable: false
                     }
                 ],
+                language: {
+                    search: "Cari:",
+                    info: "_PAGE_ dari _PAGES_ halaman",
+                    paginate: {
+                        previous: "<",
+                        next: ">",
+                        first: "<<",
+                        last: ">>"
+                    }
+                },
                 pageLength: 10, // Set default page size
                 lengthMenu: [10, 25, 50, 100], // Set available page sizes
-                drawCallback: function(settings) {
-                    // You can adjust the pagination here if needed, for example:
-                    var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
-                }
+
             });
 
-            // Filter Form Submission (on change)
-            $('#filter-form').on('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
-                table.draw(); // Redraw DataTable with new filters
+            $('#filterButton').on('click', function() {
+                table.ajax.reload(); // Mengambil data dengan filter tanggal
             });
         });
     </script>

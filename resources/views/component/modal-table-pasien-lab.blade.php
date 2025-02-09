@@ -91,32 +91,34 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return `
-                        <button class="btn btn-success btnPilihPasien" 
-    data-id-patient="${row.patient.id}" 
-    data-id="${row.id}" 
-    data-nik="${row.patient.nik}" 
-    data-name="${row.patient.name}" 
-    data-gender="${row.patient.gender}" 
-    data-age="${row.patient.dob}" 
-    data-phone="${row.patient.phone}" 
-    data-address="${row.patient.address}" 
-    data-blood="${row.patient.blood_type}" 
-    data-education="${row.patient.education}" 
-    data-job="${row.patient.occupation}" 
-    data-rm="${row.patient.no_rm}" 
-    data-tanggal="${row.tanggal}" 
-    data-doctor="${row.doctor}" 
-    data-kunjungan="${row.kunjungan}"    
-    data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}"    
-    data-hasillab="${row.hasil_lab}" 
-">
-    Pilih
-</button>
 
-                        `;
-                        },
-                    },
+                            return `
+            <button class="btn btn-success btnPilihPasien" 
+                data-id-patient="${row.patient.id}" 
+                data-id="${row.id}" 
+                data-nik="${row.patient.nik}" 
+                data-name="${row.patient.name}" 
+                data-gender="${row.patient.gender}" 
+                data-age="${row.patient.dob}" 
+                data-phone="${row.patient.phone}" 
+                data-address="${row.patient.address}" 
+                data-blood="${row.patient.blood_type}" 
+                data-education="${row.patient.education}" 
+                data-job="${row.patient.occupation}" 
+                data-rm="${row.patient.no_rm}" 
+                data-tanggal="${row.tanggal}" 
+                data-doctor="${row.doctor}" 
+                data-kunjungan="${row.kunjungan}"    
+                data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}"    
+                data-hasillab="${row.hasil_lab && row.hasil_lab.jenis_pemeriksaan ? JSON.parse(row.hasil_lab.jenis_pemeriksaan) : null}"
+
+            >
+                Pilih
+            </button>
+        `;
+                        }
+                    }
+
                 ],
                 destroy: true, // Mengizinkan inisialisasi ulang
                 processing: true,
@@ -188,7 +190,7 @@
 
             $('#kunjungan').val(data.kunjungan);
 
-            $('#hasillab').val(data.hasillab);
+            // $('#hasillab').val(data.hasillab);
             $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
             $('#riwayat_penyakit_keluarga').val(data.riwayatpenyakitkeluarga).trigger('change');
 
@@ -204,6 +206,119 @@
             const patientId = $(this).data('id-patient');
             // console.log($('#patientDetails').show());
             $('#btnCariskrining').data('id', patientId);
+
+            if (data.hasillab.includes("GDS")) {
+                document.getElementById("label-gds").style.display = "block";
+                document.getElementById("gds").style.display = "block";
+                document.getElementById("pd").style.display = "flex";
+            }
+            if (data.hasillab.includes("GDP")) {
+                document.getElementById("label-gdp").style.display = "block";
+                document.getElementById("gdp").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("GDP 2 Jam pp")) {
+                document.getElementById("label-gdp_2_jam_pp").style.display = "block";
+                document.getElementById("gdp_2_jam_pp").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+
+            }
+            if (data.hasillab.includes("Cholesterol")) {
+                document.getElementById("label-cholesterol").style.display = "block";
+                document.getElementById("cholesterol").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Asam Urat")) {
+                document.getElementById("label-asam_urat").style.display = "block";
+                document.getElementById("asam_urat").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Leukosit")) {
+                document.getElementById("label-leukosit").style.display = "block";
+                document.getElementById("leukosit").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Eritrosit")) {
+                document.getElementById("label-eritrosit").style.display = "block";
+                document.getElementById("eritrosit").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Trombosit")) {
+                document.getElementById("label-trombosit").style.display = "block";
+                document.getElementById("trombosit").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Hemoglobin")) {
+                document.getElementById("label-hemoglobin").style.display = "block";
+                document.getElementById("hemoglobin").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Sifilis")) {
+                document.getElementById("label-sifilis").style.display = "block";
+                document.getElementById("sifilis").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("HIV")) {
+                document.getElementById("label-hiv").style.display = "block";
+                document.getElementById("hiv").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Golongan Darah")) {
+                document.getElementById("label-golongan_darah").style.display = "block";
+                document.getElementById("golongan_darah").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Widal")) {
+                document.getElementById("label-widal").style.display = "block";
+                document.getElementById("widal").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Malaria")) {
+                document.getElementById("label-malaria").style.display = "block";
+                document.getElementById("malaria").style.display = "block";
+                document.getElementById("pd").style.display = "flex"
+            }
+            if (data.hasillab.includes("Albumin")) {
+                document.getElementById("label-albumin").style.display = "block";
+                document.getElementById("albumin").style.display = "block";
+                document.getElementById("pu").style.display = "flex"
+            }
+            if (data.hasillab.includes("Reduksi")) {
+                document.getElementById("label-reduksi").style.display = "block";
+                document.getElementById("reduksi").style.display = "block";
+                document.getElementById("pu").style.display = "flex"
+            }
+            if (data.hasillab.includes("Urinalisa")) {
+                document.getElementById("label-urinalisa").style.display = "block";
+                document.getElementById("urinalisa").style.display = "block";
+                document.getElementById("pu").style.display = "flex"
+            }
+            if (data.hasillab.includes("Tes Kehamilan")) {
+                document.getElementById("label-tes_kehamilan").style.display = "block";
+                document.getElementById("tes_kehamilan").style.display = "block";
+                document.getElementById("pu").style.display = "flex"
+            }
+            if (data.hasillab.includes("Telur Cacing")) {
+                document.getElementById("label-telur_cacing").style.display = "block";
+                document.getElementById("telur_cacing").style.display = "block";
+                document.getElementById("pf").style.display = "flex"
+            }
+            if (data.hasillab.includes("BTA")) {
+                document.getElementById("label-bta").style.display = "block";
+                document.getElementById("bta").style.display = "block";
+                document.getElementById("pf").style.display = "flex"
+            }
+            if (data.hasillab.includes("IgM DBD")) {
+                document.getElementById("label-igm_dbd").style.display = "block";
+                document.getElementById("igm_dbd").style.display = "block";
+                document.getElementById("pi").style.display = "flex"
+            }
+            if (data.hasillab.includes("IgM Typhoid")) {
+                document.getElementById("label-igm_typhoid").style.display = "block";
+                document.getElementById("igm_typhoid").style.display = "block";
+                document.getElementById("pi").style.display = "flex"
+            }
+
 
 
             // Tutup modal

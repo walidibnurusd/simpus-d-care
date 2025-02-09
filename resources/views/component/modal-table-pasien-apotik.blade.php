@@ -120,9 +120,8 @@ data-bs-dismiss="modal">
             });
         }
         $('#filterDate').on('change', function() {
-            if ($.fn.DataTable.isDataTable('#pasienApotik')) {
-                table.destroy();
-            }
+            table.destroy();
+            $('#pasienApotik tbody').empty();
             initializeTable();
         });
 

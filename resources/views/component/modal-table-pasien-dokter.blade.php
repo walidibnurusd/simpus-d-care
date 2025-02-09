@@ -424,6 +424,17 @@
                     // Reload DataTable dan tunggu sampai selesai
                     await new Promise((resolve) => {
                         table.ajax.reload(resolve, false);
+                        const section1 = document.getElementById(
+                            'formSection1');
+                        const section2 = document.getElementById(
+                            'formSection2');
+                        const button = this;
+
+                        // Kembali ke Section 1
+                        section1.classList.remove('d-none');
+                        section2.classList.add('d-none');
+                        button.textContent = 'Lanjut Pemeriksaan';
+
                     });
 
                     // Perbarui daftar diagnosa

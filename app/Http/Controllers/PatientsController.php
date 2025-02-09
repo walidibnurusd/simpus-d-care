@@ -631,13 +631,15 @@ class PatientsController extends Controller
 
         $page = $start / $length + 1;
 
-        $query = DB::table('patients')
-            ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
-            ->select('patients.*', 'actions.id as action_id', 'actions.*')
-            ->where(function ($query) {
-                $query->where('actions.beri_tindakan', 1)->whereNull('tindakan_ruang_tindakan');
-            });
-
+        $query = DB::table('kunjungan')
+            ->leftJoin('actions', function ($join) {
+                $join->on('kunjungan.pasien', '=', 'actions.id_patient')->whereRaw('DATE(kunjungan.tanggal) = DATE(actions.tanggal)'); // Pastikan tanggal sama
+            })
+            ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
+            ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
+            ->whereNotNull('kunjungan.id')
+            ->where('beri_tindakan', 1)
+            ->whereNull('actions.tindakan_ruang_tindakan');
         if ($filterDate) {
             $query->where('kunjungan.tanggal', '=', $filterDate);
         }
@@ -667,7 +669,11 @@ class PatientsController extends Controller
 
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-umum')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'hasilLab')
+            ->where('tipe', 'poli-umum')
+            ->whereHas('hasilLab', function ($q) {
+                $q->whereNull('gds')->whereNull('gdp')->whereNull('gdp_2_jam_pp')->whereNull('cholesterol')->whereNull('asam_urat')->whereNull('leukosit')->whereNull('eritrosit')->whereNull('trombosit')->whereNull('hemoglobin')->whereNull('sifilis')->whereNull('hiv')->whereNull('golongan_darah')->whereNull('widal')->whereNull('malaria')->whereNull('albumin')->whereNull('reduksi')->whereNull('urinalisa')->whereNull('tes_kehamilan')->whereNull('telur_cacing')->whereNull('bta')->whereNull('igm_dbd')->whereNull('igm_typhoid');
+            });
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -680,7 +686,7 @@ class PatientsController extends Controller
         }
 
         $patients = $query->paginate($length, ['*'], 'page', $page);
-
+        // dd($patients);
         return response()->json([
             'draw' => (int) $draw,
             'recordsTotal' => $patients->total(),
@@ -1128,7 +1134,8 @@ class PatientsController extends Controller
                 $patient->kunjungan = $validatedData['kunjungan'];
                 $patient->wilayah_faskes = $validatedData['wilayah_faskes'];
                 $patient->no_family_folder = $validatedData['no_family_folder'];
-                $lastPatient = Patients::whereRaw('LENGTH(no_rm) = 5 AND no_rm LIKE "0000%"')->orderByRaw('CAST(no_rm AS UNSIGNED) DESC')->first();
+                $lastPatient = Patients::orderBy('created_at', 'desc')->first();
+
                 $lastNoRm = $lastPatient ? intval($lastPatient->no_rm) : 0;
                 $nextNoRm = str_pad($lastNoRm + 1, 5, '0', STR_PAD_LEFT);
                 $patient->no_rm = $nextNoRm;
