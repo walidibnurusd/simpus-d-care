@@ -446,6 +446,9 @@ Route::get('/get-patients-apotik/ruang-tindakan', [PatientsController::class, 'g
 Route::get('/get-patients-apotik/poli-kia', [PatientsController::class, 'getPatientsApotikKia'])->name('get-patients-apotik-kia');
 Route::get('/get-patients-apotik/poli-kb', [PatientsController::class, 'getPatientsApotikKb'])->name('get-patients-apotik-kb');
 
+Route::prefix('dashboard')->group(function () {
+    Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard.index');
+});
 //diagnosa
 Route::get('/get-diagnosa', [DiagnosaController::class, 'getDiagnosa']);
 //Language Change
@@ -458,13 +461,6 @@ Route::get('lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang');
 
-Route::prefix('dashboard')->group(function () {
-    Route::view('index', 'dashboard.index')->name('index');
-    Route::view('dashboard-02', 'dashboard.dashboard-02')->name('dashboard-02');
-    Route::view('dashboard-03', 'dashboard.dashboard-03')->name('dashboard-03');
-    Route::view('dashboard-04', 'dashboard.dashboard-04')->name('dashboard-04');
-    Route::view('dashboard-05', 'dashboard.dashboard-05')->name('dashboard-05');
-});
 Route::prefix('widgets')->group(function () {
     Route::view('chart-widget', 'widgets.chart-widget')->name('chart-widget');
 });

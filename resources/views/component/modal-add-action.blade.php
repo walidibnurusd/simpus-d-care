@@ -125,8 +125,8 @@
                                             <label for="wilayah_faskes">Wilayah Faskes</label>
                                             <select class="form-control" id="wilayah_faskes" name="faskes">
                                                 <option value="" disabled selected>Pilih Wilayah Faskes</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
+                                                <option value="1">Ya</option>
+                                                <option value="0">Tidak</option>
 
                                             </select>
                                         </div>

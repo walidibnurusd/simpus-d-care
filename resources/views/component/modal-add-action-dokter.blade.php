@@ -116,17 +116,13 @@
                                                     name="nomor_kartu" placeholder="Masukkan Nomor" readonly>
                                             </div>
                                         </div>
-                                        {{-- <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="wilayah_faskes">Wilayah Faskes</label>
-                                            <select class="form-control" id="wilayah_faskes" name="faskes">
-                                                <option value="" disabled selected>Pilih Wilayah Faskes</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
-
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="wilayah_faskes">Wilayah Faskes</label>
+                                                <input type="text" class="form-control" id="wilayah_faskes"
+                                                    name="wilayah_faskes" placeholder="Wilayah Faskes" readonly>
+                                            </div>
                                         </div>
-                                    </div> --}}
                                         <div class="col-md-12">
                                             <label for="keluhan" style="color: rgb(241, 11, 11);">Keluhan</label>
                                             <textarea class="form-control" id="keluhan" name="keluhan" placeholder="Keluhan"></textarea>

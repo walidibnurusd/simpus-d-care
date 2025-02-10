@@ -57,7 +57,7 @@
                     url: url,
                     type: 'GET',
                     data: function(d) {
-                        d.filterDate = filterDate; // Kirim tanggal sebagai parameter tambahan
+                        d.filterDate = filterDate;
                     },
 
 
@@ -98,7 +98,7 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-
+                            // console.log(data);
                             return `
                         <button class="btn btn-success btnPilihPasien" 
                         data-id-patient="${row.id}" 
@@ -118,7 +118,7 @@
                         data-kasus="${row.kasus}" 
                         data-kartu="${row.jenis_kartu}" 
                         data-nomor="${row.nomor_kartu}" 
-                        data-faskes="${row.faskes}" 
+                        data-wilayahfaskes="${row.wilayah_faskes}" 
                         data-sistol="${row.sistol}" 
                         data-diastol="${row.diastol}" 
                         data-beratbadan="${row.beratBadan}" 
@@ -273,7 +273,13 @@
 
 
             $('#kasus').val(data.kasus);
-            $('#wilayah_faskes').val(data.faskes);
+            if (data.wilayahfaskes === 1) {
+                $('#wilayah_faskes').val(
+                    'Ya');
+            } else {
+                $('#wilayah_faskes').val('Luar Wilayah');
+            }
+
             $('#sistol').val(data.sistol);
             $('#diastol').val(data.diastol);
             $('#berat_badan').val(data.beratbadan);

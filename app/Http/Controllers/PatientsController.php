@@ -479,7 +479,7 @@ class PatientsController extends Controller
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('patients.name', 'LIKE', "%{$searchValue}%")
-                 ->orWhere('dob', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('dob', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
@@ -524,7 +524,7 @@ class PatientsController extends Controller
             $query
                 ->where('name', 'LIKE', "%{$searchValue}%")
                 ->orWhere('address', 'LIKE', "%{$searchValue}%")
-                 ->orWhere('dob', 'LIKE', "%{$searchValue}%")
+                ->orWhere('dob', 'LIKE', "%{$searchValue}%")
                 ->orWhere('nik', 'LIKE', "%{$searchValue}%");
         }
 
@@ -566,6 +566,7 @@ class PatientsController extends Controller
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('patients.name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('dob', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
@@ -609,6 +610,7 @@ class PatientsController extends Controller
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('patients.name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('dob', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
@@ -651,6 +653,7 @@ class PatientsController extends Controller
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('patients.name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('dob', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
@@ -1045,17 +1048,30 @@ class PatientsController extends Controller
             $patients->whereDate('created_at', '<=', $endDate);
         }
 
-        // Check if there's a search query
-        if ($search = $request->get('search')['value']) {
-            $patients->where(function ($query) use ($search) {
-                // Filter by any relevant columns (you can add more columns here)
-                $query
-                    ->where('nik', 'like', "%$search%")
-                    ->orWhere('name', 'like', "%$search%")
-                    ->orWhere('address', 'like', "%$search%")
-                    ->orWhere('dob', 'like', "%$search%")
-                    ->orWhere('phone', 'like', "%$search%");
-            });
+        $filters = [
+            'nik' => $request->input('nik'),
+            'name' => $request->input('name'),
+            'address' => $request->input('address'),
+            'dob' => $request->input('dob'),
+            'gender' => $request->input('gender'),
+            'phone' => $request->input('phone'),
+            'marrital_status' => $request->input('marrital_status'),
+            'no_rm' => $request->input('no_rm'),
+            'no_family_folder' => $request->input('no_family_folder'),
+            'created_at' => $request->input('created_at'),
+        ];
+
+        // Apply filters to the query builder
+        foreach ($filters as $column => $value) {
+            if ($value) {
+                if ($column === 'dob') {
+                    // Handle date specific column (dob in this case)
+                    $patients->whereDate('dob', 'like', "%$value%");
+                } else {
+                    // Generic column search
+                    $patients->where($column, 'like', "%$value%");
+                }
+            }
         }
 
         // Return the datatables response
