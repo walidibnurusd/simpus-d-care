@@ -11,7 +11,14 @@
                 @method('PUT')
                 <div class="modal-body">
                     <div class="row g-2">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="tanggal">Tanggal Kunjungan</label>
+                                <input type="date" class="form-control" name="tanggal" id="tanggal"
+                                    placeholder="Pilih Tanggal" value="{{ $k->tanggal }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="poli">Poli Tujuan Berobat</label>
                                 <select class="form-control" id="poli" name="poli">
@@ -27,6 +34,10 @@
                                         {{ old('poli', $k->poli) == 'ruang-tindakan' ? 'selected' : '' }}>
                                         UGD
                                     </option>
+                                    <option value="tindakan"
+                                        {{ old('poli', $k->poli) == 'tindakan' ? 'selected' : '' }}>
+                                        Ruang Tindakan
+                                    </option>
                                     <option value="poli-kia"
                                         {{ old('poli', $k->poli) == 'poli-kia' ? 'selected' : '' }}>
                                         Poli KIA
@@ -37,7 +48,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4 mt-2">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="hamil">Hamil?</label>
                                 <select class="form-control" id="hamil" name="hamil">

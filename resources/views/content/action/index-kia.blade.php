@@ -208,19 +208,7 @@
                     },
                     {
                         data: 'kunjungan',
-                        render: function(data, type, row) {
-
-                            let kunjungan = data || row.patient.kunjungan;
-
-
-                            if (kunjungan === 1 || kunjungan === 'baru') {
-                                return 'Baru';
-                            } else if (kunjungan === 0 || kunjungan === 'lama') {
-                                return 'Lama';
-                            } else {
-                                return kunjungan;
-                            }
-                        }
+                        name: 'kunjungan'
                     },
                     {
                         data: 'faskes',

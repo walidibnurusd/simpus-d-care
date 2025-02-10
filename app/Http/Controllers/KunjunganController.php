@@ -54,6 +54,8 @@ class KunjunganController extends Controller
                         return 'Poli KIA';
                     } elseif ($row->poli == 'poli-kb') {
                         return 'Poli KB';
+                    } elseif ($row->poli == 'tindakan') {
+                        return 'Ruang Tindakan';
                     } else {
                         return 'UGD';
                     }
@@ -120,11 +122,13 @@ class KunjunganController extends Controller
             $validated = $request->validate([
                 'poli' => 'nullable',
                 'hamil' => 'nullable',
+                'tanggal' => 'nullable',
             ]);
 
             $kunjungan->update([
                 'poli' => $validated['poli'] ?? $kunjungan->poli,
                 'hamil' => $validated['hamil'] ?? $kunjungan->hamil,
+                'tanggal' => $validated['tanggal'] ?? $kunjungan->tanggal,
             ]);
 
             if ($request->ajax()) {

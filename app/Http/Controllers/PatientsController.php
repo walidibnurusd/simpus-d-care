@@ -437,6 +437,7 @@ class PatientsController extends Controller
             $query
                 ->where('name', 'LIKE', "%{$searchValue}%")
                 ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                ->orWhere('dob', 'LIKE', "%{$searchValue}%")
                 ->orWhere('nik', 'LIKE', "%{$searchValue}%");
         }
 
@@ -478,6 +479,7 @@ class PatientsController extends Controller
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('patients.name', 'LIKE', "%{$searchValue}%")
+                 ->orWhere('dob', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.address', 'LIKE', "%{$searchValue}%")
                     ->orWhere('patients.nik', 'LIKE', "%{$searchValue}%");
             });
@@ -522,6 +524,7 @@ class PatientsController extends Controller
             $query
                 ->where('name', 'LIKE', "%{$searchValue}%")
                 ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                 ->orWhere('dob', 'LIKE', "%{$searchValue}%")
                 ->orWhere('nik', 'LIKE', "%{$searchValue}%");
         }
 
@@ -637,9 +640,11 @@ class PatientsController extends Controller
             })
             ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
+
             ->whereNotNull('kunjungan.id')
-            ->where('beri_tindakan', 1)
-            ->whereNull('actions.tindakan_ruang_tindakan');
+            ->where(function ($query) {
+                $query->where('actions.beri_tindakan', 1)->whereNull('actions.tindakan_ruang_tindakan')->orWhere('kunjungan.poli', 'tindakan');
+            });
         if ($filterDate) {
             $query->where('kunjungan.tanggal', '=', $filterDate);
         }
@@ -707,7 +712,11 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-gigi')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'hasilLab')
+            ->where('tipe', 'poli-gigi')
+            ->whereHas('hasilLab', function ($q) {
+                $q->whereNull('gds')->whereNull('gdp')->whereNull('gdp_2_jam_pp')->whereNull('cholesterol')->whereNull('asam_urat')->whereNull('leukosit')->whereNull('eritrosit')->whereNull('trombosit')->whereNull('hemoglobin')->whereNull('sifilis')->whereNull('hiv')->whereNull('golongan_darah')->whereNull('widal')->whereNull('malaria')->whereNull('albumin')->whereNull('reduksi')->whereNull('urinalisa')->whereNull('tes_kehamilan')->whereNull('telur_cacing')->whereNull('bta')->whereNull('igm_dbd')->whereNull('igm_typhoid');
+            });
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
         }
@@ -741,7 +750,11 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'ruang-tindakan')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'hasilLab')
+            ->where('tipe', 'ruang-tindakan')
+            ->whereHas('hasilLab', function ($q) {
+                $q->whereNull('gds')->whereNull('gdp')->whereNull('gdp_2_jam_pp')->whereNull('cholesterol')->whereNull('asam_urat')->whereNull('leukosit')->whereNull('eritrosit')->whereNull('trombosit')->whereNull('hemoglobin')->whereNull('sifilis')->whereNull('hiv')->whereNull('golongan_darah')->whereNull('widal')->whereNull('malaria')->whereNull('albumin')->whereNull('reduksi')->whereNull('urinalisa')->whereNull('tes_kehamilan')->whereNull('telur_cacing')->whereNull('bta')->whereNull('igm_dbd')->whereNull('igm_typhoid');
+            });
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -776,7 +789,11 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kia')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'hasilLab')
+            ->where('tipe', 'poli-kia')
+            ->whereHas('hasilLab', function ($q) {
+                $q->whereNull('gds')->whereNull('gdp')->whereNull('gdp_2_jam_pp')->whereNull('cholesterol')->whereNull('asam_urat')->whereNull('leukosit')->whereNull('eritrosit')->whereNull('trombosit')->whereNull('hemoglobin')->whereNull('sifilis')->whereNull('hiv')->whereNull('golongan_darah')->whereNull('widal')->whereNull('malaria')->whereNull('albumin')->whereNull('reduksi')->whereNull('urinalisa')->whereNull('tes_kehamilan')->whereNull('telur_cacing')->whereNull('bta')->whereNull('igm_dbd')->whereNull('igm_typhoid');
+            });
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -811,7 +828,11 @@ class PatientsController extends Controller
         // Hitung halaman berdasarkan DataTables `start` dan `length`
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->where('tipe', 'poli-kb')->whereNotNull('pemeriksaan_penunjang')->whereNull('hasil_lab');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'hasilLab')
+            ->where('tipe', 'poli-kb')
+            ->whereHas('hasilLab', function ($q) {
+                $q->whereNull('gds')->whereNull('gdp')->whereNull('gdp_2_jam_pp')->whereNull('cholesterol')->whereNull('asam_urat')->whereNull('leukosit')->whereNull('eritrosit')->whereNull('trombosit')->whereNull('hemoglobin')->whereNull('sifilis')->whereNull('hiv')->whereNull('golongan_darah')->whereNull('widal')->whereNull('malaria')->whereNull('albumin')->whereNull('reduksi')->whereNull('urinalisa')->whereNull('tes_kehamilan')->whereNull('telur_cacing')->whereNull('bta')->whereNull('igm_dbd')->whereNull('igm_typhoid');
+            });
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);
@@ -1108,7 +1129,6 @@ class PatientsController extends Controller
             // \Log::info($validatedData);
             // Check if patient with NIK exists
             $patient = Patients::where('nik', $validatedData['nik'])->first();
-
             if (!$patient) {
                 // Create new patient if not exists
                 $patient = new Patients();
@@ -1145,7 +1165,6 @@ class PatientsController extends Controller
             $existingVisit = Kunjungan::where('pasien', $patient->id)->where('poli', $validatedData['poli_berobat'])->where('tanggal', $validatedData['tanggal'])->first();
 
             if (!$existingVisit) {
-                // Create a new Kunjungan entry if it doesn't exist
                 Kunjungan::create([
                     'pasien' => $patient->id,
                     'poli' => $validatedData['poli_berobat'],
@@ -1160,7 +1179,20 @@ class PatientsController extends Controller
             return redirect()->back()->with('success', 'Patient and visit data added successfully.');
         } catch (Exception $e) {
             // Log the error
-            Log::error('Error adding patient or visit: ' . $e->getMessage());
+            if ($e instanceof \Illuminate\Validation\ValidationException) {
+                $errors = $e->errors();
+
+                // Check if specific validation errors exist for 'nik'
+                if (isset($errors['nik'])) {
+                    $errorMessage = 'NIK Tidak Boleh Lebih Dari 16 Angka';
+                    return redirect()
+                        ->back()
+                        ->withErrors(['nik' => $errorMessage]);
+                }
+
+                // Return all other validation errors
+                return redirect()->back()->withErrors($errors);
+            }
 
             // Redirect back with an error message
             return redirect()->back()->withErrors('An error occurred while adding the patient or visit. Please try again.');

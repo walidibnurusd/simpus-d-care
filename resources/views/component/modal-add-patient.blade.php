@@ -261,7 +261,7 @@
                         </div>
                     </div>
                     <div class="row g-2">
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kunjungan">Kunjungan</label>
                                 <select class="form-control" id="kunjungan" name="kunjungan">
@@ -270,7 +270,7 @@
                                     <option value="0">Lama </option>
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="wilayah_faskes">Wilayah Faskes</label>
@@ -289,7 +289,7 @@
                     <div class="row g-2 mt-2">
                         <div class="col-md-4 mt-2">
                             <div class="form-group">
-                                <label for="tanggal">Tanggal Berobat</label>
+                                <label for="tanggal">Tanggal Kunjungan</label>
                                 <input type="date" class="form-control" name="tanggal" id="tanggal"
                                     placeholder="Pilih Tanggal">
                             </div>
@@ -302,6 +302,7 @@
                                     <option value="poli-umum">Poli Umum</option>
                                     <option value="poli-gigi">Poli Gigi</option>
                                     <option value="ruang-tindakan">UGD</option>
+                                    <option value="tindakan">Ruang Tindakan</option>
                                     <option value="poli-kia">Poli KIA</option>
                                     <option value="poli-kb">Poli KB</option>
                                 </select>
@@ -393,8 +394,6 @@
 
 
                 klasterSelect.value = klaster;
-
-
 
             }
         }

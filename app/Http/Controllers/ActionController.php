@@ -66,6 +66,11 @@ class ActionController extends Controller
                 $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
                 return implode(', ', $diagnoses);
             })
+            ->addColumn('kunjungan', function ($row) {
+                $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+            })
             ->addColumn('action', function ($row) {
                 // Get the doctor list
                 $rs = Hospital::all();
@@ -141,6 +146,11 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -226,6 +236,11 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
                     $rs = Hospital::all();
@@ -270,20 +285,14 @@ class ActionController extends Controller
     public function indexDokter(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
             $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab'])
                 ->where('tipe', 'poli-umum')
                 ->whereNotNull('diagnosa');
 
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
@@ -312,13 +321,41 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
+
+                ->addColumn('hasil_lab', function ($row) {
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    if (!empty($row->hasilLab)) {
+                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                        return '<div class="action-buttons">
+                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                            $row->id .
+                            '">
+                                  Hasil
+                                </button>
+                                <form action="' .
+                            route('action.destroy', $row->id) .
+                            '" method="POST" class="d-inline">
+                                    ' .
+                            csrf_field() .
+                            $editModal;
+                    }
+                })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
 
                 ->addColumn('action', function ($row) {
                     $dokter = User::where('role', 'dokter')->get();
                     $rs = Hospital::all();
-                    // Menggunakan request() global untuk mendapatkan route name
                     $routeName = request()->route()->getName();
-                    // Render modal edit dengan membawa routeName
                     $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -341,7 +378,7 @@ class ActionController extends Controller
                         $editModal;
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'hasil_lab'])
                 ->make(true);
         }
 
@@ -358,20 +395,14 @@ class ActionController extends Controller
     public function indexGigiDokter(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab'])
                 ->where('tipe', 'poli-gigi') // Adjust the type to 'poli-gigi'
                 ->whereNotNull('diagnosa'); // Ensure 'diagnosa' is not null
 
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
@@ -400,6 +431,31 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
+                ->addColumn('hasil_lab', function ($row) {
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    if (!empty($row->hasilLab)) {
+                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                        return '<div class="action-buttons">
+                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                            $row->id .
+                            '">
+                                  Hasil
+                                </button>
+                                <form action="' .
+                            route('action.destroy', $row->id) .
+                            '" method="POST" class="d-inline">
+                                    ' .
+                            csrf_field() .
+                            $editModal;
+                    }
+                })
+
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
                     $rs = Hospital::all();
@@ -446,21 +502,14 @@ class ActionController extends Controller
     public function indexUgdDokter(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab'])
                 ->where('tipe', 'ruang-tindakan')
                 ->whereNotNull('tindakan');
 
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
-
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
             $actions = $actionsQuery->get();
@@ -487,6 +536,30 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
+                ->addColumn('hasil_lab', function ($row) {
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    if (!empty($row->hasilLab)) {
+                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                        return '<div class="action-buttons">
+                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                            $row->id .
+                            '">
+                                  Hasil
+                                </button>
+                                <form action="' .
+                            route('action.destroy', $row->id) .
+                            '" method="POST" class="d-inline">
+                                    ' .
+                            csrf_field() .
+                            $editModal;
+                    }
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -533,18 +606,12 @@ class ActionController extends Controller
     public function indexRuangTindakanDokter(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
             $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('beri_tindakan', 1);
 
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
@@ -572,6 +639,11 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -796,21 +868,14 @@ class ActionController extends Controller
     public function indexDokterKia(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab'])
                 ->where('tipe', 'poli-kia') // Filter by type for KIA
                 ->whereNotNull('diagnosa'); // Ensure diagnosa exists
 
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
-
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
             $actions = $actionsQuery->get();
@@ -838,6 +903,26 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('hasil_lab', function ($row) {
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    if (!empty($row->hasilLab)) {
+                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                        return '<div class="action-buttons">
+                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                            $row->id .
+                            '">
+                                  Hasil
+                                </button>
+                                <form action="' .
+                            route('action.destroy', $row->id) .
+                            '" method="POST" class="d-inline">
+                                    ' .
+                            csrf_field() .
+                            $editModal;
+                    }
+                })
+
                 ->addColumn('action', function ($row) {
                     // Render action buttons
                     $rs = Hospital::all();
@@ -884,20 +969,14 @@ class ActionController extends Controller
     public function indexDokterKb(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab'])
                 ->where('tipe', 'poli-kb') // Filter by type for KB
                 ->whereNotNull('diagnosa'); // Filter for actions that have 'layanan_kb'
 
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
@@ -925,6 +1004,25 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('hasil_lab', function ($row) {
+                    $dokter = User::where('role', 'dokter')->get();
+                    $routeName = request()->route()->getName();
+                    if (!empty($row->hasilLab)) {
+                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                        return '<div class="action-buttons">
+                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                            $row->id .
+                            '">
+                                  Hasil
+                                </button>
+                                <form action="' .
+                            route('action.destroy', $row->id) .
+                            '" method="POST" class="d-inline">
+                                    ' .
+                            csrf_field() .
+                            $editModal;
+                    }
                 })
                 ->addColumn('action', function ($row) {
                     // Render action buttons
@@ -1012,6 +1110,11 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
                     $rs = Hospital::all();
@@ -1096,6 +1199,11 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
                     $rs = Hospital::all();
@@ -1139,23 +1247,22 @@ class ActionController extends Controller
     }
     public function actionReport(Request $request)
     {
-        // Ambil parameter filter awal dan akhir dari query string
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
 
-        // Query data dari tabel 'actions'
         $query = Action::query();
 
-        // Jika filter tanggal diberikan, tambahkan kondisi ke query
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);
+        } else {
+            $startDate = Action::min('tanggal');
+            $endDate = Action::max('tanggal');
         }
+        $query->orderBy('tanggal', 'asc');
 
-        // Eksekusi query untuk mendapatkan hasil
         $actions = $query->get();
 
-        // Kirim data ke view
-        return view('content.action.print', compact('actions'));
+        return view('content.action.print', compact('actions', 'startDate', 'endDate'));
     }
 
     public function store(Request $request)
@@ -1177,7 +1284,7 @@ class ActionController extends Controller
                 'id_patient' => 'required|exists:patients,id',
                 'tanggal' => 'required',
                 'doctor' => 'nullable',
-                'kunjungan' => 'nullable|string|max:255',
+                'kasus' => 'nullable',
                 'faskes' => 'nullable|string|max:255',
                 'sistol' => 'nullable|numeric',
                 'diastol' => 'nullable|numeric',
@@ -1287,10 +1394,12 @@ class ActionController extends Controller
             }
 
             $action = Action::create($validated);
-            HasilLab::create([
-                'id_action' => $action->id,
-                'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan),
-            ]);
+            if (!empty($request->jenis_pemeriksaan)) {
+                HasilLab::create([
+                    'id_action' => $action->id,
+                    'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                ]);
+            }
             return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
@@ -1323,7 +1432,7 @@ class ActionController extends Controller
                 'id_patient' => 'required|exists:patients,id',
                 'tanggal' => 'required|date',
                 'doctor' => 'required',
-                'kunjungan' => 'nullable|string|max:255',
+                'kasus' => 'nullable|string|max:255',
                 'faskes' => 'nullable|string|max:255',
                 'sistol' => 'nullable|numeric',
                 'diastol' => 'nullable|numeric',
@@ -1489,7 +1598,7 @@ class ActionController extends Controller
                 'id_patient' => 'required',
                 'tanggal' => 'required',
                 'doctor' => 'required',
-                'kunjungan' => 'nullable|string|max:255',
+                'kasus' => 'nullable|string|max:255',
                 'faskes' => 'nullable|string|max:255',
                 'sistol' => 'nullable|numeric',
                 'diastol' => 'nullable|numeric',
@@ -1607,10 +1716,12 @@ class ActionController extends Controller
             if ($id != null) {
                 // Jika ID diberikan, update data yang sudah ada
                 $action = Action::find($id);
-                HasilLab::create([
-                    'id_action' => $action->id,
-                    'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
-                ]);
+                if (!empty($request->jenis_pemeriksaan)) {
+                    HasilLab::create([
+                        'id_action' => $action->id,
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                    ]);
+                }
 
                 if (!$action) {
                     return response()->json(['error' => 'Action not found'], 404);
@@ -1620,10 +1731,12 @@ class ActionController extends Controller
             } else {
                 // Jika tidak ada ID, buat data baru
                 $action = Action::create($validated);
-                HasilLab::create([
-                    'id_action' => $action->id,
-                    'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
-                ]);
+                if (!empty($request->jenis_pemeriksaan)) {
+                    HasilLab::create([
+                        'id_action' => $action->id,
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                    ]);
+                }
                 return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
             }
         } catch (\Exception $e) {

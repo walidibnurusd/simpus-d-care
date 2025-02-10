@@ -4,13 +4,13 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                @if ($routeName === 'action.lab.index')
+                @if ($routeName === 'action.lab.index' || 'action.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
-                @elseif ($routeName === 'action.lab.gigi.index')
+                @elseif ($routeName === 'action.lab.gigi.index' || 'action.dokter.gigi.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
-                @elseif ($routeName === 'action.lab.kia.index')
+                @elseif ($routeName === 'action.lab.kia.index' || 'kia.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KIA</h5>
-                @elseif ($routeName === 'action.lab.kb.index')
+                @elseif ($routeName === 'action.lab.kb.index' || 'kb.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KB</h5>
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
@@ -22,13 +22,13 @@
                 <form id="addPatientForm" action="{{ route('action.update.lab', $action->id) }}" method="POST"
                     class="px-3">
                     @csrf
-                    @if ($routeName === 'action.lab.index')
+                    @if ($routeName === 'action.lab.index' || 'action.dokter.index')
                         <input type="hidden" name="tipe" value="poli-umum">
-                    @elseif($routeName === 'action.lab.gigi.index')
+                    @elseif($routeName === 'action.lab.gigi.index' || 'action.dokter.gigi.index')
                         <input type="hidden" name="tipe" value="poli-gigi">
-                    @elseif($routeName === 'action.lab.kia.index')
+                    @elseif($routeName === 'action.lab.kia.index' || 'kia.dokter.index')
                         <input type="hidden" name="tipe" value="poli-kia">
-                    @elseif($routeName === 'action.lab.kb.index')
+                    @elseif($routeName === 'action.lab.kb.index' || 'kb.dokter.index')
                         <input type="hidden" name="tipe" value="poli-kb">
                     @else
                         <input type="hidden" name="tipe" value="ruang-tindakan">

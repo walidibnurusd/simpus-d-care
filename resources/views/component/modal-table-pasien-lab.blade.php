@@ -206,120 +206,159 @@
             const patientId = $(this).data('id-patient');
             // console.log($('#patientDetails').show());
             $('#btnCariskrining').data('id', patientId);
-
-            if (data.hasillab.includes("GDS")) {
-                document.getElementById("label-gds").style.display = "block";
-                document.getElementById("gds").style.display = "block";
-                document.getElementById("pd").style.display = "flex";
-            }
-            if (data.hasillab.includes("GDP")) {
-                document.getElementById("label-gdp").style.display = "block";
-                document.getElementById("gdp").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("GDP 2 Jam pp")) {
-                document.getElementById("label-gdp_2_jam_pp").style.display = "block";
-                document.getElementById("gdp_2_jam_pp").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-
-            }
-            if (data.hasillab.includes("Cholesterol")) {
-                document.getElementById("label-cholesterol").style.display = "block";
-                document.getElementById("cholesterol").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Asam Urat")) {
-                document.getElementById("label-asam_urat").style.display = "block";
-                document.getElementById("asam_urat").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Leukosit")) {
-                document.getElementById("label-leukosit").style.display = "block";
-                document.getElementById("leukosit").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Eritrosit")) {
-                document.getElementById("label-eritrosit").style.display = "block";
-                document.getElementById("eritrosit").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Trombosit")) {
-                document.getElementById("label-trombosit").style.display = "block";
-                document.getElementById("trombosit").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Hemoglobin")) {
-                document.getElementById("label-hemoglobin").style.display = "block";
-                document.getElementById("hemoglobin").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Sifilis")) {
-                document.getElementById("label-sifilis").style.display = "block";
-                document.getElementById("sifilis").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("HIV")) {
-                document.getElementById("label-hiv").style.display = "block";
-                document.getElementById("hiv").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Golongan Darah")) {
-                document.getElementById("label-golongan_darah").style.display = "block";
-                document.getElementById("golongan_darah").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Widal")) {
-                document.getElementById("label-widal").style.display = "block";
-                document.getElementById("widal").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Malaria")) {
-                document.getElementById("label-malaria").style.display = "block";
-                document.getElementById("malaria").style.display = "block";
-                document.getElementById("pd").style.display = "flex"
-            }
-            if (data.hasillab.includes("Albumin")) {
-                document.getElementById("label-albumin").style.display = "block";
-                document.getElementById("albumin").style.display = "block";
-                document.getElementById("pu").style.display = "flex"
-            }
-            if (data.hasillab.includes("Reduksi")) {
-                document.getElementById("label-reduksi").style.display = "block";
-                document.getElementById("reduksi").style.display = "block";
-                document.getElementById("pu").style.display = "flex"
-            }
-            if (data.hasillab.includes("Urinalisa")) {
-                document.getElementById("label-urinalisa").style.display = "block";
-                document.getElementById("urinalisa").style.display = "block";
-                document.getElementById("pu").style.display = "flex"
-            }
-            if (data.hasillab.includes("Tes Kehamilan")) {
-                document.getElementById("label-tes_kehamilan").style.display = "block";
-                document.getElementById("tes_kehamilan").style.display = "block";
-                document.getElementById("pu").style.display = "flex"
-            }
-            if (data.hasillab.includes("Telur Cacing")) {
-                document.getElementById("label-telur_cacing").style.display = "block";
-                document.getElementById("telur_cacing").style.display = "block";
-                document.getElementById("pf").style.display = "flex"
-            }
-            if (data.hasillab.includes("BTA")) {
-                document.getElementById("label-bta").style.display = "block";
-                document.getElementById("bta").style.display = "block";
-                document.getElementById("pf").style.display = "flex"
-            }
-            if (data.hasillab.includes("IgM DBD")) {
-                document.getElementById("label-igm_dbd").style.display = "block";
-                document.getElementById("igm_dbd").style.display = "block";
-                document.getElementById("pi").style.display = "flex"
-            }
-            if (data.hasillab.includes("IgM Typhoid")) {
-                document.getElementById("label-igm_typhoid").style.display = "block";
-                document.getElementById("igm_typhoid").style.display = "block";
-                document.getElementById("pi").style.display = "flex"
+            if (!data.hasillab || !Array.isArray(data.hasillab)) {
+                console.warn("Data hasil lab tidak ditemukan atau bukan array.");
+                return;
             }
 
+            // Mapping pemeriksaan ke elemen input dan label
+            const pemeriksaanMapping = [{
+                    name: "GDS",
+                    label: "label-gds",
+                    input: "gds",
+                    section: "pd"
+                },
+                {
+                    name: "GDP",
+                    label: "label-gdp",
+                    input: "gdp",
+                    section: "pd"
+                },
+                {
+                    name: "GDP 2 Jam pp",
+                    label: "label-gdp_2_jam_pp",
+                    input: "gdp_2_jam_pp",
+                    section: "pd"
+                },
+                {
+                    name: "Cholesterol",
+                    label: "label-cholesterol",
+                    input: "cholesterol",
+                    section: "pd"
+                },
+                {
+                    name: "Asam Urat",
+                    label: "label-asam_urat",
+                    input: "asam_urat",
+                    section: "pd"
+                },
+                {
+                    name: "Leukosit",
+                    label: "label-leukosit",
+                    input: "leukosit",
+                    section: "pd"
+                },
+                {
+                    name: "Eritrosit",
+                    label: "label-eritrosit",
+                    input: "eritrosit",
+                    section: "pd"
+                },
+                {
+                    name: "Trombosit",
+                    label: "label-trombosit",
+                    input: "trombosit",
+                    section: "pd"
+                },
+                {
+                    name: "Hemoglobin",
+                    label: "label-hemoglobin",
+                    input: "hemoglobin",
+                    section: "pd"
+                },
+                {
+                    name: "Sifilis",
+                    label: "label-sifilis",
+                    input: "sifilis",
+                    section: "pd"
+                },
+                {
+                    name: "HIV",
+                    label: "label-hiv",
+                    input: "hiv",
+                    section: "pd"
+                },
+                {
+                    name: "Golongan Darah",
+                    label: "label-golongan_darah",
+                    input: "golongan_darah",
+                    section: "pd"
+                },
+                {
+                    name: "Widal",
+                    label: "label-widal",
+                    input: "widal",
+                    section: "pd"
+                },
+                {
+                    name: "Malaria",
+                    label: "label-malaria",
+                    input: "malaria",
+                    section: "pd"
+                },
+                {
+                    name: "Albumin",
+                    label: "label-albumin",
+                    input: "albumin",
+                    section: "pu"
+                },
+                {
+                    name: "Reduksi",
+                    label: "label-reduksi",
+                    input: "reduksi",
+                    section: "pu"
+                },
+                {
+                    name: "Urinalisa",
+                    label: "label-urinalisa",
+                    input: "urinalisa",
+                    section: "pu"
+                },
+                {
+                    name: "Tes Kehamilan",
+                    label: "label-tes_kehamilan",
+                    input: "tes_kehamilan",
+                    section: "pu"
+                },
+                {
+                    name: "Telur Cacing",
+                    label: "label-telur_cacing",
+                    input: "telur_cacing",
+                    section: "pf"
+                },
+                {
+                    name: "BTA",
+                    label: "label-bta",
+                    input: "bta",
+                    section: "pf"
+                },
+                {
+                    name: "IgM DBD",
+                    label: "label-igm_dbd",
+                    input: "igm_dbd",
+                    section: "pi"
+                },
+                {
+                    name: "IgM Typhoid",
+                    label: "label-igm_typhoid",
+                    input: "igm_typhoid",
+                    section: "pi"
+                }
+            ];
 
+            // Loop melalui pemeriksaan dan aktifkan elemen yang sesuai
+            pemeriksaanMapping.forEach(({
+                name,
+                label,
+                input,
+                section
+            }) => {
+                if (data.hasillab.includes(name)) {
+                    document.getElementById(label).style.display = "block";
+                    document.getElementById(input).style.display = "block";
+                    document.getElementById(section).style.display = "flex";
+                }
+            });
 
             // Tutup modal
             $('#modalPasienLab').modal('hide');

@@ -104,7 +104,8 @@ class Action extends Model
         'pembekuan_darah',
         'update_obat',
         'beri_tindakan',
-        'tindakan_ruang_tindakan'
+        'tindakan_ruang_tindakan',
+        'kasus'
     ];
 
     protected $casts = [

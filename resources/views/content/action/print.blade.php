@@ -66,7 +66,8 @@
         </div>
         <hr>
         <h3 style="margin-top: 20px;">REKAPAN KUNJUNGAN PASIEN</h3>
-        <p>TANGGAL S/D</p>
+        <p>TANGGAL {{ \Carbon\Carbon::parse($startDate)->format('d-m-Y') }}
+            S/D {{ \Carbon\Carbon::parse($endDate)->format('d-m-Y') }} </p>
     </div>
 
     <div class="table-container">
@@ -89,6 +90,7 @@
                     <th>KUNJ</th>
                     <th>KELUHAN</th>
                     <th>DIAGNOSA</th>
+                    <th>ICD10</th>
                     <th>TINDAKAN</th>
                     <th>RUJUKAN</th>
                     <th>KETERANGAN</th>
@@ -99,12 +101,27 @@
                 @foreach ($actions as $index => $actions)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $actions->tanggal }}</td>
+                        <td>{{ \Carbon\Carbon::parse($actions->tanggal)->format('d-m-Y') }}</td>
                         <td>{{ $actions->patient->no_rm }}</td>
                         <td>{{ $actions->patient->nik }}</td>
                         <td>{{ $actions->patient->name }}<br>{{ $actions->place_birth }}</td>
-                        <td>{{ $actions->patient->dob }}</td>
-                        <td>{{ $actions->kartu }}</td>
+                        <td>{{ \Carbon\Carbon::parse($actions->patient->dob)->format('d-m-Y') }}</td>
+                        <td>
+                            @if ($actions->patient->jenis_kartu == 'pbi')
+                                PBI (KIS)
+                            @elseif($actions->patient->jenis_kartu == 'askes')
+                                AKSES
+                            @elseif($actions->patient->jenis_kartu == 'jkn_mandiri')
+                                JKN Mandiri
+                            @elseif($actions->patient->jenis_kartu == 'umum')
+                                Umum
+                            @elseif($actions->patient->jenis_kartu == 'jkd')
+                                JKD
+                            @else
+                                Tidak Diketahui
+                            @endif
+                            <br>{{ $actions->patient->nomor_kartu ?? '' }}
+                        </td>
                         <td>{{ $actions->patient->address }}</td>
                         <td>{{ $actions->patient->genderName->name }}</td>
                         <td>{{ $actions->tinggiBadan }}</td>
@@ -123,13 +140,20 @@
                         @endphp
 
                         <td>
-                            {{ implode(', ', $diagnosa->pluck('name')->toArray()) }}
-                            <!-- Join diagnosis names into a comma-separated string -->
+                            {{ implode(', ', $diagnosa->pluck('icd10')->toArray()) }}
                         </td>
+                        @php
+                            // Assuming $actions->diagnosa is an array of Diagnosis IDs
+                            $diagnosaIds =
+                                is_array($actions->diagnosa) || $actions->diagnosa instanceof \Countable
+                                    ? $actions->diagnosa
+                                    : [];
+                            $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
+                        @endphp
 
-                        {{-- <td>{{ $actions->marritalStatus->name }}</td>
-                        <td>{{ $actions->educations->name }}</td>
-                        <td>{{ $actions->occupations->name }}</td> --}}
+                        <td>
+                            {{ implode(', ', $diagnosa->pluck('icd10')->toArray()) }}
+                        </td>
                         <td>{{ $actions->tindakan }}</td>
                         <td>{{ $actions->hospitalReferral->name ?? '' }}</td>
 

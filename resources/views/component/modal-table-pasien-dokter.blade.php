@@ -20,6 +20,7 @@
                         <tr>
                             <th>NIK</th>
                             <th>Nama</th>
+                            <th>Tanggal Lahir</th>
                             <th>Tanggal Kunjungan</th>
                             <th>Aksi</th>
                         </tr>
@@ -70,6 +71,10 @@
                         name: 'name'
                     },
                     {
+                        data: 'dob',
+                        name: 'dob'
+                    },
+                    {
                         data: 'tanggal',
                         name: 'tanggal',
                         render: function(data) {
@@ -110,7 +115,7 @@
                         data-rm="${row.no_rm}" 
                         data-tanggal="${row.tanggal}" 
                         data-doctor="${row.doctor}" 
-                        data-kunjungan="${row.kunjungan}" 
+                        data-kasus="${row.kasus}" 
                         data-kartu="${row.jenis_kartu}" 
                         data-nomor="${row.nomor_kartu}" 
                         data-faskes="${row.faskes}" 
@@ -267,7 +272,7 @@
             $('#jenis_kartu').val(jenisKartu);
 
 
-            $('#kunjungan').val(data.kunjungan);
+            $('#kasus').val(data.kasus);
             $('#wilayah_faskes').val(data.faskes);
             $('#sistol').val(data.sistol);
             $('#diastol').val(data.diastol);

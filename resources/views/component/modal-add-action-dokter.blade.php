@@ -85,17 +85,18 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        {{-- <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="kunjungan">Kunjungan</label>
-                                            <select class="form-control" id="kunjungan" name="kunjungan">
-                                                <option value="" disabled selected>Pilih Jenis Kunjungan</option>
-                                                <option value="baru">Baru </option>
-                                                <option value="lama">Lama </option>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="kasus">Kasus</label>
+                                                <select class="form-control" id="kasus" name="kasus">
+                                                    <option value="" disabled selected>Pilih Jenis Kasus
+                                                    </option>
+                                                    <option value="1">Baru </option>
+                                                    <option value="0">Lama </option>
 
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div> --}}
                                     </div>
                                 </div>
                                 <div class="col-12">

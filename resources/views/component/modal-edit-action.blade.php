@@ -764,12 +764,12 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
                                         Penunjang</label>
                                     <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
                                         placeholder="Pemeriksaan penunjang">{{ old('pemeriksaan_penunjang', $action->pemeriksaan_penunjang ?? '') }}</textarea>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-6">
                                     <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                                     <select class="form-control"
