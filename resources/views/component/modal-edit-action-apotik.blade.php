@@ -98,7 +98,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    {{-- <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="kunjungan">Kunjungan</label>
                                             <select class="form-control" id="kunjungan" name="kunjungan" required>
@@ -111,7 +111,7 @@
                                                     {{ $action->kunjungan == 'lama' ? 'selected' : '' }}>Lama</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

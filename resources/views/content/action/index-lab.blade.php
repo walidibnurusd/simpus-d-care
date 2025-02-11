@@ -140,106 +140,156 @@
 
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ ucwords($action->pemeriksaan_penunjang ?? implode(', ', json_decode($action->hasilLab->jenis_pemeriksaan, true) ?? [])) }}
+                                                    {{ ucwords(
+                                                        $action->pemeriksaan_penunjang ??
+                                                            (isset($action->hasilLab) && $action->hasilLab && !empty($action->hasilLab->jenis_pemeriksaan)
+                                                                ? implode(', ', json_decode($action->hasilLab->jenis_pemeriksaan, true))
+                                                                : ''),
+                                                    ) }}
                                                 </p>
                                             </td>
 
 
-                                          <td>
-    <p class="text-xs font-weight-bold mb-0">
-        @if (!empty($action->hasil_lab))
-            {{ ucwords($action->hasil_lab) }}
-        @elseif (!empty($action->hasilLab))
-            @php
-                $jenis_pemeriksaan = is_array($action->hasilLab->jenis_pemeriksaan)
-                    ? $action->hasilLab->jenis_pemeriksaan
-                    : json_decode($action->hasilLab->jenis_pemeriksaan, true);
-                
-                $hasilLabValues = [];
 
-                // Pemeriksaan dasar
-                if (in_array('GDS', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'GDS: ' . ($action->hasilLab->gds ?? '-');
-                }
-                if (in_array('GDP', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'GDP: ' . ($action->hasilLab->gdp ?? '-');
-                }
-                if (in_array('GDP 2 Jam PP', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'GDP 2 Jam PP: ' . ($action->hasilLab->gdp_2_jam_pp ?? '-');
-                }
-                if (in_array('Cholesterol', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Cholesterol: ' . ($action->hasilLab->cholesterol ?? '-');
-                }
-                if (in_array('Asam Urat', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Asam Urat: ' . ($action->hasilLab->asam_urat ?? '-');
-                }
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">
+                                                    @if (!empty($action->hasil_lab))
+                                                        {{ ucwords($action->hasil_lab) }}
+                                                    @elseif (!empty($action->hasilLab))
+                                                        @php
+                                                            $jenis_pemeriksaan = [];
+                                                            if (
+                                                                isset($action->hasilLab) &&
+                                                                !empty($action->hasilLab->jenis_pemeriksaan)
+                                                            ) {
+                                                                // Jika hasilLab dan jenis_pemeriksaan ada, parsing JSON atau gunakan data langsung
+                                                                $jenis_pemeriksaan = is_array(
+                                                                    $action->hasilLab->jenis_pemeriksaan,
+                                                                )
+                                                                    ? $action->hasilLab->jenis_pemeriksaan
+                                                                    : json_decode(
+                                                                        $action->hasilLab->jenis_pemeriksaan,
+                                                                        true,
+                                                                    );
+                                                            }
 
-                // Pemeriksaan darah lengkap
-                if (in_array('Leukosit', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Leukosit: ' . ($action->hasilLab->leukosit ?? '-');
-                }
-                if (in_array('Eritrosit', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Eritrosit: ' . ($action->hasilLab->eritrosit ?? '-');
-                }
-                if (in_array('Trombosit', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Trombosit: ' . ($action->hasilLab->trombosit ?? '-');
-                }
-                if (in_array('Hemoglobin', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Hemoglobin: ' . ($action->hasilLab->hemoglobin ?? '-');
-                }
-                if (in_array('Golongan Darah', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Golongan Darah: ' . ($action->hasilLab->golongan_darah ?? '-');
-                }
+                                                            $hasilLabValues = [];
 
-                // Pemeriksaan infeksi & penyakit menular
-                if (in_array('Widal', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Widal: ' . ($action->hasilLab->widal ?? '-');
-                }
-                if (in_array('Malaria', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Malaria: ' . ($action->hasilLab->malaria ?? '-');
-                }
-                if (in_array('BTA', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'BTA: ' . ($action->hasilLab->bta ?? '-');
-                }
-                if (in_array('IgM DBD', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'IgM DBD: ' . ($action->hasilLab->igm_dbd ?? '-');
-                }
-                if (in_array('IgM Typhoid', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'IgM Typhoid: ' . ($action->hasilLab->igm_typhoid ?? '-');
-                }
-                if (in_array('Sifilis', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Sifilis: ' . ($action->hasilLab->sifilis ?? '-');
-                }
-                if (in_array('HIV', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'HIV: ' . ($action->hasilLab->hiv ?? '-');
-                }
+                                                            // Pemeriksaan dasar
+                                                            if (in_array('GDS', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'GDS: ' . ($action->hasilLab->gds ?? '-');
+                                                            }
+                                                            if (in_array('GDP', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'GDP: ' . ($action->hasilLab->gdp ?? '-');
+                                                            }
+                                                            if (in_array('GDP 2 Jam PP', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'GDP 2 Jam PP: ' .
+                                                                    ($action->hasilLab->gdp_2_jam_pp ?? '-');
+                                                            }
+                                                            if (in_array('Cholesterol', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Cholesterol: ' .
+                                                                    ($action->hasilLab->cholesterol ?? '-');
+                                                            }
+                                                            if (in_array('Asam Urat', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Asam Urat: ' .
+                                                                    ($action->hasilLab->asam_urat ?? '-');
+                                                            }
 
-                // Pemeriksaan urin
-                if (in_array('Albumin', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Albumin: ' . ($action->hasilLab->albumin ?? '-');
-                }
-                if (in_array('Reduksi', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Reduksi: ' . ($action->hasilLab->reduksi ?? '-');
-                }
-                if (in_array('Urinalisa', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Urinalisa: ' . ($action->hasilLab->urinalisa ?? '-');
-                }
-                if (in_array('Tes Kehamilan', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Tes Kehamilan: ' . ($action->hasilLab->tes_kehamilan ?? '-');
-                }
+                                                            // Pemeriksaan darah lengkap
+                                                            if (in_array('Leukosit', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Leukosit: ' . ($action->hasilLab->leukosit ?? '-');
+                                                            }
+                                                            if (in_array('Eritrosit', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Eritrosit: ' .
+                                                                    ($action->hasilLab->eritrosit ?? '-');
+                                                            }
+                                                            if (in_array('Trombosit', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Trombosit: ' .
+                                                                    ($action->hasilLab->trombosit ?? '-');
+                                                            }
+                                                            if (in_array('Hemoglobin', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Hemoglobin: ' .
+                                                                    ($action->hasilLab->hemoglobin ?? '-');
+                                                            }
+                                                            if (in_array('Golongan Darah', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Golongan Darah: ' .
+                                                                    ($action->hasilLab->golongan_darah ?? '-');
+                                                            }
 
-                // Pemeriksaan feses
-                if (in_array('Telur Cacing', $jenis_pemeriksaan)) {
-                    $hasilLabValues[] = 'Telur Cacing: ' . ($action->hasilLab->telur_cacing ?? '-');
-                }
+                                                            // Pemeriksaan infeksi & penyakit menular
+                                                            if (in_array('Widal', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Widal: ' . ($action->hasilLab->widal ?? '-');
+                                                            }
+                                                            if (in_array('Malaria', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Malaria: ' . ($action->hasilLab->malaria ?? '-');
+                                                            }
+                                                            if (in_array('BTA', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'BTA: ' . ($action->hasilLab->bta ?? '-');
+                                                            }
+                                                            if (in_array('IgM DBD', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'IgM DBD: ' . ($action->hasilLab->igm_dbd ?? '-');
+                                                            }
+                                                            if (in_array('IgM Typhoid', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'IgM Typhoid: ' .
+                                                                    ($action->hasilLab->igm_typhoid ?? '-');
+                                                            }
+                                                            if (in_array('Sifilis', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Sifilis: ' . ($action->hasilLab->sifilis ?? '-');
+                                                            }
+                                                            if (in_array('HIV', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'HIV: ' . ($action->hasilLab->hiv ?? '-');
+                                                            }
 
-            @endphp
-            {{ implode(', ', $hasilLabValues) }}
-        @else
-            -
-        @endif
-    </p>
-</td>
+                                                            // Pemeriksaan urin
+                                                            if (in_array('Albumin', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Albumin: ' . ($action->hasilLab->albumin ?? '-');
+                                                            }
+                                                            if (in_array('Reduksi', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Reduksi: ' . ($action->hasilLab->reduksi ?? '-');
+                                                            }
+                                                            if (in_array('Urinalisa', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Urinalisa: ' .
+                                                                    ($action->hasilLab->urinalisa ?? '-');
+                                                            }
+                                                            if (in_array('Tes Kehamilan', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Tes Kehamilan: ' .
+                                                                    ($action->hasilLab->tes_kehamilan ?? '-');
+                                                            }
+
+                                                            // Pemeriksaan feses
+                                                            if (in_array('Telur Cacing', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'Telur Cacing: ' .
+                                                                    ($action->hasilLab->telur_cacing ?? '-');
+                                                            }
+                                                        @endphp
+                                                        {{ implode(', ', $hasilLabValues) }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
+                                            </td>
 
 
 
@@ -249,7 +299,7 @@
                                                     <button type="button"
                                                         class="btn btn-primary btn-sm text-white font-weight-bold"
                                                         data-bs-toggle="modal"
-                                                        data-bs-target="#editActionModal{{ $action->id }}">
+                                                        data-bs-target="#editActionModalLab{{ $action->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
                                                     @include('component.modal-edit-action-lab')

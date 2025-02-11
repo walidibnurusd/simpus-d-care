@@ -162,8 +162,15 @@
                 ajax: {
                     url: "{{ route('action.kb.dokter.index') }}", // Your AJAX route
                     data: function(d) {
-                        d.start_date = $('#start_date').val(); // Optional: Get input field values
-                        d.end_date = $('#end_date').val(); // Optional: Get input field values
+                        var start_date = $('#start_date').val();
+                        var end_date = $('#end_date').val();
+                        if (start_date) {
+                            d.start_date = start_date;
+                        }
+                        if (end_date) {
+                            d.end_date = end_date;
+                        }
+
                     }
                 },
                 columns: [{

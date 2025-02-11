@@ -592,11 +592,11 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 mt-3">
+                                {{-- <div class="col-md-6 mt-3">
                                     <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
                                     <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
                                         placeholder="Pemeriksaan penunjang">{{ isset($action->pemeriksaan_penunjang) ? $action->pemeriksaan_penunjang : '' }}</textarea>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-6 mt-3">
                                     <label for="kesimpulan">Kesimpulan</label>
                                     <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ isset($action->kesimpulan) ? $action->kesimpulan : '' }}</textarea>

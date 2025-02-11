@@ -328,24 +328,37 @@ class ActionController extends Controller
                 })
 
                 ->addColumn('hasil_lab', function ($row) {
-                    $dokter = User::where('role', 'dokter')->get();
-                    $routeName = request()->route()->getName();
-                    if (!empty($row->hasilLab)) {
-                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                    if ($row->hasilLab) {
+                        $dokter = User::where('role', 'dokter')->get();
+                        $routeName = request()->route()->getName();
+                        $editModal = view('component.modal-edit-action-lab', [
+                            'action' => $row,
+                            'routeName' => $routeName,
+                            'dokter' => $dokter,
+                        ])->render();
+
                         return '<div class="action-buttons">
-                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                    <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModalLab' .
                             $row->id .
                             '">
-                                  Hasil
-                                </button>
-                                <form action="' .
+                        Hasil
+                    </button>
+                    <form action="' .
                             route('action.destroy', $row->id) .
                             '" method="POST" class="d-inline">
-                                    ' .
+                        ' .
                             csrf_field() .
-                            $editModal;
+                            '
+                        ' .
+                            $editModal .
+                            '
+                    </form>
+                </div>';
+                    } else {
+                        return '-'; // Jika tidak ada hasil lab, tampilkan tanda minus atau pesan lain
                     }
                 })
+
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
@@ -437,22 +450,34 @@ class ActionController extends Controller
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
                 ->addColumn('hasil_lab', function ($row) {
-                    $dokter = User::where('role', 'dokter')->get();
-                    $routeName = request()->route()->getName();
-                    if (!empty($row->hasilLab)) {
-                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                    if ($row->hasilLab) {
+                        $dokter = User::where('role', 'dokter')->get();
+                        $routeName = request()->route()->getName();
+                        $editModal = view('component.modal-edit-action-lab', [
+                            'action' => $row,
+                            'routeName' => $routeName,
+                            'dokter' => $dokter,
+                        ])->render();
+
                         return '<div class="action-buttons">
-                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                    <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModalLab' .
                             $row->id .
                             '">
-                                  Hasil
-                                </button>
-                                <form action="' .
+                        Hasil
+                    </button>
+                    <form action="' .
                             route('action.destroy', $row->id) .
                             '" method="POST" class="d-inline">
-                                    ' .
+                        ' .
                             csrf_field() .
-                            $editModal;
+                            '
+                        ' .
+                            $editModal .
+                            '
+                    </form>
+                </div>';
+                    } else {
+                        return '-'; // Jika tidak ada hasil lab, tampilkan tanda minus atau pesan lain
                     }
                 })
 
@@ -485,7 +510,7 @@ class ActionController extends Controller
                             </div>' .
                         $editModal;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'hasil_lab'])
                 ->make(true);
         }
 
@@ -543,24 +568,37 @@ class ActionController extends Controller
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
                 ->addColumn('hasil_lab', function ($row) {
-                    $dokter = User::where('role', 'dokter')->get();
-                    $routeName = request()->route()->getName();
-                    if (!empty($row->hasilLab)) {
-                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                    if ($row->hasilLab) {
+                        $dokter = User::where('role', 'dokter')->get();
+                        $routeName = request()->route()->getName();
+                        $editModal = view('component.modal-edit-action-lab', [
+                            'action' => $row,
+                            'routeName' => $routeName,
+                            'dokter' => $dokter,
+                        ])->render();
+
                         return '<div class="action-buttons">
-                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                    <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModalLab' .
                             $row->id .
                             '">
-                                  Hasil
-                                </button>
-                                <form action="' .
+                        Hasil
+                    </button>
+                    <form action="' .
                             route('action.destroy', $row->id) .
                             '" method="POST" class="d-inline">
-                                    ' .
+                        ' .
                             csrf_field() .
-                            $editModal;
+                            '
+                        ' .
+                            $editModal .
+                            '
+                    </form>
+                </div>';
+                    } else {
+                        return '-'; // Jika tidak ada hasil lab, tampilkan tanda minus atau pesan lain
                     }
                 })
+
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
                     $dokter = User::where('role', 'dokter')->get();
@@ -590,7 +628,7 @@ class ActionController extends Controller
                         </div>' .
                         $editModal;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'hasil_lab'])
                 ->make(true);
         }
 
@@ -609,7 +647,9 @@ class ActionController extends Controller
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('beri_tindakan', 1);
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
+                ->where('beri_tindakan', 1)
+                ->orWhere('tipe', 'tindakan');
 
             $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
@@ -796,6 +836,7 @@ class ActionController extends Controller
         $actionsQuery = Action::with('hasilLab')
             ->where('tipe', 'poli-kia')
             ->whereNotNull('hasil_lab')
+            ->where('hasil_lab', '!=', '-')
             ->orWhereHas('hasilLab', function ($q) {
                 $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid');
             });
@@ -904,22 +945,34 @@ class ActionController extends Controller
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('hasil_lab', function ($row) {
-                    $dokter = User::where('role', 'dokter')->get();
-                    $routeName = request()->route()->getName();
-                    if (!empty($row->hasilLab)) {
-                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                    if ($row->hasilLab) {
+                        $dokter = User::where('role', 'dokter')->get();
+                        $routeName = request()->route()->getName();
+                        $editModal = view('component.modal-edit-action-lab', [
+                            'action' => $row,
+                            'routeName' => $routeName,
+                            'dokter' => $dokter,
+                        ])->render();
+
                         return '<div class="action-buttons">
-                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                    <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModalLab' .
                             $row->id .
                             '">
-                                  Hasil
-                                </button>
-                                <form action="' .
+                        Hasil
+                    </button>
+                    <form action="' .
                             route('action.destroy', $row->id) .
                             '" method="POST" class="d-inline">
-                                    ' .
+                        ' .
                             csrf_field() .
-                            $editModal;
+                            '
+                        ' .
+                            $editModal .
+                            '
+                    </form>
+                </div>';
+                    } else {
+                        return '-'; // Jika tidak ada hasil lab, tampilkan tanda minus atau pesan lain
                     }
                 })
 
@@ -952,7 +1005,7 @@ class ActionController extends Controller
                             </div>' .
                         $editModal;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'hasil_lab'])
                 ->make(true);
         }
 
@@ -1006,24 +1059,37 @@ class ActionController extends Controller
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
                 ->addColumn('hasil_lab', function ($row) {
-                    $dokter = User::where('role', 'dokter')->get();
-                    $routeName = request()->route()->getName();
-                    if (!empty($row->hasilLab)) {
-                        $editModal = view('component.modal-edit-action-lab', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                    if ($row->hasilLab) {
+                        $dokter = User::where('role', 'dokter')->get();
+                        $routeName = request()->route()->getName();
+                        $editModal = view('component.modal-edit-action-lab', [
+                            'action' => $row,
+                            'routeName' => $routeName,
+                            'dokter' => $dokter,
+                        ])->render();
+
                         return '<div class="action-buttons">
-                                <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
+                    <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModalLab' .
                             $row->id .
                             '">
-                                  Hasil
-                                </button>
-                                <form action="' .
+                        Hasil
+                    </button>
+                    <form action="' .
                             route('action.destroy', $row->id) .
                             '" method="POST" class="d-inline">
-                                    ' .
+                        ' .
                             csrf_field() .
-                            $editModal;
+                            '
+                        ' .
+                            $editModal .
+                            '
+                    </form>
+                </div>';
+                    } else {
+                        return '-'; // Jika tidak ada hasil lab, tampilkan tanda minus atau pesan lain
                     }
                 })
+
                 ->addColumn('action', function ($row) {
                     // Render action buttons
                     $rs = Hospital::all();
@@ -1053,7 +1119,7 @@ class ActionController extends Controller
                         </div>' .
                         $editModal;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'hasil_lab'])
                 ->make(true);
         }
 

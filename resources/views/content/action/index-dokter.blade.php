@@ -244,8 +244,17 @@
                             type: 'GET',
                             data: function(d) {
                                 // Add date filters if available
-                                d.start_date = $('#startDate').val();
-                                d.end_date = $('#endDate').val();
+                                var start_date = $('#start_date').val();
+                                var end_date = $('#end_date').val();
+                                if (start_date) {
+                                    d.start_date = start_date;
+                                }
+                                if (end_date) {
+                                    d.end_date = end_date;
+                                }
+
+                                // console.log("Start Date: ", start_date);
+                                // console.log("End Date: ", end_date);
                             }
                         },
                         columns: [{
@@ -351,8 +360,15 @@
                             type: 'GET',
                             data: function(d) {
                                 // Add date filters if available
-                                d.start_date = $('#startDate').val();
-                                d.end_date = $('#endDate').val();
+                                var start_date = $('#start_date').val();
+                                var end_date = $('#end_date').val();
+                                if (start_date) {
+                                    d.start_date = start_date;
+                                }
+                                if (end_date) {
+                                    d.end_date = end_date;
+                                }
+
                             }
                         },
                         columns: [{
@@ -459,8 +475,15 @@
                             type: 'GET',
                             data: function(d) {
                                 // Add date filters if available
-                                d.start_date = $('#startDate').val();
-                                d.end_date = $('#endDate').val();
+                                var start_date = $('#start_date').val();
+                                var end_date = $('#end_date').val();
+                                if (start_date) {
+                                    d.start_date = start_date;
+                                }
+                                if (end_date) {
+                                    d.end_date = end_date;
+                                }
+
                             }
                         },
                         columns: [{

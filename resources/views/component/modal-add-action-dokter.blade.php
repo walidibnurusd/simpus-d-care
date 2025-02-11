@@ -665,7 +665,7 @@
                         </div>
 
                     </div>
-                    @if (Auth::user()->role == 'dokter')
+                    @if (Auth::user()->role == 'dokter' || $routeName === 'action.dokter.ugd.index')
                         <div id="formSection2" class="form-section d-none">
                             <h6>Jenis Pemeriksaan Darah</h6>
                             <div class="row">
@@ -798,7 +798,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                @if (Auth::user()->role == 'dokter')
+                @if (Auth::user()->role == 'dokter' || $routeName === 'action.dokter.ugd.index')
                     <button type="button" class="btn btn-success" id="nextSectionButton">Lanjut
                         Pemeriksaan</button>
                 @endif

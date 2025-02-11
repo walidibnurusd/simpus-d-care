@@ -159,8 +159,15 @@
                 ajax: {
                     url: "{{ route('action.kia.dokter.index') }}",
                     data: function(d) {
-                        d.start_date = $('#start_date').val();
-                        d.end_date = $('#end_date').val();
+                        var start_date = $('#start_date').val();
+                        var end_date = $('#end_date').val();
+                        if (start_date) {
+                            d.start_date = start_date;
+                        }
+                        if (end_date) {
+                            d.end_date = end_date;
+                        }
+
                     }
                 },
                 columns: [{

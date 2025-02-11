@@ -110,7 +110,8 @@
                 data-doctor="${row.doctor}" 
                 data-kunjungan="${row.kunjungan}"    
                 data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}"    
-                data-hasillab="${row.hasil_lab && row.hasil_lab.jenis_pemeriksaan ? JSON.parse(row.hasil_lab.jenis_pemeriksaan) : null}"
+              data-hasillab="${row.hasil_lab && row.hasil_lab.jenis_pemeriksaan ? JSON.parse(row.hasil_lab.jenis_pemeriksaan) : null}"
+
 
             >
                 Pilih
@@ -206,10 +207,22 @@
             const patientId = $(this).data('id-patient');
             // console.log($('#patientDetails').show());
             $('#btnCariskrining').data('id', patientId);
-            if (!data.hasillab || !Array.isArray(data.hasillab)) {
+            let hasilLab = [];
+            if (data.hasillab) {
+                if (typeof data.hasillab === "string") {
+                    hasilLab = data.hasillab.split(","); // Ubah string jadi array
+                } else if (Array.isArray(data.hasillab)) {
+                    hasilLab = data.hasillab; // Jika sudah array, gunakan langsung
+                }
+            }
+
+            console.log("Parsed hasilLab:", hasilLab);
+
+            if (!Array.isArray(hasilLab)) {
                 console.warn("Data hasil lab tidak ditemukan atau bukan array.");
                 return;
             }
+
 
             // Mapping pemeriksaan ke elemen input dan label
             const pemeriksaanMapping = [{
@@ -353,12 +366,13 @@
                 input,
                 section
             }) => {
-                if (data.hasillab.includes(name)) {
+                if (hasilLab.includes(name)) {
                     document.getElementById(label).style.display = "block";
                     document.getElementById(input).style.display = "block";
                     document.getElementById(section).style.display = "flex";
                 }
             });
+
 
             // Tutup modal
             $('#modalPasienLab').modal('hide');

@@ -1,5 +1,5 @@
 <!-- Modal Add Action -->
-<div class="modal fade" style="z-index: 1050;" id="editActionModal{{ $action->id }}" tabindex="-1"
+<div class="modal fade" style="z-index: 1050;" id="editActionModalLab{{ $action->id }}" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">

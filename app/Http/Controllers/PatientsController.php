@@ -1168,7 +1168,6 @@ class PatientsController extends Controller
                 $patient->address = $validatedData['address'];
                 $patient->jenis_kartu = $validatedData['jenis_kartu'];
                 $patient->nomor_kartu = $validatedData['nomor_kartu'];
-                $patient->kunjungan = $validatedData['kunjungan'];
                 $patient->wilayah_faskes = $validatedData['wilayah_faskes'];
                 $patient->no_family_folder = $validatedData['no_family_folder'];
                 $lastPatient = Patients::orderBy('created_at', 'desc')->first();
@@ -1194,9 +1193,12 @@ class PatientsController extends Controller
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Patient and visit data added successfully.');
         } catch (Exception $e) {
+            \Log::error('Error occurred: ' . $e->getMessage());
+            \Log::error('Stack Trace: ' . $e->getTraceAsString());
             // Log the error
             if ($e instanceof \Illuminate\Validation\ValidationException) {
                 $errors = $e->errors();
+                \Log::error('Validation Errors: ', $errors);
 
                 // Check if specific validation errors exist for 'nik'
                 if (isset($errors['nik'])) {
