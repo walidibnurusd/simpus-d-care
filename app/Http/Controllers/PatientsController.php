@@ -1065,7 +1065,7 @@ class PatientsController extends Controller
         foreach ($filters as $column => $value) {
             if ($value) {
                 if ($column === 'dob') {
-                    // Handle date specific column (dob in this case)
+            
                     $patients->whereDate('dob', 'like', "%$value%");
                 } else {
                     // Generic column search

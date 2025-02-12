@@ -16,11 +16,11 @@
             </div>
         </form>
 
-        {{-- <div class="header-logo-wrapper col-auto p-0">
-            <div class="logo-wrapper"><a href="{{ route('index') }}"></a></div>
+        <div class="header-logo-wrapper col-auto p-0">
+            <div class="logo-wrapper"><a href="{{ route('dashboard.index') }}"></a></div>
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i>
             </div>
-        </div> --}}
+        </div>
         <div class="left-header col-xxl-5 col-xl-6 col-lg-5 col-md-4 col-sm-3 p-0">
             {{-- <div class="notification-slider"> --}}
             <a class="d-flex align-items-center" href="#">

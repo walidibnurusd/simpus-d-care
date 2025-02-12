@@ -28,17 +28,19 @@
                             <h6 class="lan-1">General</h6>
                         </div>
                     </li>
-                    {{-- <li class="sidebar-list">
-                        <a class="sidebar-link sidebar-title link-nav" href="{{ route('dashboard.index') }}">
-                            <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-home') }}"></use>
-                            </svg>
-                            <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-home') }}"></use>
-                            </svg>
-                            <span>Dashboard</span>
-                        </a>
-                    </li> --}}
+                    @if (Auth::user()->role == 'admin')
+                        <li class="sidebar-list">
+                            <a class="sidebar-link sidebar-title link-nav" href="{{ route('dashboard.index') }}">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-home') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-home') }}"></use>
+                                </svg>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                    @endif
                     @if (Auth::user()->role == 'admin-loket')
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('patient.index') }}">
@@ -172,9 +174,9 @@
                                 @elseif(Auth::user()->role == 'apotik')
                                     <li><a href="{{ route('action.apotik.ugd.index') }}">Tindakan</a></li>
                                     <li><a href="{{ route('report.index') }}">Laporan</a></li>
-                                    {{-- @else
+                                @else
                                     <li><a href="{{ route('action.lab.ugd.index') }}">Tindakan</a></li>
-                                    <li><a href="{{ route('report.index') }}">Laporan</a></li> --}}
+                                    <li><a href="{{ route('report.index') }}">Laporan</a></li>
                                 @endif
 
                             </ul>

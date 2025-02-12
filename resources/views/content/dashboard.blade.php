@@ -37,67 +37,125 @@
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             NIK
                                             <input type="text" id="nik-filter" class="filter-input"
-                                                placeholder="Search NIK">
+                                                placeholder="Cari NIK">
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             NAMA
                                             <input type="text" id="name-filter" class="filter-input"
-                                                placeholder="Search Name">
+                                                placeholder="Cari Nama">
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             ALAMAT
                                             <input type="text" id="address-filter" class="filter-input"
-                                                placeholder="Search Address">
+                                                placeholder="Cari Alamat">
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             TEMPAT/TGL.LAHIR
                                             <input type="text" id="dob-filter" class="filter-input"
-                                                placeholder="Search DOB">
+                                                placeholder="Cari TTL">
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             JK
                                             <input type="text" id="gender-filter" class="filter-input"
-                                                placeholder="Search Gender">
+                                                placeholder="Cari Jenis Kelamin">
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             TELEPON
                                             <input type="text" id="phone-filter" class="filter-input"
-                                                placeholder="Search Phone">
+                                                placeholder="Cari Nomor Hp">
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             NIKAH
                                             <input type="text" id="marrital-status-filter" class="filter-input"
-                                                placeholder="Search Marital Status">
+                                                placeholder="Cari Nikah">
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             No RM
                                             <input type="text" id="no-rm-filter" class="filter-input"
-                                                placeholder="Search No RM">
+                                                placeholder="Cari No RM">
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             No FAMILY FOLDER
                                             <input type="text" id="no-family-folder-filter" class="filter-input"
-                                                placeholder="Search Family Folder">
+                                                placeholder="Cari Family Folder">
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             TANGGAL INPUT
-                                            <input type="text" id="created-at-filter" class="filter-input"
-                                                placeholder="Search Date">
+                                            <input type="date" id="created-at-filter" class="filter-input"
+                                                placeholder="Cari Tanggal">
                                         </th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">AKSI
                                         </th>
                                     </tr>
                                 </thead>
 
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Daftar Data Kunjungan</h6>
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-4">
+                            <table id="kunjungan-table" class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            No
+                                        </th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            NIK <input type="text" id="nik-filter-kunjungan"
+                                                class="filter-input-kunjungan" placeholder="Cari NIK"></th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            No RM<input type="text" id="no-rm-filter-kunjungan"
+                                                class="filter-input-kunjungan" placeholder="Cari NO RM"></th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            NAMA <input type="text" id="name-filter-kunjungan"
+                                                class="filter-input-kunjungan" placeholder="Cari Nama"></th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            TEMPAT/TGL.LAHIR <input type="text" id="dob-filter-kunjungan"
+                                                class="filter-input-kunjungan" placeholder="Cari TTL"></th>
+
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            POLI BEROBAT <input type="text" id="poli-filter-kunjungan"
+                                                class="filter-input-kunjungan" placeholder="Cari Poli"></th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            HAMIL <input type="text" id="hamil-filter-kunjungan"
+                                                class="filter-input-kunjungan" placeholder="Cari Hamil"></th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            KLASTER <input type="text" id="klaster-filter-kunjungan"
+                                                class="filter-input-kunjungan" placeholder="Cari KLaster"></th>
+
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            TANGGAL KUNJUNGAN <input type="date" id="tanggal-filter-kunjungan"
+                                                class="filter-input-kunjungan" placeholder="Cari Tanggal Kunjungan"></th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            AKSI</th>
+
+                                    </tr>
+                                </thead>
 
                             </table>
 
@@ -219,6 +277,89 @@
                 $('.filter-input').on('keyup change', function() {
                     table.ajax.reload(); // Reload the table with filter values
                 });
+                var tableKunjungan = $('#kunjungan-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('kunjungan.index') }}',
+                        data: function(d) {
+                            // Send filter data along with the request
+                            d.start_date = $('#start_date').val();
+                            d.end_date = $('#end_date').val();
+                            d.nik = $('#nik-filter-kunjungan').val();
+                            d.name = $('#name-filter-kunjungan').val();
+                            d.poli = $('#poli-filter-kunjungan').val();
+                            d.dob = $('#dob-filter-kunjungan').val();
+                            d.hamil = $('#hamil-filter-kunjungan').val();
+                            d.klaster = $('#klaster-filter-kunjungan').val();
+                            d.tanggal = $('#tanggal-filter-kunjungan').val();
+                            d.no_rm = $('#no-rm-filter-kunjungan').val();
+                        }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex'
+                        },
+                        {
+                            data: 'patient_nik',
+                            name: 'patient_nik'
+                        },
+                        {
+                            data: 'patient_no_rm',
+                            name: 'patient_no_rm'
+                        },
+                        {
+                            data: 'patient_name',
+                            name: 'patient_name'
+                        },
+                        {
+                            data: 'patient_age',
+                            name: 'patient_age'
+                        },
+                        {
+                            data: 'poli',
+                            name: 'poli'
+                        },
+                        {
+                            data: 'hamil',
+                            name: 'hamil'
+                        },
+                        {
+                            data: 'patient_klaster',
+                            name: 'patient_klaster'
+                        },
+                        {
+                            data: 'tanggal',
+                            name: 'tanggal',
+                            orderable: false,
+                            searchable: false
+                        },
+
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                    language: {
+                        search: "Cari:",
+                        info: "_PAGE_ dari _PAGES_ halaman",
+                        paginate: {
+                            previous: "<",
+                            next: ">",
+                            first: "<<",
+                            last: ">>"
+                        }
+                    },
+                    pageLength: 10, // Set default page size
+                    lengthMenu: [10, 25, 50, 100], // Set available page sizes
+
+                });
+                $('.filter-input-kunjungan').on('keyup change', function() {
+                    tableKunjungan.ajax.reload(); // Reload the table with filter values
+                });
+
             });
         </script>
 

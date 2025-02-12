@@ -102,6 +102,7 @@
                                 data-job="${row.occupation}" 
                                 data-wilayahfaskes="${row.wilayah_faskes}" 
                                 data-kunjungan="${row.kunjungan}" 
+                                data-familyfolder="${row.no_family_folder}" 
                                 data-rm="${row.no_rm}">
                                 Pilih
                             </button>
@@ -134,7 +135,7 @@
             var age = calculateAge(dob);
             $('#nikAdd').val(data.nik);
             $('#name').val(data.name);
-            $('#no_rm').val(data.rm);
+            $('#no_family_folder').val(data.familyfolder);
             $('#marriage_status').val(data.marrital);
             $('#phone').val(data.phone);
             $('#blood_type').val(data.blood);
@@ -153,7 +154,7 @@
             $('#village').val(data.village);
             $('#rw').val(data.rw);
             $('#address').val(data.address);
-            $('#wilayah_faskes').val(data.wilayah_faskes);
+            $('#wilayah_faskes').val(data.wilayahfaskes);
             $('#kunjungan').val(data.kunjungan);
 
             let jenisKartu = data.jenis_kartu;

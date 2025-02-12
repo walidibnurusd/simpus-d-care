@@ -17,6 +17,14 @@ class KunjunganController extends Controller
         if ($request->ajax()) {
             $startDate = $request->input('start_date');
             $endDate = $request->input('end_date');
+            $nik = $request->input('nik');
+            $name = $request->input('name');
+            $poli = $request->input('poli');
+            $dob = $request->input('dob');
+            $hamil = $request->input('hamil');
+            $klaster = $request->input('klaster');
+            $tanggal = $request->input('tanggal');
+            $no_rm = $request->input('no_rm');
 
             $kunjungansQuery = Kunjungan::with('patient');
 
@@ -27,7 +35,57 @@ class KunjunganController extends Controller
             if ($endDate) {
                 $kunjungansQuery->whereDate('tanggal', '<=', $endDate);
             }
+            if ($nik) {
+                $kunjungansQuery->whereHas('patient', function ($query) use ($nik) {
+                    $query->where('nik', 'like', '%' . $nik . '%');
+                });
+            }
 
+            if ($name) {
+                $kunjungansQuery->whereHas('patient', function ($query) use ($name) {
+                    $query->where('name', 'like', '%' . $name . '%');
+                });
+            }
+            if ($poli) {
+                if (strtolower($poli) == 'ugd') {
+                    $poli = 'ruang-tindakan';
+                }
+
+                if (strtolower($poli) == 'tindakan' || strtolower($poli) == 'ruang tindakan') {
+                    $poli = 'tindakan';
+                    $kunjungansQuery->where('poli', $poli);
+                }
+
+                $normalizedPoli = str_replace(' ', '-', strtolower($poli));
+                $kunjungansQuery->where('poli', 'like', '%' . $normalizedPoli . '%');
+            }
+
+            if ($dob) {
+                $kunjungansQuery->whereHas('patient', function ($query) use ($dob) {
+                    $query->whereDate('dob', $dob);
+                });
+            }
+
+            if ($hamil) {
+                $kunjungansQuery->where('hamil', $hamil);
+            }
+
+            if ($klaster) {
+                $kunjungansQuery->whereHas('patient', function ($query) use ($klaster) {
+                    $query->where('klaster', $klaster);
+                });
+            }
+
+            if ($request->has('tanggal') && $request->tanggal) {
+                $tanggal = Carbon::createFromFormat('Y-m-d', $request->tanggal)->toDateString();
+                $kunjungansQuery->whereDate('tanggal', $tanggal);
+            }
+
+            if ($no_rm) {
+                $kunjungansQuery->whereHas('patient', function ($query) use ($no_rm) {
+                    $query->where('no_rm', 'like', '%' . $no_rm . '%');
+                });
+            }
             $kunjungansQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
             $kunjungans = $kunjungansQuery->get();
@@ -78,7 +136,7 @@ class KunjunganController extends Controller
                         }
                     }
                 })
-                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('d-m-Y') : '-')
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
                     // Render modal edit with route name
