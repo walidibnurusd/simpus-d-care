@@ -1064,9 +1064,27 @@ class PatientsController extends Controller
         // Apply filters to the query builder
         foreach ($filters as $column => $value) {
             if ($value) {
+                Log::info($column);
                 if ($column === 'dob') {
-            
                     $patients->whereDate('dob', 'like', "%$value%");
+                } elseif ($column === 'gender') {
+                    if (strtolower($value) === 'perempuan') {
+                        $patients->where('gender', 1);
+                    } else {
+                        $patients->where('gender', 2);
+                    }
+                } elseif ($column === 'marrital_status') {
+                
+
+                    if (strtolower($value) === 'belum menikah') {
+                        $patients->where('marrital_status', 1);
+                    } elseif (strtolower($value) === 'menikah') {
+                        $patients->where('marrital_status', 2);
+                    } elseif (strtolower($value) === 'janda') {
+                        $patients->where('marrital_status', 3);
+                    } else {
+                        $patients->where('marrital_status', 4);
+                    }
                 } else {
                     // Generic column search
                     $patients->where($column, 'like', "%$value%");
@@ -1297,7 +1315,7 @@ class PatientsController extends Controller
         $patient->delete();
 
         // Redirect with a success message
-        return redirect()->route('patient.index')->with('success', 'Patient deleted successfully.');
+        return redirect()->back()->with('success', 'Patient deleted successfully.');
     }
     public function patientReport()
     {

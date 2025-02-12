@@ -45,8 +45,8 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="no_family_folder">Nomor Family Folder</label>
-                                    <input type="text" class="form-control" id="no_family_folder" name="no_family_folder"
-                                        placeholder="Nomor Family Folder"
+                                    <input type="text" class="form-control" id="no_family_folder"
+                                        name="no_family_folder" placeholder="Nomor Family Folder"
                                         value="{{ old('no_family_folder', $patient->no_family_folder) }}" required>
                                 </div>
                             </div>
@@ -142,7 +142,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row g-2">
+                        {{-- <div class="row g-2">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="klaster">Klaster</label>
@@ -208,7 +208,7 @@
                                         placeholder="Masukkan Nomor" value="{{ $patient->nomor_kartu }}" required>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="row g-2">
                             <div class="col-md-6">
@@ -303,12 +303,15 @@
                                                 {{ $i }}
                                             </option>
                                         @endfor
-                                        <option value="4A" {{ old('rw', $patient->rw) == '4A' ? 'selected' : '' }}>4A
+                                        <option value="4A"
+                                            {{ old('rw', $patient->rw) == '4A' ? 'selected' : '' }}>4A
                                         </option>
-                                        <option value="4B" {{ old('rw', $patient->rw) == '4B' ? 'selected' : '' }}>4B
+                                        <option value="4B"
+                                            {{ old('rw', $patient->rw) == '4B' ? 'selected' : '' }}>4B
                                             (TPA)</option>
                                         <option value="luar-wilayah"
-                                            {{ old('rw', $patient->rw) == 'luar-wilayah' ? 'selected' : '' }}>Luar Wilayah
+                                            {{ old('rw', $patient->rw) == 'luar-wilayah' ? 'selected' : '' }}>Luar
+                                            Wilayah
                                         </option>
                                     </select>
                                 </div>
@@ -345,7 +348,8 @@
                                     <select class="form-control" id="wilayah_faskes" name="wilayah_faskes">
                                         <option value="" disabled selected>Pilih</option>
                                         <option value="1"
-                                            {{ old('wilayah_faskes', $patient->wilayah_faskes) == 1 ? 'selected' : '' }}>Ya
+                                            {{ old('wilayah_faskes', $patient->wilayah_faskes) == 1 ? 'selected' : '' }}>
+                                            Ya
                                         </option>
                                         <option value="0"
                                             {{ old('wilayah_faskes', $patient->wilayah_faskes) == 0 ? 'selected' : '' }}>

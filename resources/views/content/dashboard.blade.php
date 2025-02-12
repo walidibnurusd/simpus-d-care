@@ -201,6 +201,7 @@
                             d.no_rm = $('#no-rm-filter').val();
                             d.no_family_folder = $('#no-family-folder-filter').val();
                             d.created_at = $('#created-at-filter').val();
+
                         }
                     },
                     columns: [{
@@ -274,9 +275,9 @@
                 // $('#filterButton').on('click', function() {
                 //     table.ajax.reload(); // Mengambil data dengan filter tanggal
                 // });
-                $('.filter-input').on('keyup change', function() {
-                    table.ajax.reload(); // Reload the table with filter values
-                });
+                // $('.filter-input').on('keyup change', function() {
+                //     table.ajax.reload(); // Reload the table with filter values
+                // });
                 var tableKunjungan = $('#kunjungan-table').DataTable({
                     processing: true,
                     serverSide: true,
@@ -356,9 +357,9 @@
                     lengthMenu: [10, 25, 50, 100], // Set available page sizes
 
                 });
-                $('.filter-input-kunjungan').on('keyup change', function() {
-                    tableKunjungan.ajax.reload(); // Reload the table with filter values
-                });
+                // $('.filter-input-kunjungan').on('keyup change', function() {
+                //     tableKunjungan.ajax.reload(); // Reload the table with filter values
+                // });
 
             });
         </script>

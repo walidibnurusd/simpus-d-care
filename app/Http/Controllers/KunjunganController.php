@@ -67,9 +67,14 @@ class KunjunganController extends Controller
             }
 
             if ($hamil) {
+                if (strtolower($hamil) == 'ya') {
+                    $hamil = 1;
+                } else {
+                    $hamil = 0;
+                }
+
                 $kunjungansQuery->where('hamil', $hamil);
             }
-
             if ($klaster) {
                 $kunjungansQuery->whereHas('patient', function ($query) use ($klaster) {
                     $query->where('klaster', $klaster);
