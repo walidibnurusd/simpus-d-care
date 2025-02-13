@@ -401,11 +401,11 @@
                 });
                 $('#tanggal-filter-kunjungan').on('change', function() {
                     // When date filter changes, reload the table with the new data
-                    table.draw();
+                    tableKunjungan.draw();
                 });
                 $('#nik-filter-kunjungan, #name-filter-kunjungan, #poli-filter-kunjungan, #dob-filter-kunjungan, #hamil-filter-kunjungan, #klaster-filter-kunjungan, #no-rm-filter-kunjungan')
                     .on('input', function() {
-                        table.draw();
+                        tableKunjungan.draw();
                     });
 
                 // $('.filter-input-kunjungan').on('keyup change', function() {

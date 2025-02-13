@@ -142,7 +142,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="row g-2">
+                        <div class="row g-2">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="klaster">Klaster</label>
@@ -158,7 +158,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            {{-- <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="poli">Poli</label>
 
@@ -173,7 +173,7 @@
                                             Lansia & Dewasa</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="kartu">Jenis Kartu</label>
@@ -185,14 +185,16 @@
                                         <option value="pbi" {{ $patient->jenis_kartu == 'pbi' ? 'selected' : '' }}>
                                             PBI (KIS)
                                         </option>
-                                        <option value="askes" {{ $patient->jenis_kartu == 'askes' ? 'selected' : '' }}>
+                                        <option value="askes"
+                                            {{ $patient->jenis_kartu == 'askes' ? 'selected' : '' }}>
                                             ASKES
                                         </option>
                                         <option value="jkn_mandiri"
                                             {{ $patient->jenis_kartu == 'jkn_mandiri' ? 'selected' : '' }}>
                                             JKN Mandiri
                                         </option>
-                                        <option value="umum" {{ $patient->jenis_kartu == 'umum' ? 'selected' : '' }}>
+                                        <option value="umum"
+                                            {{ $patient->jenis_kartu == 'umum' ? 'selected' : '' }}>
                                             Umum
                                         </option>
                                         <option value="jkd" {{ $patient->jenis_kartu == 'jkd' ? 'selected' : '' }}>
@@ -208,7 +210,7 @@
                                         placeholder="Masukkan Nomor" value="{{ $patient->nomor_kartu }}" required>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
 
                         <div class="row g-2">
                             <div class="col-md-6">

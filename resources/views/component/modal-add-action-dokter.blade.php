@@ -464,14 +464,17 @@
                         @if (Auth::user()->role != 'tindakan')
                             <div class="row mt-3">
                                 <div class="col-md-4">
-                                    <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                    <label for="diagnosa" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                     <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
                                         @foreach ($diagnosa as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
+                                            <option value="{{ $item->id }}"
+                                                @if (in_array($item->id, old('diagnosa', []))) selected @endif>
+                                                {{ $item->name }} - {{ $item->icd10 }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
+
 
                                 <div class="col-md-4">
                                     <div class="form-group">

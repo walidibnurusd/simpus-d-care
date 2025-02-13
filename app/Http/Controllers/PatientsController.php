@@ -1083,7 +1083,7 @@ class PatientsController extends Controller
                         $patients->where('gender', 2);
                     }
                 } elseif ($column === 'marrital_status') {
-                    if (strtolower($value) === 'belum menikah') {
+                    if (strtolower($value) === 'belum menikah'||strtolower($value) === 'belum') {
                         $patients->where('marrital_status', 1);
                     } elseif (strtolower($value) === 'menikah') {
                         $patients->where('marrital_status', 2);
