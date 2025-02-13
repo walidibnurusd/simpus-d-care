@@ -212,43 +212,63 @@
                         },
                         {
                             data: 'nik',
-                            name: 'nik'
+                            name: 'nik',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'name',
-                            name: 'name'
+                            name: 'name',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'address',
-                            name: 'address'
+                            name: 'address',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'dob',
-                            name: 'dob'
+                            name: 'dob',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'gender',
-                            name: 'gender'
+                            name: 'gender',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'phone',
-                            name: 'phone'
+                            name: 'phone',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'marrital_status',
-                            name: 'marrital_status'
+                            name: 'marrital_status',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'no_rm',
-                            name: 'no_rm'
+                            name: 'no_rm',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'no_family_folder',
-                            name: 'no_family_folder'
+                            name: 'no_family_folder',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'created_at',
-                            name: 'created_at'
+                            name: 'created_at',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'action',
@@ -278,6 +298,14 @@
                 // $('.filter-input').on('keyup change', function() {
                 //     table.ajax.reload(); // Reload the table with filter values
                 // });
+                $('#created-at-filter').on('change', function() {
+                    // When date filter changes, reload the table with the new data
+                    table.draw();
+                });
+                $('#nik-filter, #name-filter, #address-filter, #dob-filter, #gender-filter, #phone-filter, #marrital-status-filter, #no-rm-filter, #no-family-folder-filter')
+                    .on('input', function() {
+                        table.draw();
+                    });
                 var tableKunjungan = $('#kunjungan-table').DataTable({
                     processing: true,
                     serverSide: true,
@@ -303,31 +331,45 @@
                         },
                         {
                             data: 'patient_nik',
-                            name: 'patient_nik'
+                            name: 'patient_nik',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'patient_no_rm',
-                            name: 'patient_no_rm'
+                            name: 'patient_no_rm',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'patient_name',
-                            name: 'patient_name'
+                            name: 'patient_name',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'patient_age',
-                            name: 'patient_age'
+                            name: 'patient_age',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'poli',
-                            name: 'poli'
+                            name: 'poli',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'hamil',
-                            name: 'hamil'
+                            name: 'hamil',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'patient_klaster',
-                            name: 'patient_klaster'
+                            name: 'patient_klaster',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'tanggal',
@@ -354,9 +396,18 @@
                         }
                     },
                     pageLength: 10, // Set default page size
-                    lengthMenu: [10, 25, 50, 100], // Set available page sizes
+                    lengthMenu: [10, 25, 50, 100], // Set available page size
 
                 });
+                $('#tanggal-filter-kunjungan').on('change', function() {
+                    // When date filter changes, reload the table with the new data
+                    table.draw();
+                });
+                $('#nik-filter-kunjungan, #name-filter-kunjungan, #poli-filter-kunjungan, #dob-filter-kunjungan, #hamil-filter-kunjungan, #klaster-filter-kunjungan, #no-rm-filter-kunjungan')
+                    .on('input', function() {
+                        table.draw();
+                    });
+
                 // $('.filter-input-kunjungan').on('keyup change', function() {
                 //     tableKunjungan.ajax.reload(); // Reload the table with filter values
                 // });

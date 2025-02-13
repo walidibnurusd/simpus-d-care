@@ -356,17 +356,27 @@
             var diagnosaArray = JSON.parse(data.diagnosa); // Parse the diagnosa data
 
             // Clear previous selections before setting new ones
-            $('#diagnosaEdit').val([]).trigger('change'); // Clear previous selections
+            // Ensure that there's data in diagnosaArray before proceeding
+            if (diagnosaArray && diagnosaArray.length > 0) {
+                // Clear previous selections
+                $('#diagnosaEdit').val([]).trigger('change');
 
-            // Ensure the select element has the 'multiple' attribute for multi-selection
-            $('#diagnosaEdit').attr('multiple', 'multiple'); // Ensure it's a multi-select dropdown
+                // Ensure the select element has the 'multiple' attribute for multi-selection
+                $('#diagnosaEdit').attr('multiple', 'multiple');
 
-            // Manually mark options as selected based on diagnosaArray
-            $('#diagnosaEdit option').each(function() {
-                if (diagnosaArray.includes(parseInt($(this).val()))) {
-                    $(this).prop('selected', true); // Mark the option as selected
-                }
-            });
+                // Manually mark options as selected based on diagnosaArray
+                $('#diagnosaEdit option').each(function() {
+                    if (diagnosaArray.includes(parseInt($(this).val()))) {
+                        $(this).prop('selected', true); // Mark the option as selected
+                    }
+                });
+
+                // Trigger a change event to update the select input UI
+                $('#diagnosaEdit').trigger('change');
+            } else {
+                // If diagnosaArray is empty or undefined, handle it accordingly
+                $('#diagnosaEdit').val([]).trigger('change'); // Clear any selections (optional)
+            }
 
             // Trigger the change event to update Select2 after manually selecting options
             $('#diagnosaEdit').trigger('change'); // This should update Select2 if it's used

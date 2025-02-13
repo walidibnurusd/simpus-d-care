@@ -195,10 +195,10 @@ class KunjunganController extends Controller
             ]);
 
             if ($request->ajax()) {
-                return response()->json(['success' => true, 'message' => 'Kunjungan berhasil diperbarui']);
+                return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui']);
             }
 
-            return redirect()->route('kunjungan.index')->with('success', 'Kunjungan Berhasil Diedit');
+            return redirect() - back()->with('success', 'Data Berhasil Diedit');
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
@@ -217,10 +217,10 @@ class KunjunganController extends Controller
             $kunjungan->delete();
 
             if ($request->ajax()) {
-                return response()->json(['success' => true, 'message' => 'Kunjungan berhasil dihapus']);
+                return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
             }
 
-            return redirect()->route('kunjungan.index')->with('success', 'Kunjungan berhasil dihapus');
+            return redirect()->back()->with('success', 'Data berhasil dihapus');
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);

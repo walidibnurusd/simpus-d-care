@@ -647,9 +647,7 @@ class ActionController extends Controller
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral'])
-                ->where('beri_tindakan', 1)
-                ->orWhere('tipe', 'tindakan');
+            $actionsQuery = Action::with(['patient', 'hospitalReferral'])->whereNotNull('tindakan_ruang_tindakan');
 
             $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
@@ -1768,7 +1766,7 @@ class ActionController extends Controller
                 'pembekuan_darah' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
             ]);
-
+            Log::info('Validated data:', $validated);
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
             $validated['usia_kehamilan'] = $validated['usia_kehamilan'] ?? 0;
             $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
@@ -1792,6 +1790,7 @@ class ActionController extends Controller
                 if (!$action) {
                     return response()->json(['error' => 'Action not found'], 404);
                 }
+                Log::info('Updating action data with ID ' . $id, $validated);
                 $action->update($validated);
                 return response()->json(['success' => 'Action has been successfully updated.']);
             } else {

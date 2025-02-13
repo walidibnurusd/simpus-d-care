@@ -645,7 +645,16 @@ class PatientsController extends Controller
 
             ->whereNotNull('kunjungan.id')
             ->where(function ($query) {
-                $query->where('actions.beri_tindakan', 1)->whereNull('actions.tindakan_ruang_tindakan')->orWhere('kunjungan.poli', 'tindakan');
+                // If kunjungan.poli is 'tindakan', skip the actions.beri_tindakan = 1 check
+                $query
+                    ->where(function ($subQuery) {
+                        // When kunjungan.poli is 'tindakan', no need to check actions.beri_tindakan = 1
+                        $subQuery->where('kunjungan.poli', 'tindakan')->whereNull('actions.tindakan_ruang_tindakan');
+                    })
+                    ->orWhere(function ($subQuery) {
+                        // For other cases, actions.beri_tindakan should be 1 and actions.tindakan_ruang_tindakan should be null
+                        $subQuery->where('actions.beri_tindakan', 1)->whereNull('actions.tindakan_ruang_tindakan');
+                    });
             });
         if ($filterDate) {
             $query->where('kunjungan.tanggal', '=', $filterDate);
@@ -1074,8 +1083,6 @@ class PatientsController extends Controller
                         $patients->where('gender', 2);
                     }
                 } elseif ($column === 'marrital_status') {
-                
-
                     if (strtolower($value) === 'belum menikah') {
                         $patients->where('marrital_status', 1);
                     } elseif (strtolower($value) === 'menikah') {
@@ -1209,7 +1216,7 @@ class PatientsController extends Controller
             // Create a new Kunjungan entry
 
             // Redirect back with a success message
-            return redirect()->back()->with('success', 'Patient and visit data added successfully.');
+            return redirect()->back()->with('success', 'Data berhasil tersimpan');
         } catch (Exception $e) {
             \Log::error('Error occurred: ' . $e->getMessage());
             \Log::error('Stack Trace: ' . $e->getTraceAsString());
@@ -1254,8 +1261,6 @@ class PatientsController extends Controller
                 'district' => 'required',
                 'village' => 'nullable',
                 'rw' => 'nullable',
-                'klaster' => 'required',
-                'poli' => 'required',
                 'address' => 'required|string|max:255',
                 'jenis_kartu' => 'required|string|max:255',
                 'nomor_kartu' => 'required|string|max:255',
@@ -1283,8 +1288,6 @@ class PatientsController extends Controller
             $patient->indonesia_district = $validatedData['district'];
             $patient->indonesia_village = $validatedData['village'] ?? null;
             $patient->rw = $validatedData['rw'] ?? null;
-            $patient->klaster = $validatedData['klaster'] ?? null;
-            $patient->poli = $validatedData['poli'] ?? null;
             $patient->address = $validatedData['address'];
             $patient->jenis_kartu = $validatedData['jenis_kartu'];
             $patient->nomor_kartu = $validatedData['nomor_kartu'];
@@ -1295,7 +1298,7 @@ class PatientsController extends Controller
             $patient->save();
 
             // Redirect back with a success message
-            return redirect()->back()->with('success', 'Patient data updated successfully.');
+            return redirect()->back()->with('success', 'Data berhasil diubah');
         } catch (Exception $e) {
             // Log the error
             Log::error('Error updating patient: ' . $e->getMessage());
@@ -1315,7 +1318,7 @@ class PatientsController extends Controller
         $patient->delete();
 
         // Redirect with a success message
-        return redirect()->back()->with('success', 'Patient deleted successfully.');
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
     public function patientReport()
     {
