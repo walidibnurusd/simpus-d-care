@@ -41,15 +41,26 @@
                     <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3">
                         <div class="row">
                             <!-- Start Date -->
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="start_date" class="form-label">Start Date</label>
                                 <input type="date" name="start_date" id="start_date" class="form-control">
                             </div>
 
                             <!-- End Date -->
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="end_date" class="form-label">End Date</label>
                                 <input type="date" name="end_date" id="end_date" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="poli">Poli</label>
+                                <select class="form-control" id="poli" name="poli">
+                                    <option value="" disabled selected>Pilih Poli</option>
+                                    <option value="poli-umum">Poli Umum</option>
+                                    <option value="poli-gigi">Poli Gigi</option>
+                                    <option value="poli-kia">Poli KIA</option>
+                                    <option value="poli-kb">Poli KB</option>
+                                    <option value="ruang-tindakan">UGD</option>
+                                </select>
                             </div>
 
                             <!-- Tombol Print -->
@@ -64,7 +75,7 @@
 
                     <!-- Tombol Filter -->
                     <div class="row mt-3">
-                        <div class="col-md-2 offset-md-8 d-flex align-items-end">
+                        <div class="col-md-2 offset-md-9 d-flex align-items-end">
                             <button type="button" id="filterButton" class="btn btn-primary w-100">
                                 Cari <i class="fas fa-search ms-2"></i> <!-- Ikon Cari -->
                             </button>
@@ -105,6 +116,9 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             UPDATE OBAT</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            POLI</th>
 
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             AKSI
@@ -124,74 +138,78 @@
 
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-    @if ($routeName == 'action.apotik.index')
-        <script>
-            $(document).ready(function() {
-                // Initialize DataTable with pagination
-                var table = $('#actions-table').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '{{ route('action.apotik.index') }}',
-                        data: function(d) {
-                            // Send filter data along with the request
-                            d.start_date = $('#start_date').val();
-                            d.end_date = $('#end_date').val();
-                        }
-                    },
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex'
-                        },
-                        {
-                            data: 'tanggal',
-                            name: 'tanggal'
-                        },
-                        {
-                            data: 'patient_nik',
-                            name: 'patient_nik'
-                        },
-                        {
-                            data: 'patient_name',
-                            name: 'patient_name'
-                        },
-                        {
-                            data: 'patient_age',
-                            name: 'patient_age'
-                        },
-                        {
-                            data: 'obat',
-                            name: 'obat'
-                        },
-                        {
-                            data: 'update_obat',
-                            name: 'update_obat'
-                        },
-
-
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        }
-                    ],
-                    pageLength: 10, // Set default page size
-                    lengthMenu: [10, 25, 50, 100], // Set available page sizes
-                    drawCallback: function(settings) {
-                        // You can adjust the pagination here if needed, for example:
-                        var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+    {{-- @if ($routeName == 'action.apotik.index') --}}
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable with pagination
+            var table = $('#actions-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('action.apotik.index') }}',
+                    data: function(d) {
+                        // Send filter data along with the request
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
+                        d.poli = $('#poli').val();
                     }
-                });
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
+                    {
+                        data: 'patient_nik',
+                        name: 'patient_nik'
+                    },
+                    {
+                        data: 'patient_name',
+                        name: 'patient_name'
+                    },
+                    {
+                        data: 'patient_age',
+                        name: 'patient_age'
+                    },
+                    {
+                        data: 'obat',
+                        name: 'obat'
+                    },
+                    {
+                        data: 'update_obat',
+                        name: 'update_obat'
+                    },
+                    {
+                        data: 'tipe',
+                        name: 'tipe'
+                    },
 
-                // Filter Form Submission (on change)
-                $('#filter-form').on('submit', function(e) {
-                    e.preventDefault(); // Prevent default form submission
-                    table.draw(); // Redraw DataTable with new filters
-                });
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                pageLength: 10, // Set default page size
+                lengthMenu: [10, 25, 50, 100], // Set available page sizes
+                drawCallback: function(settings) {
+                    // You can adjust the pagination here if needed, for example:
+                    var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
+                }
             });
-        </script>
-    @elseif ($routeName == 'action.apotik.gigi.index')
+
+            // Filter Form Submission (on change)
+            $('#filterButton').on('click', function() {
+
+                table.ajax.reload(); // Corrected reload function
+            });
+        });
+    </script>
+    {{-- @elseif ($routeName == 'action.apotik.gigi.index')
         <script>
             $(document).ready(function() {
                 // Initialize DataTable with pagination
@@ -459,7 +477,7 @@
                 });
             });
         </script>
-    @endif
+    @endif --}}
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

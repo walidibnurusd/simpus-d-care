@@ -105,6 +105,9 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             HASIL LAB</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            POLI</th>
 
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             AKSI
@@ -291,7 +294,21 @@
                                                 </p>
                                             </td>
 
-
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">
+                                                    @if ($action->tipe == 'poli-umum')
+                                                        Poli Umum
+                                                    @elseif ($action->tipe == 'poli-gigi')
+                                                        Poli Gigi
+                                                    @elseif ($action->tipe == 'poli-kia')
+                                                        Poli KIA
+                                                    @elseif ($action->tipe == 'poli-kb')
+                                                        Poli KB
+                                                    @else
+                                                        UGD
+                                                    @endif
+                                                </p>
+                                            </td>
 
                                             <td>
                                                 <div class="action-buttons">

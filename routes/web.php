@@ -164,17 +164,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/poli-kia', [ActionController::class, 'indexDokterKia'])->name('kia.dokter.index');
             Route::get('/poli-kb', [ActionController::class, 'indexDokterKb'])->name('kb.dokter.index');
 
-            Route::get('/lab/poli-umum', [ActionController::class, 'indexLab'])->name('lab.index');
-            Route::get('/lab/poli-gigi', [ActionController::class, 'indexGigiLab'])->name('lab.gigi.index');
-            Route::get('/lab/ugd', [ActionController::class, 'indexUgdLab'])->name('lab.ugd.index');
-            Route::get('/lab/poli-kia', [ActionController::class, 'indexKiaLab'])->name('lab.kia.index');
-            Route::get('/lab/poli-kb', [ActionController::class, 'indexKbLab'])->name('lab.kb.index');
+            Route::get('/lab', [ActionController::class, 'indexLab'])->name('lab.index');
 
-            Route::get('/apotik/poli-umum', [ActionController::class, 'indexApotik'])->name('apotik.index');
-            Route::get('/apotik/poli-gigi', [ActionController::class, 'indexGigiApotik'])->name('apotik.gigi.index');
-            Route::get('/apotik/ugd', [ActionController::class, 'indexUgdApotik'])->name('apotik.ugd.index');
-            Route::get('/apotik/poli-kia', [ActionController::class, 'indexKiaApotik'])->name('apotik.kia.index');
-            Route::get('/apotik/poli-kb', [ActionController::class, 'indexKbApotik'])->name('apotik.kb.index');
+            Route::get('/apotik', [ActionController::class, 'indexApotik'])->name('apotik.index');
         });
 
     Route::post('/tindakan', [ActionController::class, 'store'])->name('action.store');

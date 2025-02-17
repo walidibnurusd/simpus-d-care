@@ -99,10 +99,10 @@ class PatientsController extends Controller
         $today = Carbon::now()->toDateString();
         $query = Patients::with(['genderName', 'educations', 'occupations'])
             ->whereHas('kunjungans', function ($q) use ($today) {
-                $q->where('poli', 'poli-umum')->where('tanggal', $today);
+                $q->where('tanggal', $today);
             })
             ->whereDoesntHave('actions', function ($q) use ($today) {
-                $q->where('tipe', 'poli-umum')->where('tanggal', $today);
+                $q->where('tanggal', $today);
             });
 
         if (!empty($searchValue)) {
@@ -149,187 +149,187 @@ class PatientsController extends Controller
             'data' => $formattedData,
         ]);
     }
-    public function getPatientsPoliGigi(Request $request)
-    {
-        $start = $request->input('start', 0);
-        $length = $request->input('length', 10);
-        $draw = $request->input('draw', 1);
-        $searchValue = $request->input('search.value', '');
+    // public function getPatientsPoliGigi(Request $request)
+    // {
+    //     $start = $request->input('start', 0);
+    //     $length = $request->input('length', 10);
+    //     $draw = $request->input('draw', 1);
+    //     $searchValue = $request->input('search.value', '');
 
-        $page = $start / $length + 1;
-        $today = Carbon::now()->toDateString();
-        $query = Patients::with(['genderName', 'educations', 'occupations'])
-            ->whereHas('kunjungans', function ($q) use ($today) {
-                $q->where('poli', 'poli-gigi')->where('tanggal', $today);
-            })
-            ->whereDoesntHave('actions', function ($q) use ($today) {
-                $q->where('tipe', 'poli-gigi')->where('tanggal', $today);
-            });
-        if (!empty($searchValue)) {
-            $query->where(function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('address', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('nik', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('nik', 'LIKE', "%{$searchValue}%")
-                    ->orWhereHas('genderName', function ($q) use ($searchValue) {
-                        $q->where('gender', 'LIKE', "%{$searchValue}%");
-                    });
-            });
-        }
+    //     $page = $start / $length + 1;
+    //     $today = Carbon::now()->toDateString();
+    //     $query = Patients::with(['genderName', 'educations', 'occupations'])
+    //         ->whereHas('kunjungans', function ($q) use ($today) {
+    //             $q->where('poli', 'poli-gigi')->where('tanggal', $today);
+    //         })
+    //         ->whereDoesntHave('actions', function ($q) use ($today) {
+    //             $q->where('tipe', 'poli-gigi')->where('tanggal', $today);
+    //         });
+    //     if (!empty($searchValue)) {
+    //         $query->where(function ($q) use ($searchValue) {
+    //             $q->where('name', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhere('address', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhere('nik', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhere('nik', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhereHas('genderName', function ($q) use ($searchValue) {
+    //                     $q->where('gender', 'LIKE', "%{$searchValue}%");
+    //                 });
+    //         });
+    //     }
 
-        $patients = $query->paginate($length, ['*'], 'page', $page);
+    //     $patients = $query->paginate($length, ['*'], 'page', $page);
 
-        // Format data untuk DataTables
-        $data = $patients->items();
-        $formattedData = [];
-        foreach ($data as $patient) {
-            $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
-            $formattedData[] = [
-                'id' => $patient->id,
-                'name' => $patient->name,
-                'nik' => $patient->nik,
-                'address' => $patient->address,
-                'jenis_kartu' => $patient->jenis_kartu,
-                'nomor_kartu' => $patient->nomor_kartu,
-                'blood_type' => $patient->blood_type,
-                'no_rm' => $patient->no_rm,
-                'dob' => $patient->dob,
-                'phone' => $patient->phone,
-                'gender' => $patient->genderName->gender ?? '-',
-                'education' => $patient->educations->name ?? '-',
-                'occupation' => $patient->occupations->name ?? '-',
-                'created_at' => $kunjunganCreatedAt ? $kunjunganCreatedAt->format('d-m-Y H:i:s') : '-',
-            ];
-        }
+    //     // Format data untuk DataTables
+    //     $data = $patients->items();
+    //     $formattedData = [];
+    //     foreach ($data as $patient) {
+    //         $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
+    //         $formattedData[] = [
+    //             'id' => $patient->id,
+    //             'name' => $patient->name,
+    //             'nik' => $patient->nik,
+    //             'address' => $patient->address,
+    //             'jenis_kartu' => $patient->jenis_kartu,
+    //             'nomor_kartu' => $patient->nomor_kartu,
+    //             'blood_type' => $patient->blood_type,
+    //             'no_rm' => $patient->no_rm,
+    //             'dob' => $patient->dob,
+    //             'phone' => $patient->phone,
+    //             'gender' => $patient->genderName->gender ?? '-',
+    //             'education' => $patient->educations->name ?? '-',
+    //             'occupation' => $patient->occupations->name ?? '-',
+    //             'created_at' => $kunjunganCreatedAt ? $kunjunganCreatedAt->format('d-m-Y H:i:s') : '-',
+    //         ];
+    //     }
 
-        return response()->json([
-            'draw' => (int) $draw,
-            'recordsTotal' => $patients->total(),
-            'recordsFiltered' => $patients->total(),
-            'data' => $formattedData,
-        ]);
-    }
-    public function getPatientsPoliKia(Request $request)
-    {
-        $start = $request->input('start', 0);
-        $length = $request->input('length', 10);
-        $draw = $request->input('draw', 1);
-        $searchValue = $request->input('search.value', '');
+    //     return response()->json([
+    //         'draw' => (int) $draw,
+    //         'recordsTotal' => $patients->total(),
+    //         'recordsFiltered' => $patients->total(),
+    //         'data' => $formattedData,
+    //     ]);
+    // }
+    // public function getPatientsPoliKia(Request $request)
+    // {
+    //     $start = $request->input('start', 0);
+    //     $length = $request->input('length', 10);
+    //     $draw = $request->input('draw', 1);
+    //     $searchValue = $request->input('search.value', '');
 
-        $page = $start / $length + 1;
-        $today = Carbon::now()->toDateString();
-        $query = Patients::with(['genderName', 'educations', 'occupations'])
-            ->whereHas('kunjungans', function ($q) use ($today) {
-                $q->where('poli', 'poli-kia')->where('tanggal', $today);
-            })
-            ->whereDoesntHave('actions', function ($q) use ($today) {
-                $q->where('tipe', 'poli-kia')->where('tanggal', $today);
-            });
+    //     $page = $start / $length + 1;
+    //     $today = Carbon::now()->toDateString();
+    //     $query = Patients::with(['genderName', 'educations', 'occupations'])
+    //         ->whereHas('kunjungans', function ($q) use ($today) {
+    //             $q->where('poli', 'poli-kia')->where('tanggal', $today);
+    //         })
+    //         ->whereDoesntHave('actions', function ($q) use ($today) {
+    //             $q->where('tipe', 'poli-kia')->where('tanggal', $today);
+    //         });
 
-        if (!empty($searchValue)) {
-            $query->where(function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('address', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('nik', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('nik', 'LIKE', "%{$searchValue}%")
-                    ->orWhereHas('genderName', function ($q) use ($searchValue) {
-                        $q->where('gender', 'LIKE', "%{$searchValue}%");
-                    });
-            });
-        }
+    //     if (!empty($searchValue)) {
+    //         $query->where(function ($q) use ($searchValue) {
+    //             $q->where('name', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhere('address', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhere('nik', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhere('nik', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhereHas('genderName', function ($q) use ($searchValue) {
+    //                     $q->where('gender', 'LIKE', "%{$searchValue}%");
+    //                 });
+    //         });
+    //     }
 
-        $patients = $query->paginate($length, ['*'], 'page', $page);
+    //     $patients = $query->paginate($length, ['*'], 'page', $page);
 
-        // Format data untuk DataTables
-        $data = $patients->items();
-        $formattedData = [];
-        foreach ($data as $patient) {
-            $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
-            $formattedData[] = [
-                'id' => $patient->id,
-                'name' => $patient->name,
-                'nik' => $patient->nik,
-                'address' => $patient->address,
-                'jenis_kartu' => $patient->jenis_kartu,
-                'nomor_kartu' => $patient->nomor_kartu,
-                'blood_type' => $patient->blood_type,
-                'no_rm' => $patient->no_rm,
-                'dob' => $patient->dob,
-                'phone' => $patient->phone,
-                'gender' => $patient->genderName->gender ?? '-',
-                'education' => $patient->educations->name ?? '-',
-                'occupation' => $patient->occupations->name ?? '-',
-                'created_at' => $kunjunganCreatedAt ? $kunjunganCreatedAt->format('d-m-Y H:i:s') : '-',
-            ];
-        }
+    //     // Format data untuk DataTables
+    //     $data = $patients->items();
+    //     $formattedData = [];
+    //     foreach ($data as $patient) {
+    //         $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
+    //         $formattedData[] = [
+    //             'id' => $patient->id,
+    //             'name' => $patient->name,
+    //             'nik' => $patient->nik,
+    //             'address' => $patient->address,
+    //             'jenis_kartu' => $patient->jenis_kartu,
+    //             'nomor_kartu' => $patient->nomor_kartu,
+    //             'blood_type' => $patient->blood_type,
+    //             'no_rm' => $patient->no_rm,
+    //             'dob' => $patient->dob,
+    //             'phone' => $patient->phone,
+    //             'gender' => $patient->genderName->gender ?? '-',
+    //             'education' => $patient->educations->name ?? '-',
+    //             'occupation' => $patient->occupations->name ?? '-',
+    //             'created_at' => $kunjunganCreatedAt ? $kunjunganCreatedAt->format('d-m-Y H:i:s') : '-',
+    //         ];
+    //     }
 
-        return response()->json([
-            'draw' => (int) $draw,
-            'recordsTotal' => $patients->total(),
-            'recordsFiltered' => $patients->total(),
-            'data' => $formattedData,
-        ]);
-    }
+    //     return response()->json([
+    //         'draw' => (int) $draw,
+    //         'recordsTotal' => $patients->total(),
+    //         'recordsFiltered' => $patients->total(),
+    //         'data' => $formattedData,
+    //     ]);
+    // }
 
-    public function getPatientsPoliKb(Request $request)
-    {
-        $start = $request->input('start', 0);
-        $length = $request->input('length', 10);
-        $draw = $request->input('draw', 1);
-        $searchValue = $request->input('search.value', '');
+    // public function getPatientsPoliKb(Request $request)
+    // {
+    //     $start = $request->input('start', 0);
+    //     $length = $request->input('length', 10);
+    //     $draw = $request->input('draw', 1);
+    //     $searchValue = $request->input('search.value', '');
 
-        $page = $start / $length + 1;
-        $today = Carbon::now()->toDateString();
-        $query = Patients::with(['genderName', 'educations', 'occupations'])
-            ->whereHas('kunjungans', function ($q) use ($today) {
-                $q->where('poli', 'poli-kb')->where('tanggal', $today);
-            })
-            ->whereDoesntHave('actions', function ($q) use ($today) {
-                $q->where('tipe', 'poli-kb')->where('tanggal', $today);
-            });
-        if (!empty($searchValue)) {
-            $query->where(function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('address', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('nik', 'LIKE', "%{$searchValue}%")
-                    ->orWhereHas('genderName', function ($q) use ($searchValue) {
-                        $q->where('gender', 'LIKE', "%{$searchValue}%");
-                    });
-            });
-        }
+    //     $page = $start / $length + 1;
+    //     $today = Carbon::now()->toDateString();
+    //     $query = Patients::with(['genderName', 'educations', 'occupations'])
+    //         ->whereHas('kunjungans', function ($q) use ($today) {
+    //             $q->where('poli', 'poli-kb')->where('tanggal', $today);
+    //         })
+    //         ->whereDoesntHave('actions', function ($q) use ($today) {
+    //             $q->where('tipe', 'poli-kb')->where('tanggal', $today);
+    //         });
+    //     if (!empty($searchValue)) {
+    //         $query->where(function ($q) use ($searchValue) {
+    //             $q->where('name', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhere('address', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhere('nik', 'LIKE', "%{$searchValue}%")
+    //                 ->orWhereHas('genderName', function ($q) use ($searchValue) {
+    //                     $q->where('gender', 'LIKE', "%{$searchValue}%");
+    //                 });
+    //         });
+    //     }
 
-        $patients = $query->paginate($length, ['*'], 'page', $page);
+    //     $patients = $query->paginate($length, ['*'], 'page', $page);
 
-        // Format data untuk DataTables
-        $data = $patients->items();
-        $formattedData = [];
-        foreach ($data as $patient) {
-            $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
-            $formattedData[] = [
-                'id' => $patient->id,
-                'name' => $patient->name,
-                'nik' => $patient->nik,
-                'address' => $patient->address,
-                'jenis_kartu' => $patient->jenis_kartu,
-                'nomor_kartu' => $patient->nomor_kartu,
-                'blood_type' => $patient->blood_type,
-                'no_rm' => $patient->no_rm,
-                'dob' => $patient->dob,
-                'phone' => $patient->phone,
-                'gender' => $patient->genderName->gender ?? '-',
-                'education' => $patient->educations->name ?? '-',
-                'occupation' => $patient->occupations->name ?? '-',
-                'created_at' => $kunjunganCreatedAt ? $kunjunganCreatedAt->format('d-m-Y H:i:s') : '-',
-            ];
-        }
+    //     // Format data untuk DataTables
+    //     $data = $patients->items();
+    //     $formattedData = [];
+    //     foreach ($data as $patient) {
+    //         $kunjunganCreatedAt = optional($patient->kunjungans->last())->created_at;
+    //         $formattedData[] = [
+    //             'id' => $patient->id,
+    //             'name' => $patient->name,
+    //             'nik' => $patient->nik,
+    //             'address' => $patient->address,
+    //             'jenis_kartu' => $patient->jenis_kartu,
+    //             'nomor_kartu' => $patient->nomor_kartu,
+    //             'blood_type' => $patient->blood_type,
+    //             'no_rm' => $patient->no_rm,
+    //             'dob' => $patient->dob,
+    //             'phone' => $patient->phone,
+    //             'gender' => $patient->genderName->gender ?? '-',
+    //             'education' => $patient->educations->name ?? '-',
+    //             'occupation' => $patient->occupations->name ?? '-',
+    //             'created_at' => $kunjunganCreatedAt ? $kunjunganCreatedAt->format('d-m-Y H:i:s') : '-',
+    //         ];
+    //     }
 
-        return response()->json([
-            'draw' => (int) $draw,
-            'recordsTotal' => $patients->total(),
-            'recordsFiltered' => $patients->total(),
-            'data' => $formattedData,
-        ]);
-    }
+    //     return response()->json([
+    //         'draw' => (int) $draw,
+    //         'recordsTotal' => $patients->total(),
+    //         'recordsFiltered' => $patients->total(),
+    //         'data' => $formattedData,
+    //     ]);
+    // }
 
     public function getPatientsRuangTindakan(Request $request)
     {
@@ -1083,7 +1083,7 @@ class PatientsController extends Controller
                         $patients->where('gender', 2);
                     }
                 } elseif ($column === 'marrital_status') {
-                    if (strtolower($value) === 'belum menikah'||strtolower($value) === 'belum') {
+                    if (strtolower($value) === 'belum menikah' || strtolower($value) === 'belum') {
                         $patients->where('marrital_status', 1);
                     } elseif (strtolower($value) === 'menikah') {
                         $patients->where('marrital_status', 2);
