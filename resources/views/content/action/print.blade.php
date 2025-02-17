@@ -140,7 +140,7 @@
                         @endphp
 
                         <td>
-                            {{ implode(', ', $diagnosa->pluck('icd10')->toArray()) }}
+                            {{ implode(', ', $diagnosa->pluck('name')->toArray()) }}
                         </td>
                         @php
                             // Assuming $actions->diagnosa is an array of Diagnosis IDs

@@ -751,7 +751,7 @@ class ActionController extends Controller
             $actionsQuery->whereDate('tanggal', '<=', $endDate);
         }
         if ($poli) {
-            $actionsQuery->where('tipe', '<=', $poli);
+            $actionsQuery->where('tipe', $poli);
         }
 
         $actions = $actionsQuery->get();
@@ -759,7 +759,7 @@ class ActionController extends Controller
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
-  
+
     // public function indexDokterKia(Request $request)
     // {
     //     $startDate = $request->input('start_date');
@@ -1362,6 +1362,8 @@ class ActionController extends Controller
                     ->withInput();
             }
 
+            Log::info('NIK provided:', ['nik' => $request->nikEdit]);
+
             // Format the date and merge the patient ID into the request
             $request->merge([
                 'id_patient' => $patient->id,
@@ -1470,51 +1472,14 @@ class ActionController extends Controller
             // Update the action with the validated data
             // Update the action with the validated data
             $action->update($validated);
-            if (Auth::user()->role == 'tindakan') {
-                if ($action->tipe === 'ruang-tindakan') {
-                    $route = 'action.dokter.ugd.index';
-                } else {
-                    $route = 'action.dokter.ruang.tindakan.index';
-                }
-            } elseif (Auth::user()->role == 'dokter') {
-                if ($action->tipe === 'poli-umum') {
-                    $route = 'action.dokter.index';
-                } elseif ($action->tipe === 'poli-gigi') {
-                    $route = 'action.dokter.gigi.index';
-                } elseif ($action->tipe === 'poli-kia') {
-                    $route = 'action.kia.dokter.index';
-                } elseif ($action->tipe === 'poli-kb') {
-                    $route = 'action.kb.dokter.index';
-                } else {
-                    $route = 'action.dokter.ugd.index';
-                }
-            } elseif (Auth::user()->role == 'lab') {
-                if ($action->tipe === 'poli-umum') {
-                    $route = 'action.lab.index';
-                } elseif ($action->tipe === 'poli-gigi') {
-                    $route = 'action.lab.gigi.index';
-                } elseif ($action->tipe === 'poli-kia') {
-                    $route = 'action.lab.kia.index';
-                } elseif ($action->tipe === 'poli-kb') {
-                    $route = 'action.lab.kb.index';
-                } else {
-                    $route = 'action.lab.ugd.index';
-                }
-            } else {
-                if ($action->tipe === 'poli-umum') {
-                    $route = 'action.index';
-                } elseif ($action->tipe === 'poli-gigi') {
-                    $route = 'action.index.gigi';
-                } elseif ($action->tipe === 'poli-kia') {
-                    $route = 'action.kia.index';
-                } elseif ($action->tipe === 'poli-kb') {
-                    $route = 'action.kb.index';
-                } else {
-                    $route = 'action.index.ugd';
-                }
-            }
-            return redirect()->route($route)->with('success', 'Action has been successfully updated.');
+
+            return redirect()->back()->with('success', 'Action has been successfully updated.');
         } catch (\Exception $e) {
+            Log::error('Error in updating action: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request_data' => $request->all(),
+            ]);
+
             return redirect()
                 ->back()
                 ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
@@ -1528,6 +1493,7 @@ class ActionController extends Controller
             if (!$patient) {
                 return response()->json(['error' => 'Patient with the provided NIK does not exist.'], 422);
             }
+            Log::info('NIK provided:', ['nik' => $request->nikEdit]);
             // Merge the request with the formatted tanggal and id_patient
             $request->merge([
                 'id_patient' => $patient->id,
@@ -1681,6 +1647,11 @@ class ActionController extends Controller
                 return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
             }
         } catch (\Exception $e) {
+            Log::error('Error in updating action: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request_data' => $request->all(),
+            ]);
+
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
@@ -1851,7 +1822,7 @@ class ActionController extends Controller
             $action = Action::findOrFail($id);
 
             // Fetch the patient ID based on the provided NIK
-            $patient = Patients::where('nik', $request->nik)->first();
+            $patient = Patients::where('nik', $request->nikEditLab)->first();
 
             if (!$patient) {
                 return redirect()

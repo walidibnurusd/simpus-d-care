@@ -4,17 +4,8 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                @if ($routeName === 'action.lab.index' || 'action.dokter.index')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
-                @elseif ($routeName === 'action.lab.gigi.index' || 'action.dokter.gigi.index')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
-                @elseif ($routeName === 'action.lab.kia.index' || 'kia.dokter.index')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KIA</h5>
-                @elseif ($routeName === 'action.lab.kb.index' || 'kb.dokter.index')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KB</h5>
-                @else
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
-                @endif
+                <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI</h5>
+
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -65,7 +56,7 @@
                                             <label for="nik">Cari Pasien</label>
                                             <div class="input-group">
                                                 <input readonly type="text" class="form-control"
-                                                    id="nikEdit{{ $action->id }}" value="" name="nik"
+                                                    id="nikEditLab{{ $action->id }}" value="" name="nik"
                                                     placeholder="NIK" required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
@@ -128,8 +119,8 @@
                                         <label for="gds" class="form-label" id="label-gds{{ $action->id }}"
                                             style="display: none;">Hasil GDS</label>
                                         <input class="form-control" type="text" id="gds{{ $action->id }}"
-                                            value="{{ $action->hasilLab->gds ?? '' }}" name="gds"
-                                            placeholder="GDS" style="display: none;">
+                                            value="{{ $action->hasilLab->gds ?? '' }}" name="gds" placeholder="GDS"
+                                            style="display: none;">
 
                                         <!-- GDP Field -->
                                         <label for="gdp" class="form-label" id="label-gdp{{ $action->id }}"
@@ -379,7 +370,7 @@
 <script>
     // Set NIK value
     var nikValue = "{{ $action->patient->nik ?? '' }}";
-    document.getElementById('nikEdit{{ $action->id }}').value = nikValue;
+    document.getElementById('nikEditLab{{ $action->id }}').value = nikValue;
     console.log(nikValue);
 
     // Helper function to toggle display for elements
