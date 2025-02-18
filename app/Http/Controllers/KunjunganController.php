@@ -76,9 +76,19 @@ class KunjunganController extends Controller
                 $kunjungansQuery->where('hamil', $hamil);
             }
             if ($klaster) {
-                $kunjungansQuery->whereHas('patient', function ($query) use ($klaster) {
-                    $query->where('klaster', $klaster);
-                });
+                if ($klaster == '2') {
+                    $kunjungansQuery->whereHas('patient', function ($query) {
+                        $query->where(function ($q) {
+                            $q->whereDate('dob', '>', now()->subYears(18))->orWhere('hamil', 1);
+                        });
+                    });
+                } elseif ($klaster == '3') {
+                    $kunjungansQuery->whereHas('patient', function ($query) {
+                        $query->where(function ($q) {
+                            $q->whereDate('dob', '<=', now()->subYears(18))->where('hamil', 0);
+                        });
+                    });
+                }
             }
 
             if ($request->has('tanggal') && $request->tanggal) {
@@ -198,7 +208,7 @@ class KunjunganController extends Controller
                 return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui']);
             }
 
-            return redirect() - back()->with('success', 'Data Berhasil Diedit');
+            return redirect()->back()->with('success', 'Data Berhasil Diedit');
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);

@@ -4,17 +4,9 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                @if ($routeName === 'action.apotik.index')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
-                @elseif($routeName === 'action.apotik.gigi.index')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
-                @elseif($routeName === 'action.apotik.kia.index')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KIA</h5>
-                @elseif($routeName === 'action.apotik.kb.index')
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KB</h5>
-                @else
-                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
-                @endif
+         
+                    <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI APOTIK</h5>
+   
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-apotikel="Close"></button>
             </div>
 

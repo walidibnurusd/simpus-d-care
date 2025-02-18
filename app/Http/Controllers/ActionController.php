@@ -1493,7 +1493,6 @@ class ActionController extends Controller
             if (!$patient) {
                 return response()->json(['error' => 'Patient with the provided NIK does not exist.'], 422);
             }
-            Log::info('NIK provided:', ['nik' => $request->nikEdit]);
             // Merge the request with the formatted tanggal and id_patient
             $request->merge([
                 'id_patient' => $patient->id,
@@ -1822,7 +1821,7 @@ class ActionController extends Controller
             $action = Action::findOrFail($id);
 
             // Fetch the patient ID based on the provided NIK
-            $patient = Patients::where('nik', $request->nikEditLab)->first();
+            $patient = Patients::where('nik', $request->nik)->first();
 
             if (!$patient) {
                 return redirect()
@@ -1936,18 +1935,8 @@ class ActionController extends Controller
             $hasilLab->save();
 
             $action->update($validated);
-            if ($action->tipe === 'poli-umum') {
-                $route = 'action.lab.index';
-            } elseif ($action->tipe === 'poli-gigi') {
-                $route = 'action.lab.gigi.index';
-            } elseif ($action->tipe === 'poli-kia') {
-                $route = 'action.lab.kia.index';
-            } elseif ($action->tipe === 'poli-kb') {
-                $route = 'action.lab.kb.index';
-            } else {
-                $route = 'action.lab.ugd.index';
-            }
-            return redirect()->route($route)->with('success', 'Action has been successfully updated.');
+         
+            return redirect()->back()->with('success', 'Action has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -1980,18 +1969,8 @@ class ActionController extends Controller
             ]);
 
             $action->update($validated);
-            if ($action->tipe === 'poli-umum') {
-                $route = 'action.apotik.index';
-            } elseif ($action->tipe === 'poli-gigi') {
-                $route = 'action.apotik.gigi.index';
-            } elseif ($action->tipe === 'poli-kia') {
-                $route = 'action.apotik.kia.index';
-            } elseif ($action->tipe === 'poli-kb') {
-                $route = 'action.apotik.kb.index';
-            } else {
-                $route = 'action.apotik.ugd.index';
-            }
-            return redirect()->route($route)->with('success', 'Action has been successfully updated.');
+            
+            return redirect()->back()->with('success', 'Action has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()

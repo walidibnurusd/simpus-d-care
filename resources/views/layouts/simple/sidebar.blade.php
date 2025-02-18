@@ -125,7 +125,8 @@
                     </ul>
                     </li>
                     @endif
-                    @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'admin-kajian-awal')
+                    @if (Auth::user()->role == 'dokter' ||
+                            Auth::user()->role == 'admin-kajian-awal')
                         <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
                                 href="#">
                                 <svg class="stroke-icon">
