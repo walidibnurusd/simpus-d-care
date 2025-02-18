@@ -1935,7 +1935,7 @@ class ActionController extends Controller
             $hasilLab->save();
 
             $action->update($validated);
-         
+
             return redirect()->back()->with('success', 'Action has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
@@ -1969,7 +1969,7 @@ class ActionController extends Controller
             ]);
 
             $action->update($validated);
-            
+
             return redirect()->back()->with('success', 'Action has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()

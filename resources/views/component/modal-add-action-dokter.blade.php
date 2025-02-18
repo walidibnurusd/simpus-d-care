@@ -93,7 +93,6 @@
                                                     </option>
                                                     <option value="1">Baru </option>
                                                     <option value="0">Lama </option>
-
                                                 </select>
                                             </div>
                                         </div>
@@ -474,7 +473,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
 
                                 <div class="col-md-4">
                                     <div class="form-group">

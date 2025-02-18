@@ -1,3 +1,8 @@
+<!-- Modal Add Action -->
+@php
+    $diagnosa = App\Models\Diagnosis::all();
+    // dd($diagnosa);
+@endphp
 <style>
     .custom-radio {
 
@@ -158,14 +163,19 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="wilayah_faskes">Wilayah Faskes</label>
-                                            <select class="form-control" id="wilayah_faskes" name="faskes">
+                                            <select class="form-control" id="wilayah_faskes" name="faskes" disabled>
                                                 <option value="" disabled
-                                                    {{ empty($action->faskes) ? 'selected' : '' }}>Pilih Wilayah Faskes
+                                                    {{ empty($action->patient->wilayah_faskes) ? 'selected' : '' }}>
+                                                    Pilih Wilayah
+                                                    Faskes
                                                 </option>
-                                                <option value="ya"
-                                                    {{ $action->faskes == 'ya' ? 'selected' : '' }}>Ya</option>
-                                                <option value="tidak"
-                                                    {{ $action->faskes == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="1"
+                                                    {{ $action->patient->wilayah_faskes == '1' ? 'selected' : '' }}>
+                                                    Ya</option>
+                                                <option value="0"
+                                                    {{ $action->patient->wilayah_faskes == '0' ? 'selected' : '' }}>
+                                                    Tidak
+                                                </option>
 
                                             </select>
                                         </div>
@@ -592,11 +602,24 @@
                             </div>
 
                             <div class="row">
-                                {{-- <div class="col-md-6 mt-3">
-                                    <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
-                                    <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
-                                        placeholder="Pemeriksaan penunjang">{{ isset($action->pemeriksaan_penunjang) ? $action->pemeriksaan_penunjang : '' }}</textarea>
-                                </div> --}}
+                                <div class="col-md-6">
+                                    <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                    <select class="form-control" id="diagnosaEdit{{ $action->id }}"
+                                        name="diagnosa[]" multiple>
+                                        @php
+                                            // Decode JSON if it exists
+                                            $selectedDiagnosa = is_string($action->diagnosa)
+                                                ? json_decode($action->diagnosa, true)
+                                                : $action->diagnosa;
+                                        @endphp
+                                        @foreach ($diagnosa as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
+                                                {{ $item->name }}-{{ $item->icd10 }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-md-6 mt-3">
                                     <label for="kesimpulan">Kesimpulan</label>
                                     <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ isset($action->kesimpulan) ? $action->kesimpulan : '' }}</textarea>
@@ -605,13 +628,6 @@
                                     <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                     <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ isset($action->obat) ? $action->obat : '' }}</textarea>
                                 </div>
-                                <div class="col-md-12">
-                                    <label for="hasil_lab" style="color: rgb(19, 11, 241);">Hasil Laboratorium</label>
-                                    <textarea class="form-control" id="hasil_lab" name="hasil_lab" placeholder="Hasil Laboratorium">{{ isset($action->hasil_lab) ? $action->hasil_lab : '' }}</textarea>
-                                </div>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -639,7 +655,7 @@
 </script>
 <script>
     $(document).ready(function() {
-        $('#diagnosaEdit').select2({
+        $('#diagnosaEdit{{ $action->id }}').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0

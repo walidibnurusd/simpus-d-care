@@ -1,3 +1,8 @@
+<!-- Modal Add Action -->
+@php
+    $diagnosa = App\Models\Diagnosis::all();
+    // dd($diagnosa);
+@endphp
 <style>
     .custom-radio {
 
@@ -164,15 +169,19 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="wilayah_faskes">Wilayah Faskes</label>
-                                                <select class="form-control" id="wilayah_faskes" name="faskes">
+                                                <select class="form-control" id="wilayah_faskes" name="faskes"
+                                                    disabled>
                                                     <option value="" disabled
-                                                        {{ empty($action->faskes) ? 'selected' : '' }}>Pilih Wilayah
+                                                        {{ empty($action->patient->wilayah_faskes) ? 'selected' : '' }}>
+                                                        Pilih Wilayah
                                                         Faskes
                                                     </option>
-                                                    <option value="ya"
-                                                        {{ $action->faskes == 'ya' ? 'selected' : '' }}>Ya</option>
-                                                    <option value="tidak"
-                                                        {{ $action->faskes == 'tidak' ? 'selected' : '' }}>Tidak
+                                                    <option value="1"
+                                                        {{ $action->patient->wilayah_faskes == '1' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="0"
+                                                        {{ $action->patient->wilayah_faskes == '0' ? 'selected' : '' }}>
+                                                        Tidak
                                                     </option>
 
                                                 </select>
@@ -608,6 +617,24 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-md-6">
+                                    <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                    <select class="form-control" id="diagnosaEdit{{ $action->id }}"
+                                        name="diagnosa[]" multiple>
+                                        @php
+                                            // Decode JSON if it exists
+                                            $selectedDiagnosa = is_string($action->diagnosa)
+                                                ? json_decode($action->diagnosa, true)
+                                                : $action->diagnosa;
+                                        @endphp
+                                        @foreach ($diagnosa as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
+                                                {{ $item->name }}-{{ $item->icd10 }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-md-6 mt-3">
                                     <label for="hasil_usg">Hasil USG</label>
                                     <textarea class="form-control" id="hasil_usg" name="hasil_usg" placeholder="Hasil USG">{{ old('hasil_usg', $action->hasil_usg ?? '') }}</textarea>
@@ -817,11 +844,16 @@
 
 
 @include('component.modal-table-edit-pasien')
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 
 <script>
     var nikValue = "{{ $action->patient->nik ?? '' }}";
     document.getElementById('nikEdit{{ $action->id }}').value = nikValue;
-    console.log(nikValue);
 </script>
 <script>
     document.getElementById('nextSectionButton{{ $action->id }}').addEventListener('click', function() {
@@ -842,7 +874,7 @@
         }
     });
     $(document).ready(function() {
-        $('#diagnosaEdit').select2({
+        $('#diagnosaEdit{{ $action->id }}').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0

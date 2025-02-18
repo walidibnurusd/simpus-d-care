@@ -22,13 +22,13 @@
         <div class="modal-content">
             <div class="modal-header bg-primary">
 
-                @if ($routeName === 'action.index' || 'action.dokter.index')
+                @if ($routeName === 'action.index' || $routeName === 'action.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
-                @elseif ($routeName === 'action.index.gigi' || 'action.dokter.gigi.index')
+                @elseif ($routeName === 'action.index.gigi' || $routeName === 'action.dokter.gigi.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
-                @elseif ($routeName === 'action.kia.index' || 'kia.dokter.index')
+                @elseif ($routeName === 'action.kia.index' || $routeName === 'kia.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KIA</h5>
-                @elseif ($routeName === 'action.kib.index' || 'kb.dokter.index')
+                @elseif ($routeName === 'action.kb.index' || $routeName === 'kb.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KB</h5>
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
@@ -176,15 +176,19 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="wilayah_faskes">Wilayah Faskes</label>
-                                                <select class="form-control" id="wilayah_faskes" name="faskes">
+                                                <select class="form-control" id="wilayah_faskes" name="faskes"
+                                                    disabled>
                                                     <option value="" disabled
-                                                        {{ empty($action->faskes) ? 'selected' : '' }}>Pilih Wilayah
+                                                        {{ empty($action->patient->wilayah_faskes) ? 'selected' : '' }}>
+                                                        Pilih Wilayah
                                                         Faskes
                                                     </option>
-                                                    <option value="ya"
-                                                        {{ $action->faskes == 'ya' ? 'selected' : '' }}>Ya</option>
-                                                    <option value="tidak"
-                                                        {{ $action->faskes == 'tidak' ? 'selected' : '' }}>Tidak
+                                                    <option value="1"
+                                                        {{ $action->patient->wilayah_faskes == '1' ? 'selected' : '' }}>
+                                                        Ya</option>
+                                                    <option value="0"
+                                                        {{ $action->patient->wilayah_faskes == '0' ? 'selected' : '' }}>
+                                                        Tidak
                                                     </option>
 
                                                 </select>
@@ -718,58 +722,51 @@
 
 
                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'tindakan')
-                            <div class="row mt-3">
-                                <div class="container">
-                                    <div class="row g-2">
-                                        <div class="col-md-12">
-                                            <label for="hasil_lab" style="color: green;">Hasil Laboratorium</label>
-                                            <input type="text" class="form-control" id="hasil_lab" readonly
-                                                name="hasil_lab"
-                                                value="{{ old('hasil_lab', $action->hasil_lab ?? '') }}"
-                                                placeholder="Hasil Laboratorium">
+
+                            @if (Auth::user()->role != 'tindakan')
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <label for="diagnosaEditAction"
+                                            style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                        <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
+                                            name="diagnosa[]" multiple>
+                                            @php
+                                                // Decode JSON if it exists
+                                                $selectedDiagnosa = is_string($action->diagnosa)
+                                                    ? json_decode($action->diagnosa, true)
+                                                    : $action->diagnosa;
+                                            @endphp
+                                            @foreach ($diagnosa as $item)
+                                                <option value="{{ $item->id }}"
+                                                    {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
+                                                    {{ $item->name }}-{{ $item->icd10 }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="skrining" class="form-label">Hasil Skrining</label>
+                                            <button class="btn btn-primary w-100 mt-2" type="button"
+                                                id="btnCariskriningEdit" data-bs-toggle="modal"
+                                                data-bs-target="#modalSkriningEdit"
+                                                data-patient-id="{{ $action->id_patient }}">
+                                                <!-- Tambahkan data-patient-id -->
+                                                Hasil Skrining
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
 
-                            <div class="row mt-3">
-
-                                <div class="col-md-6">
-                                    <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                    <select class="form-control" id="diagnosaEdit{{ $action->id }}"
-                                        name="diagnosa[]" multiple>
-                                        @php
-                                            // Decode JSON if it exists
-                                            $selectedDiagnosa = is_string($action->diagnosa)
-                                                ? json_decode($action->diagnosa, true)
-                                                : $action->diagnosa;
-                                        @endphp
-                                        @foreach ($diagnosa as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
-                                                {{ $item->name }}-{{ $item->icd10 }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="skrining" class="form-label">Hasil Skrining</label>
-                                        <button class="btn btn-primary w-100 mt-2" type="button"
-                                            id="btnCariskriningEdit" data-bs-toggle="modal"
-                                            data-bs-target="#modalSkriningEdit"
-                                            data-patient-id="{{ $action->id_patient }}">
-                                            <!-- Tambahkan data-patient-id -->
-                                            Hasil Skrining
-                                        </button>
-                                    </div>
-                                </div>
-                                {{-- <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                     <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
                                         Penunjang</label>
                                     <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
                                         placeholder="Pemeriksaan penunjang">{{ old('pemeriksaan_penunjang', $action->pemeriksaan_penunjang ?? '') }}</textarea>
                                 </div> --}}
+                            <div class="row mt-3">
+
                                 <div class="col-md-6">
                                     <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                                     <select class="form-control"
@@ -905,6 +902,10 @@
                                                 Tampon/Off Tampon</option>
                                         @endif
                                     </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
+                                    <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                                 </div>
                             </div>
                         @endif
@@ -1119,19 +1120,24 @@
 @include('component.modal-table-edit-pasien')
 @include('component.modal-skrining-edit')
 
-
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-
 <script>
     var nikValue = "{{ $action->patient->nik ?? '' }}";
     document.getElementById('nikEdit{{ $action->id }}').value = nikValue;
-    console.log(nikValue);
+</script>
+<script>
+    $(document).ready(function() {
+        $('#diagnosaEditAction{{ $action->id }}').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
 </script>
 <script>
     document.getElementById('nextSectionButton{{ $action->id }}').addEventListener('click', function() {
@@ -1150,13 +1156,6 @@
             section2.classList.remove('d-none');
             button.textContent = 'Kembali';
         }
-    });
-    $(document).ready(function() {
-        $('#diagnosaEdit{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
     });
     $(document).ready(function() {
         $('#tindakanEdit{{ $action->id }}').select2({
