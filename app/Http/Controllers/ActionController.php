@@ -818,6 +818,11 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
                         $dokter = User::where('role', 'dokter')->get();
@@ -931,6 +936,11 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('kunjungan', function ($row) {
+                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
@@ -1327,6 +1337,7 @@ class ActionController extends Controller
                 'diabetes' => 'nullable',
                 'pembekuan_darah' => 'nullable',
                 'tipe' => 'nullable',
+                'tindakan_ruang_tindakan' => 'nullable',
             ]);
             $existingAction = Action::where('id_patient', $validated['id_patient'])->where('tanggal', $validated['tanggal'])->where('tipe', $validated['tipe'])->first();
             if ($existingAction) {
@@ -2061,31 +2072,7 @@ class ActionController extends Controller
             $action = Action::findOrFail($id);
             $action->delete();
 
-            if (Auth::user()->role == 'dokter') {
-                if ($action->tipe === 'poli-umum') {
-                    $route = 'action.dokter.index';
-                } elseif ($action->tipe === 'poli-gigi') {
-                    $route = 'action.dokter.gigi.index';
-                } elseif ($action->tipe === 'poli-kia') {
-                    $route = 'action.kia.dokter.index';
-                } else {
-                    $route = 'action.dokter.ugd.index';
-                }
-            } else {
-                if ($action->tipe === 'poli-umum') {
-                    $route = 'action.index';
-                } elseif ($action->tipe === 'poli-gigi') {
-                    $route = 'action.index.gigi';
-                } elseif ($action->tipe === 'poli-kia') {
-                    $route = 'action.kia.index';
-                } elseif ($action->tipe === 'poli-kb') {
-                    $route = 'action.kb.index';
-                } else {
-                    $route = 'action.index.ugd';
-                }
-            }
-
-            return redirect()->route($route)->with('success', 'Data berhasil dihapus.');
+            return redirect()->back()->with('success', 'Data berhasil dihapus.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()

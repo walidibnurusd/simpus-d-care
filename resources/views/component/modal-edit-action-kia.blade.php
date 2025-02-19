@@ -121,16 +121,15 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="kunjungan">Kunjungan</label>
-                                                <select class="form-control" id="kunjungan" name="kunjungan">
+                                                <label for="kasus">Kasus</label>
+                                                <select class="form-control" id="kasus" name="kasus">
                                                     <option value="" disabled
-                                                        {{ empty($action->kunjungan) ? 'selected' : '' }}>Pilih Jenis
-                                                        Kunjungan</option>
-                                                    <option value="baru"
-                                                        {{ $action->kunjungan == 'baru' ? 'selected' : '' }}>Baru
+                                                        {{ empty($action->kasus) ? 'selected' : '' }}>Pilih Jenis Kasus</option>
+                                                    <option value="1"
+                                                        {{ $action->kasus == '1' ? 'selected' : '' }}>Baru
                                                     </option>
-                                                    <option value="lama"
-                                                        {{ $action->kunjungan == 'lama' ? 'selected' : '' }}>Lama
+                                                    <option value="0"
+                                                        {{ $action->kasus == '0' ? 'selected' : '' }}>Lama
                                                     </option>
                                                 </select>
                                             </div>

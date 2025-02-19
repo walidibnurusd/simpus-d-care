@@ -573,11 +573,11 @@
                                 </div>
                             @else
                                 <div class="col-md-4">
-                                    <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                                    <label for="tindakan_ruang_tindakan"
+                                        style="color: rgb(19, 11, 241);">TINDAKAN</label>
                                     <select class="form-control" id="tindakan_ruang_tindakan"
-                                        name="tindakan_ruang_tindakan">
+                                        name="tindakan_ruang_tindakan[]">
                                         <option value="" disabled selected>pilih</option>
-
                                         <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan
                                             Invasif
                                         </option>
@@ -838,7 +838,8 @@
     });
     $(document).ready(function() {
         // Initialize select2 for all relevant elements
-        $('#diagnosa, #tindakan, #rujuk_rs')
+
+        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan')
             .select2({
                 placeholder: "Pilih",
                 allowClear: true,
