@@ -29,16 +29,21 @@
                         </div>
                     </li>
                     @if (Auth::user()->role == 'admin')
-                        <li class="sidebar-list">
-                            <a class="sidebar-link sidebar-title link-nav" href="{{ route('dashboard.index') }}">
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
+                                href="#">
                                 <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-home') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>
                                 <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-home') }}"></use>
-                                </svg>
-                                <span>Dashboard</span>
-                            </a>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+
+                                </svg><span>Dashboard</span></a>
+
+                            <ul class="sidebar-submenu">
+                                <li><a href="{{ route('dashboard.patient') }}">Pasien</a></li>
+                                <li><a href="{{ route('dashboard.kunjungan') }}">Kunjungan</a></li>
+
+                            </ul>
                         </li>
                     @endif
                     @if (Auth::user()->role == 'admin-loket')
@@ -125,10 +130,9 @@
                     </ul>
                     </li>
                     @endif
-                    @if (Auth::user()->role == 'dokter' ||
-                            Auth::user()->role == 'admin-kajian-awal')
-                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                                href="#">
+                    @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'admin-kajian-awal')
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+                                class="sidebar-link sidebar-title" href="#">
                                 <svg class="stroke-icon">
                                     <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>

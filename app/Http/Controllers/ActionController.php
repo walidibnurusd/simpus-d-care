@@ -1343,7 +1343,9 @@ class ActionController extends Controller
             if ($existingAction) {
                 return;
             }
-
+            if ($request->has('tindakan')) {
+                $validated['tindakan'] = implode(',', $request->tindakan);
+            }
             $action = Action::create($validated);
             if (!empty($request->jenis_pemeriksaan)) {
                 HasilLab::create([
@@ -1471,6 +1473,12 @@ class ActionController extends Controller
                 'beri_tindakan' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
             ]);
+            if ($request->has('tindakan_ruang_tindakan')) {
+                $validated['tindakan_ruang_tindakan'] = implode(',', $request->tindakan_ruang_tindakan);
+            }
+            if ($request->has('tindakan')) {
+                $validated['tindakan'] = implode(',', $request->tindakan);
+            }
             $validatedData['lingkar_lengan_atas'] = $validatedData['lingkar_lengan_atas'] ?? 0;
             $validatedData['usia_kehamilan'] = $validatedData['usia_kehamilan'] ?? 0;
             $validatedData['tinggi_fundus_uteri'] = $validatedData['tinggi_fundus_uteri'] ?? 0;
@@ -1482,6 +1490,23 @@ class ActionController extends Controller
             $validatedData['periksa_usg'] = $validatedData['periksa_usg'] ?? 0;
             // Update the action with the validated data
             // Update the action with the validated data
+            if (!empty($request->jenis_pemeriksaan)) {
+                // Cek apakah HasilLab dengan id_action sudah ada
+                $hasilLab = HasilLab::where('id_action', $action->id)->first();
+
+                if ($hasilLab) {
+                    // Jika sudah ada, update jenis_pemeriksaan
+                    $hasilLab->update([
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Update sebagai JSON
+                    ]);
+                } else {
+                    // Jika belum ada, buat entri baru
+                    HasilLab::create([
+                        'id_action' => $action->id,
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                    ]);
+                }
+            }
             $action->update($validated);
 
             return redirect()->back()->with('success', 'Action has been successfully updated.');
@@ -1618,7 +1643,6 @@ class ActionController extends Controller
                 'pembekuan_darah' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
             ]);
-            Log::info('Validated data:', $validated);
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
             $validated['usia_kehamilan'] = $validated['usia_kehamilan'] ?? 0;
             $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
@@ -1628,7 +1652,12 @@ class ActionController extends Controller
             $validated['tablet_fe'] = $validated['tablet_fe'] ?? 0;
             $validated['proteinuria'] = $validated['proteinuria'] ?? 0;
             $validated['periksa_usg'] = $validated['periksa_usg'] ?? 0;
-
+            if ($request->has('tindakan_ruang_tindakan')) {
+                $validated['tindakan_ruang_tindakan'] = implode(',', $request->tindakan_ruang_tindakan);
+            }
+            if ($request->has('tindakan')) {
+                $validated['tindakan'] = implode(',', $request->tindakan);
+            }
             if ($id != null) {
                 // Jika ID diberikan, update data yang sudah ada
                 $action = Action::find($id);
@@ -1642,7 +1671,6 @@ class ActionController extends Controller
                 if (!$action) {
                     return response()->json(['error' => 'Action not found'], 404);
                 }
-                Log::info('Updating action data with ID ' . $id, $validated);
                 $action->update($validated);
                 return response()->json(['success' => 'Action has been successfully updated.']);
             } else {
@@ -1797,7 +1825,11 @@ class ActionController extends Controller
                 'tumor' => 'nullable',
                 'diabetes' => 'nullable',
                 'pembekuan_darah' => 'nullable',
+                'tindakan_ruang_tindakan' => 'nullable',
             ]);
+            if ($request->has('tindakan_ruang_tindakan')) {
+                $validated['tindakan_ruang_tindakan'] = implode(',', $request->tindakan_ruang_tindakan);
+            }
 
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
             $validated['usia_kehamilan'] = $validated['usia_kehamilan'] ?? 0;
@@ -1817,7 +1849,7 @@ class ActionController extends Controller
 
             Log::info("Update berhasil untuk Action ID: $id");
 
-            return redirect()->route('action.dokter.ruang.tindakan.index')->with('success', 'Action has been successfully updated.');
+            return redirect()->route('action.dokter.ruang.tindakan.index')->with('success', 'Action tindakan has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()

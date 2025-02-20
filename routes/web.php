@@ -137,6 +137,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::post('/import/patients', [PatientsController::class, 'import'])->name('patient.import');
     Route::get('/patients/data', [PatientsController::class, 'getPatientIndex'])->name('patient.data');
+    Route::get('/patients/dashboard', [PatientsController::class, 'getPatientDashboard'])->name('patient.dashboard');
 
     Route::get('/patients', [PatientsController::class, 'index'])->name('patient.index');
     Route::post('/patients', [PatientsController::class, 'store'])->name('patient.store');
@@ -211,6 +212,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::prefix('kunjungan')->group(function () {
         Route::get('/', [App\Http\Controllers\KunjunganController::class, 'index'])->name('kunjungan.index');
+        Route::get('/', [App\Http\Controllers\KunjunganController::class, 'kunjunganDashboard'])->name('kunjungan.dashboard');
         Route::post('/', [App\Http\Controllers\KunjunganController::class, 'store'])->name('kunjungan.store');
         Route::put('/{id}', [App\Http\Controllers\KunjunganController::class, 'update'])->name('kunjungan.update');
         Route::delete('/{id}', [App\Http\Controllers\KunjunganController::class, 'destroy'])->name('kunjungan.delete');
@@ -439,7 +441,8 @@ Route::get('/get-patients-apotik/poli-kia', [PatientsController::class, 'getPati
 Route::get('/get-patients-apotik/poli-kb', [PatientsController::class, 'getPatientsApotikKb'])->name('get-patients-apotik-kb');
 
 Route::prefix('dashboard')->group(function () {
-    Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/pasien', [App\Http\Controllers\DashboardController::class, 'indexPatient'])->name('dashboard.patient');
+    Route::get('/kunjungan', [App\Http\Controllers\DashboardController::class, 'indexKunjungan'])->name('dashboard.kunjungan');
 });
 //diagnosa
 Route::get('/get-diagnosa', [DiagnosaController::class, 'getDiagnosa']);

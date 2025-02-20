@@ -419,8 +419,6 @@
             let formData = $('#addPatientForm').serialize();
             formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
             let actionId = $('#action_id').val() ?? null;
-
-            // Tentukan URL berdasarkan ada tidaknya actionId
             let url = actionId ? `/tindakan-dokter/${actionId}` : '/tindakan';
 
             $.ajax({

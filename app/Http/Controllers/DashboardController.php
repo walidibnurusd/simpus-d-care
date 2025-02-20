@@ -17,10 +17,13 @@ class DashboardController extends Controller
         // dd($user);
         return view('content.profile.index', ['user' => $user]);
     }
-      public function index()
+      public function indexPatient()
     {
-        $patients = Patients::paginate(10); // Ambil data dengan paginasi 10 per halaman
-        return view('content.dashboard', compact('patients'));
+        return view('content.dashboard.patient');
+    }
+      public function indexKunjungan()
+    {
+        return view('content.dashboard.kunjungan');
     }
 
 }

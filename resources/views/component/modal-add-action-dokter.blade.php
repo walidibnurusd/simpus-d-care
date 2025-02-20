@@ -495,7 +495,7 @@
                         @endif
                         <div class="row mt-3">
 
-                            @if ($routeName !== 'action.dokter.ruang.tindakan.index')
+                            @if (Auth::user()->role == 'dokter')
                                 <div class="col-md-4">
                                     <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                                     <select class="form-control" id="tindakan" name="tindakan">
@@ -503,7 +503,7 @@
                                         @if ($routeName === 'action.dokter.index')
                                             <option value="Diberikan Obat">Diberikan Obat</option>
                                             <option value="Dirujuk">Dirujuk</option>
-                                        @elseif($routeName === 'action.dokter.gigi.index')
+                                        @else
                                             <option value="Gigi Sulung Tumpatan Sementara">Gigi Sulung Tumpatan
                                                 Sementara
                                             </option>
@@ -535,7 +535,16 @@
                                             <option value="Tindakan Lain">Tindakan Lain
                                             </option>
                                             <option value="Incici Abses Gigi">Incici Abses Gigi</option>
-                                        @else
+                                        @endif
+                                    </select>
+                                </div>
+                            @else
+                                @if ($routeName === 'action.dokter.ruang.tindakan.index')
+                                    <div class="col-md-4">
+                                        <label for="tindakan_ruang_tindakan"
+                                            style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                                        <select class="form-control" id="tindakan_ruang_tindakan"
+                                            name="tindakan_ruang_tindakan[]" multiple>
                                             <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan
                                                 Invasif
                                             </option>
@@ -568,51 +577,49 @@
                                             <option value="Hecting (Jahit Luka)">Hecting (Jahit Luka)
                                             </option>
                                             <option value="Tampon/Off Tampon">Tampon/Off Tampon</option>
-                                        @endif
-                                    </select>
-                                </div>
-                            @else
-                                <div class="col-md-4">
-                                    <label for="tindakan_ruang_tindakan"
-                                        style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                                    <select class="form-control" id="tindakan_ruang_tindakan"
-                                        name="tindakan_ruang_tindakan">
-                                        <option value="" disabled selected>pilih</option>
-                                        <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan
-                                            Invasif
-                                        </option>
-                                        <option value="Observasi Dengan Tindakan Invasif">Observasi Dengan Tindakan
-                                            Invasif
-                                        </option>
-                                        <option value="Tidak Ada">Tidak Ada
-                                        </option>
-                                        <option value="Corpus Alineum">Corpus Alineum
-                                        </option>
-                                        <option value="Ekstraksi Kuku">Ekstraksi Kuku
-                                        </option>
-                                        <option value="Sircumsisi (Bedah Ringan)">Sircumsisi (Bedah Ringan)
-                                        </option>
-                                        <option value="Incisi Abses">Incisi Abses
-                                        </option>
-                                        <option value="Rawat Luka">Rawat Luka
-                                        </option>
-                                        <option value="Ganti Verban">Ganti Verban
-                                        </option>
-                                        <option value="Spooling">Spooling
-                                        </option>
-                                        <option value="Toilet Telinga">Toilet Telinga
-                                        </option>
-                                        <option value="Tetes Telinga">Tetes Telinga
-                                        </option>
-                                        <option value="Aff Hecting">Aff Hecting
-                                        </option>
-                                        </option>
-                                        <option value="Hecting (Jahit Luka)">Hecting (Jahit Luka)
-                                        </option>
-                                        <option value="Tampon/Off Tampon">Tampon/Off Tampon</option>
 
-                                    </select>
-                                </div>
+                                        </select>
+                                    </div>
+                                @else
+                                    <div class="col-md-4">
+                                        <label for="tindakan" style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                                        <select class="form-control" id="tindakan" name="tindakan[]" multiple>
+                                            <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan
+                                                Invasif
+                                            </option>
+                                            <option value="Observasi Dengan Tindakan Invasif">Observasi Dengan Tindakan
+                                                Invasif
+                                            </option>
+                                            <option value="Tidak Ada">Tidak Ada
+                                            </option>
+                                            <option value="Corpus Alineum">Corpus Alineum
+                                            </option>
+                                            <option value="Ekstraksi Kuku">Ekstraksi Kuku
+                                            </option>
+                                            <option value="Sircumsisi (Bedah Ringan)">Sircumsisi (Bedah Ringan)
+                                            </option>
+                                            <option value="Incisi Abses">Incisi Abses
+                                            </option>
+                                            <option value="Rawat Luka">Rawat Luka
+                                            </option>
+                                            <option value="Ganti Verban">Ganti Verban
+                                            </option>
+                                            <option value="Spooling">Spooling
+                                            </option>
+                                            <option value="Toilet Telinga">Toilet Telinga
+                                            </option>
+                                            <option value="Tetes Telinga">Tetes Telinga
+                                            </option>
+                                            <option value="Aff Hecting">Aff Hecting
+                                            </option>
+                                            </option>
+                                            <option value="Hecting (Jahit Luka)">Hecting (Jahit Luka)
+                                            </option>
+                                            <option value="Tampon/Off Tampon">Tampon/Off Tampon</option>
+
+                                        </select>
+                                    </div>
+                                @endif
                             @endif
                             <div class="col-md-4">
                                 <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
@@ -625,7 +632,8 @@
                                     <select class="form-control" id="diagnosaEdit" name="diagnosa[]" disabled>
                                         <option value="" disabled selected>Pilih</option>
                                         @foreach ($diagnosa as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
+                                            <option value="{{ $item->id }}">
+                                                {{ $item->name }}-{{ $item->icd10 }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -809,7 +817,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 
@@ -818,24 +825,26 @@
 
 
 <script>
-    let currentSection = 1;
-    document.getElementById('nextSectionButton').addEventListener('click', function() {
-        const section1 = document.getElementById('formSection1');
-        const section2 = document.getElementById('formSection2');
-        const button = this;
+    @if ($routeName != 'action.dokter.ruang.tindakan.index')
+        let currentSection = 1;
+        document.getElementById('nextSectionButton').addEventListener('click', function() {
+            const section1 = document.getElementById('formSection1');
+            const section2 = document.getElementById('formSection2');
+            const button = this;
 
-        if (section1.classList.contains('d-none')) {
-            // Kembali ke Section 1
-            section1.classList.remove('d-none');
-            section2.classList.add('d-none');
-            button.textContent = 'Lanjut Pemeriksaan';
-        } else {
-            // Lanjut ke Section 2
-            section1.classList.add('d-none');
-            section2.classList.remove('d-none');
-            button.textContent = 'Kembali';
-        }
-    });
+            if (section1.classList.contains('d-none')) {
+                // Kembali ke Section 1
+                section1.classList.remove('d-none');
+                section2.classList.add('d-none');
+                button.textContent = 'Lanjut Pemeriksaan';
+            } else {
+                // Lanjut ke Section 2
+                section1.classList.add('d-none');
+                section2.classList.remove('d-none');
+                button.textContent = 'Kembali';
+            }
+        });
+    @endif
     $(document).ready(function() {
         // Initialize select2 for all relevant elements
 

@@ -17,7 +17,7 @@
         </form>
 
         <div class="header-logo-wrapper col-auto p-0">
-            <div class="logo-wrapper"><a href="{{ route('dashboard.index') }}"></a></div>
+            <div class="logo-wrapper"><a href="{{ route('dashboard.patient') }}"></a></div>
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i>
             </div>
         </div>

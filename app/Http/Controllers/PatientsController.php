@@ -1136,7 +1136,95 @@ class PatientsController extends Controller
             })
             ->make(true);
     }
+    public function getPatientDashboard(Request $request)
+    {
+        // Get the query builder for Patients model
+        $patients = Patients::query();
+        $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+        $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
+        $patients->whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate);
 
+        $filters = [
+            'nik' => $request->input('nik'),
+            'name' => $request->input('name'),
+            'address' => $request->input('address'),
+            'dob' => $request->input('dob'),
+            'gender' => $request->input('gender'),
+            'phone' => $request->input('phone'),
+            'marrital_status' => $request->input('marrital_status'),
+            'no_rm' => $request->input('no_rm'),
+            'no_family_folder' => $request->input('no_family_folder'),
+            'created_at' => $request->input('created_at'),
+        ];
+
+        // Apply filters to the query builder
+        foreach ($filters as $column => $value) {
+            if ($value) {
+                Log::info($column);
+                if ($column === 'dob') {
+                    $patients->whereDate('dob', 'like', "%$value%");
+                } elseif ($column === 'gender') {
+                    if (strtolower($value) === 'perempuan') {
+                        $patients->where('gender', 1);
+                    } else {
+                        $patients->where('gender', 2);
+                    }
+                } elseif ($column === 'marrital_status') {
+                    if (strtolower($value) === 'belum menikah' || strtolower($value) === 'belum') {
+                        $patients->where('marrital_status', 1);
+                    } elseif (strtolower($value) === 'menikah') {
+                        $patients->where('marrital_status', 2);
+                    } elseif (strtolower($value) === 'janda') {
+                        $patients->where('marrital_status', 3);
+                    } else {
+                        $patients->where('marrital_status', 4);
+                    }
+                } else {
+                    // Generic column search
+                    $patients->where($column, 'like', "%$value%");
+                }
+            }
+        }
+
+        // Return the datatables response
+        return datatables()
+            ->of($patients)
+            ->addIndexColumn() // Add index column for row number
+            ->editColumn('dob', function ($row) {
+                return $row->place_birth . ' / ' . $row->dob . ' (' . $row->getAgeAttribute() . '-thn)';
+            })
+            ->editColumn('gender', function ($row) {
+                return $row->genderName->name ?? '';
+            })
+            ->editColumn('marrital_status', function ($row) {
+                return $row->marritalStatus->name ?? '';
+            })
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at->format('d-m-Y');
+            })
+            ->addColumn('action', function ($row) {
+                // Render the modal HTML for this specific row
+                $modal = view('component.modal-edit-patient', ['patient' => $row])->render();
+
+                return '<div class="action-buttons">
+                        <!-- Edit Button -->
+                        <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editPatientModal' .
+                    $row->id .
+                    '">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        
+                        <!-- Delete Button with a Unique ID -->
+                        <button type="button" class="btn btn-danger btn-sm text-white font-weight-bold d-flex align-items-center btn-delete" id="delete-button-' .
+                    $row->id .
+                    '">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>' .
+                    $modal;
+            })
+            ->make(true);
+    }
     public function store(Request $request)
     {
         try {
