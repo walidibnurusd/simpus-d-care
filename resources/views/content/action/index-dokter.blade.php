@@ -584,12 +584,6 @@
                 });
             </script>
         @endif
-
-
-
-
-
-
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Check for success message

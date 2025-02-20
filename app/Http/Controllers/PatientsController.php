@@ -99,10 +99,10 @@ class PatientsController extends Controller
         $today = Carbon::now()->toDateString();
         $query = Patients::with(['genderName', 'educations', 'occupations'])
             ->whereHas('kunjungans', function ($q) use ($today) {
-                 $q->where('poli', 'poli-umum')->where('tanggal', $today);
+                $q->where('poli', 'poli-umum')->where('tanggal', $today);
             })
             ->whereDoesntHave('actions', function ($q) use ($today) {
-                 $q->where('poli', 'poli-umum')->where('tanggal', $today);
+                $q->where('tipe', 'poli-umum')->where('tanggal', $today);
             });
 
         if (!empty($searchValue)) {
@@ -686,10 +686,9 @@ class PatientsController extends Controller
 
         $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'hasilLab')
-            ->whereHas('hasilLab', function ($q) {
-                $q->whereNull('gds')->whereNull('gdp')->whereNull('gdp_2_jam_pp')->whereNull('cholesterol')->whereNull('asam_urat')->whereNull('leukosit')->whereNull('eritrosit')->whereNull('trombosit')->whereNull('hemoglobin')->whereNull('sifilis')->whereNull('hiv')->whereNull('golongan_darah')->whereNull('widal')->whereNull('malaria')->whereNull('albumin')->whereNull('reduksi')->whereNull('urinalisa')->whereNull('tes_kehamilan')->whereNull('telur_cacing')->whereNull('bta')->whereNull('igm_dbd')->whereNull('igm_typhoid');
-            });
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'hasilLab')->whereHas('hasilLab', function ($q) {
+            $q->whereNull('gds')->whereNull('gdp')->whereNull('gdp_2_jam_pp')->whereNull('cholesterol')->whereNull('asam_urat')->whereNull('leukosit')->whereNull('eritrosit')->whereNull('trombosit')->whereNull('hemoglobin')->whereNull('sifilis')->whereNull('hiv')->whereNull('golongan_darah')->whereNull('widal')->whereNull('malaria')->whereNull('albumin')->whereNull('reduksi')->whereNull('urinalisa')->whereNull('tes_kehamilan')->whereNull('telur_cacing')->whereNull('bta')->whereNull('igm_dbd')->whereNull('igm_typhoid');
+        });
 
         if ($filterDate) {
             $query->whereDate('tanggal', $filterDate);

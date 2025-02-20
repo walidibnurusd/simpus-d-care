@@ -905,6 +905,7 @@
                                                     Tampon/Off Tampon</option>
                                             @endif
                                         </select>
+
                                     </div>
                                 @else
                                     <div class="col-md-6">
@@ -977,11 +978,14 @@
 
                                         </select>
                                     </div>
+
                                 @endif
-                                <div class="col-md-4">
-                                    <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
-                                    <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
-                                </div>
+                                @if (Auth::user()->role == 'tindakan')
+                                    <div class="col-md-4">
+                                        <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
+                                        <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
+                                    </div>
+                                @endif
                             </div>
                         @endif
 
