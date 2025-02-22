@@ -498,7 +498,7 @@
                             @if (Auth::user()->role == 'dokter')
                                 <div class="col-md-4">
                                     <label for="alkohol" style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                                    <select class="form-control" id="tindakan" name="tindakan">
+                                    <select class="form-control" id="tindakan" name="tindakan[]">
                                         <option value="" disabled selected>pilih</option>
                                         @if ($routeName === 'action.dokter.index')
                                             <option value="Diberikan Obat">Diberikan Obat</option>

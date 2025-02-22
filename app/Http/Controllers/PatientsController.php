@@ -1409,4 +1409,18 @@ class PatientsController extends Controller
         $patients = Patients::all(); // Ganti dengan query sesuai kebutuhan
         return view('content.patients.print', compact('patients'));
     }
+
+    public function getAllPatients()
+    {
+        $patients = Patients::all();
+        $totalPatients = $patients->count();
+        return response()->json(
+            [
+                'message' => 'Successfully get all data patients',
+                'patients' => $patients,
+                'total_patients' => $totalPatients,
+            ],
+            200,
+        );
+    }
 }

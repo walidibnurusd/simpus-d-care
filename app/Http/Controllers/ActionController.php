@@ -1343,6 +1343,10 @@ class ActionController extends Controller
             if ($existingAction) {
                 return;
             }
+            if ($request->has('tindakan_ruang_tindakan')) {
+                $validated['tindakan_ruang_tindakan'] = implode(',', $request->tindakan_ruang_tindakan);
+            }
+
             if ($request->has('tindakan')) {
                 $validated['tindakan'] = implode(',', $request->tindakan);
             }

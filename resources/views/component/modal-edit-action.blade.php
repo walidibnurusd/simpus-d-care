@@ -772,7 +772,7 @@
                                     <div class="col-md-6">
                                         <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
                                         <select class="form-control" id="tindakanEdit{{ $action->id }}"
-                                            name="tindakan">
+                                            name="tindakan[]">
                                             <option value="" {{ empty($action->tindakan) ? 'selected' : '' }}
                                                 disabled selected>pilih</option>
                                             @if ($action->tipe == 'poli-umum')
@@ -1009,6 +1009,21 @@
                                                 {{ $item->name }}
                                             </option>
                                         @endforeach
+                                    </select>
+                                </div>
+                            @endif
+                            @if ($routeName === 'action.dokter.index')
+                                <div class="col-md-4">
+                                    <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang
+                                        Tindakan</label>
+                                    <select class="form-control" id="beri_tindakan" name="beri_tindakan">
+                                        <option value="" disabled selected>pilih</option>
+                                        <option value="1"
+                                            {{ old('beri_tindakan', $action->beri_tindakan ?? '') == 1 ? 'selected' : '' }}>
+                                            Iya</option>
+                                        <option value="0"
+                                            {{ old('beri_tindakan', $action->beri_tindakan ?? '') == 0 ? 'selected' : '' }}>
+                                            Tidak</option>
                                     </select>
                                 </div>
                             @endif

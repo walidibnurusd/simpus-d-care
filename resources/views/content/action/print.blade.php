@@ -83,7 +83,8 @@
                     <th>KEPESERTAAN</th>
                     <th>ALAMAT</th>
                     <th>JENIS KELAMIN</th>
-                    <th>TD</th>
+                    <th>SISTOL</th>
+                    <th>DIASTOL</th>
                     <th>TB</th>
                     <th>BB</th>
                     <th>LP</th>
@@ -124,7 +125,8 @@
                         </td>
                         <td>{{ $actions->patient->address }}</td>
                         <td>{{ $actions->patient->genderName->name }}</td>
-                        <td>{{ $actions->tinggiBadan }}</td>
+                        <td>{{ $actions->sistol }}</td>
+                        <td>{{ $actions->diastol }}</td>
                         <td>{{ $actions->tinggiBadan }}</td>
                         <td>{{ $actions->beratBadan }}</td>
                         <td>{{ $actions->lingkarPinggang }}</td>

@@ -212,7 +212,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::prefix('kunjungan')->group(function () {
         Route::get('/', [App\Http\Controllers\KunjunganController::class, 'index'])->name('kunjungan.index');
-        Route::get('/', [App\Http\Controllers\KunjunganController::class, 'kunjunganDashboard'])->name('kunjungan.dashboard');
+        Route::get('/dashboard', [App\Http\Controllers\KunjunganController::class, 'kunjunganDashboard'])->name('kunjungan.dashboard');
         Route::post('/', [App\Http\Controllers\KunjunganController::class, 'store'])->name('kunjungan.store');
         Route::put('/{id}', [App\Http\Controllers\KunjunganController::class, 'update'])->name('kunjungan.update');
         Route::delete('/{id}', [App\Http\Controllers\KunjunganController::class, 'destroy'])->name('kunjungan.delete');
