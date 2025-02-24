@@ -88,7 +88,7 @@
                     <th>TB</th>
                     <th>BB</th>
                     <th>LP</th>
-                    <th>KUNJ</th>
+                    <th>KASUS</th>
                     <th>KELUHAN</th>
                     <th>DIAGNOSA</th>
                     <th>ICD10</th>
@@ -130,7 +130,13 @@
                         <td>{{ $actions->tinggiBadan }}</td>
                         <td>{{ $actions->beratBadan }}</td>
                         <td>{{ $actions->lingkarPinggang }}</td>
-                        <td>{{ $actions->kunjungan }}</td>
+                        <td>
+                            @if ($actions->kasus == '1')
+                                Baru
+                            @else
+                                Lama
+                            @endif
+                        </td>
                         <td>{{ $actions->keluhan }}</td>
                         @php
                             // Assuming $actions->diagnosa is an array of Diagnosis IDs
