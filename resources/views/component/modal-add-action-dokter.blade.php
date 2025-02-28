@@ -478,13 +478,25 @@
                                     <div class="form-group">
                                         <label for="skrining" class="form-label">Hasil Skrining</label>
                                         <button class="btn btn-primary w-100 mt-2" type="button"
-                                            id="btnCariskrining" data-bs-toggle="modal"
+                                            id="btnCariSkrining" data-bs-toggle="modal"
                                             data-bs-target="#modalSkrining">
                                             Hasil Skrining
                                         </button>
 
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="skrining" class="form-label">Riwayat Berobat</label>
+                                        <button class="btn btn-success w-100 mt-2" type="button"
+                                            id="btnCariRiwayatBerobat" data-bs-toggle="modal"
+                                            data-bs-target="#modalBerobat">
+                                            Riwayat Berobat
+                                        </button>
+
+                                    </div>
+                                </div>
+
                                 {{-- <div class="col-md-4">
                                     <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
                                         Penunjang</label>
@@ -822,6 +834,7 @@
 
 @include('component.modal-table-pasien-dokter')
 @include('component.modal-skrining')
+@include('component.modal-berobat')
 
 
 <script>

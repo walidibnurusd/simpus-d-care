@@ -476,6 +476,27 @@
                                 <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan"></textarea>
                             </div>
                             <div class="col-md-6 mt-3">
+                                <div class="form-group">
+                                    <label for="skrining" class="form-label">Hasil Skrining</label>
+                                    <button class="btn btn-primary w-100 mt-2" type="button" id="btnCariSkrining"
+                                        data-bs-toggle="modal" data-bs-target="#modalSkrining">
+                                        Hasil Skrining
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <div class="form-group">
+                                    <label for="skrining" class="form-label">Riwayat Berobat</label>
+                                    <button class="btn btn-success w-100 mt-2" type="button"
+                                        id="btnCariRiwayatBerobat" data-bs-toggle="modal"
+                                        data-bs-target="#modalBerobat">
+                                        Riwayat Berobat
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-3">
                                 <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                 <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                             </div>
@@ -635,7 +656,7 @@
 
 @include('component.modal-table-pasien-dokter')
 @include('component.modal-skrining')
-
+@include('component.modal-berobat')
 
 
 <style>

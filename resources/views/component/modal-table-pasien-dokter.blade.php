@@ -101,7 +101,7 @@
                             // console.log(data);
                             return `
                         <button class="btn btn-success btnPilihPasien" 
-                        data-id-patient="${row.id}" 
+                        data-idpatient="${row.patient_id}" 
                         data-id="${row.action_id ? row.action_id : null}"
                         data-nik="${row.nik}" 
                         data-name="${row.name}" 
@@ -393,8 +393,11 @@
 
 
             $('#patientDetails').show();
-            const patientId = $(this).data('id-patient');
-            $('#btnCariskrining').data('id', patientId);
+            const patientId = data.idpatient;
+            console.log('log pasien', data.idpatient);
+
+            $('#btnCariSkrining').data('id', patientId);
+            $('#btnCariRiwayatBerobat').data('id', patientId);
 
 
             // Tutup modal

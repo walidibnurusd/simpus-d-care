@@ -47,6 +47,7 @@ class SkriningController extends Controller
     }
     public function getSkriningPatient(Request $request, $id)
     {
+        try {
         $patient = Patients::with([
             'kunjungans' => function ($query) {
                 $query->orderBy('tanggal', 'desc'); // Urutkan kunjungan berdasarkan tanggal terbaru
@@ -162,6 +163,16 @@ class SkriningController extends Controller
             'recordsFiltered' => count($skriningData),
             'data' => $paginatedData,
         ]);
+    }
+    catch (\Exception $e) {
+        // Log the error with the exception message and stack trace
+        Log::error("Error in getSkriningPatient for Patient ID: $id", [
+            'error' => $e->getMessage(),
+            'stack' => $e->getTraceAsString(),
+        ]);
+
+        return response()->json(['error' => 'An error occurred while processing the request.'], 500);
+    }
     }
 
     private function getRouteNameMapping()

@@ -414,6 +414,7 @@ Route::get('districts/{cityId}', [DependentDropdownController::class, 'districts
 Route::get('villages/{districtId}', [DependentDropdownController::class, 'villagesData'])->name('villages');
 Route::get('/get-patients', [PatientsController::class, 'getPatients'])->name('get-patients');
 Route::get('/get-skrining/{id}', [SkriningController::class, 'getSkriningPatient'])->name('get-skrining-patient');
+Route::get('/get-patients-kunjungan/{patient}', [PatientsController::class, 'getPatientsKunjunganByPatient'])->name('get.patients.kunjungan');
 
 Route::get('/get-patients/poli-umum', [PatientsController::class, 'getPatientsPoliUmum'])->name('get-patients-poli-umum');
 Route::get('/get-patients/poli-gigi', [PatientsController::class, 'getPatientsPoliGigi'])->name('get-patients-poli-gigi');

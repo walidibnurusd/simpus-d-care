@@ -31,7 +31,6 @@
     $(document).ready(function() {
         $('#btnCariskriningEdit').on('click', function() {
             const patientId = $(this).data('patient-id'); // Ambil ID pasien dari tombol
-            console.log('data pasien', patientId);
 
             if (patientId) {
                 if ($.fn.DataTable.isDataTable('#skriningEdit')) {

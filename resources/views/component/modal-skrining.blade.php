@@ -29,7 +29,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#btnCariskrining').on('click', function() {
+        $('#btnCariSkrining').on('click', function() {
             const patientId = $(this).data('id'); // Ambil ID pasien dari tombol
             console.log('data pasien', patientId);
 

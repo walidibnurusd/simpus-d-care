@@ -727,7 +727,7 @@
 
                             @if (Auth::user()->role != 'tindakan')
                                 <div class="row mt-3">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="diagnosaEditAction"
                                             style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                         <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
@@ -746,7 +746,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Hasil Skrining</label>
                                             <button class="btn btn-primary w-100 mt-2" type="button"
@@ -756,6 +756,18 @@
                                                 <!-- Tambahkan data-patient-id -->
                                                 Hasil Skrining
                                             </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="skrining" class="form-label">Riwayat Berobat</label>
+                                            <button class="btn btn-success w-100 mt-2" type="button"
+                                                id="btnCariRiwayatBerobatEdit" data-bs-toggle="modal"
+                                                data-bs-target="#modalBerobatEdit"
+                                                data-patient-id="{{ $action->id_patient }}">
+                                                Riwayat Berobat
+                                            </button>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1217,6 +1229,7 @@
 
 @include('component.modal-table-edit-pasien')
 @include('component.modal-skrining-edit')
+@include('component.modal-berobat-edit')
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />

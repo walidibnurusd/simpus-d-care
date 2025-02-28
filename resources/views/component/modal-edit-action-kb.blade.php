@@ -666,6 +666,30 @@
                                         <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ isset($action->kesimpulan) ? $action->kesimpulan : '' }}</textarea>
                                     </div>
                                     <div class="col-md-6 mt-3">
+                                        <div class="form-group">
+                                            <label for="skrining" class="form-label">Hasil Skrining</label>
+                                            <button class="btn btn-primary w-100 mt-2" type="button"
+                                                id="btnCariskriningEdit" data-bs-toggle="modal"
+                                                data-bs-target="#modalSkriningEdit"
+                                                data-patient-id="{{ $action->id_patient }}">
+                                                <!-- Tambahkan data-patient-id -->
+                                                Hasil Skrining
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <div class="form-group">
+                                            <label for="skrining" class="form-label">Riwayat Berobat</label>
+                                            <button class="btn btn-success w-100 mt-2" type="button"
+                                                id="btnCariRiwayatBerobatEdit" data-bs-toggle="modal"
+                                                data-bs-target="#modalBerobatEdit"
+                                                data-patient-id="{{ $action->id_patient }}">
+                                                Riwayat Berobat
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
                                         <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                         <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ isset($action->obat) ? $action->obat : '' }}</textarea>
                                     </div>
@@ -854,6 +878,9 @@
 
 
 @include('component.modal-table-edit-pasien')
+@include('component.modal-skrining-edit')
+@include('component.modal-berobat-edit')
+
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

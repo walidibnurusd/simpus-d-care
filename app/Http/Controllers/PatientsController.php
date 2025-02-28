@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Action;
 use App\Models\Patients;
+use App\Models\Diagnosis;
 use App\Models\Hipertensi;
 use App\Models\Kunjungan;
 use App\Models\GangguanAutis;
@@ -41,6 +42,123 @@ use App\Imports\PatientImport;
 
 class PatientsController extends Controller
 {
+    public function getPatientsKunjunganByPatient(Request $request, $patientId)
+    {
+        // Pastikan hanya mengambil kunjungan dari pasien yang sesuai dengan $patientId dan milik user yang login
+        $query = Kunjungan::with(['patient', 'patient.actions'])
+            ->where('pasien', $patientId)
+            ->get();
+
+        // Log the actions data to check if it's being loaded correctly
+        $query->each(function ($kunjungan) {
+            Log::info('Actions data for patient ID: ' . $kunjungan->patient->id, [
+                'actions' => $kunjungan->patient->actions,
+            ]);
+        });
+
+        // Jika terdapat pencarian, filter berdasarkan data pasien (misalnya name, address, dll)
+        if (!empty($request->input('search.value'))) {
+            $searchValue = $request->input('search.value');
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('address', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('nik', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('no_rm', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('no_family_folder', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        return DataTables::of($query)
+            ->editColumn('poli', function ($row) {
+                // Check the value of 'poli' and return the corresponding string
+                if ($row->poli == 'poli-umum') {
+                    return 'Poli Umum';
+                } elseif ($row->poli == 'poli-gigi') {
+                    return 'Poli Gigi';
+                } elseif ($row->poli == 'poli-kia') {
+                    return 'Poli KIA';
+                } elseif ($row->poli == 'poli-kb') {
+                    return 'Poli KB';
+                } elseif ($row->poli == 'tindakan') {
+                    return 'Ruang Tindakan';
+                } else {
+                    return 'UGD';
+                }
+            })
+            ->addColumn('diagnosa', function ($kunjungan) {
+                // Log the first action's diagnosa to debug
+                if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+                    // Get the first action for this patient
+                    $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+                    Log::info('First action for patient ID: ' . $kunjungan->patient->id, [
+                        'diagnosa' => $action->diagnosa ?? 'No diagnosa field',
+                    ]);
+
+                    // Check if diagnosa is set and is either a string or an array
+                    if ($action && isset($action->diagnosa)) {
+                        $diagnosa = $action->diagnosa;
+
+                        // If diagnosa is a string of IDs separated by commas, convert it into an array
+                        $diagnosaIds = is_array($diagnosa) ? $diagnosa : explode(',', $diagnosa);
+
+                        // Log the diagnosa IDs
+                        Log::info('Diagnosa IDs:', ['ids' => $diagnosaIds]);
+
+                        // Ensure diagnosaIds are integers to avoid type mismatch
+                        $diagnosaIds = array_map('intval', $diagnosaIds);
+
+                        // Fetch diagnoses names using the IDs
+                        $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+
+                        // Log the fetched diagnoses
+                        Log::info('Diagnoses found for patient ID: ' . $kunjungan->patient->id, [
+                            'diagnoses' => $diagnoses,
+                        ]);
+
+                        // If there are diagnoses, return the matched names, otherwise return '-'
+                        return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                    }
+                }
+                return '-';
+            })
+            ->addColumn('icd10', function ($kunjungan) {
+                // Log the first action's diagnosa to debug
+                if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+                    // Get the first action for this patient
+                    $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+                    // Check if diagnosa is set and is either a string or an array
+                    if ($action && isset($action->diagnosa)) {
+                        $diagnosa = $action->diagnosa;
+
+                        // If diagnosa is a string of IDs separated by commas, convert it into an array
+                        $diagnosaIds = is_array($diagnosa) ? $diagnosa : explode(',', $diagnosa);
+
+                        // Ensure diagnosaIds are integers to avoid type mismatch
+                        $diagnosaIds = array_map('intval', $diagnosaIds);
+
+                        // Fetch diagnoses ICD10 codes using the IDs
+                        $icd10Codes = Diagnosis::whereIn('id', $diagnosaIds)->pluck('icd10')->toArray();
+
+                        // If there are ICD10 codes, return them, otherwise return '-'
+                        return !empty($icd10Codes) ? implode(', ', $icd10Codes) : '-';
+                    }
+                }
+                return '-';
+            })
+
+            // ->addColumn('icd10', function ($kunjungan) {
+            //     // if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+            //     //     $action = $kunjungan->patient->actions->first();
+            //     //     if ($action && isset($action->diagnosa)) {
+            //     //         $diagnosis = \App\Models\Diagnosis::find($action->diagnosa);
+            //     //         return $diagnosis ? $diagnosis->icd10 : '-';
+            //     //     }
+            //     // }
+            //     return '-';
+            // })
+            ->make(true);
+    }
+
     public function import(Request $request)
     {
         $request->validate([
