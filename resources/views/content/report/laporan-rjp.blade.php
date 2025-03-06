@@ -66,110 +66,63 @@
         </div>
         <hr>
         <h3 style="margin-top: 20px;">REKAPAN JENIS PELAYANAN TINDAKAN DI RUANG TINDAKAN</h3>
-        <p>TANGGAL S/D</p>
+          <p>BULAN {{ strtoupper($namaBulan) }}
+            TAHUN {{ $tahun }}</p>
     </div>
 
     <div class="table-container">
-        <table border="1">
+        <table border="1" style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr>
-                    <th style="width: 10%s">NO</th>
-                    <th>JENIS TINDAKAN</th>
-                    <th>JUMLAH</th>
-
+                    <th style="width: 10%; text-align: center;">NO</th>
+                    <th style="text-align: left;">JENIS TINDAKAN</th>
+                    <th style="width: 15%; text-align: center;">JUMLAH</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td style="text-align: left">Tampon/Off Tampon</td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td style="text-align: left">Hecting (Jahit Luka) </td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td style="text-align: left">Aff Hecting</td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td style="text-align: left">Tetes Telinga </td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td style="text-align: left">Toilet Telinga</td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td style="text-align: left">Spooling</td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td style="text-align: left">Ganti Verban</td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td style="text-align: left">Rawat Luka</td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td style="text-align: left">Insici Abses</td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td style="text-align: left">Sircumsisi (Bedah Ringan) </td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>11</td>
-                    <td style="text-align: left">Ekstraksi Kuku </td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>12</td>
-                    <td style="text-align: left">Corpus Alineum </td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>13</td>
-                    <td style="text-align: left">Observasi dengan tindakan Invasif</td>
-                    <td>15</td>
-                </tr>
-                <tr>
-                    <td>14</td>
-                    <td style="text-align: left">Observasi tanpa tindakan Invasif</td>
-                    <td>15</td>
-                </tr>
-
+                @if ($result->isEmpty())
+                    <tr>
+                        <td colspan="3" style="text-align: center; font-style: italic;">Data tidak tersedia</td>
+                    </tr>
+                @else
+                    @foreach ($result as $index => $item)
+                        <tr>
+                            <td style="text-align: center;">{{ $index + 1 }}</td>
+                            <td style="text-align: left;">{{ $item['tindakan_ruang_tindakan'] }}</td>
+                            <td style="text-align: center;">{{ $item['jumlah'] }}</td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
+        
+        
         <div style="margin-top: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px;">
                 <!-- Bagian Kiri -->
-                <div style="text-align: left; width: 40%;">
+               <div style="text-align: left; width: 40%;">
+                    <br><br>
                     <p>Mengetahui,</p>
                     <p>Kepala UPT Puskesmas Tamangapa</p>
                     <br><br><br>
-                    <p><strong>(___________________)</strong></p>
+                    <p style="margin-bottom: 0px;padding-bottom:0px">dr. Fatimah .M.Kes</p>
+                    <p style="margin-top: 0px;padding-top:0px">NIP.198511252011012009</p>
                 </div>
 
                 <!-- Bagian Kanan -->
                 <div style="text-align: left; width: 40%; padding-left: 50%;">
-                    <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
+                    @php
+                    use Carbon\Carbon;
+                    
+                    $hariIni = Carbon::now()->translatedFormat('l, d F Y');
+                    @endphp
+                    
+                    <p>Makassar, <span id="currentDate">{{ $hariIni }}</span></p>
                     <p>Mengetahui,</p>
                     <p>Pengelola</p>
                     <br><br><br>
-                    <p><strong>(___________________)</strong></p>
+                    <p style="margin-bottom: 0px;padding-bottom:0px">Nurinayah,S.Kep.,Ns</p>
+                    <p style="margin-top: 0px;padding-top:0px">NIP.197808042003122007</p>
                 </div>
             </div>
         </div>

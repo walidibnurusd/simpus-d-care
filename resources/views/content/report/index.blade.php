@@ -42,7 +42,7 @@
         @else
             <h4 class="mb-3">UGD</h4>
         @endif
-        @if ($routeName === 'report.index')
+        {{-- @if ($routeName === 'report.index') --}}
             <div class="row">
                 <!-- Kolom 1 -->
                 <div class="col-md-4 mb-3">
@@ -57,6 +57,8 @@
                         data-bs-target="#modalISPA">ISPA Tahunan</button>
                     <button class="btn btn-warning btn-block w-100 mb-2" data-bs-toggle="modal"
                         data-bs-target="#modalRujukanTerbanyak">Rekap Rujukan Terbanyak</button>
+                    <button class="btn btn-warning btn-block w-100 mb-2" data-bs-toggle="modal"
+                        data-bs-target="#modalRujukanTerbanyakRS">Rekap Rujukan Terbanyak RS</button>
                 </div>
 
 
@@ -101,7 +103,7 @@
                         data-bs-target="#modalDiare">Laporan Penyakit/DIARE</button>
                 </div>
             </div>
-        @elseif($routeName === 'report.index.gigi')
+        {{-- @elseif($routeName === 'report.index.gigi') --}}
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <button type="button" class="btn btn-primary btn-block w-100 mb-2" data-bs-toggle="modal"
@@ -117,7 +119,7 @@
                     </button>
                 </div>
             </div>
-        @else
+        {{-- @else --}}
             <div class="row">
                 <!-- Kolom 1 -->
                 <div class="col-md-6 mb-3">
@@ -134,7 +136,7 @@
                     </button>
                 </div>
             </div>
-        @endif
+        {{-- @endif --}}
         <div class="modal fade" id="modalURT" tabindex="-1" aria-labelledby="modalURTLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -361,6 +363,17 @@
                     </div>
                     <form action="{{ route('report.lkt') }}" method="GET">
                         <div class="modal-body">
+                            <label for="bulanLBKT">Bulan</label>
+                            <select id="bulanRujukanTerbanyak" name="bulan" class="form-select mb-3">
+                                @foreach ([
+                                    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                                    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                                    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                                ] as $key => $month)
+                                    <option value="{{ $key }}">{{ $month }}</option>
+                                @endforeach
+                            </select>
+        
                             <label for="tahunLKT">Tahun</label>
                             <select id="tahunTELINGA" name="tahun" class="form-control mb-3">
                                 @for ($year = 2020; $year <= now()->year; $year++)
@@ -376,6 +389,7 @@
                 </div>
             </div>
         </div>
+        
 
         <!-- Rekap Bulanan Kasus Terbanyak Formulir 14 -->
         <div class="modal fade" id="modalLBKT" tabindex="-1" aria-labelledby="modalLBKTLabel" aria-hidden="true">
@@ -768,6 +782,48 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form action="{{ route('report.rrt') }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <label for="bulanRujukanTerbanyak">Bulan</label>
+                            <select id="bulanRujukanTerbanyak" name="bulan" class="form-select mb-3">
+                                <option value="1">Januari</option>
+                                <option value="2">Februari</option>
+                                <option value="3">Maret</option>
+                                <option value="4">April</option>
+                                <option value="5">Mei</option>
+                                <option value="6">Juni</option>
+                                <option value="7">Juli</option>
+                                <option value="8">Agustus</option>
+                                <option value="9">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+                            <label for="tahunRujukanTerbanyak">Tahun</label>
+                            <select id="tahunRujukanTerbanyak" class="form-control" name="tahun" required>
+                                @for ($i = 2020; $i <= date('Y'); $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal fade" id="modalRujukanTerbanyakRS" tabindex="-1" aria-labelledby="modalRujukanTerbanyakLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalRujukanTerbanyakLabel">Rekap Rujukan Terbanyak</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('report.lr') }}" method="GET">
                         @csrf
                         <div class="modal-body">
                             <label for="bulanRujukanTerbanyak">Bulan</label>

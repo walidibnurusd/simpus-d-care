@@ -49,9 +49,8 @@
 
         @media print {
             @page {
-                size: legal;
-                /* Ukuran kertas Letter */
-                margin: 20px;
+                size: letter landscape; /* Ukuran Letter dalam mode lanskap */
+                margin: 10mm; 
                 /* Margin */
             }
 
@@ -65,6 +64,23 @@
         .left-align {
             text-align: left;
         }
+        @media print {
+    @page {
+        size: letter landscape; /* Ukuran Letter dalam mode lanskap */
+        margin: 10mm; /* Sesuaikan margin jika diperlukan */
+    }
+
+    body {
+        transform: scale(1); /* Skala 81% */
+        transform-origin: top left; /* Titik asal transformasi */
+    }
+
+    .left-align {
+        text-align: left;
+    }
+}
+
+
     </style>
 
 </head>
@@ -84,6 +100,8 @@
             <img src="../assets/assets/img/logo-puskesmas.png" alt="Logo Right">
         </div>
         <hr>
+             <p>BULAN {{ strtoupper(\Carbon\Carbon::create()->month($bulan)->translatedFormat('F')) }}
+            TAHUN {{ $tahun }}</p>
         <h3 style="margin-top: 20px;">LAPORAN RUJUKAN</h3>
 
 
@@ -96,66 +114,74 @@
                     <th rowspan="2" style="width: 5%">No.</th>
                     <th rowspan="2">ICD X </th>
                     <th rowspan="2">JENIS PENYAKIT</th>
-
                     <th colspan="3">Jenis Kelamin </th>
                     <th colspan="6">Jenis Pembayaran</th>
-                    <th rowspan="2">Rumah sakit 1</th>
-                    <th rowspan="2">Rumah sakit 2</th>
-
-
+                    @foreach ($hospitalColumns as $hospitalName)
+                        <th rowspan="2">{{ $hospitalName }}</th>
+                    @endforeach
                 </tr>
                 <tr>
-
                     <th>L</th>
                     <th>P</th>
                     <th>JML</th>
+                    <th>PBI (KIS)</th>
+                    <th>ASKES</th>
+                    <th>JKN Mandiri</th>
                     <th>Umum</th>
-                    <th>ASK</th>
-                    <th>JKM</th>
                     <th>JKD</th>
-                    <th>BPJS Mandiri</th>
                     <th>JML</th>
                 </tr>
-
             </thead>
-            <tbody>
+              <tbody>
+                @foreach ($topDiagnoses as $index => $diagnosis)
                 <tr>
-                    <td>1</td>
-                    <td>INFEKSI PADA USUS</td>
-                    <td>A90</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>3</td>
-                    <td>8</td>
-                    <td>10</td>
-                    <td>7</td>
-                    <td>6</td>
-                    <td>4</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>2</td>
-
+                    @if ($diagnosis['name'] === 'Total')
+                        <td colspan="3" style="text-align: center; font-weight: bold;">Total</td> <!-- Menggabungkan No + ICD X + Jenis Penyakit -->
+                    @else
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $diagnosis['icd10'] }}</td>
+                        <td>{{ $diagnosis['name'] }}</td>
+                    @endif
+                    <td>{{ $diagnosis['male'] }}</td>
+                    <td>{{ $diagnosis['female'] }}</td>
+                    <td>{{ $diagnosis['male'] + $diagnosis['female'] }}</td>
+                    <td>{{ $diagnosis['payments']['pbi'] }}</td>
+                    <td>{{ $diagnosis['payments']['askes'] }}</td>
+                    <td>{{ $diagnosis['payments']['jkn_mandiri'] }}</td>
+                    <td>{{ $diagnosis['payments']['umum'] }}</td>
+                    <td>{{ $diagnosis['payments']['jkd'] }}</td>
+                    <td>{{ array_sum($diagnosis['payments']) }}</td>
+                    @foreach ($hospitalColumns as $hospitalName)
+                        <td>{{ $diagnosis['hospitals'][$hospitalName] ?? 0 }}</td>
+                    @endforeach
                 </tr>
+                @endforeach
             </tbody>
         </table>
+        
+        
+        
 
         <div style="margin-top: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px;">
                 <!-- Bagian Kiri -->
                 <div style="text-align: left; width: 40%;">
+                    <br><br>
                     <p>Mengetahui,</p>
                     <p>Kepala UPT Puskesmas Tamangapa</p>
                     <br><br><br>
-                    <p><strong>(___________________)</strong></p>
+                    <p style="margin-bottom: 0px;padding-bottom:0px">dr. Fatimah .M.Kes</p>
+                    <p style="margin-top: 0px;padding-top:0px">NIP.198511252011012009</p>
                 </div>
 
                 <!-- Bagian Kanan -->
                 <div style="text-align: left; width: 40%; padding-left: 50%;">
-                    <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
+                    <p>Makassar, <span id="currentDate">{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</span></p>
                     <p>Mengetahui,</p>
                     <p>Pengelola</p>
                     <br><br><br>
-                    <p><strong>(___________________)</strong></p>
+                    <p style="margin-bottom: 0px;padding-bottom:0px">dr.Aryanti Abd Razak</p>
+                    <p style="margin-top: 0px;padding-top:0px">NIP. 197908012010012014</p>
                 </div>
             </div>
         </div>

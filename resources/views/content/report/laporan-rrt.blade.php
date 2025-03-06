@@ -88,7 +88,8 @@
         </div>
         <hr>
         <h3 style="margin-top: 20px;">REKAPITULASI RUJUKAN TERBANYAK</h3>
-        <p>BULAN OKTOBER TAHUN 2024</p>
+        <p>BULAN {{ strtoupper(\Carbon\Carbon::create()->month($bulan)->translatedFormat('F')) }}
+            TAHUN {{ $tahun }}</p>
         <h3>10 RUMAH SAKIT RUJUKAN TERBANYAK</h3>
     </div>
 
@@ -136,7 +137,7 @@
             </thead>
             <tbody>
             <tbody>
-                @foreach ($diagnosisData as $index => $data)
+                @foreach ($topDiagnoses as $index => $data)
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $data['name'] }}</td>
@@ -155,19 +156,22 @@
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px;">
                 <!-- Bagian Kiri -->
                 <div style="text-align: left; width: 40%;">
+                    <br><br>
                     <p>Mengetahui,</p>
                     <p>Kepala UPT Puskesmas Tamangapa</p>
                     <br><br><br>
-                    <p><strong>(___________________)</strong></p>
+                    <p style="margin-bottom: 0px;padding-bottom:0px">dr. Fatimah .M.Kes</p>
+                    <p style="margin-top: 0px;padding-top:0px">NIP.198511252011012009</p>
                 </div>
 
                 <!-- Bagian Kanan -->
                 <div style="text-align: left; width: 40%; padding-left: 50%;">
-                    <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
+                    <p>Makassar, <span id="currentDate">{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</span></p>
                     <p>Mengetahui,</p>
                     <p>Pembuat Laporan</p>
                     <br><br><br>
-                    <p><strong>(___________________)</strong></p>
+                    <p style="margin-bottom: 0px;padding-bottom:0px">dr.Aryanti Abd Razak</p>
+                    <p style="margin-top: 0px;padding-top:0px">NIP. 197908012010012014</p>
                 </div>
             </div>
         </div>

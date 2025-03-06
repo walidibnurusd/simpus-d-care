@@ -91,7 +91,8 @@
 
 
         </h3>
-        <p>TANGGAL S/D</p>
+        <p>BULAN {{ strtoupper(\Carbon\Carbon::create()->month($bulan)->translatedFormat('F')) }}
+            TAHUN {{ $tahun }}</p>
     </div>
 
     <div class="table-container">
@@ -117,51 +118,49 @@
                 </tr>
             </thead>
             <tbody>
-            <tbody>
                 @foreach ($data as $service => $counts)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td class="left-align">{{ $service }}</td>
-                        <td>{{ $counts['akses'] }}</td>
-                        <td>{{ $counts['bpjs_mandiri'] }}</td>
-                        <td>{{ $counts['bpjs'] }}</td>
-                        <td>{{ $counts['gratis_jkd'] }}</td>
+                        <td>{{ $counts['askes'] }}</td>
+                        <td>{{ $counts['jkn_mandiri'] }}</td>
+                        <td>{{ $counts['pbi'] }}</td>
+                        <td>{{ $counts['jkd'] }}</td>
                         <td>{{ $counts['umum'] }}</td>
                     </tr>
                 @endforeach
                 <tr>
                     <td></td>
                     <td class="left-align"><strong>TOTAL</strong></td>
-                    <td>{{ array_sum(array_column($data, 'akses')) }}</td>
-                    <td>{{ array_sum(array_column($data, 'bpjs_mandiri')) }}</td>
-                    <td>{{ array_sum(array_column($data, 'bpjs_kis')) }}</td>
-                    <td>{{ array_sum(array_column($data, 'gratis')) }}</td>
+                    <td>{{ array_sum(array_column($data, 'askes')) }}</td>
+                    <td>{{ array_sum(array_column($data, 'jkn_mandiri')) }}</td>
+                    <td>{{ array_sum(array_column($data, 'pbi')) }}</td>
+                    <td>{{ array_sum(array_column($data, 'jkd')) }}</td>
                     <td>{{ array_sum(array_column($data, 'umum')) }}</td>
                 </tr>
             </tbody>
-
-
-
-
-            </tbody>
+            
         </table>
         <div style="margin-top: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px;">
                 <!-- Bagian Kiri -->
                 <div style="text-align: left; width: 40%;">
+                    <br><br>
                     <p>Mengetahui,</p>
                     <p>Kepala UPT Puskesmas Tamangapa</p>
                     <br><br><br>
-                    <p><strong>(___________________)</strong></p>
+                    <p style="margin-bottom: 0px;padding-bottom:0px">dr. Fatimah .M.Kes</p>
+                    <p style="margin-top: 0px;padding-top:0px">NIP.198511252011012009</p>
                 </div>
 
                 <!-- Bagian Kanan -->
                 <div style="text-align: left; width: 40%; padding-left: 50%;">
-                    <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
+                    <p>Makassar, <span id="currentDate">{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</span></p>
                     <p>Mengetahui,</p>
                     <p>Pembuat Laporan</p>
                     <br><br><br>
-                    <p><strong>(___________________)</strong></p>
+                    <p style="margin-bottom: 0px;padding-bottom:0px">Nurinayah,S.Kep.,Ns</p>
+                    <p style="margin-top: 0px;padding-top:0px">NIP.197808042003122007</p>
                 </div>
             </div>
         </div>
