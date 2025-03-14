@@ -220,7 +220,7 @@
             </div>
         </div>
         <!-- Modal untuk Laporan Kegiatan Pelayanan Kesehatan Gigi dan Mulut -->
-        <div class="modal fade" id="modalLKG" tabindex="-1" aria-labelledby="modalLKGLabel" aria-hidden="true">
+          <div class="modal fade" id="modalLKG" tabindex="-1" aria-labelledby="modalLKGLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -229,6 +229,21 @@
                     </div>
                     <form action="{{ route('report.lkg') }}" method="GET" target="_blank">
                         <div class="modal-body">
+                            <label for="bulanRJP" class="form-label">Bulan</label>
+                            <select id="bulanRJP" name="bulan" class="form-control mb-3">
+                                <option value="01">Januari</option>
+                                <option value="02">Februari</option>
+                                <option value="03">Maret</option>
+                                <option value="04">April</option>
+                                <option value="05">Mei</option>
+                                <option value="06">Juni</option>
+                                <option value="07">Juli</option>
+                                <option value="08">Agustus</option>
+                                <option value="09">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
                             <label for="tahunLKG" class="form-label">Tahun</label>
                             <select id="tahunLKG" name="tahun" class="form-control mb-3">
                                 @for ($year = 2020; $year <= now()->year; $year++)
@@ -244,7 +259,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Modal untuk Laporan Bulanan Kesakitan Gigi dan Mulut -->
         <div class="modal fade" id="modalLRKG" tabindex="-1" aria-labelledby="modalLRKGLabel" aria-hidden="true">
             <div class="modal-dialog">

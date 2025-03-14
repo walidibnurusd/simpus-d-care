@@ -641,7 +641,7 @@
                             @if ($routeName == 'action.dokter.ruang.tindakan.index')
                                 <div class="col-md-4">
                                     <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                    <select class="form-control" id="diagnosaEdit" name="diagnosa[]" disabled>
+                                    <select class="form-control" id="diagnosaEdit" name="diagnosa[]">
                                         <option value="" disabled selected>Pilih</option>
                                         @foreach ($diagnosa as $item)
                                             <option value="{{ $item->id }}">

@@ -891,13 +891,277 @@ class ReportController extends Controller
     {
         return view('content.report.laporan-skdr');
     }
-    public function reportLKG()
+    public function reportLKG(Request $request)
     {
-        return view('content.report.laporan-lkg');
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
+    
+        // Validasi input bulan dan tahun
+        if (!$bulan || !$tahun) {
+            return response()->json(['error' => 'Bulan dan tahun diperlukan'], 400);
+        }
+    
+        // Daftar diagnosis
+        $diagnosisList = [
+            "K00.6" => "Persistensi Gigi Sulung",
+            "K01.1" => "Impaksi M3 Klasifikasi IA",
+            "K02" => "Karies Gigi",
+            "K03" => "Penyakit jaringan keras gigi lainnya",
+            "K04" => "Penyakit pulpa dan jaringan periapikal",
+            "K05" => "Gingivitis dan penyakit periodontal",
+            "K07" => "Anomali Dentofasial / termasuk maloklusi Kelainan",
+            "K08" => "Gangguan gigi dan jaringan penyangga lainnya",
+            "K12" => "Stomatitis dan Lesi-lesi yang berhubungan",
+            "K13.0" => "Angular Cheilitis / penyakit bibir dan mukosa",
+            "L51" => "Eritema Multiformis",
+            "R51" => "Nyeri Orofasial",
+            "S02.6" => "Fraktur mahkota yang tidak merusak pulpa",
+            "K07.3" => "Crowded",
+            "K14.3" => "Hipertrofi of Tongue Papiloma",
+            "D21.9" => "Tumor di langit-langit",
+            "M27.0" => "Torus palatinal"
+        ];
+    
+        // Ambil ID diagnosis berdasarkan kode ICD10
+        $diagnosis = Diagnosis::whereIn('icd10', array_keys($diagnosisList))
+            ->pluck('id', 'icd10')
+            ->map(fn($id) => (string) $id)
+            ->toArray();
+    
+        // Jika diagnosis kosong, langsung return hasil kosong
+        if (empty($diagnosis)) {
+            return response()->json([]);
+        }
+    
+        // Ambil data tindakan berdasarkan ID diagnosis dan filter bulan & tahun
+        $actions = Action::where('tipe', 'poli-gigi')
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->where(function ($query) use ($diagnosis) {
+                foreach ($diagnosis as $id) {
+                    $query->orWhereJsonContains('diagnosa', $id);
+                }
+            })
+            ->get();
+    
+        // Inisialisasi array data diagnosis
+        $diagnosisData = [];
+        $totalLaki = 0;
+        $totalPerempuan = 0;
+    
+        foreach ($diagnosisList as $code => $name) {
+            $diagnosisId = $diagnosis[$code] ?? null;
+    
+            if (!$diagnosisId) {
+                continue;
+            }
+    
+            $filteredActions = $actions->filter(function ($action) use ($diagnosisId) {
+                $diagnosa = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
+                return in_array($diagnosisId, (array) $diagnosa);
+            });
+    
+            // Hitung jumlah laki-laki dan perempuan
+            $lakiLakiCount = $filteredActions->where('patient.gender', 2)->count();
+            $perempuanCount = $filteredActions->where('patient.gender', 1)->count();
+    
+            $diagnosisData[$code] = [
+                'code' => $code,
+                'name' => $name,
+                'laki_laki' => $lakiLakiCount,
+                'perempuan' => $perempuanCount,
+                'total' => $lakiLakiCount + $perempuanCount
+            ];
+    
+            // Hitung total keseluruhan
+            $totalLaki += $lakiLakiCount;
+            $totalPerempuan += $perempuanCount;
+        }
+    
+        // Tindakan gigi
+        $tindakanGigi = [
+            "Gigi Sulung Tumpatan Sementara",
+            "Gigi Tetap Tumpatan Sementara",
+            "Gigi Tetap Tumpatan Tetap",
+            "Gigi Sulung Tumpatan Tetap",
+            "Perawatan Saluran Akar",
+            "Gigi Sulung Pencabutan",
+            "Gigi Tetap Pencabutan",
+            "Pembersihan Karang Gigi",
+            "Odontectomy",
+            "Sebagian Prothesa",
+            "Penuh Prothesa",
+            "Reparasi Prothesa",
+            "Premedikasi/Pengobatan",
+            "Tindakan Lain",
+            "Incisi Abses Gigi"
+        ];
+    
+        $tindakan = Action::where('tipe', 'poli-gigi')
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->whereIn('tindakan', $tindakanGigi)
+            ->get();
+            $rujukanL = Action::join('patients', 'actions.id_patient', '=', 'patients.id')
+            ->where('actions.tipe', 'poli-gigi')
+            ->whereMonth('actions.tanggal', $bulan)
+            ->whereYear('actions.tanggal', $tahun)
+            ->where('patients.gender', 2) // Laki-laki
+            ->where('actions.rujuk_rs', '!=', 1)
+            ->count();
+        
+        $rujukanP = Action::join('patients', 'actions.id_patient', '=', 'patients.id')
+            ->where('actions.tipe', 'poli-gigi')
+            ->whereMonth('actions.tanggal', $bulan)
+            ->whereYear('actions.tanggal', $tahun)
+            ->where('patients.gender', 1) // Perempuan
+            ->where('actions.rujuk_rs', '!=', 1)
+            ->count();
+        
+    
+        // Mengirim data ke satu view
+        return view('content.report.laporan-lkg', compact('bulan', 'tahun', 'diagnosisData', 'totalLaki', 'totalPerempuan', 'tindakanGigi', 'tindakan','rujukanL','rujukanP'));
     }
-    public function reportLRKG()
+   public function reportLRKG(Request $request)
     {
-        return view('content.report.laporan-lrkg');
+        // Ambil input bulan dan tahun
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
+    
+        // Validasi input bulan dan tahun
+        if (!$bulan || !$tahun) {
+            return response()->json(['error' => 'Bulan dan tahun diperlukan'], 400);
+        }
+    
+        // Daftar diagnosis ICD-10
+        $diagnosisList = [
+            "K00.6" => "Persistensi Gigi Sulung",
+            "K01.1" => "Impaksi M3 Klasifikasi IA",
+            "K02" => "Karies Gigi",
+            "K03" => "Penyakit jaringan keras gigi lainnya",
+            "K04" => "Penyakit pulpa dan jaringan periapikal",
+            "K05" => "Gingivitis dan penyakit periodontal",
+            "K07" => "Anomali Dentofasial / termasuk maloklusi Kelainan",
+            "K08" => "Gangguan gigi dan jaringan penyangga lainnya",
+            "K12" => "Stomatitis dan Lesi-lesi yang berhubungan",
+            "K13.0" => "Angular Cheilitis / penyakit bibir dan mukosa",
+            "L51" => "Eritema Multiformis",
+            "R51" => "Nyeri Orofasial",
+            "S02.6" => "Fraktur mahkota yang tidak merusak pulpa",
+            "K07.3" => "Crowded",
+            "K14.3" => "Hipertrofi of Tongue Papiloma",
+            "D21.9" => "Tumor di langit-langit",
+            "M27.0" => "Torus palatinal"
+        ];
+    
+        // Ambil ID diagnosis berdasarkan kode ICD-10
+        $diagnosis = Diagnosis::whereIn('icd10', array_keys($diagnosisList))
+            ->pluck('id', 'icd10')
+            ->map(fn($id) => (string) $id)
+            ->toArray();
+    
+        // Jika diagnosis kosong, langsung return hasil kosong
+        if (empty($diagnosis)) {
+            return response()->json([]);
+        }
+    
+        // Ambil data tindakan berdasarkan ID diagnosis dan filter bulan & tahun
+        $actionsBaru = Action::where('tipe', 'poli-gigi')->where('kasus', 1)
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->get();
+    
+        $actionsLama = Action::where('tipe', 'poli-gigi')->where('kasus', 0)
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->get();
+    
+        // Definisi rentang usia
+        $ageGroups = [
+            '0-4' => [0, 4],
+            '5-6' => [5, 6],
+            '7-11' => [7, 11],
+            '12' => [12, 12],
+            '13-14' => [13, 14],
+            '15-18' => [15, 18],
+            '19-34' => [19, 34],
+            '35-44' => [35, 44],
+            '45-64' => [45, 64],
+            '65+' => [65, 150] // Asumsi batas usia tertinggi 150 tahun
+        ];
+    
+        // Inisialisasi array data diagnosis
+        $diagnosisData = [];
+    
+        foreach ($diagnosisList as $code => $name) {
+            $diagnosisId = $diagnosis[$code] ?? null;
+    
+            if (!$diagnosisId) {
+                continue;
+            }
+    
+            // Filter tindakan yang memiliki diagnosis terkait untuk kasus baru
+            $filteredActionsBaru = $actionsBaru->filter(function ($action) use ($diagnosisId) {
+                $diagnosa = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
+                return in_array($diagnosisId, (array) $diagnosa);
+            });
+    
+            // Filter tindakan yang memiliki diagnosis terkait untuk kasus lama
+            $filteredActionsLama = $actionsLama->filter(function ($action) use ($diagnosisId) {
+                $diagnosa = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
+                return in_array($diagnosisId, (array) $diagnosa);
+            });
+    
+            // Inisialisasi data penyakit
+            $data = [
+                'code' => $code,
+                'name' => $name,
+                'ageGroups' => [],
+                'total' => ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0],
+                'kasus_lama' => ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0] // Placeholder kasus lama
+            ];
+    
+            // Inisialisasi data per rentang usia
+            foreach ($ageGroups as $group => $range) {
+                $data['ageGroups'][$group] = ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0];
+            }
+    
+            // Hitung jumlah pasien berdasarkan gender dan rentang usia untuk kasus baru
+            foreach ($filteredActionsBaru as $action) {
+                $patient = $action->patient;
+                $age = \Carbon\Carbon::parse($patient->dob)->age;
+                $gender = $patient->gender; // 2 = Laki-laki, 1 = Perempuan
+    
+                foreach ($ageGroups as $group => [$minAge, $maxAge]) {
+                    if ($age >= $minAge && $age <= $maxAge) {
+                        if ($gender == 2) {
+                            $data['ageGroups'][$group]['laki_laki']++;
+                        } else {
+                            $data['ageGroups'][$group]['perempuan']++;
+                        }
+                        $data['ageGroups'][$group]['jumlah']++;
+                    }
+                }
+    
+                // Tambahkan ke total keseluruhan kasus baru
+                if ($gender == 2) {
+                    $data['total']['laki_laki']++;
+                } else {
+                    $data['total']['perempuan']++;
+                }
+                $data['total']['jumlah']++;
+            }
+    
+            // Hitung jumlah pasien untuk kasus lama
+            $data['kasus_lama']['laki_laki'] = $filteredActionsLama->where('patient.gender', 2)->count();
+            $data['kasus_lama']['perempuan'] = $filteredActionsLama->where('patient.gender', 1)->count();
+            $data['kasus_lama']['jumlah'] = $filteredActionsLama->count();
+    
+            $diagnosisData[] = $data;
+        }
+    
+        // Kirim data ke tampilan laporan
+        return view('content.report.laporan-lrkg', compact('diagnosisData', 'bulan', 'tahun'));
     }
  public function reportLKT(Request $request)
     {
@@ -1049,7 +1313,9 @@ class ReportController extends Controller
                                 ->get();
     
         // Get the actions with diagnosis data
-        $actionsQuery = Action::select('diagnosa');
+          $actionsQuery = Action::select('diagnosa')
+        ->where('rujuk_rs', '!=', '1')
+        ->whereNotIn('tipe', ['poli-kia', 'poli-kb']);
     
         // Apply month and year filter for actions if provided
         if ($bulan && $tahun) {
