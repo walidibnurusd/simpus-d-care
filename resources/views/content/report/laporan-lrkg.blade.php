@@ -104,12 +104,12 @@
                     <th colspan="3" rowspan="2">JUMLAH KASUS LAMA</th>
                 </tr>
                 <tr>
-                    @foreach(['0-4', '5-6', '7-11', '12', '13-14', '15-18', '19-34', '35-44', '45-64', '65+', 'TOTAL'] as $group)
+                    @foreach (['0-4', '5-6', '7-11', '12', '13-14', '15-18', '19-34', '35-44', '45-64', '65+', 'TOTAL'] as $group)
                         <th colspan="3">{{ $group }} thn</th>
                     @endforeach
                 </tr>
                 <tr>
-                    @for($i = 0; $i < 11; $i++)
+                    @for ($i = 0; $i < 11; $i++)
                         <th>L</th>
                         <th>P</th>
                         <th>JML</th>
@@ -120,26 +120,67 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($diagnosisData as $index => $data)
+                @php
+                    $total = [
+                        'ageGroups' => [],
+                        'total' => ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0],
+                        'kasus_lama' => ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0],
+                    ];
+
+                    foreach (
+                        ['0-4', '5-6', '7-11', '12', '13-14', '15-18', '19-34', '35-44', '45-64', '65+']
+                        as $group
+                    ) {
+                        $total['ageGroups'][$group] = ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0];
+                    }
+                @endphp
+
+                @foreach ($diagnosisData as $index => $data)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $data['name'] }}</td>
+                        <td>{{ $data['code'] }}</td>
+                        @foreach ($data['ageGroups'] as $group => $values)
+                            <td>{{ $values['laki_laki'] }}</td>
+                            <td>{{ $values['perempuan'] }}</td>
+                            <td>{{ $values['jumlah'] }}</td>
+                            @php
+                                $total['ageGroups'][$group]['laki_laki'] += $values['laki_laki'];
+                                $total['ageGroups'][$group]['perempuan'] += $values['perempuan'];
+                                $total['ageGroups'][$group]['jumlah'] += $values['jumlah'];
+                            @endphp
+                        @endforeach
+                        <td>{{ $data['total']['laki_laki'] }}</td>
+                        <td>{{ $data['total']['perempuan'] }}</td>
+                        <td>{{ $data['total']['jumlah'] }}</td>
+                        <td>{{ $data['kasus_lama']['laki_laki'] }}</td>
+                        <td>{{ $data['kasus_lama']['perempuan'] }}</td>
+                        <td>{{ $data['kasus_lama']['jumlah'] }}</td>
+                        @php
+                            $total['total']['laki_laki'] += $data['total']['laki_laki'];
+                            $total['total']['perempuan'] += $data['total']['perempuan'];
+                            $total['total']['jumlah'] += $data['total']['jumlah'];
+                            $total['kasus_lama']['laki_laki'] += $data['kasus_lama']['laki_laki'];
+                            $total['kasus_lama']['perempuan'] += $data['kasus_lama']['perempuan'];
+                            $total['kasus_lama']['jumlah'] += $data['kasus_lama']['jumlah'];
+                        @endphp
+                    </tr>
+                @endforeach
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $data['name'] }}</td>
-                    <td>{{ $data['code'] }}</td>
-                    @foreach($data['ageGroups'] as $group)
+                    <td colspan="3" style="font-weight: bold; text-align: center;">TOTAL</td>
+                    @foreach ($total['ageGroups'] as $group)
                         <td>{{ $group['laki_laki'] }}</td>
                         <td>{{ $group['perempuan'] }}</td>
                         <td>{{ $group['jumlah'] }}</td>
                     @endforeach
-                    <td>{{ $data['total']['laki_laki'] }}</td>
-                    <td>{{ $data['total']['perempuan'] }}</td>
-                    <td>{{ $data['total']['jumlah'] }}</td>
-                    <td>{{ $data['kasus_lama']['laki_laki'] }}</td>
-                    <td>{{ $data['kasus_lama']['perempuan'] }}</td>
-                    <td>{{ $data['kasus_lama']['jumlah'] }}</td>
+                    <td>{{ $total['total']['laki_laki'] }}</td>
+                    <td>{{ $total['total']['perempuan'] }}</td>
+                    <td>{{ $total['total']['jumlah'] }}</td>
+                    <td>{{ $total['kasus_lama']['laki_laki'] }}</td>
+                    <td>{{ $total['kasus_lama']['perempuan'] }}</td>
+                    <td>{{ $total['kasus_lama']['jumlah'] }}</td>
                 </tr>
-                @endforeach
             </tbody>
-            
         </table>
 
         <div style="margin-top: 30px;">

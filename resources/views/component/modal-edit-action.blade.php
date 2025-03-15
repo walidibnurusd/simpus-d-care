@@ -861,7 +861,27 @@
                                     </div>
                                 @else
                                     @if ($routeName === 'action.dokter.ruang.tindakan.index')
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="diagnosaEditAction"
+                                                style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                            <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
+                                                name="diagnosa[]" multiple>
+                                                @php
+                                                    // Decode JSON if it exists
+                                                    $selectedDiagnosa = is_string($action->diagnosa)
+                                                        ? json_decode($action->diagnosa, true)
+                                                        : $action->diagnosa;
+                                                @endphp
+                                                @foreach ($diagnosa as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
+                                                        {{ $item->name }}-{{ $item->icd10 }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-4">
                                             <label for="tindakanEdit"
                                                 style="color: rgb(19, 11, 241);">TINDAKAN</label>
                                             <select class="form-control" id="tindakanEdit{{ $action->id }}"
