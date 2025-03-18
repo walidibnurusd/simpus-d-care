@@ -10,6 +10,7 @@ use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SkriningController;
 use App\Http\Controllers\KunjunganController;
+use App\Http\Controllers\ObatController;
 use App\Http\Controllers\DiagnosaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -445,6 +446,13 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/pasien', [App\Http\Controllers\DashboardController::class, 'indexPatient'])->name('dashboard.patient');
     Route::get('/kunjungan', [App\Http\Controllers\DashboardController::class, 'indexKunjungan'])->name('dashboard.kunjungan');
 });
+Route::prefix('obat')->group(function () {
+    Route::get('master-data', [App\Http\Controllers\ObatController::class, 'indexMasterData'])->name('obat-master-data');
+    Route::post('master-data', [App\Http\Controllers\ObatController::class, 'storeMasterData'])->name('store-obat-master-data');
+    Route::put('master-data/{id}', [App\Http\Controllers\ObatController::class, 'updateMasterData'])->name('update-obat-master-data');
+    Route::get('table-master-data', [App\Http\Controllers\ObatController::class, 'getObatMasterData'])->name('table-obat-master-data');
+});
+
 //diagnosa
 Route::get('/get-diagnosa', [DiagnosaController::class, 'getDiagnosa']);
 //Language Change

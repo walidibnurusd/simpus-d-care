@@ -95,6 +95,19 @@
                             <span>Profile</span>
                         </a>
                     </li>
+                    @if (Auth::user()->role == 'apotik')
+                        <li class="sidebar-list">
+                            <a class="sidebar-link sidebar-title link-nav" href="{{ route('obat-master-data') }}">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                </svg>
+                                <span>Master Data Obat</span>
+                            </a>
+                        </li>
+                    @endif
                     @if (Auth::user()->role == 'dokter' ||
                             Auth::user()->role == 'admin-kajian-awal' ||
                             Auth::user()->role == 'apotik' ||

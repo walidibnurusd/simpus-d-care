@@ -40,7 +40,90 @@
 
 <script>
     $(document).ready(function() {
+        let rowNumber = 1;
 
+        // Function to add medication to the table
+        document.getElementById("addMedicationBtn").addEventListener("click", function() {
+            var codeElement = document.getElementById("code_obat");
+            var shape = document.getElementById("shape");
+            var alergi = document.getElementById("alergi").value;
+            var jumlah = document.getElementById("jumlah").value;
+            var stok = document.getElementById("stok").value;
+            var gangguanGinjal = document.getElementById("gangguan_ginjal").value;
+            var dosis = document.getElementById("dosis").value;
+            var hamil = document.getElementById("hamil").value;
+            var menyusui = document.getElementById("menyusui").value;
+
+            var selectedOption = codeElement.options[codeElement.selectedIndex];
+            var selectedOptionShape = shape.options[shape.selectedIndex];
+            var medicationName = selectedOption.text;
+            var medicationCode = selectedOption.value;
+            var shapeName = selectedOptionShape.text;
+
+            // Menambahkan row baru ke tabel
+            var tableBody = document.getElementById("medicationTableBody");
+            var newRow = tableBody.insertRow();
+
+            newRow.innerHTML = `
+        <td>${rowNumber}</td>
+        <td>${medicationName}</td>
+        <td>${dosis}</td>
+        <td>${jumlah}</td>
+        <td>${shapeName}</td>
+        <td>${stok}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+    `;
+
+            rowNumber++;
+            newRow.setAttribute("data-medication-code", medicationCode);
+
+            // Clear input fields after adding to the table
+            document.getElementById("addActionObat").reset();
+        });
+
+        // Function to remove a row from the table
+        function removeRow(button) {
+            button.closest("tr").remove();
+        }
+
+        // Function to clear the entire table
+        document.getElementById("clearTableBtn").addEventListener("click", function() {
+            var tableBody = document.getElementById("medicationTableBody");
+            tableBody.innerHTML = '';
+            rowNumber = 1; // Reset row number when table is cleared
+        });
+
+        // Button to save data to the previous modal
+        document.getElementById("saveToPreviousModalBtn").addEventListener("click", function() {
+            // Get all table rows
+            var rows = document.getElementById("medicationTableBody").rows;
+            var medicationsData = [];
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var medicationData = {
+                    number: row.cells[0].textContent,
+                    name: row.cells[1].textContent,
+                    dose: row.cells[2].textContent,
+                    quantity: row.cells[3].textContent,
+                    shape: row.cells[4].textContent,
+                    stock: row.cells[5].textContent,
+                    idObat: row.getAttribute(
+                        "data-medication-code"
+                    )
+                };
+                medicationsData.push(medicationData);
+            }
+
+            // Convert data to JSON and store it in a hidden input
+            document.getElementById("medicationsData").value = JSON.stringify(medicationsData);
+            var medicationsData = JSON.parse(document.getElementById("medicationsData").value);
+            // Optionally, you can now pass this data to another modal or form field
+            // For example, to another modal input or to a different part of your page
+            console.log(medicationsData); // Output the medications data in the console
+
+            // Optionally, hide the current modal after saving data
+            $('#addActionObatModal').modal('hide');
+        });
         let table; // Deklarasi variabel DataTable
 
         // Fungsi untuk menginisialisasi DataTable
@@ -78,7 +161,8 @@
                         data: 'tanggal',
                         name: 'tanggal',
                         render: function(data) {
-                            if (!data) return '-'; // Jika data kosong, tampilkan tanda "-"
+                            if (!data)
+                                return '-'; // Jika data kosong, tampilkan tanda "-"
 
                             // Konversi ke format dd-mm-yyyy hh:mm:ss
                             const dateObj = new Date(data);
@@ -87,8 +171,10 @@
                                 '0'); // Bulan dimulai dari 0
                             const year = dateObj.getFullYear();
                             const hours = String(dateObj.getHours()).padStart(2, '0');
-                            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-                            const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+                            const minutes = String(dateObj.getMinutes()).padStart(2,
+                                '0');
+                            const seconds = String(dateObj.getSeconds()).padStart(2,
+                                '0');
 
                             return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
                         }
@@ -240,7 +326,8 @@
 
 
             if (tipe == 'tindakan' && actionId) {
-                actionUrl = "{{ route('action.update.dokter.tindakan', '__ID__') }}".replace('__ID__',
+                actionUrl = "{{ route('action.update.dokter.tindakan', '__ID__') }}".replace(
+                    '__ID__',
                     actionId);
             } else {
                 actionUrl = actionId ?
@@ -421,6 +508,9 @@
             e.preventDefault();
             let formData = $('#addPatientForm').serialize();
             formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
+            let medicationsData = document.getElementById("medicationsData")
+                .value; // Get the JSON string from the hidden input
+            formData += "&medications=" + encodeURIComponent(medicationsData);
             let actionId = $('#action_id').val() ?? null;
             let url = actionId ? `/tindakan-dokter/${actionId}` : '/tindakan';
 
@@ -439,8 +529,9 @@
 
                     // Sembunyikan detail pasien & reset form
                     $('#patientDetails').hide();
-                    $('#tindakan_ruang_tindakan').val(response.tindakan || []).trigger(
-                        'change');
+                    $('#tindakan_ruang_tindakan').val(response.tindakan || [])
+                        .trigger(
+                            'change');
                     $('#diagnosa').val(response.tindakan || []).trigger(
                         'change');
                     $('#diagnosaEdit').val(response.tindakan || []).trigger(

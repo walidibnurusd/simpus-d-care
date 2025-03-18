@@ -1422,12 +1422,11 @@ class PatientsController extends Controller
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Data berhasil tersimpan');
         } catch (Exception $e) {
-            \Log::error('Error occurred: ' . $e->getMessage());
-            \Log::error('Stack Trace: ' . $e->getTraceAsString());
+
             // Log the error
             if ($e instanceof \Illuminate\Validation\ValidationException) {
                 $errors = $e->errors();
-                \Log::error('Validation Errors: ', $errors);
+               
 
                 // Check if specific validation errors exist for 'nik'
                 if (isset($errors['nik'])) {

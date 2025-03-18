@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Action;
+use App\Models\ActionObat;
 use App\Models\Diagnosis;
 use App\Models\Disease;
 use App\Models\Doctor;
@@ -12,6 +13,7 @@ use App\Models\Hospital;
 use App\Models\Patients;
 use App\Models\Kunjungan;
 use App\Models\HasilLab;
+use App\Models\Obat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -399,10 +401,11 @@ class ActionController extends Controller
         $diagnosa = Diagnosis::all();
         $penyakit = Disease::all();
         $rs = Hospital::all();
+        $obats = Obat::all();
         $routeName = $request->route()->getName();
         // dd(  $routeName);
 
-        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats'));
     }
 
     public function indexGigiDokter(Request $request)
@@ -1494,6 +1497,23 @@ class ActionController extends Controller
             $validatedData['periksa_usg'] = $validatedData['periksa_usg'] ?? 0;
             // Update the action with the validated data
             // Update the action with the validated data
+            $medications = json_decode($request->medications, true);
+
+            // Ensure medications is an array before using foreach
+            if (is_array($medications)) {
+                foreach ($medications as $medication) {
+                    // Process each medication
+                    ActionObat::create([
+                        'number' => $medication['number'],
+                        'name' => $medication['name'],
+                        'dose' => $medication['dose'],
+                        'quantity' => $medication['quantity'],
+                        'shape' => $medication['shape'],
+                        'stock' => $medication['stock'],
+                        'idObat' => $medication['idObat'],
+                    ]);
+                }
+            }
             if (!empty($request->jenis_pemeriksaan)) {
                 // Cek apakah HasilLab dengan id_action sudah ada
                 $hasilLab = HasilLab::where('id_action', $action->id)->first();
@@ -1671,6 +1691,23 @@ class ActionController extends Controller
                         'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
                     ]);
                 }
+                $medications = json_decode($request->medications, true);
+
+                // Ensure medications is an array before using foreach
+                if (is_array($medications)) {
+                    foreach ($medications as $medication) {
+                        // Process each medication
+                        ActionObat::create([
+                            'number' => $medication['number'],
+                            'name' => $medication['name'],
+                            'dose' => $medication['dose'],
+                            'quantity' => $medication['quantity'],
+                            'shape' => $medication['shape'],
+                            'stock' => $medication['stock'],
+                            'idObat' => $medication['idObat'],
+                        ]);
+                    }
+                }
 
                 if (!$action) {
                     return response()->json(['error' => 'Action not found'], 404);
@@ -1685,6 +1722,23 @@ class ActionController extends Controller
                         'id_action' => $action->id,
                         'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
                     ]);
+                }
+                $medications = json_decode($request->medications, true);
+
+                // Ensure medications is an array before using foreach
+                if (is_array($medications)) {
+                    foreach ($medications as $medication) {
+                        // Process each medication
+                        ActionObat::create([
+                            'number' => $medication['number'],
+                            'name' => $medication['name'],
+                            'dose' => $medication['dose'],
+                            'quantity' => $medication['quantity'],
+                            'shape' => $medication['shape'],
+                            'stock' => $medication['stock'],
+                            'idObat' => $medication['idObat'],
+                        ]);
+                    }
                 }
                 return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
             }

@@ -633,11 +633,20 @@
                                     </div>
                                 @endif
                             @endif
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                 <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
-                            </div>
+                            </div> --}}
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="skrining" class="form-label">Obat</label>
+                                    <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
+                                        data-bs-toggle="modal" data-bs-target="#addActionObatModal">
+                                        Obat
+                                    </button>
 
+                                </div>
+                            </div>
                             @if ($routeName == 'action.dokter.ruang.tindakan.index')
                                 <div class="col-md-4">
                                     <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
@@ -835,6 +844,7 @@
 @include('component.modal-table-pasien-dokter')
 @include('component.modal-skrining')
 @include('component.modal-berobat')
+@include('component.modal-add-action-obat')
 
 
 <script>
