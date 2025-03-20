@@ -12,8 +12,7 @@
                 <form id="editMasterObat{{ $obat->id }}" action="{{ route('update-obat-master-data', $obat->id) }}"
                     method="POST">
                     @csrf
-                    @method('PUT') <!-- Gunakan PUT untuk update -->
-
+                    @method('PUT')
                     <div class="row mt-3">
                         <!-- Kode Obat -->
                         <div class="col-md-4 mb-3">
@@ -59,9 +58,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll("form[id^='editMasterObat']").forEach(form => {
-            form.addEventListener("submit", function(e) {
-                console.log("Form submitted: ", form.id);
-            });
+            form.addEventListener("submit", function(e) {});
         });
 
         // Display success message if session has a success
