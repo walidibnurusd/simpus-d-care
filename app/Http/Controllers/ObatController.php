@@ -23,14 +23,14 @@ class ObatController extends Controller
         $obats = Obat::all();
         return view('content.obat.terima-obat', compact('obats'));
     }
-    public function storeMasterData(Request $request)
+      public function storeMasterData(Request $request)
     {
         try {
             // Validate the request data
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'code' => 'required|string|max:255|unique:obat,code',
-                'shape' => 'required|integer|max:1',
+                'shape' => 'required|integer',
             ]);
 
             $obat = new Obat();
@@ -104,19 +104,6 @@ class ObatController extends Controller
             return redirect()->back()->withErrors('Eror saat membuat master data obat');
         }
     }
-    public function destroyMasterData($id)
-    {
-        try {
-            $obat = Obat::findOrFail($id);
-            $obat->delete();
-
-            return redirect()->back()->with('success', 'Data berhasil dihapus.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
-        }
-    }
     public function getObatMasterData(Request $request)
     {
         $obats = Obat::all();
@@ -169,17 +156,7 @@ class ObatController extends Controller
                             <i class="fas fa-edit"></i>
                         </button>
                         
-                             <form action="' .
-                    route('destroy-obat-master-data', $row->id) .
-                    '" method="POST" class="d-inline">
-                                    ' .
-                    csrf_field() .
-                    method_field('DELETE') .
-                    '
-                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
+                       
                     </div>' .
                     $modal;
             })
@@ -232,6 +209,8 @@ class ObatController extends Controller
             $obat->id_obat = $request->id_obat;
             $obat->amount = $request->amount;
             $obat->date = $request->date;
+            $obat->date = $request->date;
+            $obat->date = $request->date;
             $obat->save();
 
             return redirect()->back()->with('success', 'Data berhasil diedit');
@@ -240,21 +219,7 @@ class ObatController extends Controller
             return redirect()->back()->withErrors('Eror saat membuat terima obat');
         }
     }
-
-    public function destroyTerimaObat($id)
-    {
-        try {
-            $obat = TerimaObat::findOrFail($id);
-            $obat->delete();
-
-            return redirect()->back()->with('success', 'Data berhasil dihapus.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
-        }
-    }
-    public function getTerimaObat(Request $request)
+      public function getTerimaObat(Request $request)
     {
         $obats = TerimaObat::with('obat')->get();
 
@@ -263,17 +228,18 @@ class ObatController extends Controller
             ->of($obats)
             ->addIndexColumn()
             ->editColumn('date', function ($row) {
-                return \Carbon\Carbon::parse($row->date)->format('d-m-Y') ?? '';
+                return $row->date;
             })
-
-            ->addColumn('code', function ($row) {
-                return $row->obat->code;
+            ->editColumn('name', function ($row) {
+                return $row->obat->name;
             })
-            ->addColumn('name', function ($row) {
-                return ucwords(strtolower($row->obat->name));
+            ->editColumn('code', function ($row) {
+                return $row->obat->code ?? '';
             })
-
-            ->addColumn('shape', function ($row) {
+            ->editColumn('mount', function ($row) {
+                return $row->amount ?? '';
+            })
+            ->editColumn('shape', function ($row) {
                 // Check the value of shape and return appropriate value
                 switch ($row->obat->shape) {
                     case 1:
@@ -298,9 +264,6 @@ class ObatController extends Controller
                         return '';
                 }
             })
-            ->addColumn('amount', function ($row) {
-                return $row->amount;
-            })
 
             ->addColumn('action', function ($row) {
                 // Render the modal HTML for this specific row
@@ -313,17 +276,7 @@ class ObatController extends Controller
                     '">
                             <i class="fas fa-edit"></i>
                         </button>
-                         <form action="' .
-                    route('destroy-terima-obat', $row->id) .
-                    '" method="POST" class="d-inline">
-                                    ' .
-                    csrf_field() .
-                    method_field('DELETE') .
-                    '
-                                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
+                        
                        
                     </div>' .
                     $modal;

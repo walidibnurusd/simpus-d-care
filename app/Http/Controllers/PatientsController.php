@@ -983,38 +983,39 @@ class PatientsController extends Controller
             'data' => $patients->items(),
         ]);
     }
-    public function getPatientsApotik(Request $request)
-    {
-        $start = $request->input('start', 0);
-        $length = $request->input('length', 10);
-        $draw = $request->input('draw', 1);
-        $searchValue = $request->input('search.value', '');
-        $filterDate = $request->input('filterDate', null);
+        public function getPatientsApotik(Request $request)
+        {
+            $start = $request->input('start', 0);
+            $length = $request->input('length', 10);
+            $draw = $request->input('draw', 1);
+            $searchValue = $request->input('search.value', '');
+            $filterDate = $request->input('filterDate', null);
 
-        $page = $start / $length + 1;
+            $page = $start / $length + 1;
 
-        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations')->whereNotNull('obat')->whereNull('update_obat');
+            $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations','actionObats.obat.terimaObat')->where(function ($q) {
+            $q->WhereHas('actionObats')->orWhereNotNull('obat');
+        })->whereNull('update_obat')->whereNull('verifikasi_awal');
 
-        if ($filterDate) {
-            $query->whereDate('tanggal', $filterDate);
+            if ($filterDate) {
+                $query->whereDate('tanggal', $filterDate);
+            }
+
+            if (!empty($searchValue)) {
+                $query->whereHas('patient', function ($q) use ($searchValue) {
+                    $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+                });
+            }
+
+            $patients = $query->paginate($length, ['*'], 'page', $page);
+
+            return response()->json([
+                'draw' => (int) $draw,
+                'recordsTotal' => $patients->total(),
+                'recordsFiltered' => $patients->total(),
+                'data' => $patients->items(),
+            ]);
         }
-
-        if (!empty($searchValue)) {
-            $query->whereHas('patient', function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
-            });
-        }
-
-        $patients = $query->paginate($length, ['*'], 'page', $page);
-
-        return response()->json([
-            'draw' => (int) $draw,
-            'recordsTotal' => $patients->total(),
-            'recordsFiltered' => $patients->total(),
-            'data' => $patients->items(),
-        ]);
-    }
-
     public function getPatientsApotikGigi(Request $request)
     {
         // Ambil parameter DataTables
@@ -1422,11 +1423,12 @@ class PatientsController extends Controller
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Data berhasil tersimpan');
         } catch (Exception $e) {
-
+            \Log::error('Error occurred: ' . $e->getMessage());
+            \Log::error('Stack Trace: ' . $e->getTraceAsString());
             // Log the error
             if ($e instanceof \Illuminate\Validation\ValidationException) {
                 $errors = $e->errors();
-               
+                \Log::error('Validation Errors: ', $errors);
 
                 // Check if specific validation errors exist for 'nik'
                 if (isset($errors['nik'])) {

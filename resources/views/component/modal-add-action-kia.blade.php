@@ -491,7 +491,7 @@
                                 <label for="hasil_usg">Hasil USG</label>
                                 <textarea class="form-control" id="hasil_usg" name="hasil_usg" placeholder="Hasil USG"></textarea>
                             </div>
-                            <div class="col-md-6 mt-3">
+                            <div class="col-md-4 mt-3">
                                 <div class="form-group">
                                     <label for="skrining" class="form-label">Hasil Skrining</label>
                                     <button class="btn btn-primary w-100 mt-2" type="button" id="btnCariSkrining"
@@ -501,7 +501,17 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-6 mt-3">
+                            <div class="col-md-4 mt-3">
+                                <div class="form-group">
+                                    <label for="skrining" class="form-label">Obat</label>
+                                    <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
+                                        data-bs-toggle="modal" data-bs-target="#addActionObatModal">
+                                        Obat
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4 mt-3">
                                 <div class="form-group">
                                     <label for="skrining" class="form-label">Riwayat Berobat</label>
                                     <button class="btn btn-success w-100 mt-2" type="button"
@@ -525,10 +535,10 @@
                                 <input type="date" class="form-control" name="tanggal_kembali"
                                     id="tanggal_kembali" placeholder="Pilih Tanggal">
                             </div>
-                            <div class="col-md-6 mt-3">
-                                <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
-                                <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
-                            </div>
+                            <!--<div class="col-md-6 mt-3">-->
+                            <!--    <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>-->
+                            <!--    <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>-->
+                            <!--</div>-->
                             {{-- <div class="col-md-6 mt-3">
                                 <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
                                 <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
@@ -691,6 +701,7 @@
 @include('component.modal-table-pasien-dokter')
 @include('component.modal-skrining')
 @include('component.modal-berobat')
+@include('component.modal-add-action-obat')
 
 
 

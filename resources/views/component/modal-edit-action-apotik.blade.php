@@ -117,10 +117,10 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-12" style="margin-bottom: 15px;">
-                            <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
-                            <textarea class="form-control" id="obat" name="obat" readonly placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
-                        </div>
+                        <!--<div class="col-md-12" style="margin-bottom: 15px;">-->
+                        <!--    <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>-->
+                        <!--    <textarea class="form-control" id="obat" name="obat" readonly placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>-->
+                        <!--</div>-->
                         <div class="col-md-12">
                             <label for="update_obat" style="color: rgb(19, 11, 241);">Update Obat</label>
                             <textarea class="form-control" id="update_obat" name="update_obat" placeholder="Update Obat">{{ old('update_obat', $action->update_obat ?? '') }}</textarea>

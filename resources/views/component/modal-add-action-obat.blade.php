@@ -116,11 +116,62 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-primary" id="saveToPreviousModalBtn">Simpan</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveToPreviousModalBtn"  >Simpan</button>
             </div>
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let obatData = @json($obats); // Ambil data obat dari Laravel
+        let originalStock = 0;
+
+        $('#code_obat').select2({
+            placeholder: "Pilih Obat",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+
+        $('#code_obat').change(function () {
+            let selectedId = $(this).val();
+            let selectedObat = obatData.find(obat => obat.id == selectedId);
+
+            if (selectedObat) {
+                originalStock = parseInt(selectedObat.total_stock) || 0;
+                $('#stok').val(originalStock);
+                $('#jumlah').val('');
+
+                // Set sediaan (shape)
+                console.log(selectedObat.shape);
+                
+                $('#shape').val(selectedObat.shape).trigger('change');
+            } else {
+                $('#stok').val('');
+                $('#jumlah').val('');
+                $('#shape').val('');
+            }
+        });
+
+        $('#jumlah').on('input', function () {
+            let jumlah = parseInt($(this).val()) || 0;
+            let stokTersisa = originalStock - jumlah;
+
+            if (jumlah < 0) {
+                alert('Jumlah tidak boleh negatif!');
+                $(this).val(0);
+                stokTersisa = originalStock;
+            } else if (stokTersisa < 0) {
+                alert('Jumlah melebihi stok yang tersedia!');
+                $(this).val(originalStock);
+                stokTersisa = 0;
+            }
+
+            $('#stok').val(stokTersisa);
+        });
+    });
+</script>
+
 
 <script>
     // let rowNumber = 1;

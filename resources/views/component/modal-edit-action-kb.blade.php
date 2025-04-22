@@ -54,7 +54,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('action.update', $action->id) }}" method="POST"
+                <form id="editPatientForm{{ $action->id }}" action="{{ route('action.update', $action->id) }}" method="POST"
                     class="px-3">
                     <div id="formSection1{{ $action->id }}" class="form-section">
                         @csrf
@@ -690,8 +690,14 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6 mt-3">
-                                        <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
-                                        <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ isset($action->obat) ? $action->obat : '' }}</textarea>
+                                        <div class="form-group">
+                                            <label for="skrining" class="form-label">Obat</label>
+                                            <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
+                                                data-bs-toggle="modal" data-bs-target="#editActionObatModal{{$action->id}}">
+                                                Obat
+                                            </button>
+        
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -880,13 +886,14 @@
 @include('component.modal-table-edit-pasien')
 @include('component.modal-skrining-edit')
 @include('component.modal-berobat-edit')
+@include('component.modal-edit-action-obat')
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 <script>
     var nikValue = "{{ $action->patient->nik ?? '' }}";
     document.getElementById('nikEdit{{ $action->id }}').value = nikValue;

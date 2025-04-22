@@ -10,7 +10,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>Tindakan Apotik</h3>
+    <h3>Tindakan Apotek</h3>
 @endsection
 
 @section('breadcrumb-items')

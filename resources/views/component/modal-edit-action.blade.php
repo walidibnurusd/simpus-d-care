@@ -39,7 +39,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('action.update', $action->id) }}" method="POST"
+                <form id="editPatientForm{{ $action->id }}" action="{{ route('action.update', $action->id) }}" method="POST"
                     class="px-3">
                     <div id="formSection1{{ $action->id }}" class="form-section">
                         @csrf
@@ -724,28 +724,38 @@
 
 
                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'tindakan')
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="skrining" class="form-label">Obat</label>
+                                    <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
+                                        data-bs-toggle="modal" data-bs-target="#editActionObatModal{{$action->id}}">
+                                        Obat
+                                    </button>
 
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="diagnosaEditAction"
+                                    style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
+                                    name="diagnosa[]" multiple>
+                                    @php
+                                        // Decode JSON if it exists
+                                        $selectedDiagnosa = is_string($action->diagnosa)
+                                            ? json_decode($action->diagnosa, true)
+                                            : $action->diagnosa;
+                                    @endphp
+                                    @foreach ($diagnosa as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
+                                            {{ $item->name }}-{{ $item->icd10 }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             @if (Auth::user()->role != 'tindakan')
-                                <div class="row mt-3">
-                                    <div class="col-md-4">
-                                        <label for="diagnosaEditAction"
-                                            style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                        <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
-                                            name="diagnosa[]" multiple>
-                                            @php
-                                                // Decode JSON if it exists
-                                                $selectedDiagnosa = is_string($action->diagnosa)
-                                                    ? json_decode($action->diagnosa, true)
-                                                    : $action->diagnosa;
-                                            @endphp
-                                            @foreach ($diagnosa as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
-                                                    {{ $item->name }}-{{ $item->icd10 }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Hasil Skrining</label>
@@ -758,6 +768,7 @@
                                             </button>
                                         </div>
                                     </div>
+                                  
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Riwayat Berobat</label>
@@ -861,7 +872,7 @@
                                     </div>
                                 @else
                                     @if ($routeName === 'action.dokter.ruang.tindakan.index')
-                                        <div class="col-md-4">
+                                        {{-- <div class="col-md-4">
                                             <label for="diagnosaEditAction"
                                                 style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                             <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
@@ -879,7 +890,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="col-md-4">
                                             <label for="tindakanEdit"
@@ -1016,21 +1027,21 @@
                                         </div>
                                     @endif
                                 @endif
-                                @if (Auth::user()->role == 'tindakan')
+                                {{-- @if (Auth::user()->role == 'tindakan')
                                     <div class="col-md-4">
                                         <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                         <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
                                     </div>
-                                @endif
+                                @endif --}}
                             </div>
                         @endif
 
                         <div class="row mt-3">
                             @if (Auth::user()->role == 'dokter')
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                     <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-6">
                                     <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
                                     <select class="form-control" id="rujuk_rs" name="rujuk_rs">
@@ -1076,7 +1087,7 @@
                                     json_decode($action->hasilLab?->jenis_pemeriksaan ?? '[]', true) ?? [];
                             @endphp
                             <div class="row">
-
+                              
                                 <div class="col-md-6">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="gds"
@@ -1250,16 +1261,24 @@
 @include('component.modal-table-edit-pasien')
 @include('component.modal-skrining-edit')
 @include('component.modal-berobat-edit')
+@include('component.modal-edit-action-obat')
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<!-- jQuery harus PERTAMA -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
+<!-- CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+<!-- JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 <script>
     var nikValue = "{{ $action->patient->nik ?? '' }}";
     document.getElementById('nikEdit{{ $action->id }}').value = nikValue;
+    console.log(nikValue);
+    
 </script>
 <script>
     $(document).ready(function() {
@@ -1384,6 +1403,7 @@
                 textarea.value = actionData[`${field}_lainnya`];
             }
         }
+        
     }
 </script>
 

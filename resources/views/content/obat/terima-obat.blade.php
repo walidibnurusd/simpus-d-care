@@ -57,12 +57,13 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             TANGGAL</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            KODE OBAT</th>
-                                        <th
+                                             <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             NAMA OBAT</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            KODE</th>
+                                       
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             BENTUK OBAT</th>
@@ -112,20 +113,20 @@
                         name: 'date'
                     },
                     {
-                        data: 'code',
-                        name: 'code'
-                    },
-                    {
                         data: 'name',
                         name: 'name'
+                    },
+                    {
+                        data: 'code',
+                        name: 'code'
                     },
                     {
                         data: 'shape',
                         name: 'shape'
                     },
                     {
-                        data: 'amount',
-                        name: 'amount'
+                        data: 'mount',
+                        name: 'mount'
                     },
                     {
                         data: 'action',

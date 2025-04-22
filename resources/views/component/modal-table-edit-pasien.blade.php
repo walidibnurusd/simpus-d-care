@@ -114,7 +114,46 @@
                 var ageDate = new Date(ageDifMs); // Convert ms to date object
                 return Math.abs(ageDate.getUTCFullYear() - 1970); // Get the age in years
             }
+            let actionObats = event.target.getAttribute("data-action-obats");
 
+            if (actionObats) {
+                let parsedObats = JSON.parse(actionObats);
+                let tableBody = document.getElementById("medicationTableBody");
+                tableBody.innerHTML = ""; // Kosongkan tabel sebelum menambahkan data baru
+
+                // Mapping bentuk obat (Shape ID ke Text)
+                let shapes = {
+                    1: "Tablet",
+                    2: "Botol",
+                    3: "Pcs",
+                    4: "Suppositoria",
+                    5: "Ovula",
+                    6: "Drop",
+                    7: "Tube",
+                    8: "Pot",
+                    9: "Injeksi"
+                };
+
+                let rowNumber = 1;
+                parsedObats.forEach(obat => {
+                let newRow = tableBody.insertRow();
+                let totalAmount = Array.isArray(obat.obat.terima_obat) 
+                    ? obat.obat.terima_obat.reduce((total, item) => total + (item.amount || 0), 0) 
+                    : 0; // Jika bukan array, kembalikan 0
+
+                newRow.innerHTML = `
+                    <td>${rowNumber}</td>
+                    <td>${obat.obat.name}</td>
+                    <td>${obat.dose}</td>
+                    <td>${obat.amount}</td>
+                    <td>${shapes[obat.shape] || "Tidak Diketahui"}</td>
+                    <td>${totalAmount}</td> <!-- Menampilkan jumlah total amount -->
+                    <td><button class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+                `;
+                rowNumber++;
+            });
+
+            }
             // Get the age
             var age = calculateAge(dob);
 

@@ -14,4 +14,9 @@ class Obat extends Model
     protected $fillable = [
         'name','code','shape','amount'
     ];
+    
+    public function terimaObat()
+    {
+        return $this->hasMany(TerimaObat::class, 'id_obat');
+    }
 }

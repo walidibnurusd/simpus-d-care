@@ -1,14 +1,14 @@
 <div class="sidebar-wrapper" sidebar-layout="stroke-svg">
     <div>
         <div class="logo-wrapper" style="margin: 2px;text-align:center"><a href="{{ route('profile') }}"><img
-                    class="img-fluid for-light" src="{{ asset('assets/assets/img/logo-puskesmas.png') }}"
+                    class="img-fluid for-light" src="{{ asset('assets/assets/img/logo-app1.png') }}"
                     style="height: 80px" alt=""><img class="img-fluid for-dark"
-                    src="{{ asset('assets/assets/img/logo-puskesmas.png') }}"style="height: 80px" alt=""></a>
+                    src="{{ asset('assets/assets/img/logo-app1.png') }}"style="height: 80px" alt=""></a>
             <div class="back-btn"><i class="fa fa-angle-left"></i></div>
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
         </div>
         <div class="logo-icon-wrapper"><a href="{{ route('profile') }}"><img class="img-fluid" style="height: 40px"
-                    src="{{ asset('assets/assets/img/logo-puskesmas.png') }}" alt=""></a></div>
+                    src="{{ asset('assets/assets/img/logo-app1.png') }}" alt=""></a></div>
         <nav class="sidebar-main">
             <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
             <div id="sidebar-menu">
@@ -99,10 +99,10 @@
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('terima-obat') }}">
                                 <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
                                 </svg>
                                 <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
                                 </svg>
                                 <span>Penerimaan Obat</span>
                             </a>
@@ -110,10 +110,10 @@
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('obat-master-data') }}">
                                 <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
                                 </svg>
                                 <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
                                 </svg>
                                 <span>Master Data Obat</span>
                             </a>

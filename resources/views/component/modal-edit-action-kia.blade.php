@@ -43,7 +43,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('action.update', $action->id) }}" method="POST"
+                <form id="editPatientForm{{ $action->id }}" action="{{ route('action.update', $action->id) }}" method="POST"
                     class="px-3">
                     <div id="formSection1{{ $action->id }}" class="form-section">
                         @csrf
@@ -639,7 +639,7 @@
                                     <label for="hasil_usg">Hasil USG</label>
                                     <textarea class="form-control" id="hasil_usg" name="hasil_usg" placeholder="Hasil USG">{{ old('hasil_usg', $action->hasil_usg ?? '') }}</textarea>
                                 </div>
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <div class="form-group">
                                         <label for="skrining" class="form-label">Hasil Skrining</label>
                                         <button class="btn btn-primary w-100 mt-2" type="button"
@@ -651,7 +651,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <div class="form-group">
                                         <label for="skrining" class="form-label">Riwayat Berobat</label>
                                         <button class="btn btn-success w-100 mt-2" type="button"
@@ -661,6 +661,16 @@
                                             Riwayat Berobat
                                         </button>
 
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mt-3">
+                                    <div class="form-group">
+                                        <label for="skrining" class="form-label">Obat</label>
+                                        <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
+                                            data-bs-toggle="modal" data-bs-target="#editActionObatModal{{$action->id}}">
+                                            Obat
+                                        </button>
+    
                                     </div>
                                 </div>
                             </div>
@@ -694,7 +704,7 @@
                         </div>
 
                     </div>
-            </div>
+           
             <div id="formSection2{{ $action->id }}" class="form-section d-none">
                 <h6>Jenis Pemeriksaan Darah</h6>
                 @php
@@ -855,6 +865,7 @@
             </div>
             </form>
         </div>
+        </div>
     </div>
 </div>
 
@@ -864,6 +875,7 @@
 @include('component.modal-table-edit-pasien')
 @include('component.modal-skrining-edit')
 @include('component.modal-berobat-edit')
+@include('component.modal-edit-action-obat')
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />

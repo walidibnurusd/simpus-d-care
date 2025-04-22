@@ -30,7 +30,7 @@
                     <div class="col-lg-6 d-none d-lg-flex pe-0 text-center justify-content-center flex-column">
                         <div
                             class="position-relative h-100 m-3 border-radius-lg d-flex flex-column justify-content-center overflow-hidden">
-                            <img src="{{ 'assets/assets/img/login-img.png' }}" alt="Healthcare Workers"
+                            <img src="{{ 'assets/assets/img/login-img1.jpg' }}" alt="Healthcare Workers"
                                 class="img-fluid" />
                         </div>
                     </div>

@@ -10,12 +10,12 @@ use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SkriningController;
 use App\Http\Controllers\KunjunganController;
-use App\Http\Controllers\ObatController;
 use App\Http\Controllers\DiagnosaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\ObatController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -172,7 +172,7 @@ Route::middleware('auth')->group(function () {
         });
 
     Route::post('/tindakan', [ActionController::class, 'store'])->name('action.store');
-    Route::post('/tindakan/{id}', [ActionController::class, 'update'])->name('action.update');
+    Route::post('/tindakan-edit/{id}', [ActionController::class, 'update'])->name('action.update');
     Route::post('/tindakan-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
     Route::post('/dokter-tindakan/{id}', [ActionController::class, 'updateTindakan'])->name('action.update.dokter.tindakan');
     Route::post('/tindakan-lab/{id}', [ActionController::class, 'updateLab'])->name('action.update.lab');
@@ -447,12 +447,18 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/kunjungan', [App\Http\Controllers\DashboardController::class, 'indexKunjungan'])->name('dashboard.kunjungan');
 });
 Route::prefix('obat')->group(function () {
+    //master obat
     Route::get('master-data', [App\Http\Controllers\ObatController::class, 'indexMasterData'])->name('obat-master-data');
     Route::post('master-data', [App\Http\Controllers\ObatController::class, 'storeMasterData'])->name('store-obat-master-data');
     Route::put('master-data/{id}', [App\Http\Controllers\ObatController::class, 'updateMasterData'])->name('update-obat-master-data');
     Route::get('table-master-data', [App\Http\Controllers\ObatController::class, 'getObatMasterData'])->name('table-obat-master-data');
-});
 
+    //terima obat
+    Route::get('terima-obat', [App\Http\Controllers\ObatController::class, 'indexTerimaObat'])->name('terima-obat');
+    Route::post('terima-obat', [App\Http\Controllers\ObatController::class, 'storeTerimaObat'])->name('store-terima-obat');
+    Route::put('terima-obat/{id}', [App\Http\Controllers\ObatController::class, 'updateTerimaObat'])->name('update-terima-obat');
+    Route::get('table-terima-obat', [App\Http\Controllers\ObatController::class, 'getTerimaObat'])->name('table-terima-obat');
+});
 //diagnosa
 Route::get('/get-diagnosa', [DiagnosaController::class, 'getDiagnosa']);
 //Language Change

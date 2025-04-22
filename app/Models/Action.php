@@ -105,11 +105,13 @@ class Action extends Model
         'update_obat',
         'beri_tindakan',
         'tindakan_ruang_tindakan',
-        'kasus'
+        'kasus','alergi', 'gangguan_ginjal', 'menyusui',
+        'verifikasi_awal', 'verifikasi_akhir', 'informasi_obat'
     ];
 
     protected $casts = [
         'diagnosa' => 'array',
+        'verifikasi_awal' => 'array', 'verifikasi_akhir' => 'array', 'informasi_obat' => 'array',
     ];
     /**
      * Relasi ke model Patient
@@ -160,5 +162,9 @@ class Action extends Model
     public function hospitalReferral()
     {
         return $this->belongsTo(Hospital::class, 'rujuk_rs');
+    }
+    public function actionObats()
+    {
+        return $this->hasMany(ActionObat::class, 'id_action');
     }
 }
