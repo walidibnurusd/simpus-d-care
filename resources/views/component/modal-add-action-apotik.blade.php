@@ -126,30 +126,30 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="form-group">
-                                        
-                                                <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                                <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
-                                                    <option value="" disabled selected>Pilih</option>
-                                                    @foreach ($diagnosa as $item)
-                                                        <option value="{{ $item->id }}">
-                                                            {{ $item->name }}-{{ $item->icd10 }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            
+                                        <div class="col-md-8">
+                                            <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                            <select class="form-control" id="diagnosaEdit" name="diagnosa[]" multiple>
+                                                <option value="" disabled selected>Pilih</option>
+                                                @foreach ($diagnosa as $item)
+                                                    <option value="{{ $item->id }}">
+                                                        {{ $item->name }}-{{ $item->icd10 }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
+                                    
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="row mt-3">
-                        <!--<div class="col-md-12" style="margin-bottom: 15px;">-->
-                        <!--    <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>-->
-                        <!--    <textarea class="form-control" id="obat" name="obat" readonly placeholder="Obat"></textarea>-->
-                        <!--</div>-->
+                        {{-- <div class="col-md-12" style="margin-bottom: 15px;">
+                            <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
+                            <textarea class="form-control" id="obat" name="obat" readonly placeholder="Obat"></textarea>
+                        </div> --}}
       
                         
                         <!--<div class="col-md-12">-->
@@ -252,6 +252,8 @@
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
+                                    <tbody id="medicationTableBody1">
+                                    </tbody>
                                     <tbody id="medicationTableBody">
                                     </tbody>
                                 </table>
@@ -281,9 +283,8 @@
 @include('component.modal-table-pasien-apotik')
 
 <!-- Tambahkan di dalam <head> atau sebelum </body> -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     
     <script>
         $(document).ready(function () {
@@ -337,16 +338,7 @@
 
 
 <script>
-       $(document).ready(function() {
-        // Initialize select2 for all relevant elements
-
-        $('#diagnosa')
-            .select2({
-                placeholder: "Pilih",
-                allowClear: true,
-                minimumResultsForSearch: 0
-            });
-    });
+    
     document.addEventListener('DOMContentLoaded', function() {
 
         // Display success message if session has a success

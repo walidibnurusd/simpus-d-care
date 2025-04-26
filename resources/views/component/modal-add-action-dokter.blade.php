@@ -88,7 +88,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="kasus">Kasus</label>
-                                                <select class="form-control" id="kasus" name="kasus">
+                                                <select class="form-control" id="kasus" name="kasus" required>
                                                     <option value="" disabled selected>Pilih Jenis Kasus
                                                     </option>
                                                     <option value="1">Baru </option>
@@ -505,6 +505,7 @@
                                 </div> --}}
                             </div>
                         @endif
+                        
                         <div class="row mt-3">
 
                             @if (Auth::user()->role == 'dokter')
@@ -637,6 +638,21 @@
                                 <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                 <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                             </div> --}}
+                            @if (Auth::user()->role != 'dokter')
+                           
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="skrining" class="form-label">Riwayat Berobat</label>
+                                        <button class="btn btn-success w-100 mt-2" type="button"
+                                            id="btnCariRiwayatBerobat" data-bs-toggle="modal"
+                                            data-bs-target="#modalBerobat">
+                                            Riwayat Berobat
+                                        </button>
+
+                                    </div>
+                                </div>
+                   
+                        @endif
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="skrining" class="form-label">Obat</label>
@@ -659,6 +675,7 @@
                                         @endforeach
                                     </select>
                                 </div>
+
 
                             @endif
                             @if (Auth::user()->role != 'tindakan')

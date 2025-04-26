@@ -39,8 +39,8 @@
             </div>
 
             <div class="modal-body">
-                <form id="editPatientForm{{ $action->id }}" action="{{ route('action.update', $action->id) }}" method="POST"
-                    class="px-3">
+                <form id="editPatientForm{{ $action->id }}" action="{{ route('action.update', $action->id) }}"
+                    method="POST" class="px-3">
                     <div id="formSection1{{ $action->id }}" class="form-section">
                         @csrf
                         @if ($routeName === 'action.index' || 'action.dokter.index')
@@ -72,7 +72,8 @@
                                         @endif
                                     </p>
                                     <p><strong>Telepon/WA</strong> : <span
-                                            id="Phone{{ $action->id }}">{{ $action->patient->phone ?? '' }}</span></p>
+                                            id="Phone{{ $action->id }}">{{ $action->patient->phone ?? '' }}</span>
+                                    </p>
                                     <p><strong>Alamat</strong> : <span
                                             id="Address">{{ $action->patient->address ?? '' }}</span>
                                     </p>
@@ -722,40 +723,38 @@
                             </div>
                         </div>
 
-
                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'tindakan')
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="skrining" class="form-label">Obat</label>
-                                    <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
-                                        data-bs-toggle="modal" data-bs-target="#editActionObatModal{{$action->id}}">
-                                        Obat
-                                    </button>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="skrining" class="form-label">Obat</label>
+                                        <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editActionObatModal{{ $action->id }}">
+                                            Obat
+                                        </button>
 
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="diagnosaEditAction"
-                                    style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
-                                    name="diagnosa[]" multiple>
-                                    @php
-                                        // Decode JSON if it exists
-                                        $selectedDiagnosa = is_string($action->diagnosa)
-                                            ? json_decode($action->diagnosa, true)
-                                            : $action->diagnosa;
-                                    @endphp
-                                    @foreach ($diagnosa as $item)
-                                        <option value="{{ $item->id }}"
-                                            {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
-                                            {{ $item->name }}-{{ $item->icd10 }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @if (Auth::user()->role != 'tindakan')
-                                
+                                <div class="col-md-4">
+                                    <label for="diagnosaEditAction" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                    <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
+                                        name="diagnosa[]" multiple>
+                                        @php
+                                            // Decode JSON if it exists
+                                            $selectedDiagnosa = is_string($action->diagnosa)
+                                                ? json_decode($action->diagnosa, true)
+                                                : $action->diagnosa;
+                                        @endphp
+                                        @foreach ($diagnosa as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
+                                                {{ $item->name }}-{{ $item->icd10 }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @if (Auth::user()->role != 'tindakan')
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Hasil Skrining</label>
@@ -768,7 +767,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                  
+
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Riwayat Berobat</label>
@@ -781,98 +780,98 @@
 
                                         </div>
                                     </div>
-                                </div>
-                            @endif
+                            </div>
+                        @endif
 
-                            {{-- <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                                     <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
                                         Penunjang</label>
                                     <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
                                         placeholder="Pemeriksaan penunjang">{{ old('pemeriksaan_penunjang', $action->pemeriksaan_penunjang ?? '') }}</textarea>
                                 </div> --}}
-                            <div class="row mt-3">
-                                @if (Auth::user()->role == 'dokter')
-                                    <div class="col-md-6">
-                                        <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                                        <select class="form-control" id="tindakanEdit{{ $action->id }}"
-                                            name="tindakan[]">
-                                            <option value="" {{ empty($action->tindakan) ? 'selected' : '' }}
-                                                disabled selected>pilih</option>
-                                            @if ($action->tipe == 'poli-umum')
-                                                <option value="Diberikan Obat"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Diberikan Obat' ? 'selected' : '' }}>
-                                                    Diberikan Obat</option>
-                                                <option value="Dirujuk"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Dirujuk' ? 'selected' : '' }}>
-                                                    Dirujuk
-                                                </option>
-                                            @else
-                                                <option value="Gigi Sulung Tumpatan Sementara"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Sulung Tumpatan Sementara' ? 'selected' : '' }}>
-                                                    Gigi Sulung Tumpatan Sementara
-                                                </option>
-                                                <option value="Tidak Ada"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Tidak Ada' ? 'selected' : '' }}>
-                                                    Tidak Ada
-                                                </option>
-                                                <option value="Gigi Tetap Tumpatan Tetap"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Tetap Tumpatan Tetap' ? 'selected' : '' }}>
-                                                    Gigi Tetap Tumpatan Tetap
-                                                </option>
-                                                <option value="Gigi Sulung Tumpatan Tetap"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Sulung Tumpatan Tetap' ? 'selected' : '' }}>
-                                                    Gigi Sulung Tumpatan Tetap
-                                                </option>
-                                                <option value="Perawatan Saluran Akar"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Perawatan Saluran Akar' ? 'selected' : '' }}>
-                                                    Perawatan Saluran Akar
-                                                </option>
-                                                <option value="Gigi Sulung Pencabutan"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Sulung Pencabutan' ? 'selected' : '' }}>
-                                                    Gigi Sulung Pencabutan
-                                                </option>
-                                                <option value="Gigi Tetap Pencabutan"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Tetap Pencabutan' ? 'selected' : '' }}>
-                                                    Gigi Tetap Pencabutan
-                                                </option>
-                                                <option value="Pembersihan Karang Gigi"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Pembersihan Karang Gigi' ? 'selected' : '' }}>
-                                                    Pembersihan Karang Gigi
-                                                </option>
-                                                <option value="Odontectomy"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Odontectomy' ? 'selected' : '' }}>
-                                                    Odontectomy
-                                                </option>
-                                                <option value="Sebagian Prothesa"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Sebagian Prothesa' ? 'selected' : '' }}>
-                                                    Sebagian Prothesa
-                                                </option>
-                                                <option value="Penuh Prothesa"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Penuh Prothesa' ? 'selected' : '' }}>
-                                                    Penuh Prothesa
-                                                </option>
-                                                <option value="Reparasi Prothesa"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Reparasi Prothesa' ? 'selected' : '' }}>
-                                                    Reparasi Prothesa
-                                                </option>
-                                                <option value="Premedikasi"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Premedikasi' ? 'selected' : '' }}>
-                                                    Premedikasi/Pengobatan
-                                                </option>
-                                                <option value="Tindakan Lain"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Tindakan Lain' ? 'selected' : '' }}>
-                                                    Tindakan Lain
-                                                </option>
-                                                <option value="Incici Abses Gigi"
-                                                    {{ old('tindakan', $action->tindakan ?? '') == 'Incici Abses Gigi' ? 'selected' : '' }}>
-                                                    Incici Abses Gigi</option>
-                                            @endif
-                                        </select>
+                        <div class="row mt-3">
+                            @if (Auth::user()->role == 'dokter')
+                                <div class="col-md-6">
+                                    <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                                    <select class="form-control" id="tindakanEdit{{ $action->id }}"
+                                        name="tindakan[]">
+                                        <option value="" {{ empty($action->tindakan) ? 'selected' : '' }}
+                                            disabled selected>pilih</option>
+                                        @if ($action->tipe == 'poli-umum')
+                                            <option value="Diberikan Obat"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Diberikan Obat' ? 'selected' : '' }}>
+                                                Diberikan Obat</option>
+                                            <option value="Dirujuk"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Dirujuk' ? 'selected' : '' }}>
+                                                Dirujuk
+                                            </option>
+                                        @else
+                                            <option value="Gigi Sulung Tumpatan Sementara"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Sulung Tumpatan Sementara' ? 'selected' : '' }}>
+                                                Gigi Sulung Tumpatan Sementara
+                                            </option>
+                                            <option value="Tidak Ada"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Tidak Ada' ? 'selected' : '' }}>
+                                                Tidak Ada
+                                            </option>
+                                            <option value="Gigi Tetap Tumpatan Tetap"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Tetap Tumpatan Tetap' ? 'selected' : '' }}>
+                                                Gigi Tetap Tumpatan Tetap
+                                            </option>
+                                            <option value="Gigi Sulung Tumpatan Tetap"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Sulung Tumpatan Tetap' ? 'selected' : '' }}>
+                                                Gigi Sulung Tumpatan Tetap
+                                            </option>
+                                            <option value="Perawatan Saluran Akar"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Perawatan Saluran Akar' ? 'selected' : '' }}>
+                                                Perawatan Saluran Akar
+                                            </option>
+                                            <option value="Gigi Sulung Pencabutan"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Sulung Pencabutan' ? 'selected' : '' }}>
+                                                Gigi Sulung Pencabutan
+                                            </option>
+                                            <option value="Gigi Tetap Pencabutan"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Gigi Tetap Pencabutan' ? 'selected' : '' }}>
+                                                Gigi Tetap Pencabutan
+                                            </option>
+                                            <option value="Pembersihan Karang Gigi"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Pembersihan Karang Gigi' ? 'selected' : '' }}>
+                                                Pembersihan Karang Gigi
+                                            </option>
+                                            <option value="Odontectomy"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Odontectomy' ? 'selected' : '' }}>
+                                                Odontectomy
+                                            </option>
+                                            <option value="Sebagian Prothesa"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Sebagian Prothesa' ? 'selected' : '' }}>
+                                                Sebagian Prothesa
+                                            </option>
+                                            <option value="Penuh Prothesa"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Penuh Prothesa' ? 'selected' : '' }}>
+                                                Penuh Prothesa
+                                            </option>
+                                            <option value="Reparasi Prothesa"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Reparasi Prothesa' ? 'selected' : '' }}>
+                                                Reparasi Prothesa
+                                            </option>
+                                            <option value="Premedikasi"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Premedikasi' ? 'selected' : '' }}>
+                                                Premedikasi/Pengobatan
+                                            </option>
+                                            <option value="Tindakan Lain"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Tindakan Lain' ? 'selected' : '' }}>
+                                                Tindakan Lain
+                                            </option>
+                                            <option value="Incici Abses Gigi"
+                                                {{ old('tindakan', $action->tindakan ?? '') == 'Incici Abses Gigi' ? 'selected' : '' }}>
+                                                Incici Abses Gigi</option>
+                                        @endif
+                                    </select>
 
-                                    </div>
-                                @else
-                                    @if ($routeName === 'action.dokter.ruang.tindakan.index')
-                                        {{-- <div class="col-md-4">
+                                </div>
+                            @else
+                                @if ($routeName === 'action.dokter.ruang.tindakan.index')
+                                    {{-- <div class="col-md-4">
                                             <label for="diagnosaEditAction"
                                                 style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                             <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
@@ -892,148 +891,160 @@
                                             </select>
                                         </div> --}}
 
-                                        <div class="col-md-4">
-                                            <label for="tindakanEdit"
-                                                style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                                            <select class="form-control" id="tindakanEdit{{ $action->id }}"
-                                                name="tindakan_ruang_tindakan[]" multiple>
-                                                <option value="Observasi Tanpa Tindakan Invasif"
-                                                    {{ in_array('Observasi Tanpa Tindakan Invasif', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Observasi Tanpa Tindakan Invasif
-                                                </option>
-                                                <option value="Observasi Dengan Tindakan Invasif"
-                                                    {{ in_array('Observasi Dengan Tindakan Invasif', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Observasi Dengan Tindakan Invasif
-                                                </option>
-                                                <option value="Tidak Ada"
-                                                    {{ in_array('Tidak Ada', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Tidak Ada
-                                                </option>
-                                                <option value="Corpus Alineum"
-                                                    {{ in_array('Corpus Alineum', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Corpus Alineum
-                                                </option>
-                                                <option value="Ekstraksi Kuku"
-                                                    {{ in_array('Ekstraksi Kuku', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Ekstraksi Kuku
-                                                </option>
-                                                <option value="Sircumsisi (Bedah Ringan)"
-                                                    {{ in_array('Sircumsisi (Bedah Ringan)', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Sircumsisi (Bedah Ringan)
-                                                </option>
-                                                <option value="Incisi Abses"
-                                                    {{ in_array('Incisi Abses', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Incisi Abses
-                                                </option>
-                                                <option value="Rawat Luka"
-                                                    {{ in_array('Rawat Luka', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Rawat Luka
-                                                </option>
-                                                <option value="Ganti Verban"
-                                                    {{ in_array('Ganti Verban', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Ganti Verban
-                                                </option>
-                                                <option value="Spooling"
-                                                    {{ in_array('Spooling', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Spooling
-                                                </option>
-                                                <option value="Toilet Telinga"
-                                                    {{ in_array('Toilet Telinga', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Toilet Telinga
-                                                </option>
-                                                <option value="Tetes Telinga"
-                                                    {{ in_array('Tetes Telinga', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Tetes Telinga
-                                                </option>
-                                                <option value="Aff Hecting"
-                                                    {{ in_array('Aff Hecting', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Aff Hecting
-                                                </option>
-                                                <option value="Hecting (Jahit Luka)"
-                                                    {{ in_array('Hecting (Jahit Luka)', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Hecting (Jahit Luka)</option>
-                                                <option value="Tampon/Off Tampon"
-                                                    {{ in_array('Tampon/Off Tampon', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Tampon/Off Tampon</option>
+                                    <div class="col-md-4">
+                                        <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                                        <select class="form-control" id="tindakanEdit{{ $action->id }}"
+                                            name="tindakan_ruang_tindakan[]" multiple>
+                                            <option value="Observasi Tanpa Tindakan Invasif"
+                                                {{ in_array('Observasi Tanpa Tindakan Invasif', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Observasi Tanpa Tindakan Invasif
+                                            </option>
+                                            <option value="Observasi Dengan Tindakan Invasif"
+                                                {{ in_array('Observasi Dengan Tindakan Invasif', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Observasi Dengan Tindakan Invasif
+                                            </option>
+                                            <option value="Tidak Ada"
+                                                {{ in_array('Tidak Ada', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Tidak Ada
+                                            </option>
+                                            <option value="Corpus Alineum"
+                                                {{ in_array('Corpus Alineum', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Corpus Alineum
+                                            </option>
+                                            <option value="Ekstraksi Kuku"
+                                                {{ in_array('Ekstraksi Kuku', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Ekstraksi Kuku
+                                            </option>
+                                            <option value="Sircumsisi (Bedah Ringan)"
+                                                {{ in_array('Sircumsisi (Bedah Ringan)', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Sircumsisi (Bedah Ringan)
+                                            </option>
+                                            <option value="Incisi Abses"
+                                                {{ in_array('Incisi Abses', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Incisi Abses
+                                            </option>
+                                            <option value="Rawat Luka"
+                                                {{ in_array('Rawat Luka', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Rawat Luka
+                                            </option>
+                                            <option value="Ganti Verban"
+                                                {{ in_array('Ganti Verban', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Ganti Verban
+                                            </option>
+                                            <option value="Spooling"
+                                                {{ in_array('Spooling', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Spooling
+                                            </option>
+                                            <option value="Toilet Telinga"
+                                                {{ in_array('Toilet Telinga', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Toilet Telinga
+                                            </option>
+                                            <option value="Tetes Telinga"
+                                                {{ in_array('Tetes Telinga', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Tetes Telinga
+                                            </option>
+                                            <option value="Aff Hecting"
+                                                {{ in_array('Aff Hecting', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Aff Hecting
+                                            </option>
+                                            <option value="Hecting (Jahit Luka)"
+                                                {{ in_array('Hecting (Jahit Luka)', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Hecting (Jahit Luka)</option>
+                                            <option value="Tampon/Off Tampon"
+                                                {{ in_array('Tampon/Off Tampon', explode(',', old('tindakan_ruang_tindakan', $action->tindakan_ruang_tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Tampon/Off Tampon</option>
 
-                                            </select>
-                                        </div>
-                                    @else
-                                        <div class="col-md-6">
-                                            <label for="tindakanEdit"
-                                                style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                                            <select class="form-control" id="tindakanEdit{{ $action->id }}"
-                                                name="tindakan[]" multiple>
-                                                <option value="Observasi Tanpa Tindakan Invasif"
-                                                    {{ in_array('Observasi Tanpa Tindakan Invasif', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Observasi Tanpa Tindakan Invasif
-                                                </option>
-                                                <option value="Observasi Dengan Tindakan Invasif"
-                                                    {{ in_array('Observasi Dengan Tindakan Invasif', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Observasi Dengan Tindakan Invasif
-                                                </option>
-                                                <option value="Tidak Ada"
-                                                    {{ in_array('Tidak Ada', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Tidak Ada
-                                                </option>
-                                                <option value="Corpus Alineum"
-                                                    {{ in_array('Corpus Alineum', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Corpus Alineum
-                                                </option>
-                                                <option value="Ekstraksi Kuku"
-                                                    {{ in_array('Ekstraksi Kuku', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Ekstraksi Kuku
-                                                </option>
-                                                <option value="Sircumsisi (Bedah Ringan)"
-                                                    {{ in_array('Sircumsisi (Bedah Ringan)', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Sircumsisi (Bedah Ringan)
-                                                </option>
-                                                <option value="Incisi Abses"
-                                                    {{ in_array('Incisi Abses', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Incisi Abses
-                                                </option>
-                                                <option value="Rawat Luka"
-                                                    {{ in_array('Rawat Luka', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Rawat Luka
-                                                </option>
-                                                <option value="Ganti Verban"
-                                                    {{ in_array('Ganti Verban', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Ganti Verban
-                                                </option>
-                                                <option value="Spooling"
-                                                    {{ in_array('Spooling', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Spooling
-                                                </option>
-                                                <option value="Toilet Telinga"
-                                                    {{ in_array('Toilet Telinga', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Toilet Telinga
-                                                </option>
-                                                <option value="Tetes Telinga"
-                                                    {{ in_array('Tetes Telinga', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Tetes Telinga
-                                                </option>
-                                                <option value="Aff Hecting"
-                                                    {{ in_array('Aff Hecting', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Aff Hecting
-                                                </option>
-                                                <option value="Hecting (Jahit Luka)"
-                                                    {{ in_array('Hecting (Jahit Luka)', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Hecting (Jahit Luka)</option>
-                                                <option value="Tampon/Off Tampon"
-                                                    {{ in_array('Tampon/Off Tampon', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
-                                                    Tampon/Off Tampon</option>
+                                        </select>
+                                    </div>
+                                @else
+                                    <div class="col-md-6">
+                                        <label for="tindakanEdit" style="color: rgb(19, 11, 241);">TINDAKAN</label>
+                                        <select class="form-control" id="tindakanEdit{{ $action->id }}"
+                                            name="tindakan[]" multiple>
+                                            <option value="Observasi Tanpa Tindakan Invasif"
+                                                {{ in_array('Observasi Tanpa Tindakan Invasif', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Observasi Tanpa Tindakan Invasif
+                                            </option>
+                                            <option value="Observasi Dengan Tindakan Invasif"
+                                                {{ in_array('Observasi Dengan Tindakan Invasif', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Observasi Dengan Tindakan Invasif
+                                            </option>
+                                            <option value="Tidak Ada"
+                                                {{ in_array('Tidak Ada', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Tidak Ada
+                                            </option>
+                                            <option value="Corpus Alineum"
+                                                {{ in_array('Corpus Alineum', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Corpus Alineum
+                                            </option>
+                                            <option value="Ekstraksi Kuku"
+                                                {{ in_array('Ekstraksi Kuku', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Ekstraksi Kuku
+                                            </option>
+                                            <option value="Sircumsisi (Bedah Ringan)"
+                                                {{ in_array('Sircumsisi (Bedah Ringan)', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Sircumsisi (Bedah Ringan)
+                                            </option>
+                                            <option value="Incisi Abses"
+                                                {{ in_array('Incisi Abses', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Incisi Abses
+                                            </option>
+                                            <option value="Rawat Luka"
+                                                {{ in_array('Rawat Luka', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Rawat Luka
+                                            </option>
+                                            <option value="Ganti Verban"
+                                                {{ in_array('Ganti Verban', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Ganti Verban
+                                            </option>
+                                            <option value="Spooling"
+                                                {{ in_array('Spooling', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Spooling
+                                            </option>
+                                            <option value="Toilet Telinga"
+                                                {{ in_array('Toilet Telinga', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Toilet Telinga
+                                            </option>
+                                            <option value="Tetes Telinga"
+                                                {{ in_array('Tetes Telinga', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Tetes Telinga
+                                            </option>
+                                            <option value="Aff Hecting"
+                                                {{ in_array('Aff Hecting', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Aff Hecting
+                                            </option>
+                                            <option value="Hecting (Jahit Luka)"
+                                                {{ in_array('Hecting (Jahit Luka)', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Hecting (Jahit Luka)</option>
+                                            <option value="Tampon/Off Tampon"
+                                                {{ in_array('Tampon/Off Tampon', explode(',', old('tindakan', $action->tindakan ?? ''))) ? 'selected' : '' }}>
+                                                Tampon/Off Tampon</option>
 
-                                            </select>
-                                        </div>
-                                    @endif
+                                        </select>
+                                    </div>
                                 @endif
-                                {{-- @if (Auth::user()->role == 'tindakan')
+                            @endif
+                            @if (Auth::user()->role != 'dokter')
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="skrining" class="form-label">Riwayat Berobat</label>
+                                        <button class="btn btn-success w-100 mt-2" type="button"
+                                            id="btnCariRiwayatBerobatEdit" data-bs-toggle="modal"
+                                            data-bs-target="#modalBerobatEdit"
+                                            data-patient-id="{{ $action->id_patient }}">
+                                            Riwayat Berobat
+                                        </button>
+
+                                    </div>
+                                </div>
+                            @endif
+                            {{-- @if (Auth::user()->role == 'tindakan')
                                     <div class="col-md-4">
                                         <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                         <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
                                     </div>
                                 @endif --}}
-                            </div>
+                        </div>
                         @endif
 
                         <div class="row mt-3">
@@ -1087,7 +1098,7 @@
                                     json_decode($action->hasilLab?->jenis_pemeriksaan ?? '[]', true) ?? [];
                             @endphp
                             <div class="row">
-                              
+
                                 <div class="col-md-6">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="gds"
@@ -1278,7 +1289,6 @@
     var nikValue = "{{ $action->patient->nik ?? '' }}";
     document.getElementById('nikEdit{{ $action->id }}').value = nikValue;
     console.log(nikValue);
-    
 </script>
 <script>
     $(document).ready(function() {
@@ -1403,7 +1413,7 @@
                 textarea.value = actionData[`${field}_lainnya`];
             }
         }
-        
+
     }
 </script>
 

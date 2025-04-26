@@ -1877,7 +1877,7 @@ class ActionController extends Controller
                 'id_patient' => 'required',
                 'tanggal' => 'required',
                 'doctor' => 'required',
-                'kasus' => 'nullable|string|max:255',
+                'kasus' => 'required|nullable|string|max:255',
                 'faskes' => 'nullable|string|max:255',
                 'sistol' => 'nullable|numeric',
                 'diastol' => 'nullable|numeric',
@@ -2612,46 +2612,50 @@ class ActionController extends Controller
                 ->withInput();
         }
     }
-         public function updateApotik(Request $request, $id)
-    {
-        try {
-            // Find the action record to be updated
-            $action = Action::findOrFail($id);
+     public function updateApotik(Request $request, $id)
+{
+    try {
+        $action = Action::findOrFail($id);
 
-            $patient = Patients::where('nik', $request->nik)->first();
+        $patient = Patients::where('nik', $request->nik)->first();
 
-            if (!$patient) {
-                return redirect()
-                    ->back()
-                    ->withErrors(['nik' => 'Patient with the provided NIK does not exist.'])
-                    ->withInput();
-            }
+        if (!$patient) {
+            return response()->json(['error' => 'Patient with the provided NIK does not exist.'], 404);
+        }
 
-            $request->merge([
-                'id_patient' => $patient->id,
+        $request->merge([
+            'id_patient' => $patient->id,
+        ]);
+
+        $validated = $request->validate([
+            'id_patient' => 'required',
+            'update_obat' => 'nullable',
+            'verifikasi_awal' => 'array',
+            'verifikasi_akhir' => 'array',
+            'informasi_obat' => 'array',
+            'diagnosa' => 'array',
+        ]);
+
+        $action->update($validated);
+        $medications = json_decode($request->medications, true);
+
+        $validated['alergi'] = $medications[0]['alergi'] ?? null;
+        $validated['usia_kehamilan'] = $medications[0]['hamil']  ?? 0;
+        $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
+        $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
+
+        if (!empty($request->jenis_pemeriksaan)) {
+            HasilLab::create([
+                'id_action' => $action->id,
+                'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan),
             ]);
+        }
 
-            $validated = $request->validate([
-                'id_patient' => 'required',
-                'update_obat' => 'nullable',
-                'verifikasi_awal' => 'array',
-                'verifikasi_akhir' => 'array',
-                'informasi_obat' => 'array',
-                'diagnosa' => 'array',
-            ]);
-            // dd($request->medicationsData);
-            $action->update($validated);
-            $medications = json_decode($request->medications, true);
-            // dd($request->medications);
-            $validated['alergi'] = $medications[0]['alergi'] ?? null;
-            $validated['usia_kehamilan'] = $medications[0]['hamil']  ?? 0;
-            $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
-            $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
-            // dd($validated);
-            if (is_array($medications)) {
-                // Hapus semua data ActionObat sebelumnya
-                ActionObat::where('id_action', $action->id)->delete();
-            
+        if (is_array($medications)) {
+            foreach ($medications as $medication) {
+                 if ($medication['idObat']==null) {
+                    continue;
+                }
                 $shapes = [
                     'Tablet' => 1,
                     'Botol' => 2,
@@ -2663,61 +2667,56 @@ class ActionController extends Controller
                     'Pot' => 8,
                     'Injeksi' => 9,
                 ];
-            
-                foreach ($medications as $medication) {
-                    // Tambahkan ulang data ActionObat
-                    ActionObat::create([
-                        'id_action' => $action->id,
-                        'number' => $medication['number'],
-                        'name' => $medication['name'],
-                        'dose' => $medication['dose'],
-                        'amount' => $medication['quantity'],
-                        'shape' => $shapes[$medication['shape']] ?? null,
-                        'id_obat' => $medication['idObat'],
-                    ]);
-            
-                    $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
-            
-                    if ($obats->isEmpty()) {
-                        return response()->json(['error' => 'Obat tidak ditemukan'], 404);
-                    }
-            
-                    $remainingQuantity = $medication['quantity'];
-            
-                    foreach ($obats as $obat) {
-                        if ($remainingQuantity <= 0) {
-                            break;
-                        }
-            
-                        if ($obat->amount >= $remainingQuantity) {
-                            $obat->amount -= $remainingQuantity;
-                            $obat->save();
-                            $remainingQuantity = 0;
-                        } else {
-                            $remainingQuantity -= $obat->amount;
-                            $obat->amount = 0;
-                            $obat->save();
-                        }
-                    }
-            
-                    if ($remainingQuantity > 0) {
-                        return response()->json(['error' => 'Stok tidak mencukupi'], 400);
+
+                ActionObat::create([
+                    'id_action' => $action->id,
+                    'number' => $medication['number'],
+                    'name' => $medication['name'],
+                    'dose' => $medication['dose'],
+                    'amount' => $medication['quantity'],
+                    'shape' => $shapes[$medication['shape']] ?? null,
+                    'id_obat' => $medication['idObat'],
+                ]);
+
+                $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
+
+                if ($obats->isEmpty()) {
+                    return response()->json(['error' => 'Obat tidak ditemukan'], 404);
+                }
+
+                $remainingQuantity = $medication['quantity'];
+
+                foreach ($obats as $obat) {
+                    if ($remainingQuantity <= 0) break;
+
+                    if ($obat->amount >= $remainingQuantity) {
+                        $obat->amount -= $remainingQuantity;
+                        $obat->save();
+                        $remainingQuantity = 0;
+                    } else {
+                        $remainingQuantity -= $obat->amount;
+                        $obat->amount = 0;
+                        $obat->save();
                     }
                 }
-            
-                return response()->json(['message' => 'Stok berhasil diperbarui'], 200);
-            }
-            
 
-            return response()->json(['success' => 'Action has been successfully updated.']);
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
-                ->withInput();
+                if ($remainingQuantity > 0) {
+                    return response()->json(['error' => 'Stok tidak mencukupi'], 400);
+                }
+            }
         }
+
+        $action->update($validated);
+
+        return response()->json(['success' => 'Action has been successfully updated.']);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json(['errors' => $e->errors()], 422);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
     }
-     public function indexApotik(Request $request)
+}
+
+      public function indexApotik(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_date');
@@ -2725,7 +2724,7 @@ class ActionController extends Controller
             $poli = $request->input('poli');
             
             $actionsQuery = Action::with(['patient','actionObats.obat']) ->where(function ($q) {
-                $q->WhereHas('actionObats')->orWhereNotNull('obat');
+                $q->WhereHas('actionObats')->WhereNotNull('verifikasi_awal');
             });
 
             if ($startDate) {
@@ -2777,9 +2776,13 @@ class ActionController extends Controller
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
                     $rs = Hospital::all();
-
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
+                    ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
+                    ->selectRaw('SUM(terima_obat.amount) as total_stock')
+                    ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
+                    ->get();
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs])->render();
+                    $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs,'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .

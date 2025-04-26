@@ -43,37 +43,37 @@
         let rowNumber = 1;
 
         // Function to add medication to the table
-              document.getElementById("addMedicationBtn").addEventListener("click", function (e) {
-                e.preventDefault(); // mencegah reload
-            
-                var codeElement = document.getElementById("code_obat");
-                var shape = document.getElementById("shape");
-                var alergi = document.getElementById("alergi").value;
-                var jumlah = document.getElementById("jumlah").value;
-                var stok = document.getElementById("stok").value;
-                var gangguanGinjal = document.getElementById("gangguan_ginjal").value;
-                var dosis = document.getElementById("dosis").value;
-                var hamil = document.getElementById("hamil").value;
-                var menyusui = document.getElementById("menyusui").value;
-            
-                var selectedOption = codeElement.options[codeElement.selectedIndex];
-                var selectedOptionShape = shape.options[shape.selectedIndex];
-            
-                var medicationName = selectedOption.text;
-                var medicationCode = selectedOption.value;
-                var shapeName = selectedOptionShape.text;
-            
-                // Cek apakah sudah ada
-                if (document.getElementById(`medication-${medicationCode}`)) {
-                    alert("Obat ini sudah ditambahkan.");
-                    return;
-                }
-            
-                var tableBody = document.getElementById("medicationTableBody");
-                var newRow = tableBody.insertRow();
-                newRow.setAttribute("id", `medication-${medicationCode}`);
-            
-                newRow.innerHTML = `
+        document.getElementById("addMedicationBtn").addEventListener("click", function(e) {
+            e.preventDefault(); // mencegah reload
+
+            var codeElement = document.getElementById("code_obat");
+            var shape = document.getElementById("shape");
+            var alergi = document.getElementById("alergi").value;
+            var jumlah = document.getElementById("jumlah").value;
+            var stok = document.getElementById("stok").value;
+            var gangguanGinjal = document.getElementById("gangguan_ginjal").value;
+            var dosis = document.getElementById("dosis").value;
+            var hamil = document.getElementById("hamil").value;
+            var menyusui = document.getElementById("menyusui").value;
+
+            var selectedOption = codeElement.options[codeElement.selectedIndex];
+            var selectedOptionShape = shape.options[shape.selectedIndex];
+
+            var medicationName = selectedOption.text;
+            var medicationCode = selectedOption.value;
+            var shapeName = selectedOptionShape.text;
+
+            // Cek apakah sudah ada
+            if (document.getElementById(`medication-${medicationCode}`)) {
+                alert("Obat ini sudah ditambahkan.");
+                return;
+            }
+
+            var tableBody = document.getElementById("medicationTableBody");
+            var newRow = tableBody.insertRow();
+            newRow.setAttribute("id", `medication-${medicationCode}`);
+
+            newRow.innerHTML = `
                     <td>${rowNumber}</td>
                     <td>${medicationName}</td>
                     <td>${dosis}</td>
@@ -86,19 +86,19 @@
                     <td style="display: none;">${hamil}</td>
                     <td><button class="btn btn-danger btn-sm delete-row">Hapus</button></td>
                 `;
-            
-                rowNumber++;
-                newRow.setAttribute("data-medication-code", medicationCode);
-                document.getElementById("addActionObat").reset();
-            });
-            
-            // Delegasi event untuk hapus baris
-            document.getElementById("medicationTableBody").addEventListener("click", function (e) {
-                if (e.target && e.target.classList.contains("delete-row")) {
-                    const row = e.target.closest("tr");
-                    if (row) row.remove();
-                }
-            });
+
+            rowNumber++;
+            newRow.setAttribute("data-medication-code", medicationCode);
+            document.getElementById("addActionObat").reset();
+        });
+
+        // Delegasi event untuk hapus baris
+        document.getElementById("medicationTableBody").addEventListener("click", function(e) {
+            if (e.target && e.target.classList.contains("delete-row")) {
+                const row = e.target.closest("tr");
+                if (row) row.remove();
+            }
+        });
         // Function to clear the entire table
         document.getElementById("clearTableBtn").addEventListener("click", function() {
             var tableBody = document.getElementById("medicationTableBody");
@@ -179,8 +179,8 @@
                         name: 'dob'
                     },
                     {
-                        data: 'tanggal',
-                        name: 'tanggal',
+                        data: 'created_at',
+                        name: 'created_at',
                         render: function(data) {
                             if (!data)
                                 return '-'; // Jika data kosong, tampilkan tanda "-"
@@ -502,7 +502,6 @@
 
             $('#patientDetails').show();
             const patientId = data.idpatient;
-            console.log('log pasien', data.idpatient);
 
             $('#btnCariSkrining').data('id', patientId);
             $('#btnCariRiwayatBerobat').data('id', patientId);
@@ -551,6 +550,9 @@
                     // Sembunyikan detail pasien & reset form
                     $('#patientDetails').hide();
                     $('#tindakan_ruang_tindakan').val(response.tindakan || [])
+                        .trigger(
+                            'change');
+                    $('#rujuk_rs').val(response.tindakan || [])
                         .trigger(
                             'change');
                     $('#diagnosa').val(response.tindakan || []).trigger(
@@ -617,7 +619,7 @@
         return new Promise((resolve, reject) => {
             const tipe = $('#tipe').val();
             $.ajax({
-                url: `/get-patient-dokter/${tipe}`,
+                url: `/get-patients-dokter/${tipe}`,
                 type: 'GET',
                 success: function(response) {
                     $('#patientTableBody').html('');

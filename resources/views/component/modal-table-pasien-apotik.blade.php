@@ -41,6 +41,7 @@
 
 <!-- JS Select2 -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
     let rowNumber = 1;
 
@@ -176,10 +177,9 @@
         });
     });
 </script>
-
 <script>
         $(document).ready(function() {
-        
+
 
 
         let table;
@@ -229,29 +229,29 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            console.log(row.action_obats);
-                            
+                            console.log(row);
+
                             return `
-                        <button class="btn btn-success btnPilihPasien" 
-    data-id-patient="${row.patient.id}" 
-    data-id="${row.id}" 
-    data-nik="${row.patient.nik}" 
-    data-name="${row.patient.name}" 
-    data-gender="${row.patient.gender}" 
-    data-age="${row.patient.dob}" 
-    data-phone="${row.patient.phone}" 
-    data-address="${row.patient.address}" 
-    data-blood="${row.patient.blood_type}" 
-    data-education="${row.patient.education}" 
-    data-job="${row.patient.occupation}" 
-    data-rm="${row.patient.no_rm}" 
-    data-tanggal="${row.tanggal}" 
-    data-doctor="${row.doctor}" 
-    data-kunjungan="${row.kunjungan}"    
-    data-obat="${row.obat}"    
-    data-updateobat="${row.update_obat}" 
+                        <button class="btn btn-success btnPilihPasien"
+    data-id-patient="${row.patient.id}"
+    data-id="${row.id}"
+    data-nik="${row.patient.nik}"
+    data-name="${row.patient.name}"
+    data-gender="${row.patient.gender}"
+    data-age="${row.patient.dob}"
+    data-phone="${row.patient.phone}"
+    data-address="${row.patient.address}"
+    data-blood="${row.patient.blood_type}"
+    data-education="${row.patient.education}"
+    data-job="${row.patient.occupation}"
+    data-rm="${row.patient.no_rm}"
+    data-diagnosa='${JSON.stringify(row.diagnosa)}'
+    data-tanggal="${row.tanggal}"
+    data-doctor="${row.doctor}"
+    data-kunjungan="${row.kunjungan}"
+    data-obat="${row.obat}"
+    data-updateobat="${row.update_obat}"
  data-action-obats='${JSON.stringify(row.action_obats)}'
- data-diagnosa='${JSON.stringify(row.diagnosa)}'
 data-bs-dismiss="modal">
     Pilih
 </button>
@@ -273,47 +273,47 @@ data-bs-dismiss="modal">
 
 
 
-        $(document).on('click', '.btnPilihPasien', function() {
+        $(document).on('click', '.btnPilihPasien', function(event) {
+    const data = $(this).data();
+    console.log(data);
 
-            const data = $(this).data();
-            console.log(data);
-            
-            var dob = data.age;
+    var dob = data.age;
 
+    function calculateAge(dob) {
+        var birthDate = new Date(dob);
+        var ageDifMs = Date.now() - birthDate.getTime();
+        var ageDate = new Date(ageDifMs);
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
 
-            function calculateAge(dob) {
-                var birthDate = new Date(dob);
-                var ageDifMs = Date.now() - birthDate.getTime();
-                var ageDate = new Date(ageDifMs);
-                return Math.abs(ageDate.getUTCFullYear() - 1970);
-            }
-            if (event.target.classList.contains("btnPilihPasien")) {
-            let actionObats = event.target.getAttribute("data-action-obats");
+    if (event.target.classList.contains("btnPilihPasien")) {
+        let actionObats = event.target.getAttribute("data-action-obats");
 
-            if (actionObats) {
-                let parsedObats = JSON.parse(actionObats);
-                let tableBody = document.getElementById("medicationTableBody");
-                tableBody.innerHTML = ""; // Kosongkan tabel sebelum menambahkan data baru
+        if (actionObats) {
+            let parsedObats = JSON.parse(actionObats);
+            let tableBody = document.getElementById("medicationTableBody1");
+            tableBody.innerHTML = "";
 
-                // Mapping bentuk obat (Shape ID ke Text)
-                let shapes = {
-                    1: "Tablet",
-                    2: "Botol",
-                    3: "Pcs",
-                    4: "Suppositoria",
-                    5: "Ovula",
-                    6: "Drop",
-                    7: "Tube",
-                    8: "Pot",
-                    9: "Injeksi"
-                };
+            let shapes = {
+                1: "Tablet",
+                2: "Botol",
+                3: "Pcs",
+                4: "Suppositoria",
+                5: "Ovula",
+                6: "Drop",
+                7: "Tube",
+                8: "Pot",
+                9: "Injeksi"
+            };
 
-                let rowNumber = 1;
-                parsedObats.forEach(obat => {
+            let rowNumber = 1;
+            let readonlyMode = true; // Ganti false kalau mau aktifin edit/hapus
+
+            parsedObats.forEach(obat => {
                 let newRow = tableBody.insertRow();
-                let totalAmount = Array.isArray(obat.obat.terima_obat) 
-                    ? obat.obat.terima_obat.reduce((total, item) => total + (item.amount || 0), 0) 
-                    : 0; // Jika bukan array, kembalikan 0
+                let totalAmount = Array.isArray(obat.obat.terima_obat)
+                    ? obat.obat.terima_obat.reduce((total, item) => total + (item.amount || 0), 0)
+                    : 0;
 
                 newRow.innerHTML = `
                     <td>${rowNumber}</td>
@@ -321,73 +321,107 @@ data-bs-dismiss="modal">
                     <td>${obat.dose}</td>
                     <td>${obat.amount}</td>
                     <td>${shapes[obat.shape] || "Tidak Diketahui"}</td>
-                    <td>${totalAmount}</td> <!-- Menampilkan jumlah total amount -->
-                    <td><button class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+                    <td>${totalAmount}</td>
+                    <td>${readonlyMode ? '-' : `<button class="btn btn-danger btn-sm delete-row">Hapus</button>`}</td>
                 `;
                 rowNumber++;
-                // newRow.setAttribute("data-medication-code", medicationCode);
-                // document.getElementById("addActionObat").reset();
             });
-            document.getElementById("medicationTableBody").addEventListener("click", function (e) {
-                if (e.target && e.target.classList.contains("delete-row")) {
-                    const row = e.target.closest("tr");
-                    if (row) row.remove();
-                }
-            });
-        // Function to clear the entire table
-        document.getElementById("clearTableBtn").addEventListener("click", function() {
-            var tableBody = document.getElementById("medicationTableBody");
-            tableBody.innerHTML = '';
-            rowNumber = 1; // Reset row number when table is cleared
-        });
 
+            if (readonlyMode) {
+                // Disable semua interaksi di tabel
+                $('#medicationTableBody1').css('pointer-events', 'none');
+                // Optional: ubah style cursor biar kelihatan nonaktif
+                $('#medicationTableBody1').css('opacity', '0.7');
+            } else {
+                document.getElementById("medicationTableBody1").addEventListener("click", function (e) {
+                    if (e.target && e.target.classList.contains("delete-row")) {
+                        const row = e.target.closest("tr");
+                        if (row) row.remove();
+                    }
+                });
 
+                document.getElementById("clearTableBtn").addEventListener("click", function() {
+                    var tableBody = document.getElementById("medicationTableBody1");
+                    tableBody.innerHTML = '';
+                    rowNumber = 1;
+                });
             }
-
         }
+    }
 
-            var age = calculateAge(dob);
-            console.log(data.nik);
-            
-            $('#displayNIK').text(data.nik);
-            $('#displayName').text(data.name);
-            $('#displayGender').text(data.gender);
-            $('#displayAge').text(age);
-            $('#displayPhone').text(data.phone);
-            $('#displayAddress').text(data.address);
-            $('#displayBlood').text(data.blood);
-            $('#displayEducation').text(data.education);
-            $('#displayJob').text(data.job);
-            $('#displayRmNumber').text(data.rm);
-            $('#patientDetails').show();
-            const actionId = data.id;
-            const actionUrl = "{{ route('action.update.apotik', '__ID__') }}".replace('__ID__',
-                actionId);
-            $('#addPatientForm').attr('action', actionUrl);
-            // Set nilai ID ke input form
-            $('#nik').val(data.nik);
-            $('#idAction').val(data.id);
-            $('#tanggal').val(data.tanggal);
-            $('#doctor').val(data.doctor);
-            $('#nomor_kartu').val(data.nomor);
-            $('#kunjungan').val(data.kunjungan);
+    var age = calculateAge(dob);
+    console.log(data.nik);
 
-            $('#obat').val(data.obat);
-            $('#update_obat').val(data.updateobat);
-            $('#diagnosa').select2();
+    $('#displayNIK').text(data.nik);
+    $('#displayName').text(data.name);
+    $('#displayGender').text(data.gender);
+    $('#displayAge').text(age);
+    $('#displayPhone').text(data.phone);
+    $('#displayAddress').text(data.address);
+    $('#displayBlood').text(data.blood);
+    $('#displayEducation').text(data.education);
+    $('#displayJob').text(data.job);
+    $('#displayRmNumber').text(data.rm);
+    $('#patientDetails').show();
 
-           
-            const diagnosaData = $(data.diagnosa); // Ambil dari data-diagnosa
-            console.log(diagnosaData);
-            
-                if (Array.isArray(diagnosaData) && diagnosaData.length > 0) {
-                    const stringValues = diagnosaData.map(String); // Konversi ke string (Select2 perlu string)
-                    $('#diagnosa').val(stringValues).trigger('change');
-                } else {
-                    $('#diagnosa').val([]).trigger('change'); // Reset jika kosong
-                }
-            $('#modalPasienApotik').modal('hide');
+    const actionId = data.id;
+    const actionUrl = "{{ route('action.update.apotik', '__ID__') }}".replace('__ID__', actionId);
+    $('#addPatientForm').attr('action', actionUrl);
+
+    $('#nik').val(data.nik);
+    $('#idAction').val(data.id);
+    $('#tanggal').val(data.tanggal);
+    $('#doctor').val(data.doctor);
+    $('#nomor_kartu').val(data.nomor);
+    $('#kunjungan').val(data.kunjungan);
+
+    $('#obat').val(data.obat);
+    $('#update_obat').val(data.updateobat);
+
+    var diagnosaData = data.diagnosa;
+    console.log(diagnosaData);
+
+    var diagnosaArray = [];
+
+    if (typeof diagnosaData === 'string') {
+        if (diagnosaData.trim().startsWith('[')) {
+            try {
+                diagnosaArray = JSON.parse(diagnosaData);
+            } catch (e) {
+                console.error("Parsing error:", e);
+            }
+        } else if (diagnosaData.includes(',')) {
+            diagnosaArray = diagnosaData.split(',').map(val => parseInt(val.trim()));
+        } else {
+            diagnosaArray = [parseInt(diagnosaData)];
+        }
+    } else if (Array.isArray(diagnosaData)) {
+        diagnosaArray = diagnosaData.map(val => parseInt(val));
+    }
+
+    console.log(diagnosaArray);
+
+    if (diagnosaArray.length > 0) {
+        $('#diagnosaEdit').val([]).trigger('change');
+
+        $('#diagnosaEdit option').each(function() {
+            if (diagnosaArray.includes(parseInt($(this).val()))) {
+                $(this).prop('selected', true);
+            }
         });
+
+        $('#diagnosaEdit').trigger('change');
+    } else {
+        $('#diagnosaEdit').val([]).trigger('change');
+    }
+
+    if (!$('#diagnosaEdit').hasClass('select2-hidden-accessible')) {
+        $('#diagnosaEdit').select2();
+    }
+
+    $('#modalPasienApotik').modal('hide');
+});
+
         initializeTable();
         // Inisialisasi ulang DataTables saat modal ditampilkan
         $('#modalPasienApotik').on('shown.bs.modal', function() {
@@ -398,7 +432,7 @@ data-bs-dismiss="modal">
             table.ajax.reload(null, false);
         });
 
-       
-       
+
+
     });
 </script>
