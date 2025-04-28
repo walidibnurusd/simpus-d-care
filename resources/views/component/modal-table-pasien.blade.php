@@ -6,6 +6,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="d-flex justify-content-end m-2">
+                    <button id="refreshTable" class="btn btn-primary btn-sm ms-2">Refresh</button>
+                </div>
                 <table class="table table-striped" id="pasien">
                     <thead>
                         <tr>
@@ -16,7 +19,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                       
+
                     </tbody>
                 </table>
             </div>
@@ -29,40 +32,50 @@
 
 
 <script>
- $(document).ready(function () {
-   
-    let table; // Deklarasi variabel DataTable
+    $(document).ready(function() {
 
-    // Fungsi untuk menginisialisasi DataTable
-    function initializeTable() {
-        // if ($.fn.DataTable.isDataTable('#pasien')) {
-        //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
-        // }
+        let table; // Deklarasi variabel DataTable
+        const tipe = $('#tipe').val(); // Ambil route name
+        const url = `/get-patients/${tipe}`;
+        // Fungsi untuk menginisialisasi DataTable
+        function initializeTable() {
+            // if ($.fn.DataTable.isDataTable('#pasien')) {
+            //     $('#pasien').DataTable().destroy(); // Hancurkan DataTables jika sudah ada
+            // }
 
-        table = $('#pasien').DataTable({
-            ajax: {
-                url: '/get-patients', // Endpoint untuk mengambil data
-                type: 'GET',
-                dataSrc: function (json) {
-                    return json.data; // Pastikan data dalam key 'data'
+            table = $('#pasien').DataTable({
+                ajax: {
+                    url: url,
+                    type: 'GET',
+                    dataSrc: function(response) {
+                        return response
+                            .data; // Pastikan 'data' adalah key yang mengandung array dari server
+                    },
+
                 },
-                error: function (xhr, error, code) {
-                    console.error('Error fetching data:', error);
-                    alert('Error fetching patient data!');
-                }
-            },
-            columns: [
-                { data: 'nik', name: 'nik' },
-                { data: 'name', name: 'name' },
-                { data: 'address', name: 'address' },
-                {
-                    data: null,
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row) {
-                        return `
+                columns: [{
+                        data: 'nik',
+                        name: 'nik',
+                        searchable: true,
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `
                             <button class="btn btn-success btnPilihPasien" 
                                 data-id="${row.id}" 
+                                data-jenis_kartu="${row.jenis_kartu}" 
+                                data-nomor_kartu="${row.nomor_kartu}" 
                                 data-nik="${row.nik}" 
                                 data-name="${row.name}" 
                                 data-gender="${row.gender}" 
@@ -76,62 +89,79 @@
                                 Pilih
                             </button>
                         `;
+                        },
                     },
-                },
-            ],
-            destroy: true, // Mengizinkan inisialisasi ulang
-            processing: true,
-            serverSide: true,
+                ],
+                destroy: true, // Mengizinkan inisialisasi ulang
+                processing: true,
+                serverSide: true,
+            });
+        }
+
+        // Handle tombol "Pilih" diklik
+        $(document).on('click', '.btnPilihPasien', function() {
+
+            const data = $(this).data();
+            // Assuming 'data.dob' contains the date of birth, e.g., "1990-01-01"
+            var dob = data.age; // data.dob should be in the format 'YYYY-MM-DD'
+
+            // Function to calculate age from dob
+            function calculateAge(dob) {
+                var birthDate = new Date(dob);
+                var ageDifMs = Date.now() - birthDate.getTime(); // Difference in milliseconds
+                var ageDate = new Date(ageDifMs); // Convert ms to date object
+                return Math.abs(ageDate.getUTCFullYear() - 1970); // Get the age in years
+            }
+
+            // Get the age
+            var age = calculateAge(dob);
+            // Tampilkan data pasien di elemen luar modal
+            $('#displayNIK').text(data.nik);
+            $('#idPatient').text(data.id);
+            $('#displayName').text(data.name);
+            $('#displayGender').text(data.gender);
+            $('#displayAge').text(age);
+            $('#displayPhone').text(data.phone);
+            $('#displayAddress').text(data.address);
+            $('#displayBlood').text(data.blood);
+            $('#displayEducation').text(data.education);
+            $('#displayJob').text(data.job);
+            $('#displayRmNumber').text(data.rm);
+
+            $('#nik').val(data.nik);
+            $('#namePatient').val(data.name);
+            $('#nomor_kartu').val(data.nomor_kartu);
+
+            let jenisKartu = data.jenis_kartu;
+            if (jenisKartu === 'pbi') {
+                jenisKartu = 'PBI (KIS)';
+            } else if (jenisKartu === 'askes') {
+                jenisKartu = 'AKSES'
+            } else if (jenisKartu === 'jkn_mandiri') {
+                jenisKartu = 'JKN Mandiri'
+            } else if (jenisKartu === 'umum') {
+                jenisKartu = 'Umum'
+            } else {
+                jenisKartu = 'JKD'
+            }
+            $('#jenis_kartu').val(jenisKartu);
+
+
+
+            $('#patientDetails').show();
+
+
+            // Tutup modal
+            $('#modalPasien').modal('hide');
         });
-    }
 
-    // Handle tombol "Pilih" diklik
-    $(document).on('click', '.btnPilihPasien', function () {
-        
-        const data = $(this).data();
-        // Assuming 'data.dob' contains the date of birth, e.g., "1990-01-01"
-  var dob = data.age;  // data.dob should be in the format 'YYYY-MM-DD'
+        // Inisialisasi ulang DataTables saat modal ditampilkan
+        $('#modalPasien').on('shown.bs.modal', function() {
+            initializeTable();
+        });
+        $('#refreshTable').on('click', function() {
 
-// Function to calculate age from dob
-function calculateAge(dob) {
-  var birthDate = new Date(dob);
-  var ageDifMs = Date.now() - birthDate.getTime(); // Difference in milliseconds
-  var ageDate = new Date(ageDifMs); // Convert ms to date object
-  return Math.abs(ageDate.getUTCFullYear() - 1970); // Get the age in years
-}
-
-// Get the age
-var age = calculateAge(dob);
-        // Tampilkan data pasien di elemen luar modal
-        $('#displayNIK').text(data.nik);
-        $('#displayName').text(data.name);
-        $('#displayGender').text(data.gender);
-        $('#displayAge').text(age);
-        $('#displayPhone').text(data.phone);
-        $('#displayAddress').text(data.address);
-        $('#displayBlood').text(data.blood);
-        $('#displayEducation').text(data.education);
-        $('#displayJob').text(data.job);
-        $('#displayRmNumber').text(data.rm);
-
-        // Set nilai ID ke input form
-        $('#nik').val(data.nik);
-        console.log
-       
-
-        $('#patientDetails').show();
-        console.log( $('#patientDetails').show());
-        
-     
-
-        // Tutup modal
-        $('#modalPasien').modal('hide');
+            table.ajax.reload(null, false);
+        });
     });
-
-    // Inisialisasi ulang DataTables saat modal ditampilkan
-    $('#modalPasien').on('shown.bs.modal', function () {
-        initializeTable();
-    });
-});
-
 </script>

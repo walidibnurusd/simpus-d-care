@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FORMAT : C-1</title>
+    <title>Laporan Kasus Campak</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
@@ -17,7 +17,7 @@
 
         .header {
             text-align: center;
-           
+
         }
 
         .header h1 {
@@ -33,7 +33,7 @@
         .table {
             width: 100%;
             border-collapse: collapse;
-        
+
         }
 
         .table th,
@@ -69,11 +69,11 @@
 <body>
     <h1 style="text-align: center">
         <span class="badge bg-primary">FORMAT : C-1</span>
-  
+
     </h1>
     <h1 style="text-align: center">
         <span class="badge bg-primary">LAPORAN KASUS CAMPAK</span>
-  
+
     </h1>
     <p style="text-align: center">Bulan/Tahun : September / 2024</p>
 
@@ -82,19 +82,19 @@
             <tbody style="border: none;">
                 <tr style="border: none;">
                     <th style="text-align: left; border: none;width: 100%;">Puskesmas : Tamangapa</th>
-                    
-                   
+
+
                 </tr>
                 <tr style="border: none;">
-                    <th style="text-align: left; border: none;width: 100%;">Kecamatan : Manggala</th>                
+                    <th style="text-align: left; border: none;width: 100%;">Kecamatan : Manggala</th>
                 </tr>
                 <tr style="border: none;">
-                    <th style="text-align: left; border: none;width: 100%;">Propinsi : Sulawesi Selatan</th>                
+                    <th style="text-align: left; border: none;width: 100%;">Propinsi : Sulawesi Selatan</th>
                 </tr>
             </tbody>
         </table>
     </div>
-   
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -204,8 +204,8 @@
             </tr>
         </tbody>
     </table>
-    
-    
+
+
     <div style="margin-top: 30px;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px;">
             <!-- Bagian Kiri -->
@@ -217,7 +217,7 @@
                     - *Klasifikasi final diisi oleh Kabupaten
                 </p>
             </div>
-    
+
             <!-- Bagian Kanan -->
             <div style="text-align: left; width: 40%; padding-left: 50%;">
                 <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
@@ -228,7 +228,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- Bootstrap JS (including Popper.js) -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

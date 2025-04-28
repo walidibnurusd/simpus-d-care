@@ -20,7 +20,7 @@
                 <img src="{{ 'assets/assets/img/logo-mks.png' }}" alt="Healthcare Workers" class="header-logo" />
             </div>
             <div class="col-auto">
-                <div class="header-text">Puskesmas Makassar</div>
+                <div class="header-text">Puskesmas Tamangapa</div>
             </div>
         </div>
 
@@ -30,7 +30,8 @@
                     <div class="col-lg-6 d-none d-lg-flex pe-0 text-center justify-content-center flex-column">
                         <div
                             class="position-relative h-100 m-3 border-radius-lg d-flex flex-column justify-content-center overflow-hidden">
-                            <img src="{{ 'assets/assets/img/login-img.png' }}" alt="Healthcare Workers" class="img-fluid" />
+                            <img src="{{ 'assets/assets/img/login-img1.jpg' }}" alt="Healthcare Workers"
+                                class="img-fluid" />
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
@@ -58,7 +59,7 @@
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-
+                                    {{-- 
                                     <div class="captcha-container">
                                         <div class="captcha-box">
                                             <canvas id="captcha" class="captcha-canvas"></canvas>
@@ -72,7 +73,7 @@
                                         @error('captcha')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
-                                    </div>
+                                    </div> --}}
 
                                     <div class="form-check form-switch mt-3 ml-4">
                                         <input class="form-check-input" type="checkbox" id="rememberMe">
@@ -120,54 +121,43 @@
         });
     });
 
-    function generateCaptcha() {
-        var canvas = document.getElementById('captcha');
-        var ctx = canvas.getContext('2d');
+    // function generateCaptcha() {
+    //     var canvas = document.getElementById('captcha');
+    //     var ctx = canvas.getContext('2d');
 
-        // Set the canvas size to match the CSS size
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
+    //     // Set the canvas size to match the CSS size
+    //     canvas.width = canvas.offsetWidth;
+    //     canvas.height = canvas.offsetHeight;
 
-        var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        var captchaCode = '';
-        for (var i = 0; i < 6; i++) {
-            captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
+    //     var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    //     var captchaCode = '';
+    //     for (var i = 0; i < 6; i++) {
+    //         captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
+    //     }
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.font = '16px Arial'; // Increased font size
-        ctx.fillStyle = '#000000';
-        ctx.fillText(captchaCode, 10, canvas.height / 2 + 10); // Adjusted Y-coordinate to center the text
+    //     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //     ctx.fillStyle = '#ffffff';
+    //     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //     ctx.font = '16px Arial'; // Increased font size
+    //     ctx.fillStyle = '#000000';
+    //     ctx.fillText(captchaCode, 10, canvas.height / 2 + 10); // Adjusted Y-coordinate to center the text
 
-        document.getElementById('captcha-code').value = captchaCode;
-    }
+    //     document.getElementById('captcha-code').value = captchaCode;
+    // }
 
-    document.querySelector('.btn-refresh').addEventListener('click', generateCaptcha);
-    generateCaptcha(); // Generate CAPTCHA when page loads
+    // document.querySelector('.btn-refresh').addEventListener('click', generateCaptcha);
+    // generateCaptcha(); // Generate CAPTCHA when page loads
 
-    function showErrorModal(message) {
-        document.getElementById('errorMessage').innerText = message;
-        $('#errorModal').modal('show');
-    }
+    // function showErrorModal(message) {
+    //     document.getElementById('errorMessage').innerText = message;
+    //     $('#errorModal').modal('show');
+    // }
     document.querySelector('form').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent form submission for AJAX handling
 
         var login = document.querySelector('input[name="login"]').value;
         var password = document.querySelector('input[name="password"]').value;
-        var inputCaptcha = document.getElementById('captcha-input').value;
-        var generatedCaptcha = document.getElementById('captcha-code').value;
 
-        // Verifikasi CAPTCHA
-        if (inputCaptcha !== generatedCaptcha) {
-            Swal.fire({
-                icon: 'error',
-                title: 'CAPTCHA salah',
-                text: 'Silakan coba lagi.'
-            });
-            return; // Stop further processing
-        }
 
         // Validasi login dan password
         if (!login || !password) {
@@ -186,7 +176,6 @@
             data: {
                 login: login,
                 password: password,
-                captcha: inputCaptcha,
                 _token: document.querySelector('input[name="_token"]').value
             },
             success: function(response) {

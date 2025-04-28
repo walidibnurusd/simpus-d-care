@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LAPORAN  STP</title>
+    <title>LAPORAN STP</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
@@ -69,13 +69,13 @@
 <body>
     <h1 style="text-align: center">
         <span class="badge bg-primary">SURVEILANS TERPADU PENYAKIT BERBASIS PUSKESMAS</span>
-  
+
     </h1>
     <h3 style="text-align: center">
         <span class="badge bg-primary">( KASUS BARU)</span>
     </h3>
-    
-  
+
+
     <div class="header" style="align-content: left">
         <table style="width: 100%; margin-left: 0; border: none; border-radius: 10px; overflow: hidden;">
             <tbody style="border: none;">
@@ -83,13 +83,15 @@
                     <th style="text-align: left; border: none;width: 10%;"></th>
                     <th style="border: none;text-align: left; width: 70%;"><span class="badge bg-info"></span></th>
                     <th style="text-align: left; border: none;width: 10%;">Tahun</th>
-                    <th style="border: none;text-align: left;width: 10%;"><span class="badge bg-warning text-dark"> :2024</span></th>
+                    <th style="border: none;text-align: left;width: 10%;"><span class="badge bg-warning text-dark">
+                            :2024</span></th>
                 </tr>
                 <tr style="border: none;">
                     <th style="text-align: left;  border: none;">Puskesmas</th>
                     <th style="border: none;text-align: left;"><span class="badge bg-primary">:Tamangapa</span></th>
                     <th style="text-align: left; border: none;">Bulan</th>
-                    <th style="border: none;text-align: left;"><span class="badge bg-warning text-dark"> :Oktober</span></th>
+                    <th style="border: none;text-align: left;"><span class="badge bg-warning text-dark"> :Oktober</span>
+                    </th>
                 </tr>
                 <tr style="border: none;">
                     <th style="text-align: left; border: none;">Kabupaten/Kota</th>
@@ -97,8 +99,8 @@
                     <th style="text-align: left; border: none;">Jumlah Kunjungan</th>
                     <th style="border: none;text-align: left;"><span class="badge bg-warning text-dark"> :</span></th>
                 </tr>
-                
-              
+
+
             </tbody>
         </table>
     </div>
@@ -130,498 +132,31 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>Kolera</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>2</td>
-                <td>1</td>
-                <td>3</td>
-                <td>1</td>
-                <td>0</td>
-                <td>0</td>
-                <td>20</td>
-                <td>15</td>
-                <td>35</td>
-                <td>35</td>
-                
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Diare</td>
-                <td>1</td>
-                <td>2</td>
-                <td>1</td>
-                <td>4</td>
-                <td>3</td>
-                <td>5</td>
-                <td>2</td>
-                <td>3</td>
-                <td>0</td>
-                <td>1</td>
-                <td>0</td>
-                <td>11</td>
-                <td>7</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Diare Berdarah</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Tifus Perut Klinis</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>TBC Paru BTA (+)</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>6</td>
-                <td>Tersangka TBC Paru</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>7</td>
-                <td>Kusta PB</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>8</td>
-                <td>Kusta MB</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>9</td>
-                <td>Campak</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>10</td>
-                <td>Difteri</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>11</td>
-                <td>Batuk Rejan</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>12</td>
-                <td>Tetanus</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>13</td>
-                <td>Hepatitis Klinis</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>14</td>
-                <td>Malaria Klinis</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>15</td>
-                <td>Malaria vivax</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>16</td>
-                <td>malaria Falciparum</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>17</td>
-                <td>Malaria Mix</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>18</td>
-                <td>Demam Berdarah Dengue</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>19</td>
-                <td>Demam Dengue</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>20</td>
-                <td>Pneumonia</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>21</td>
-                <td>Gonorhoe</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>22</td>
-                <td>Frambusia</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>Filariasis</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
-            <tr>
-                <td>24</td>
-                <td>Influensa</td>
-                <td>0</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>10</td>
-                <td>8</td>
-                <td>18</td>
-                <td>18</td>
-                
-            </tr>
+            @foreach ($report as $diagnosaName => $ageData)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $diagnosaName }}</td>
+                    @foreach ($ageGroups as $ageGroup)
+                        <td>{{ $ageData[$ageGroup]['total'] }}</td>
+                    @endforeach
+                    <td>{{ array_sum(array_column($ageData, 'male')) }}</td>
+                    <td>{{ array_sum(array_column($ageData, 'female')) }}</td>
+                    <td>{{ array_sum(array_column($ageData, 'total')) }}</td>
+                </tr>
+            @endforeach
         </tbody>
+
     </table>
     <div style="margin-top: 30px;">
         <div style="display: flex; justify-content: space-between; margin-bottom: 50px;">
             <div style="padding-left: 70%">
-             <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
+                <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
                 <p>Mengetahui,</p>
                 <p>Kepala UPT Puskesmas Tamangapa</p>
                 <br><br><br>
-                <p><strong>(___________________)</strong></p>   
+                <p><strong>(___________________)</strong></p>
             </div>
-           
+
         </div>
     </div>
 

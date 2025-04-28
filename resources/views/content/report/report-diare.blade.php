@@ -46,6 +46,13 @@
         table th {
             background-color: #f0f0f0;
         }
+
+        @media print {
+            @page {
+                size: Legal landscape;
+                margin: 1cm;
+            }
+        }
     </style>
 
 </head>
@@ -57,10 +64,10 @@
             <div>
                 <h1>PEMERINTAH KOTA MAKASSAR</h1>
                 <h2 style="margin: 0px">DINAS KESEHATAN</h2>
-                <h3 style="margin:0px">UPT Puskesmas Makassar</h3>
-                <p>Jl. xx yy No.264 Kode Pos : 90235 Makassar</p>
-                <p>Telp. 0411-494014 Call Center : 081245194368</p>
-                <p>Email: pkmmakassar@gmail.com | Situs: puskesmasmakassar.or.id</p>
+                <h3 style="margin:0px">UPT Puskesmas Tamangapa</h3>
+                <p>Jl.Tamangapa Raya No.264 Kode Pos : 90235 Makassar</p>
+                <p>Telp.0411-494014 Call Center : 081245193468</p>
+                <p>email: Pkmtamangapa@gmail.com https://puskesmastamangapa.or.id</p>
             </div>
             <img src="../assets/assets/img/logo-puskesmas.png" alt="Logo Right">
         </div>
@@ -73,96 +80,121 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>NO</th>
-                    <th>TANGGAL</th>
-                    <th>NO.RM</th>
-                    <th>NIK</th>
-                    <th>NAMA PASIEN</th>
-                    <th>TGL.LAHIR</th>
-                    <th>KEPESERTAAN</th>
-                    <th>ALAMAT</th>
-                    <th>JENIS KELAMIN</th>
-                    <th>TD</th>
-                    <th>TB</th>
-                    <th>BB</th>
-                    <th>LP</th>
-                    <th>KUNJ</th>
-                    <th>KELUHAN</th>
-                    <th>DIAGNOSA</th>
-                    <th>TINDAKAN</th>
-                    <th>RUJUKAN</th>
-                    <th>KETERANGAN</th>
-                    <th>DOKTER</th>
+                    <th rowspan="2">NO</th>
+                    <th rowspan="2">NO.RM</th>
+                    <th rowspan="2">NIK</th>
+                    <th rowspan="2">NAMA PASIEN</th>
+                    <th rowspan="2">TGL.LAHIR</th>
+                    <th rowspan="2">KEPESERTAAN</th>
+                    <th colspan="2">ALAMAT</th>
+                    <th rowspan="2">JENIS KELAMIN</th>
+                    <th rowspan="2">TD</th>
+                    <th rowspan="2">TB</th>
+                    <th rowspan="2">BB</th>
+                    <th rowspan="2">LP</th>
+                    <th rowspan="2">TANGGAL KUNJUNGAN</th>
+                    <th rowspan="2">TANGGAL MULAI SAKIT</th>
+                    <th rowspan="2">KELUHAN</th>
+                    <th rowspan="2">DIAGNOSIS DIARE</th>
+                    <th rowspan="2">DERAJAT DEHIDRASI</th>
+                    <th colspan="3">JUMLAH PEMBERIAN</th>
+                    <th rowspan="2">Penggunaan Antibiotik Terapi Diare (Ya/ Tidak)</th>
+                    <th rowspan="2">Status Kematian Pasien (Meninggal/ Hidup)</th>
+                    <th rowspan="2">KONSELING</th>
+                    <th rowspan="2">TINDAKAN</th>
+                    <th rowspan="2">RUJUKAN</th>
+                    <th rowspan="2">KETERANGAN</th>
+                    <th rowspan="2">DOKTER</th>
+                </tr>
+                <tr>
+                    <th>Desa/Kelurahan</th>
+                    <th>Alamat Lengkap</th>
+                    <th>Oralit (bungkus)</th>
+                    <th>Zinc (tablet)</th>
+                    <th>RL (botol)</th>
                 </tr>
             </thead>
-            <tbody>
+            @foreach ($diare as $index => $data)
+                @php
+                    $bulanIndo = [
+                        '01' => 'Jan',
+                        '02' => 'Feb',
+                        '03' => 'Mar',
+                        '04' => 'Apr',
+                        '05' => 'Mei',
+                        '06' => 'Jun',
+                        '07' => 'Jul',
+                        '08' => 'Agu',
+                        '09' => 'Sep',
+                        '10' => 'Okt',
+                        '11' => 'Nov',
+                        '12' => 'Des',
+                    ];
+                    $dob = \Carbon\Carbon::parse($data->patient->dob);
+                    $ageInYears = $dob->age;
+                    $ageInMonths = $dob->diffInMonths(\Carbon\Carbon::now());
+                    if ($ageInYears < 1) {
+                        $age = $ageInMonts;
+                        $ageUnit = 'Bulan';
+                    } else {
+                        $age = $ageInYears;
+                        $ageUnit = 'Tahun';
+                    }
+
+                @endphp
+
                 <tr>
-                    <td>1</td>
-                    <td>2024-12-21</td>
-                    <td>RM001</td>
-                    <td>1234567890123456</td>
-                    <td>Ahmad Fauzi</td>
-                    <td>1990-02-15</td>
-                    <td>BPJS</td>
-                    <td>Jl. Merdeka No. 10</td>
-                    <td>Laki-laki</td>
-                    <td>120/80</td>
-                    <td>170 cm</td>
-                    <td>70 kg</td>
-                    <td>85 cm</td>
-                    <td>Rawat Jalan</td>
-                    <td>Demam Tinggi</td>
-                    <td>Diare Akut</td>
-                    <td>Pemberian Obat</td>
-                    <td>Tidak</td>
-                    <td>-</td>
-                    <td>Dr. Surya</td>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $data->patient->no_rm }}</td>
+                    <td>{{ $data->patient->nik }}</td>
+                    <td>{{ ucwords(strtolower($data->patient->name)) }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->patient->dob)->format('d-m-Y') }}</td>
+                    <td>{{ ucwords(strtolower($data->kartu)) }}<br>{{ $data->nomor }}</td>
+                    <td>{{ $data->patient->villages ? ucwords(strtolower($data->patient->villages->name)) : 'Tidak Diketahui' }}
+                    </td>
+                    <td>{{ ucwords(strtolower($data->patient->address)) }}</td>
+                    <td>{{ $data->patient->genderName->name }}</td>
+                    <td>{{ $data->sistol }}<br>{{ $data->diastol }}</td>
+                    <td>{{ $data->tinggiBadan }}</td>
+                    <td>{{ $data->beratBadan }}</td>
+                    <td>{{ $data->lingkarPinggang }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
+                    <td>{{ ucwords(strtolower($data->keluhan)) }}</td>
+                    <td>
+                        @if (!empty($data->diagnosa_names))
+                            {{ implode(', ', $data->diagnosa_names) }}
+                        @else
+                            Tidak Ada Diagnosa Diare
+                        @endif
+                    </td>
+                    <td>{{ $data->dehidrasi }}</td>
+                    <td>
+                        @if ($data->oralit == 'ya')
+                            6
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td>
+                        @if ($data->zinc == 'tidak')
+                            10
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td>0</td>
+                    <td>Ya</td>
+                    <td>Hidup</td>
+                    <td>Ya</td>
+                    <td>{{ ucwords(strtolower($data->keterangan)) }}</td>
+                    <td>{{ $data->hospitalReferral->name }}</td>
+                    <td>{{ $data->tindakan }}</td>
+                    <td>{{ $data->doctor }}</td>
+
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>2024-12-21</td>
-                    <td>RM002</td>
-                    <td>2345678901234567</td>
-                    <td>Siti Aminah</td>
-                    <td>1995-06-10</td>
-                    <td>Umum</td>
-                    <td>Jl. Pahlawan No. 20</td>
-                    <td>Perempuan</td>
-                    <td>110/70</td>
-                    <td>160 cm</td>
-                    <td>55 kg</td>
-                    <td>75 cm</td>
-                    <td>Rawat Jalan</td>
-                    <td>Sakit Kepala</td>
-                    <td>Hipertensi</td>
-                    <td>Konseling</td>
-                    <td>Tidak</td>
-                    <td>-</td>
-                    <td>Dr. Budi</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>2024-12-21</td>
-                    <td>RM003</td>
-                    <td>3456789012345678</td>
-                    <td>Joko Susanto</td>
-                    <td>1988-03-25</td>
-                    <td>BPJS</td>
-                    <td>Jl. Raya No. 30</td>
-                    <td>Laki-laki</td>
-                    <td>130/85</td>
-                    <td>180 cm</td>
-                    <td>80 kg</td>
-                    <td>90 cm</td>
-                    <td>Rawat Inap</td>
-                    <td>Nyeri Perut</td>
-                    <td>Maag Kronis</td>
-                    <td>Pemberian Cairan</td>
-                    <td>Tidak</td>
-                    <td>-</td>
-                    <td>Dr. Sari</td>
-                </tr>
-            </tbody>
+            @endforeach
+
         </table>
 
     </div>

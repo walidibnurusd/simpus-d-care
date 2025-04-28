@@ -13,6 +13,7 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+     'api_key' => env('API_KEY', 'eeNzQPk2nZ/gvOCbkGZ6FDPAOMcDJlxY'),
 
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),

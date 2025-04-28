@@ -14,34 +14,19 @@ class Action extends Model
         'tanggal',
         'doctor',
         'kunjungan',
-        'kartu',
-        'nomor',
         'faskes',
         'sistol',
         'diastol',
         'beratBadan',
         'tinggiBadan',
         'lingkarPinggang',
-        'gula',
-        'merokok',
-        'fisik',
-        'garam',
-        'gula_lebih',
-        'lemak',
-        'alkohol',
-        'hidup',
-        'buah_sayur',
-        'hasil_iva',
-        'tindak_iva',
-        'hasil_sadanis',
-        'tindak_sadanis',
-        'konseling',
-        'car',
-        'rujuk_ubm',
-        'kondisi',
-        'edukasi',
+        'riwayat_penyakit_sekarang',
+        'riwayat_penyakit_dulu',
+        'riwayat_penyakit_lainnya',
         'riwayat_penyakit_keluarga',
-        'riwayat_penyakit_tidak_menular',
+        'riwayat_penyakit_lainnya_keluarga',
+        'riwayat_alergi',
+        'riwayat_pengobatan',
         'keluhan',
         'diagnosa',
         'tindakan',
@@ -74,12 +59,59 @@ class Action extends Model
         'turgor',
         'neurologis',
         'hasil_lab',
+        'hamil',
+        'tipe',
+        'icd10',
+        'oralit',
+        'zinc',
+        'obat',
+        'pemeriksaan_penunjang',
+        'usia_kehamilan',
+        'jenis_anc',
+        'lingkar_lengan_atas',
+        'tinggi_fundus_uteri',
+        'presentasi_janin',
+        'denyut_jantung',
+        'kaki_bengkak',
+        'imunisasi_tt',
+        'tablet_fe',
+        'gravida',
+        'partus',
+        'abortus',
+        'proteinuria',
+        'hiv',
+        'sifilis',
+        'hepatitis',
+        'periksa_usg',
+        'hasil_usg',
+        'treatment_anc',
+        'tanggal_kembali',
+        'kesimpulan',
+        'nilai_hb',
+        'layanan_kb',
+        'jmlh_anak_laki',
+        'jmlh_anak_perempuan',
+        'status_kb',
+        'tgl_lahir_anak_bungsu',
+        'kb_terakhir',
+        'tgl_kb_terakhir',
+        'kedaaan_umum',
+        'informed_concern',
+        'sakit_kuning',
+        'pendarahan_vagina',
+        'tumor',
+        'diabetes',
+        'pembekuan_darah',
+        'update_obat',
+        'beri_tindakan',
+        'tindakan_ruang_tindakan',
+        'kasus','alergi', 'gangguan_ginjal', 'menyusui',
+        'verifikasi_awal', 'verifikasi_akhir', 'informasi_obat'
     ];
 
     protected $casts = [
-        'riwayat_penyakit_keluarga' => 'array',
-        'riwayat_penyakit_tidak_menular' => 'array',
         'diagnosa' => 'array',
+        'verifikasi_awal' => 'array', 'verifikasi_akhir' => 'array', 'informasi_obat' => 'array',
     ];
     /**
      * Relasi ke model Patient
@@ -88,7 +120,10 @@ class Action extends Model
     {
         return $this->belongsTo(Patients::class, 'id_patient');
     }
-
+    public function hasilLab()
+    {
+        return $this->hasOne(HasilLab::class, 'id_action','id');
+    }
     /**
      * Relasi ke model Doctor
      */
@@ -116,10 +151,10 @@ class Action extends Model
     /**
      * Relasi ke model Diagnosis
      */
-    public function diagnosis()
-    {
-        return $this->belongsTo(Diagnosis::class, 'diagnosa');
-    }
+    // public function diagnosis()
+    // {
+    //     return $this->belongsToMany(Diagnosis::class, 'diagnosa');
+    // }
 
     /**
      * Relasi ke model Hospital (Rujukan Rumah Sakit)
@@ -127,5 +162,9 @@ class Action extends Model
     public function hospitalReferral()
     {
         return $this->belongsTo(Hospital::class, 'rujuk_rs');
+    }
+    public function actionObats()
+    {
+        return $this->hasMany(ActionObat::class, 'id_action');
     }
 }

@@ -25,20 +25,10 @@ class AuthController extends Controller
     $request->validate([
         'login' => 'required', // Input bisa berupa email atau NIP
         'password' => 'required',
-        'captcha' => 'required',
+
     ]);
 
-    $inputCaptcha = $request->input('captcha-input');
-    $generatedCaptcha = $request->input('captcha-code');
-    
-    // Validasi CAPTCHA
-    if ($inputCaptcha !== $generatedCaptcha) {
-        return response()->json([
-            'message' => 'CAPTCHA does not match.',
-            'inputCaptcha' => $inputCaptcha,
-            'generatedCaptcha' => $generatedCaptcha
-        ], 400);
-    }
+   
 
     $login = $request->input('login'); // Input yang bisa berupa email atau NIP
     $password = $request->input('password');

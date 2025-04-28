@@ -9,28 +9,34 @@
     $defaultProvinceId = $provinces->firstWhere('name', 'SULAWESI SELATAN')->id; // Assuming this gets the correct ID
     $cities = $master->citiesData($defaultProvinceId);
     $defaultCityId = $cities->firstWhere('name', 'KOTA MAKASSAR')->id;
-    $districts = $master->districtsData($defaultCityId);
-    $defaultDistrictId = $districts->firstWhere('name', 'MANGGALA')->id;
-    $villages = $master->villagesData($defaultDistrictId);
+
 @endphp
 
-<div class="modal fade" style="z-index: 9999;" id="addPatientModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade" style="z-index: 1050;" id="addPatientModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-xl"> <!-- Using modal-lg for a moderate width -->
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data</h5> <!-- Updated the title -->
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addPatientForm" action="{{ route('patient.store') }}" method="POST" class="px-3">
                     @csrf
-                    <div class="row g-2"> <!-- Reduced gutter space between columns -->
+                    <div class="row g-2">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nik">NIK</label>
-                                <input type="text" class="form-control" id="nik" name="nik"
-                                    placeholder="NIK" required>
+                                <label for="nik">Cari Pasien</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="nikAdd" name="nik"
+                                        placeholder="NIK" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" id="btnCariNIK"
+                                            data-bs-toggle="modal" data-bs-target="#modalPasien">
+                                            Cari
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -43,11 +49,20 @@
                     </div>
 
                     <div class="row g-2">
+                        <div class="row g-2">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="no_family_folder">Nomor Family Folder</label>
+                                    <input type="text" class="form-control" id="no_family_folder"
+                                        name="no_family_folder" placeholder="Nomor Family Folder" required>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="phone">Telpon/WA</label>
-                                <input type="text" class="form-control" id="phone" name="phone"
-                                    placeholder="Telpon/WA" required>
+                                <input type="number" class="form-control" id="phone" name="phone"
+                                    placeholder="Telpon/WA">
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -123,6 +138,31 @@
                                 </select>
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row g-2">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="kartu">Jenis Kartu</label>
+                                <select class="form-control" id="jenis_kartu" name="jenis_kartu" required>
+                                    <option value="" disabled selected>Pilih Jenis Kartu</option>
+                                    <option value="pbi">PBI (KIS)</option>
+                                    <option value="askes">AKSES</option>
+                                    <option value="jkn_mandiri">JKN Mandiri</option>
+                                    <option value="umum">Umum</option>
+                                    <option value="jkd">JKD</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nomor">Nomor Kartu</label>
+                                <input type="text" class="form-control" id="nomor_kartu" name="nomor_kartu"
+                                    placeholder="Masukkan Nomor" required>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row g-2">
@@ -145,7 +185,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="province">Provinsi Asal</label>
-                                <select class="form-control" id="province" name="province" required>
+                                <select class="form-control" id="province" name="province" disabled>
                                     <option value=""></option>
                                     @foreach ($provinces as $province)
                                         <option value="{{ $province->id }}"
@@ -159,7 +199,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="city">Kabupaten/Kota</label>
-                                <select class="form-control" id="city" name="city" required>
+                                <select class="form-control" id="city" name="city" disabled>
                                     <option value=""></option>
                                     @foreach ($cities as $city)
                                         <option value="{{ $city->id }}"
@@ -176,14 +216,11 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="district">Kecamatan</label>
-                                <select class="form-control" id="district" name="district" required>
-                                    <option value=""></option>
-                                    @foreach ($districts as $district)
-                                        <option value="{{ $district->id }}"
-                                            {{ old('district', $defaultDistrictId) == $district->id ? 'selected' : '' }}>
-                                            {{ $district->name }}
-                                        </option>
-                                    @endforeach
+                                <select class="form-control" id="district" name="district" required
+                                    onchange="updateVillage()">
+                                    <option value="Manggala">Manggala</option>
+                                    <option value="Luar Wilayah">Luar Wilayah</option>
+
                                 </select>
                             </div>
                         </div>
@@ -191,28 +228,26 @@
                             <div class="form-group">
                                 <label for="village">Kelurahan/Desa</label>
                                 <select class="form-control" id="village" name="village" required>
-                                    <option value="">Pilih</option>
-                                    @foreach ($villages as $village)
-                                        <option value="{{ $village->id }}"
-                                            {{ old('village', $village->id) == $village->id ? 'selected' : '' }}>
-                                            {{ $village->name }}
-                                        </option>
-                                    @endforeach
+                                    <option value="Tamangapa">Tamangapa</option>
+                                    <option value="Luar Wilayah">Luar Wilayah</option>
+
                                 </select>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="row g-2">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="rw">RW</label>
-                                <select class="form-control" id="rw" name="rw" required>
+                                <select class="form-control" id="rw" name="rw">
                                     <option value="">Pilih</option>
-                                    @for ($i = 1; $i <= 10; $i++)
+                                    @for ($i = 1; $i <= 7; $i++)
                                         <option value="{{ $i }}">{{ $i }}</option>
                                     @endfor
+                                    <option value="4A">4A</option>
+                                    <option value="4B">4B (TPA)</option>
+                                    <option value="luar-wilayah">Luar Wilayah</option>
                                 </select>
                             </div>
                         </div>
@@ -225,15 +260,73 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row g-2">
-                        <div class="col-md-12">
+                        {{-- <div class="col-md-6">
                             <div class="form-group">
-                                <label for="no_rm">NOMOR RM</label>
-                                <input type="text" class="form-control" id="no_rm" name="no_rm"
-                                    placeholder="Nomor RM" required>
+                                <label for="kunjungan">Kunjungan</label>
+                                <select class="form-control" id="kunjungan" name="kunjungan">
+                                    <option value="" disabled selected>Pilih</option>
+                                    <option value="1">Baru </option>
+                                    <option value="0">Lama </option>
+                                </select>
+                            </div>
+                        </div> --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="wilayah_faskes">Wilayah Faskes</label>
+                                <select class="form-control" id="wilayah_faskes" name="wilayah_faskes">
+                                    <option value="" disabled selected>Pilih</option>
+                                    <option value="1">Ya</option>
+                                    <option value="0">Tidak</option>
+                                </select>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Data Kunjungan</h5>
+                    </div>
+                    <div class="row g-2 mt-2">
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="tanggal">Tanggal Kunjungan</label>
+                                <input type="date" class="form-control" name="tanggal" id="tanggal"
+                                    placeholder="Pilih Tanggal">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="poli">Poli Tujuan Berobat</label>
+                                <select class="form-control" id="poli_berobat" name="poli_berobat" required>
+                                    <option value="">Pilih</option>
+                                    <option value="poli-umum">Poli Umum</option>
+                                    <option value="poli-gigi">Poli Gigi</option>
+                                    <option value="ruang-tindakan">UGD</option>
+                                    <option value="tindakan">Ruang Tindakan</option>
+                                    <option value="poli-kia">Poli KIA</option>
+                                    <option value="poli-kb">Poli KB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="hamil">Hamil?</label>
+                                <select class="form-control" id="hamil" name="hamil" required>
+                                    <option value="">Pilih</option>
+                                    <option value="1">Ya</option>
+                                    <option value="0">Tidak</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="klaster">Klaster</label>
+                                <input type="text" class="form-control" id="klaster" name="klaster"
+                                    placeholder="Klaster" readonly>
+                            </div>
+                        </div>
+
                     </div>
             </div>
             <div class="modal-footer">
@@ -244,121 +337,101 @@
         </div>
     </div>
 </div>
+@include('component.modal-add-table-pasien')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .select2-dropdown {
+        z-index: 9999 !important;
+    }
+</style>
 <script>
-    $(document).ready(function() {
-        $('#province').change(function() {
-            var provinceId = $(this).val();
-            var citySelect = $('#city');
+    function updateVillage() {
+        const district = document.getElementById('district').value;
+        const village = document.getElementById('village');
 
-            if (provinceId) {
-                $.ajax({
-                    url: "{{ url('/cities') }}/" + provinceId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        console.log(data);
-                        citySelect.empty();
-                        citySelect.append('<option value="">Pilih</option>');
-                        $.each(data, function(key, value) {
-                            citySelect.append('<option value="' + value.id + '">' +
-                                value.name + '</option>');
-                        });
-                        $('#district').empty().append('<option value="">Pilih</option>');
-                        $('#village').empty().append('<option value="">Pilih</option>');
-                    },
-                    error: function() {
-                        alert('Gagal mengambil data kota/kabupaten');
-                    }
-                });
-            } else {
-                citySelect.empty();
-                citySelect.append('<option value="">Pilih</option>');
-            }
-        });
-        $('#city').change(function() {
-            var cityId = $(this).val();
-            var districtSelect = $('#district');
-
-            if (cityId) {
-                $.ajax({
-                    url: "{{ url('/districts') }}/" + cityId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        console.log(data);
-                        districtSelect.empty();
-                        districtSelect.append('<option value="">Pilih</option>');
-                        $.each(data, function(key, value) {
-                            districtSelect.append('<option value="' + value.id +
-                                '">' + value.name + '</option>');
-                        });
-
-                        // Clear village dropdown
-                        $('#village').empty().append('<option value="">Pilih</option>');
-                    },
-                    error: function() {
-                        alert('Gagal mengambil data kecamatan');
-                    }
-                });
-            } else {
-                districtSelect.empty();
-                districtSelect.append('<option value="">Pilih</option>');
-            }
-        });
-
-        $('#district').change(function() {
-            var districtId = $(this).val();
-            var villageSelect = $('#village');
-
-            if (districtId) {
-                $.ajax({
-                    url: "{{ url('/villages') }}/" + districtId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        console.log(data);
-                        villageSelect.empty();
-                        villageSelect.append('<option value="">Pilih</option>');
-                        $.each(data, function(key, value) {
-                            villageSelect.append('<option value="' + value.id +
-                                '">' + value.name + '</option>');
-                        });
-                    },
-                    error: function() {
-                        alert('Gagal mengambil data kelurahan/desa');
-                    }
-                });
-            } else {
-                villageSelect.empty();
-                villageSelect.append('<option value="">Pilih</option>');
-            }
-        });
-    });
+        if (district === 'Luar Wilayah') {
+            village.value = 'Luar Wilayah';
+        } else if (district === 'Manggala') {
+            village.value = 'Tamangapa';
+        }
+    }
 </script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      // Check for success message
-      @if (session('success'))
-          Swal.fire({
-              title: 'Success!',
-              text: "{{ session('success') }}",
-              icon: 'success',
-              confirmButtonText: 'OK'
-          });
-      @endif
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toLocaleDateString('en-CA');
 
-      // Check for validation errors
-      @if ($errors->any())
-          Swal.fire({
-              title: 'Error!',
-              html: '<ul>' +
+        document.getElementById('tanggal').value = today;
+        const dobInput = document.getElementById('dob');
+        const klasterSelect = document.getElementById('klaster');
+        const hamilInput = document.getElementById('hamil');
+
+        function calculateAge(dob) {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function updateKlaster() {
+            const dob = dobInput.value;
+            const hamil = hamilInput.value;
+
+            if (dob) {
+                const age = calculateAge(dob);
+
+                let klaster = null;
+                if (age > 18 && hamil == 0) {
+                    klaster = 3;
+                } else if (hamil == 1) {
+                    klaster = 2;
+                } else {
+                    klaster = 2;
+                }
+
+
+                klasterSelect.value = klaster;
+
+            }
+        }
+
+        dobInput.addEventListener('change', function() {
+            updateKlaster();
+        });
+
+
+        hamilInput.addEventListener('change', function() {
+            updateKlaster();
+        });
+
+        if (dobInput.value) {
+            updateKlaster();
+        }
+        // Success notification using SweetAlert2
+        @if (session('success'))
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        @endif
+
+        // Validation error handling
+        @if ($errors->any())
+            Swal.fire({
+                title: 'Error!',
+                html: '<ul>' +
                     '@foreach ($errors->all() as $error)' +
                     '<li>{{ $error }}</li>' +
                     '@endforeach' +
                     '</ul>',
-              icon: 'error',
-              confirmButtonText: 'OK'
-          });
-      @endif
-  });
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        @endif
+    });
 </script>
