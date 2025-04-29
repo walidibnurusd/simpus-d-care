@@ -65,8 +65,13 @@ body[class='dark-only'] {
   --view-border-marker: #2c2c45d4;
 }
 
+<<<<<<< HEAD
 /**=====================
      Reset css start
+=======
+/**=====================
+     Reset css start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .font-roboto {
   font-family: Roboto, sans-serif;
@@ -2661,8 +2666,13 @@ button:focus {
   width: 46%;
 }
 
+<<<<<<< HEAD
 /**=====================
      Reset css Ends
+=======
+/**=====================
+     Reset css Ends
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /**=====================
     Typography css start
@@ -3025,8 +3035,13 @@ fieldset .input-group-lg .touchspin {
 /**=====================
     Typography css Ends
 ==========================**/
+<<<<<<< HEAD
 /**=====================
     24. According CSS start
+=======
+/**=====================
+    24. According CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .default-according .avatar-showcase {
   margin-bottom: 0;
@@ -3105,11 +3120,19 @@ fieldset .input-group-lg .touchspin {
   font-family: IcoFont;
 }
 
+<<<<<<< HEAD
 /**=====================
      24. According CSS Ends
 ==========================**/
 /**=====================
      15. Alert CSS start
+=======
+/**=====================
+     24. According CSS Ends
+==========================**/
+/**=====================
+     15. Alert CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .notify-alert .close {
   background: unset;
@@ -4039,11 +4062,19 @@ strong ~ p {
   padding: 11px 1.25rem;
 }
 
+<<<<<<< HEAD
 /**=====================
      15. Alert CSS end
 ==========================**/
 /**=====================
     80. avatars CSS start
+=======
+/**=====================
+     15. Alert CSS end
+==========================**/
+/**=====================
+    80. avatars CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .avatars .avatar {
   display: inline-block;
@@ -4146,11 +4177,19 @@ strong ~ p {
   margin: 8px 0;
 }
 
+<<<<<<< HEAD
 /**=====================
      80. avatars CSS Ends
 ==========================**/
 /**=====================
     49. Badge CSS start
+=======
+/**=====================
+     80. avatars CSS Ends
+==========================**/
+/**=====================
+    49. Badge CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .badge {
   padding: 0.44em 0.7em;
@@ -4312,11 +4351,19 @@ strong ~ p {
   background-color: var(--theme-secondary);
 }
 
+<<<<<<< HEAD
 /**=====================
     49. Badge CSS Ends
 ==========================**/
 /**=====================
     81. Bookmark CSS start
+=======
+/**=====================
+    49. Badge CSS Ends
+==========================**/
+/**=====================
+    81. Bookmark CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .bookmark ul li {
   display: inline-block;
@@ -4421,11 +4468,19 @@ body.modal-open .select2-container--open .select2-dropdown {
   z-index: 1076;
 }
 
+<<<<<<< HEAD
 /**=====================
     81. Bookmark CSS Ends
 ==========================**/
 /**=====================
     57. breadcrumb CSS Start
+=======
+/**=====================
+    81. Bookmark CSS Ends
+==========================**/
+/**=====================
+    57. breadcrumb CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .breadcrumb-colored {
   padding: 12px 16px;
@@ -4465,11 +4520,19 @@ body.modal-open .select2-container--open .select2-dropdown {
   text-transform: capitalize;
 }
 
+<<<<<<< HEAD
 /**=====================
     57. breadcrumb CSS ends
 ==========================**/
 /**=====================
      35. Form builder css start
+=======
+/**=====================
+    57. breadcrumb CSS ends
+==========================**/
+/**=====================
+     35. Form builder css start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .form-builder .help-block {
   margin-bottom: 0;
@@ -4498,11 +4561,19 @@ body.modal-open .select2-container--open .select2-dropdown {
   margin-top: 30px;
 }
 
+<<<<<<< HEAD
 /**=====================
     35. Form builder css Ends
 ==========================**/
 /**=====================
     06. Button CSS start
+=======
+/**=====================
+    35. Form builder css Ends
+==========================**/
+/**=====================
+    06. Button CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .btn-link {
   color: var(--theme-deafult);
@@ -5009,8 +5080,13 @@ body.modal-open .select2-container--open .select2-dropdown {
   border-color: #555 transparent transparent transparent;
 }
 
+<<<<<<< HEAD
 /**=====================
      06. Button CSS end
+=======
+/**=====================
+     06. Button CSS end
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /**=====================
     03.  Card CSS Start
@@ -5415,8 +5491,13 @@ body.modal-open .select2-container--open .select2-dropdown {
 /**=====================
     03. Card CSS End
 ==========================**/
+<<<<<<< HEAD
 /**=====================
      07. Color CSS Start
+=======
+/**=====================
+     07. Color CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .color-box {
   margin-bottom: -10px;
@@ -5434,11 +5515,19 @@ body.modal-open .select2-container--open .select2-dropdown {
   color: #52526c;
 }
 
+<<<<<<< HEAD
 /**=====================
      07. Color CSS Ends
 ==========================**/
 /**=====================
     30. Data-table CSS Start
+=======
+/**=====================
+     07. Color CSS Ends
+==========================**/
+/**=====================
+    30. Data-table CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 div.dt-button-background {
   display: none !important;
@@ -5796,11 +5885,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   background-color: #fdfeff;
 }
 
+<<<<<<< HEAD
 /**=====================
      30. Data-table CSS Ends
 ==========================**/
 /**=====================
     52. Datepicker CSS Start
+=======
+/**=====================
+     30. Data-table CSS Ends
+==========================**/
+/**=====================
+    52. Datepicker CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .clockpicker-canvas line {
   stroke: var(--theme-deafult);
@@ -6052,11 +6149,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
           box-shadow: 0 0 0 0.2rem rgba(115, 102, 255, 0.5);
 }
 
+<<<<<<< HEAD
 /**=====================
    52. Datepicker CSS End
 ==========================**/
 /**=====================
     37. Dropdown CSS Start
+=======
+/**=====================
+   52. Datepicker CSS End
+==========================**/
+/**=====================
+    37. Dropdown CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .dropdown-divider {
   margin: 0;
@@ -6237,11 +6342,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   background-color: #f1f1f1;
 }
 
+<<<<<<< HEAD
 /**=====================
     37. Dropdown CSS Ends
 ==========================**/
 /**=====================
      11. Form Builder 1 CSS Start
+=======
+/**=====================
+    37. Dropdown CSS Ends
+==========================**/
+/**=====================
+     11. Form Builder 1 CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .form-builder .drag-box {
   -webkit-user-select: none;
@@ -6428,11 +6541,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   padding: 0;
 }
 
+<<<<<<< HEAD
 /**=====================
     11. Form Builder 1 CSS Ends
 ==========================**/
 /**=====================
      29. Form Input CSS Start
+=======
+/**=====================
+    11. Form Builder 1 CSS Ends
+==========================**/
+/**=====================
+     29. Form Input CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .icon-addon .addon-md .glyphicon, .icon-addon .addon-md .fa {
   position: absolute;
@@ -6510,11 +6631,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   border-bottom-left-radius: 1.3rem;
 }
 
+<<<<<<< HEAD
 /**=====================
      29. Form Input CSS Ends
 ==========================**/
 /**=====================
      48. Form Wizard CSS Start
+=======
+/**=====================
+     29. Form Input CSS Ends
+==========================**/
+/**=====================
+     48. Form Wizard CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /*Form Wizard One Start*/
 .form-wizard .tab {
@@ -6899,11 +7028,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
 }
 
 /*Form Wizard Four Ends*/
+<<<<<<< HEAD
 /**=====================
     48. Form Wizard CSS Ends
 ==========================**/
 /**=====================
     26. Form CSS Start
+=======
+/**=====================
+    48. Form Wizard CSS Ends
+==========================**/
+/**=====================
+    26. Form CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .form-label {
   margin-bottom: 4px;
@@ -7116,11 +7253,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   font-weight: 500;
 }
 
+<<<<<<< HEAD
 /**=====================
     26. Form CSS Ends
 ==========================**/
 /**=====================
      12. Form Builder 2 CSS Start
+=======
+/**=====================
+    26. Form CSS Ends
+==========================**/
+/**=====================
+     12. Form Builder 2 CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .form-builder-column #pills-tabContent .theme-form .form-group,
 .form-builder-column #pills-tabContent .theme-form .ui-draggable {
@@ -7262,11 +7407,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   border-radius: 4px;
 }
 
+<<<<<<< HEAD
 /**=====================
      12. Form Builder 2 CSS Ends
 ==========================**/
 /**=====================
     10. ICON CSS Start
+=======
+/**=====================
+     12. Form Builder 2 CSS Ends
+==========================**/
+/**=====================
+    10. ICON CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .icon-lists div {
   cursor: pointer;
@@ -7432,11 +7585,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   display: none;
 }
 
+<<<<<<< HEAD
 /**=====================
      10. ICON CSS Ends
 ==========================**/
 /**=====================
      17. List CSS Start
+=======
+/**=====================
+     10. ICON CSS Ends
+==========================**/
+/**=====================
+     17. List CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .list-group-item.active {
   background-color: var(--theme-deafult);
@@ -7453,11 +7614,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   margin-right: 10px;
 }
 
+<<<<<<< HEAD
 /**=====================
      17. List CSS Ends
 ==========================**/
 /**=====================
      04. Loader CSS Start
+=======
+/**=====================
+     17. List CSS Ends
+==========================**/
+/**=====================
+     04. Loader CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .loader-wrapper {
   height: 100%;
@@ -9788,11 +9957,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      04. Loader CSS Ends
 ==========================**/
 /**=====================
      16. Popover CSS Start
+=======
+/**=====================
+     04. Loader CSS Ends
+==========================**/
+/**=====================
+     16. Popover CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .popover-header {
   background-color: #2c323f;
@@ -9807,11 +9984,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   margin-right: 0;
 }
 
+<<<<<<< HEAD
 /**=====================
      16. Popover CSS Ends
 ==========================**/
 /**=====================
      77. Print CSS Start
+=======
+/**=====================
+     16. Popover CSS Ends
+==========================**/
+/**=====================
+     77. Print CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 @media print {
   .sidebar-wrapper, .page-header {
@@ -9849,11 +10034,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
           align-items: center;
 }
 
+<<<<<<< HEAD
 /**=====================
     77. Print CSS Ends
 ==========================**/
 /**=====================
      28. Radio CSS Start
+=======
+/**=====================
+    77. Print CSS Ends
+==========================**/
+/**=====================
+     28. Radio CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .animate-chk label {
   line-height: 1.6;
@@ -10471,11 +10664,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   margin-top: 0;
 }
 
+<<<<<<< HEAD
 /**=====================
      28. Radio CSS Ends
 ==========================**/
 /**=====================
     56.  Ribbon CSS Start
+=======
+/**=====================
+     28. Radio CSS Ends
+==========================**/
+/**=====================
+    56.  Ribbon CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 [class*="ribbon-wrapper"] {
   position: relative;
@@ -11144,11 +11345,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   border-left-color: #d18a00;
 }
 
+<<<<<<< HEAD
 /**=====================
      56. Ribbon CSS Ends
 ==========================**/
 /**=====================
     18. Switch  CSS Start
+=======
+/**=====================
+     56. Ribbon CSS Ends
+==========================**/
+/**=====================
+    18. Switch  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .switch {
   position: relative;
@@ -11439,11 +11648,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   border-color: var(--theme-deafult);
 }
 
+<<<<<<< HEAD
 /**=====================
      18. Switch  CSS Ends
 ==========================**/
 /**=====================
     44. Tabs CSS Start
+=======
+/**=====================
+     18. Switch  CSS Ends
+==========================**/
+/**=====================
+    44. Tabs CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   background-color: var(--theme-deafult);
@@ -11884,11 +12101,19 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
   padding: 23px 15px;
 }
 
+<<<<<<< HEAD
 /**=====================
      44. Tabs CSS Ends
 ==========================**/
 /**=====================
      39. Table  CSS Start
+=======
+/**=====================
+     44. Tabs CSS Ends
+==========================**/
+/**=====================
+     39. Table  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 thead,
 tbody,
@@ -12118,11 +12343,19 @@ th {
   border-color: #f2f4ff;
 }
 
+<<<<<<< HEAD
 /**=====================
      39.Table CSS Ends
 ==========================**/
 /**=====================
     20.  Touchspin  CSS Start
+=======
+/**=====================
+     39.Table CSS Ends
+==========================**/
+/**=====================
+    20.  Touchspin  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .bootstrap-touchspin input.touchspin {
   padding: 0 12px;
@@ -12178,11 +12411,19 @@ th {
   z-index: 9999;
 }
 
+<<<<<<< HEAD
 /**=====================
      20. Touchspin  CSS Ends
 ==========================**/
 /**=====================
      54. Tour  CSS Start
+=======
+/**=====================
+     20. Touchspin  CSS Ends
+==========================**/
+/**=====================
+     54. Tour  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .introjs-helperLayer {
   background-color: rgba(255, 255, 255, 0.9);
@@ -12343,11 +12584,19 @@ th {
   border: 10px solid rgba(146, 146, 146, 0.36);
 }
 
+<<<<<<< HEAD
 /**=====================
     54. Tour  CSS Ends
 ==========================**/
 /**=====================
      50. Tree  CSS Start
+=======
+/**=====================
+    54. Tour  CSS Ends
+==========================**/
+/**=====================
+     50. Tree  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .jstree-default .jstree-clicked {
   background-color: white;
@@ -12377,11 +12626,19 @@ th {
   display: none;
 }
 
+<<<<<<< HEAD
 /**=====================
      50. Tree CSS Ends
 ==========================**/
 /**=====================
      typahead-search  CSS Start
+=======
+/**=====================
+     50. Tree CSS Ends
+==========================**/
+/**=====================
+     typahead-search  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .Typeahead {
   width: 100%;
@@ -12584,8 +12841,13 @@ th {
   height: 1rem;
 }
 
+<<<<<<< HEAD
 /**=====================
     typahead-search CSS Ends
+=======
+/**=====================
+    typahead-search CSS Ends
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /**=====================
     Scrollbar CSS Start
@@ -12618,8 +12880,13 @@ th {
 /**=====================
      Scrollbar CSS Ends
 ==========================**/
+<<<<<<< HEAD
 /**=====================
     46. Blog CSS start
+=======
+/**=====================
+    46. Blog CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .blog-box img {
   border-radius: 0.25rem;
@@ -12913,11 +13180,19 @@ th {
   padding-right: 10px;
 }
 
+<<<<<<< HEAD
 /**=====================
     46. Blog CSS ends
 ==========================**/
 /**=====================
      85. bookmark app CSS Start
+=======
+/**=====================
+    46. Blog CSS ends
+==========================**/
+/**=====================
+     85. bookmark app CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .modal-bookmark .modal-body,
 .modal-bookmark .modal-header {
@@ -13328,11 +13603,19 @@ th {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
    85. bookmark app CSS Ends
 ==========================**/
 /**=====================
     82. cart CSS start
+=======
+/**=====================
+   85. bookmark app CSS Ends
+==========================**/
+/**=====================
+    82. cart CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .cart .total-amount {
   text-align: right !important;
@@ -13367,11 +13650,19 @@ th {
   padding-right: 85px;
 }
 
+<<<<<<< HEAD
 /**=====================
     82. cart CSS Ends
 ==========================**/
 /**=====================
     41. Chart CSS Start
+=======
+/**=====================
+    82. cart CSS Ends
+==========================**/
+/**=====================
+    41. Chart CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .radial-bar.radial-bar-lg:after, .radial-bar.radial-bar-lg > img {
   width: 70px;
@@ -13809,11 +14100,19 @@ p.data-attributes svg {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      41. Chart CSS End
 ==========================**/
 /**=====================
      14. Chat CSS Start
+=======
+/**=====================
+     41. Chart CSS End
+==========================**/
+/**=====================
+     14. Chat CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .chat-box .toogle-bar {
   display: none;
@@ -14264,11 +14563,19 @@ p.data-attributes svg {
   padding: 15px;
 }
 
+<<<<<<< HEAD
 /**=====================
     14.  Chat CSS Ends
 ==========================**/
 /**=====================
     84. Checkout CSS start
+=======
+/**=====================
+    14.  Chat CSS Ends
+==========================**/
+/**=====================
+    84. Checkout CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .checkout .checkout-details {
   background-color: #f9f9f9;
@@ -14393,11 +14700,19 @@ p.data-attributes svg {
   margin-left: 15px;
 }
 
+<<<<<<< HEAD
 /**=====================
     86. Checkout CSS Ends
 ==========================**/
 /**=====================
     Responsive CSS Start
+=======
+/**=====================
+    86. Checkout CSS Ends
+==========================**/
+/**=====================
+    Responsive CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 @media screen and (max-width: 1199px) {
   .checkout .checkout-details {
@@ -14438,11 +14753,19 @@ p.data-attributes svg {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
     84. Checkout CSS ends
 ==========================**/
 /**=====================
      27. Coming Soon CSS Start
+=======
+/**=====================
+    84. Checkout CSS ends
+==========================**/
+/**=====================
+     27. Coming Soon CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .comingsoon-bgimg {
   background: url(../images/other-images/coming-soon-bg.jpg);
@@ -14532,11 +14855,19 @@ p.data-attributes svg {
   transition: 1s opacity;
 }
 
+<<<<<<< HEAD
 /**=====================
     27. Coming Soon CSS Ends
 ==========================**/
 /**=====================
       86. contacts CSS Start
+=======
+/**=====================
+    27. Coming Soon CSS Ends
+==========================**/
+/**=====================
+      86. contacts CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .alert-contactadd {
   background-color: #fff;
@@ -14845,11 +15176,19 @@ p.data-attributes svg {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
     86. contacts CSS Ends
 ==========================**/
 /**=====================
       67. Dashboard 2 CSS Start
+=======
+/**=====================
+    86. contacts CSS Ends
+==========================**/
+/**=====================
+      67. Dashboard 2 CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .widget-decor {
   position: absolute;
@@ -15631,8 +15970,13 @@ p.data-attributes svg {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      67. Dashboard 2  CSS End
+=======
+/**=====================
+     67. Dashboard 2  CSS End
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /**=====================
      Dashboard 3 CSS Start
@@ -19978,8 +20322,13 @@ footer.blockquote-footer {
 /**=====================
 53. Dashboard CSS Ends
 ==========================**/
+<<<<<<< HEAD
 /**=====================
     33.  Ecommerce  CSS Start
+=======
+/**=====================
+    33.  Ecommerce  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /**====== Product Start ======**/
 .toggle-data {
@@ -20666,8 +21015,13 @@ footer.blockquote-footer {
   margin: 15px 15px 0 0;
 }
 
+<<<<<<< HEAD
 /**=====================
     33. Ecommerce  CSS End
+=======
+/**=====================
+    33. Ecommerce  CSS End
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 @media screen and (max-width: 1660px) and (min-width: 1200px) {
   .owl-carousel .owl-item img {
@@ -20676,8 +21030,13 @@ footer.blockquote-footer {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
     13.  Email Application  CSS Start
+=======
+/**=====================
+    13.  Email Application  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .email-wrap .row .col-xl-3 + .col-xl-3 {
   padding-right: 0;
@@ -20976,11 +21335,19 @@ footer.blockquote-footer {
   margin-right: 25px;
 }
 
+<<<<<<< HEAD
 /**=====================
     13.  Email Application  CSS Ends
 ==========================**/
 /**=====================
      09. Error-page  CSS Start
+=======
+/**=====================
+    13.  Email Application  CSS Ends
+==========================**/
+/**=====================
+     09. Error-page  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .error-wrapper {
   display: -webkit-box;
@@ -21118,11 +21485,19 @@ footer.blockquote-footer {
           box-shadow: 0 20px 35px 0 rgba(0, 0, 0, 0.21);
 }
 
+<<<<<<< HEAD
 /**=====================
      09. Error-page CSS Ends
 ==========================**/
 /**=====================
      71. Faq CSS start
+=======
+/**=====================
+     09. Error-page CSS Ends
+==========================**/
+/**=====================
+     71. Faq CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .knowledgebase-bg {
   height: 500px;
@@ -21449,11 +21824,19 @@ footer.blockquote-footer {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      71. Faq CSS end
 ==========================**/
 /**=====================
     File Manager
+=======
+/**=====================
+     71. Faq CSS end
+==========================**/
+/**=====================
+    File Manager
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .file-sidebar .card .card-body,
 .file-sidebar .card .card-header,
@@ -21895,11 +22278,19 @@ footer.blockquote-footer {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      File Manager
 ==========================**/
 /**=====================
      45. Gallery CSS Start
+=======
+/**=====================
+     File Manager
+==========================**/
+/**=====================
+     45. Gallery CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .profile-img-style img, .scroll-bar-wrap img {
   width: 100%;
@@ -22315,11 +22706,19 @@ footer.blockquote-footer {
   padding: 0;
 }
 
+<<<<<<< HEAD
 /**=====================
      45. Gallery CSS Ends
 ==========================**/
 /**=====================
      74. internationalization css start
+=======
+/**=====================
+     45. Gallery CSS Ends
+==========================**/
+/**=====================
+     74. internationalization css start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .hdg_main {
   position: relative;
@@ -22364,11 +22763,19 @@ footer.blockquote-footer {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      74. internationalization CSS end
 ==========================**/
 /**=====================
      72. Job CSS start
+=======
+/**=====================
+     74. internationalization CSS end
+==========================**/
+/**=====================
+     72. Job CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .filter-cards-view .job-filter:first-child {
   margin-bottom: 30px;
@@ -22569,11 +22976,19 @@ footer.blockquote-footer {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      72. Job CSS end
 ==========================**/
 /**=====================
      31. JS datagrid CSS Start
+=======
+/**=====================
+     72. Job CSS end
+==========================**/
+/**=====================
+     31. JS datagrid CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .jsgrid .jsgrid-grid-body .jsgrid-cell {
   padding: 0.75rem;
@@ -22629,11 +23044,19 @@ footer.blockquote-footer {
   font-weight: 500;
 }
 
+<<<<<<< HEAD
 /**=====================
      31. JS datagrid CSS Ends
 ==========================**/
 /**=====================
    61. base_inputs CSS start
+=======
+/**=====================
+     31. JS datagrid CSS Ends
+==========================**/
+/**=====================
+   61. base_inputs CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .jkanban-container .btn {
   margin-bottom: 10px;
@@ -22815,11 +23238,19 @@ footer {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
     61. base_inputs CSS ends
 ==========================**/
 /**=====================
      73. knowledgebase CSS start
+=======
+/**=====================
+    61. base_inputs CSS ends
+==========================**/
+/**=====================
+     73. knowledgebase CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .browse .browse-articles span {
   vertical-align: middle;
@@ -22904,11 +23335,19 @@ footer {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      73. knowledgebase CSS end
 ==========================**/
 /**=====================
      38. Landing CSS Start
+=======
+/**=====================
+     73. knowledgebase CSS end
+==========================**/
+/**=====================
+     38. Landing CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /* MESH LOADER */
 @-webkit-keyframes mesh {
@@ -26575,11 +27014,19 @@ ul.dot-group li {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      38. Landing CSS Ends
 ==========================**/
 /**=====================
      76. Language CSS start
+=======
+/**=====================
+     38. Landing CSS Ends
+==========================**/
+/**=====================
+     76. Language CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .current_lang {
   cursor: pointer;
@@ -26678,11 +27125,19 @@ ul.dot-group li {
   border-bottom: 1px solid #eaeaea;
 }
 
+<<<<<<< HEAD
 /**=====================
      76. Language CSS end
 ==========================**/
 /**=====================
      75. Learning CSS start
+=======
+/**=====================
+     76. Language CSS end
+==========================**/
+/**=====================
+     75. Learning CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .learning-header {
   margin-bottom: 10px;
@@ -26747,11 +27202,19 @@ ul.dot-group li {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      75. Learning CSS end
 ==========================**/
 /**=====================
     25. Authentication CSS Start
+=======
+/**=====================
+     75. Learning CSS end
+==========================**/
+/**=====================
+    25. Authentication CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .login-card {
   min-height: 100vh;
@@ -26900,11 +27363,19 @@ ul.dot-group li {
   right: 10px;
 }
 
+<<<<<<< HEAD
 /**=====================
     25. Authentication CSS Ends
 ==========================**/
 /**=====================
    19. Mega option CSS Start
+=======
+/**=====================
+    25. Authentication CSS Ends
+==========================**/
+/**=====================
+   19. Mega option CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .mega-inline {
   margin-bottom: -30px;
@@ -27008,11 +27479,19 @@ ul.dot-group li {
   color: #797979;
 }
 
+<<<<<<< HEAD
 /**=====================
      19. Mega option CSS Ends
 ==========================**/
 /**=====================
      76. Order History CSS start
+=======
+/**=====================
+     19. Mega option CSS Ends
+==========================**/
+/**=====================
+     76. Order History CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .prooduct-details-box .close {
   position: absolute;
@@ -27162,11 +27641,19 @@ ul.dot-group li {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      76. Order History CSS end
 ==========================**/
 /**=====================
      32. pagination CSS Start
+=======
+/**=====================
+     76. Order History CSS end
+==========================**/
+/**=====================
+     32. pagination CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /*test Nav bar color */
 .pagination-theme .page-item .page-link {
@@ -27249,11 +27736,19 @@ ul.dot-group li {
   border-color: #FFAA05;
 }
 
+<<<<<<< HEAD
 /**=====================
      32. pagination CSS Ends
 ==========================**/
 /**=====================
      34. Pricing CSS Start
+=======
+/**=====================
+     32. pagination CSS Ends
+==========================**/
+/**=====================
+     34. Pricing CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .pricing-simple {
   -webkit-box-shadow: 0 0 10px 5px rgba(68, 102, 242, 0.05);
@@ -27423,11 +27918,19 @@ ul.dot-group li {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
     34. Pricing CSS Ends
 ==========================**/
 /**=====================
      23. Progress CSS Start
+=======
+/**=====================
+    34. Pricing CSS Ends
+==========================**/
+/**=====================
+     23. Progress CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .progress-showcase .progress {
   margin-bottom: 10px;
@@ -27445,8 +27948,13 @@ ul.dot-group li {
   height: 20px;
 }
 
+<<<<<<< HEAD
 /**=====================
      23. Progress CSS Ends
+=======
+/**=====================
+     23. Progress CSS Ends
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .project-list .row {
   margin: 15px;
@@ -27698,8 +28206,13 @@ ul.dot-group li {
   display: none;
 }
 
+<<<<<<< HEAD
 /**=====================
      79. social app css start
+=======
+/**=====================
+     79. social app css start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .user-profile .hovercard .socialheader {
   background: url(../images/social-app/social-image.png);
@@ -28072,11 +28585,19 @@ ul.dot-group li {
   height: 15px;
 }
 
+<<<<<<< HEAD
 /**=====================
      79. social app CSS end
 ==========================**/
 /**=====================
      87. task app CSS Start
+=======
+/**=====================
+     79. social app CSS end
+==========================**/
+/**=====================
+     87. task app CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .modal-open .datepickers-container {
   z-index: 1075;
@@ -28164,11 +28685,19 @@ ul.dot-group li {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
    87. task app CSS Ends
 ==========================**/
 /**=====================
      42. Timeline CSS Start
+=======
+/**=====================
+   87. task app CSS Ends
+==========================**/
+/**=====================
+     42. Timeline CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .activity .media {
   margin-bottom: 30px;
@@ -28677,11 +29206,19 @@ ul.dot-group li {
   }
 }
 
+<<<<<<< HEAD
 /**=====================
      42. Timeline  CSS Ends
 ==========================**/
 /**=====================
     43. Timeline 2 CSS Start
+=======
+/**=====================
+     42. Timeline  CSS Ends
+==========================**/
+/**=====================
+    43. Timeline 2 CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .timeliny {
   position: relative;
@@ -28869,11 +29406,19 @@ ul.dot-group li {
   border-bottom: 8px solid var(--theme-deafult);
 }
 
+<<<<<<< HEAD
 /**=====================
      43. Timeline 2 CSS Ends
 ==========================**/
 /**=====================
      22. User profile css start
+=======
+/**=====================
+     43. Timeline 2 CSS Ends
+==========================**/
+/**=====================
+     22. User profile css start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .user-profile .ttl-info h6 {
   font-size: 12px;
@@ -29046,25 +29591,43 @@ ul.dot-group li {
   margin-right: 14px;
 }
 
+<<<<<<< HEAD
 /**=====================
      22. User profile css Ends
 ==========================**/
 /**=====================
     83. Wishlist CSS start
+=======
+/**=====================
+     22. User profile css Ends
+==========================**/
+/**=====================
+    83. Wishlist CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .wishlist table tr td svg {
   color: #898989;
   cursor: pointer;
 }
 
+<<<<<<< HEAD
 /**=====================
     83. Wishlist CSS Ends
+=======
+/**=====================
+    83. Wishlist CSS Ends
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /* ---------------------
 	*** themes ***
 -----------------------*/
+<<<<<<< HEAD
 /**=====================
      47. Footer CSS Start
+=======
+/**=====================
+     47. Footer CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .footer {
   background-color: #fff;
@@ -29091,11 +29654,19 @@ ul.dot-group li {
   position: fixed;
 }
 
+<<<<<<< HEAD
 /**=====================
      47. Footer CSS Ends
 ==========================**/
 /**=====================
       08. GRID CSS Start
+=======
+/**=====================
+     47. Footer CSS Ends
+==========================**/
+/**=====================
+      08. GRID CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .grid-showcase {
   margin-bottom: -10px;
@@ -29122,8 +29693,13 @@ ul.dot-group li {
   background-color: rgba(115, 102, 255, 0.02);
 }
 
+<<<<<<< HEAD
 /**=====================
       08. GRID CSS Ends
+=======
+/**=====================
+      08. GRID CSS Ends
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /*======= Page Header css Start ======= */
 .left-header .d-flex {
@@ -29297,8 +29873,13 @@ ul.dot-group li {
 /**=====================
     05. Header CSS Ends
 ==========================**/
+<<<<<<< HEAD
 /**=====================
      36. NAV CSS Start
+=======
+/**=====================
+     36. NAV CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 #accordionoc #collapseicon, #accordionoc #collapseicon1 {
   padding-top: 0px;
@@ -29368,11 +29949,19 @@ ul.dot-group li {
   line-height: 1.3;
 }
 
+<<<<<<< HEAD
 /**=====================
      36. NAV CSS Ends
 ==========================**/
 /**=====================
      51. Search CSS Start
+=======
+/**=====================
+     36. NAV CSS Ends
+==========================**/
+/**=====================
+     51. Search CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .search-page .theme-form input {
   border: 1px solid var(--theme-deafult);
@@ -29534,11 +30123,19 @@ ul.dot-group li {
   background-color: rgba(115, 102, 255, 0.1);
 }
 
+<<<<<<< HEAD
 /**=====================
     51. Search CSS Ends
 ==========================**/
 /**=====================
      21. Select 2 CSS Start
+=======
+/**=====================
+    51. Search CSS Ends
+==========================**/
+/**=====================
+     21. Select 2 CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .select2 {
   max-width: 100%;
@@ -29736,8 +30333,13 @@ ul.dot-group li {
   color: #fff !important;
 }
 
+<<<<<<< HEAD
 /**=====================
      21. Select 2 CSS Ends
+=======
+/**=====================
+     21. Select 2 CSS Ends
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /**=====================
   5.7 Sidebar CSS Start
@@ -36596,8 +37198,13 @@ html[dir="rtl"] body.dark-only .page-wrapper .page-body-wrapper .page-body .card
 /**=====================
     60. RTL CSS Ends
 ==========================**/
+<<<<<<< HEAD
 /**=====================
     63. Box-layout CSS start
+=======
+/**=====================
+    63. Box-layout CSS start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .box-layout {
   background-image: url(../images/other-images/boxbg.jpg);
@@ -37239,8 +37846,13 @@ html[dir="rtl"] body.dark-only .page-wrapper .page-body-wrapper .page-body .card
   }
 }
 
+<<<<<<< HEAD
 /**=====================
     63. Box-layout CSS ends
+=======
+/**=====================
+    63. Box-layout CSS ends
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 /**=====================
 55. theme layout CSS Start
@@ -42402,8 +43014,13 @@ body[class*='dark-'] .for-light {
 /**=====================
 55. theme layout CSS ends
 ==========================**/
+<<<<<<< HEAD
 /**=====================
    59. Customizer  CSS Start
+=======
+/**=====================
+   59. Customizer  CSS Start
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .customizer-links {
   position: fixed;
@@ -42830,8 +43447,13 @@ body[class*='dark-'] .for-light {
   position: absolute;
 }
 
+<<<<<<< HEAD
 /**=====================
      59.Customizer CSS Ends
+=======
+/**=====================
+     59.Customizer CSS Ends
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
 ==========================**/
 .jsgrid-filter-row select, .jsgrid-filter-row input {
   padding: 6px 10px;

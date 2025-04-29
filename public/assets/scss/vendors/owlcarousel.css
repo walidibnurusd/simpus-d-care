@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 /*
  * 	Default theme - Owl Carousel CSS File
+=======
+/*
+ * 	Default theme - Owl Carousel CSS File
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .owl-theme .owl-nav {
   margin-top: 10px;
@@ -60,8 +65,13 @@
   background: #869791;
 }
 
+<<<<<<< HEAD
 /*
  *  Owl Carousel - Core
+=======
+/*
+ *  Owl Carousel - Core
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .owl-carousel {
   display: none;
@@ -191,8 +201,13 @@
   display: block;
 }
 
+<<<<<<< HEAD
 /*
  *  Owl Carousel - Animate Plugin
+=======
+/*
+ *  Owl Carousel - Animate Plugin
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .owl-carousel .animated {
   -webkit-animation-duration: 1000ms;
@@ -232,16 +247,26 @@
   }
 }
 
+<<<<<<< HEAD
 /*
  * 	Owl Carousel - Auto Height Plugin
+=======
+/*
+ * 	Owl Carousel - Auto Height Plugin
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .owl-height {
   -webkit-transition: height 500ms ease-in-out;
   transition: height 500ms ease-in-out;
 }
 
+<<<<<<< HEAD
 /*
  * 	Owl Carousel - Lazy Load Plugin
+=======
+/*
+ * 	Owl Carousel - Lazy Load Plugin
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .owl-carousel .owl-item .owl-lazy {
   opacity: 0;

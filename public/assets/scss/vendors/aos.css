@@ -998,11 +998,19 @@ body[data-aos-easing="ease-in-out-quart"] [data-aos], [data-aos][data-aos][data-
           transition-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
 
+<<<<<<< HEAD
 /**
  * Fade animations:
  * fade
  * fade-up, fade-down, fade-left, fade-right
  * fade-up-right, fade-up-left, fade-down-right, fade-down-left
+=======
+/**
+ * Fade animations:
+ * fade
+ * fade-up, fade-down, fade-left, fade-right
+ * fade-up-right, fade-up-left, fade-down-right, fade-down-left
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 [data-aos^='fade'][data-aos^='fade'] {
   opacity: 0;
@@ -1058,10 +1066,17 @@ body[data-aos-easing="ease-in-out-quart"] [data-aos], [data-aos][data-aos][data-
           transform: translate(100px, -100px);
 }
 
+<<<<<<< HEAD
 /**
  * Zoom animations:
  * zoom-in, zoom-in-up, zoom-in-down, zoom-in-left, zoom-in-right
  * zoom-out, zoom-out-up, zoom-out-down, zoom-out-left, zoom-out-right
+=======
+/**
+ * Zoom animations:
+ * zoom-in, zoom-in-up, zoom-in-down, zoom-in-left, zoom-in-right
+ * zoom-out, zoom-out-up, zoom-out-down, zoom-out-left, zoom-out-right
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 [data-aos^='zoom'][data-aos^='zoom'] {
   opacity: 0;
@@ -1127,8 +1142,13 @@ body[data-aos-easing="ease-in-out-quart"] [data-aos], [data-aos][data-aos][data-
           transform: translate(100px, 0) scale(1.2);
 }
 
+<<<<<<< HEAD
 /**
  * Slide animations
+=======
+/**
+ * Slide animations
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 [data-aos^='slide'][data-aos^='slide'] {
   -webkit-transition-property: -webkit-transform;
@@ -1162,9 +1182,15 @@ body[data-aos-easing="ease-in-out-quart"] [data-aos], [data-aos][data-aos][data-
           transform: translateX(100%);
 }
 
+<<<<<<< HEAD
 /**
  * Flip animations:
  * flip-left, flip-right, flip-up, flip-down
+=======
+/**
+ * Flip animations:
+ * flip-left, flip-right, flip-up, flip-down
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 [data-aos^='flip'][data-aos^='flip'] {
   -webkit-backface-visibility: hidden;
