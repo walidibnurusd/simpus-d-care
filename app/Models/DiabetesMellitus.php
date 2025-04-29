@@ -12,7 +12,7 @@ class DiabetesMellitus extends Model
 
     protected $fillable = ['pasien','hasil','tinggi_badan','berat_badan','lingkar_perut','tekanan_darah_sistol','tekanan_darah_diastol', 'klaster', 'poli','kesimpulan'];
    
-      public function listPasien()
+      public function pasien()
     {
         return $this->belongsTo(Patients::class, 'pasien', 'id');
     }

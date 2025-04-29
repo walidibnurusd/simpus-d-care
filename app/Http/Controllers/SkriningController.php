@@ -85,7 +85,7 @@ class SkriningController extends Controller
         // Daftar lengkap jenis skrining untuk klaster 2 dan 3
         $allSkriningTypes = [
             2 => [
-                'kia' => ['Preeklampsia', 'Hipertensi', 'Diabetes Mellitus', 'Anemia', 'Triple Eliminasi Bumil', 'TBC', 'SRQ (>18 Tahun)', 'Kekerasan terhadap Perempuan', 'Malaria'],
+                'kia' => ['Preeklampsia', 'Diabetes Mellitus', 'Anemia', 'Triple Eliminasi Bumil', 'TBC', 'Kekerasan terhadap Perempuan', 'Malaria'],
                 'anak' => ['Hipertensi', 'Gangguan Spektrum Autisme', 'Kecacingan', 'HIV & IMS', 'Anemia', 'Talasemia', 'Hepatitis', 'Diabetes Mellitus', 'TBC'],
                 'mtbs' => ['Hipertensi', 'Kecacingan', 'Anemia', 'Talasemia', 'Kekerasan terhadap Anak', 'Kekerasan terhadap Perempuan', 'Diabetes Mellitus', 'TBC', 'Tes Pendengaran', 'SDQ (4-11 Tahun)', 'SDQ (11-18 Tahun)', 'Obesitas', 'NAPZA', 'Perilaku Merokok bagi Anak Sekolah'],
             ],

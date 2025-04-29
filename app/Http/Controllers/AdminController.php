@@ -609,7 +609,8 @@ class AdminController extends Controller
     public function editAnemia(Request $request, $id)
     {
         $anemia = Anemia::findOrFail($id);
-        $pasien = Patients::all();
+       $pasienId = $anemia->pasien;
+        $pasien = Patients::findOrFail($pasienId);
         $routeName = $request->route()->getName();
         return view('kia.anemia', compact('anemia', 'pasien', 'routeName'));
     }
@@ -962,17 +963,19 @@ class AdminController extends Controller
         }
         return redirect()->back()->with('success', 'Data Kecacingan updated successfully!');
     }
-    public function viewDiabetesMellitus(Request $request)
+    public function viewDiabetesMellitus(Request $request,$id)
     {
-        $diabetesMellitus = DiabetesMellitus::with('listPasien')->where('poli', 'kia')->get();
+       $pasien = Patients::find($id);
         $routeName = $request->route()->getName();
-        return view('kia.table.diabetes_mellitus', compact('diabetesMellitus', 'routeName'));
+       return view('kia.table.diabetes_mellitus', compact('diabetesMellitus', 'routeName'));
     }
     public function editDiabetesMellitus(Request $request, $id)
     {
         $diabetesMellitus = DiabetesMellitus::findOrFail($id);
-        $pasien = Patients::all();
+        $pasienId = $diabetesMellitus->pasien;
+        $pasien = Patients::findOrFail($pasienId);
         $routeName = $request->route()->getName();
+     
         return view('kia.diabetes_mellitus', compact('diabetesMellitus', 'pasien', 'routeName'));
     }
     public function deleteDiabetesMellitus($id)
@@ -1277,7 +1280,8 @@ class AdminController extends Controller
     public function editTripleEliminasi($id)
     {
         $triple = TripleEliminasi::findOrFail($id);
-        $pasien = Patients::all();
+       $pasienId = $triple->pasien;
+        $pasien = Patients::findOrFail($pasienId);
         return view('kia.triple_eliminasi', compact('triple', 'pasien'));
     }
     public function deleteTripleEliminasi($id)

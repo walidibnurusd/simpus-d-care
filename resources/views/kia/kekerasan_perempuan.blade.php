@@ -52,16 +52,11 @@
                         <label>Pasien</label>
                         <select class="form-control form-select select2" id="pasien" name="pasien">
                             <option value="" disabled {{ old('pasien') == '' ? 'selected' : '' }}>Pilih</option>
-                            @foreach ($pasien as $item)
-                                <option value="{{ $item->id }}" data-no_hp="{{ $item->phone }}"
-                                    data-nik="{{ $item->nik }}" data-dob="{{ $item->dob }}"
-                                    data-jenis_kelamin="{{ $item->genderName->name }}" data-alamat="{{ $item->address }}"
-                                    {{ old('pasien', $kekerasanPerempuan->pasien ?? '') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }} - {{ $item->nik }}
+                            @if ($pasien)
+                                <option value="{{ $pasien->id }}" selected>{{ $pasien->name }} - {{ $pasien->nik }}
                                 </option>
-                            @endforeach
-                        </select>
-                        @error('pasien')
+                            @endif
+                        </select> @error('pasien')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -81,8 +76,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Umur</label>
-                        <input type="number" class="form-control" name="umur" placeholder="Masukkan umur" id="umurInput"
-                            readonly readonly value="{{ old('umur', $kekerasanPerempuan->umur ?? '') }}">
+                        <input type="number" class="form-control" name="usia" value="{{ $tbc->usia ?? '' }}"
+                            id="usiaInput" readonly>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -184,6 +179,13 @@
                                 <label class="form-check-label" for="tidak_pernah">Tidak pernah</label>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-md-6 d-none">
+                    <div class="form-group">
+                        <label>Tanggal Lahir</label>
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
+                            value="{{ $pasien->dob ?? '' }}" readonly>
                     </div>
                 </div>
 
@@ -307,6 +309,38 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Event Listener untuk Tanggal Lahir
+            const tanggalLahirInput = document.getElementById('tanggal_lahir');
+            const usiaInput = document.getElementById('usiaInput');
+
+            if (tanggalLahirInput && usiaInput) {
+                // Tambahkan event listener untuk menghitung usia saat tanggal lahir berubah
+                tanggalLahirInput.addEventListener('change', () => {
+                    const tanggalLahir = new Date(tanggalLahirInput.value);
+                    const hariIni = new Date();
+                    let usia = hariIni.getFullYear() - tanggalLahir.getFullYear();
+                    const bulan = hariIni.getMonth() - tanggalLahir.getMonth();
+
+                    // Koreksi jika bulan/tanggal sekarang lebih kecil dari bulan/tanggal lahir
+                    if (bulan < 0 || (bulan === 0 && hariIni.getDate() < tanggalLahir.getDate())) {
+                        usia--;
+                    }
+
+                    // Perbarui nilai usia (jangan biarkan negatif)
+                    usiaInput.value = usia >= 0 ? usia : 0;
+
+                    // Panggil fungsi terkait usia
+                    handleUsiaChange();
+                });
+            }
+
+            // Jalankan fungsi awal jika nilai sudah diatur
+            if (tanggalLahirInput?.value) {
+                tanggalLahirInput.dispatchEvent(new Event('change'));
+            }
+        });
+
         function calculateScore() {
             let totalScore = 0;
 

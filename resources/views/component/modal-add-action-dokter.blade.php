@@ -85,7 +85,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="kasus">Kasus</label>
                                                 <select class="form-control" id="kasus" name="kasus" required>
@@ -485,17 +485,17 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="skrining" class="form-label">Riwayat Berobat</label>
-                                        <button class="btn btn-success w-100 mt-2" type="button"
-                                            id="btnCariRiwayatBerobat" data-bs-toggle="modal"
-                                            data-bs-target="#modalBerobat">
-                                            Riwayat Berobat
-                                        </button>
+                                <!--<div class="col-md-4">-->
+                                <!--    <div class="form-group">-->
+                                <!--        <label for="skrining" class="form-label">Riwayat Berobat</label>-->
+                                <!--        <button class="btn btn-success w-100 mt-2" type="button"-->
+                                <!--            id="btnCariRiwayatBerobat" data-bs-toggle="modal"-->
+                                <!--            data-bs-target="#modalBerobat">-->
+                                <!--            Riwayat Berobat-->
+                                <!--        </button>-->
 
-                                    </div>
-                                </div>
+                                <!--    </div>-->
+                                <!--</div>-->
 
                                 {{-- <div class="col-md-4">
                                     <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
@@ -505,7 +505,6 @@
                                 </div> --}}
                             </div>
                         @endif
-                        
                         <div class="row mt-3">
 
                             @if (Auth::user()->role == 'dokter')
@@ -638,21 +637,6 @@
                                 <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
                                 <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>
                             </div> --}}
-                            @if (Auth::user()->role != 'dokter')
-                           
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="skrining" class="form-label">Riwayat Berobat</label>
-                                        <button class="btn btn-success w-100 mt-2" type="button"
-                                            id="btnCariRiwayatBerobat" data-bs-toggle="modal"
-                                            data-bs-target="#modalBerobat">
-                                            Riwayat Berobat
-                                        </button>
-
-                                    </div>
-                                </div>
-                   
-                        @endif
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="skrining" class="form-label">Obat</label>
@@ -663,6 +647,17 @@
 
                                 </div>
                             </div>
+                              <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="skrining" class="form-label">Riwayat Berobat</label>
+                                        <button class="btn btn-success w-100 mt-2" type="button"
+                                            id="btnCariRiwayatBerobat" data-bs-toggle="modal"
+                                            data-bs-target="#modalBerobat">
+                                            Riwayat Berobat
+                                        </button>
+
+                                    </div>
+                                </div>
                             @if ($routeName == 'action.dokter.ruang.tindakan.index')
                                 <div class="col-md-4">
                                     <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
@@ -675,7 +670,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
 
                             @endif
                             @if (Auth::user()->role != 'tindakan')
@@ -822,11 +816,11 @@
                                     name="jenis_pemeriksaan[]" value="Telur Cacing">
                                 <label class="form-check-label" for="telur_cacing">Telur Cacing</label>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="bta"
-                                    name="jenis_pemeriksaan[]" value="BTA">
-                                <label class="form-check-label" for="bta">BTA</label>
-                            </div>
+                            <!--<div class="form-check">-->
+                            <!--    <input class="form-check-input" type="checkbox" id="bta"-->
+                            <!--        name="jenis_pemeriksaan[]" value="BTA">-->
+                            <!--    <label class="form-check-label" for="bta">BTA</label>-->
+                            <!--</div>-->
 
                             <!-- Tambahan Pemeriksaan IgM -->
                             <h6>Pemeriksaan IgM</h6>
@@ -839,6 +833,17 @@
                                 <input class="form-check-input" type="checkbox" id="igm_typhoid"
                                     name="jenis_pemeriksaan[]" value="IgM Typhoid">
                                 <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
+                            </div>
+                             <h6>Jenis Pemeriksaan Dahak</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="bta"
+                                    name="jenis_pemeriksaan[]" value="BTA">
+                                <label class="form-check-label" for="bta">BTA</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tcm"
+                                    name="jenis_pemeriksaan[]" value="TCM">
+                                <label class="form-check-label" for="bta">TCM</label>
                             </div>
                         </div>
                     @endif
