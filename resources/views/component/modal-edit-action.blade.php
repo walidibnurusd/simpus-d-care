@@ -785,12 +785,13 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Riwayat Berobat</label>
-                                            <button class="btn btn-success w-100 mt-2" type="button"
-                                                id="btnCariRiwayatBerobatEdit" data-bs-toggle="modal"
+                                            <button class="btn btn-success w-100 mt-2 btnCariRiwayatBerobatEdit"
+                                                type="button" data-bs-toggle="modal"
                                                 data-bs-target="#modalBerobatEdit"
                                                 data-patient-id="{{ $action->id_patient }}">
                                                 Riwayat Berobat
                                             </button>
+
 
                                         </div>
                                     </div>

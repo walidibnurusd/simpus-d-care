@@ -16,6 +16,7 @@
                             <th>ICD10</th>
                             <th>Obat</th>
                             <th>Hasil Lab</th>
+                            <th>Rujuk RS</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,10 +35,10 @@
 <script>
     $(document).ready(function() {
         // Event handler untuk tombol pencarian/lihat riwayat berobatEdit
-        $('#btnCariRiwayatBerobatEdit').on('click', function() {
+        $('.btnCariRiwayatBerobatEdit').on('click', function() {
             // Ambil ID pasien dari data attribute pada tombol
             const patientId = $(this).data('patient-id');
-            console.log('ID Pasien:', patientId);
+
 
             if (patientId) {
                 // Jika DataTable sudah diinisialisasi di table dengan id #berobatEdit, perbarui URL ajax dan reload datanya
@@ -69,9 +70,14 @@
                             {
                                 data: 'obat',
                                 name: 'obat'
-                            }, {
+                            },
+                            {
                                 data: 'hasil_lab',
                                 name: 'hasil_lab'
+                            },
+                            {
+                                data: 'rujuk_rs',
+                                name: 'rujuk_rs'
                             }
                         ]
                     });
