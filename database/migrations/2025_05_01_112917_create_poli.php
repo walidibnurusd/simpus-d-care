@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tbc', function (Blueprint $table) {
-            $table->integer('imt')->after('berat_badan')->default(0);
+        Schema::create('poli', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tbc', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('poli');
     }
 };

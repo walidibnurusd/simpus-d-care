@@ -6,7 +6,7 @@ use App\Models\Action;
 use App\Models\ActionObat;
 use App\Models\Diagnosis;
 use App\Models\Disease;
-use App\Models\Doctor;
+use App\Models\Poli;
 use App\Models\TerimaObat;
 use App\Models\Kia;
 use App\Models\User;
@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
-
 
 class ActionController extends Controller
 {
@@ -197,7 +196,7 @@ class ActionController extends Controller
 
         return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
-     public function indexUgd(Request $request)
+    public function indexUgd(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_date');
@@ -283,13 +282,9 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats'));
     }
     public function indexDokter(Request $request)
     {
@@ -297,7 +292,7 @@ class ActionController extends Controller
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab','actionObats.obat'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab', 'actionObats.obat'])
                 ->where('tipe', 'poli-umum')
                 ->whereNotNull('diagnosa');
 
@@ -315,11 +310,14 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats->map(function ($ao) {
-                            return optional($ao->obat)->name;
-                        })->filter()->implode(', ');
+                        return $row->actionObats
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
                     }
-                
+
                     return $row->obat ?: '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
@@ -387,12 +385,8 @@ class ActionController extends Controller
                     $dokter = User::where('role', 'dokter')->get();
                     $rs = Hospital::all();
                     $routeName = request()->route()->getName();
-                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-                    ->selectRaw('SUM(terima_obat.amount) as total_stock')
-                    ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->get();
-                    $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs,'obats' => $obats])->render();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
+                    $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
                         $row->id .
@@ -422,27 +416,21 @@ class ActionController extends Controller
         $diagnosa = Diagnosis::all();
         $penyakit = Disease::all();
         $rs = Hospital::all();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
-    
-    
-
+        $poli = Poli::all();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
         $routeName = $request->route()->getName();
         // dd(  $routeName);
 
-        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats'));
+        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
-       public function indexGigiDokter(Request $request)
+    public function indexGigiDokter(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab','actionObats.obat'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab', 'actionObats.obat'])
                 ->where('tipe', 'poli-gigi') // Adjust the type to 'poli-gigi'
                 ->whereNotNull('diagnosa'); // Ensure 'diagnosa' is not null
 
@@ -460,14 +448,17 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats->map(function ($ao) {
-                            return optional($ao->obat)->name;
-                        })->filter()->implode(', ');
+                        return $row->actionObats
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
                     }
-                
+
                     return $row->obat;
                 })
-                
+
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
                     $diagnosa = $row->diagnosa;
@@ -527,13 +518,9 @@ class ActionController extends Controller
                     $rs = Hospital::all();
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
-                     $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-                    ->selectRaw('SUM(terima_obat.amount) as total_stock')
-                    ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->get();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter,'obats' => $obats])->render();
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -565,21 +552,18 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
+        $poli = Poli::all();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs','obats', 'diagnosa', 'routeName'));
+        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'obats', 'diagnosa', 'routeName', 'poli'));
     }
-      public function indexUgdDokter(Request $request)
+    public function indexUgdDokter(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab','actionObats.obat'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab', 'actionObats.obat'])
                 ->where('tipe', 'ruang-tindakan')
                 ->whereNotNull('tindakan');
 
@@ -596,11 +580,14 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats->map(function ($ao) {
-                            return optional($ao->obat)->name;
-                        })->filter()->implode(', ');
+                        return $row->actionObats
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
                     }
-                
+
                     return $row->obat ?: '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
@@ -662,13 +649,9 @@ class ActionController extends Controller
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
                     $rs = Hospital::all();
-                   $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-                    ->selectRaw('SUM(terima_obat.amount) as total_stock')
-                    ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->get();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs,'obats' => $obats])->render();
+                    $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                             <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -700,21 +683,18 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
+        $poli = Poli::all();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
+        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
-     public function indexRuangTindakanDokter(Request $request)
+    public function indexRuangTindakanDokter(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral','actionObats.obat'])->whereNotNull('tindakan_ruang_tindakan');
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'actionObats.obat'])->whereNotNull('tindakan_ruang_tindakan');
 
             $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
@@ -730,11 +710,14 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats->map(function ($ao) {
-                            return optional($ao->obat)->name;
-                        })->filter()->implode(', ');
+                        return $row->actionObats
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
                     }
-                
+
                     return $row->obat ?: '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
@@ -764,13 +747,9 @@ class ActionController extends Controller
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
                     $rs = Hospital::all();
-                     $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-                        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-                        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                        ->get();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs,'obats' => $obats])->render();
+                    $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                             <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -802,13 +781,10 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
+        $poli = Poli::all();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
+        return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
     public function indexLab(Request $request)
     {
@@ -864,13 +840,13 @@ class ActionController extends Controller
     //     $routeName = $request->route()->getName();
     //     return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     // }
-       public function indexDokterKia(Request $request)
+    public function indexDokterKia(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab','actionObats.obat'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab', 'actionObats.obat'])
                 ->where('tipe', 'poli-kia') // Filter by type for KIA
                 ->whereNotNull('diagnosa'); // Ensure diagnosa exists
 
@@ -887,11 +863,14 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats->map(function ($ao) {
-                            return optional($ao->obat)->name;
-                        })->filter()->implode(', ');
+                        return $row->actionObats
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
                     }
-                
+
                     return $row->obat ?: '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
@@ -953,11 +932,7 @@ class ActionController extends Controller
                     $rs = Hospital::all();
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
-                     $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-                    ->selectRaw('SUM(terima_obat.amount) as total_stock')
-                    ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->get();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
                     // Render modal for edit
                     $editModal = view('component.modal-edit-action-kia', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
 
@@ -991,13 +966,9 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
-
-        return view('content.action.index-kia', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
+        $poli = Poli::all();
+        return view('content.action.index-kia', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
 
     public function indexDokterKb(Request $request)
@@ -1006,7 +977,7 @@ class ActionController extends Controller
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
-            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab','actionObats.obat'])
+            $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab', 'actionObats.obat'])
                 ->where('tipe', 'poli-kb') // Filter by type for KB
                 ->whereNotNull('diagnosa'); // Filter for actions that have 'layanan_kb'
 
@@ -1024,11 +995,14 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats->map(function ($ao) {
-                            return optional($ao->obat)->name;
-                        })->filter()->implode(', ');
+                        return $row->actionObats
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
                     }
-                
+
                     return $row->obat ?: '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
@@ -1090,13 +1064,9 @@ class ActionController extends Controller
                     $rs = Hospital::all();
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
-                      $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-                    ->selectRaw('SUM(terima_obat.amount) as total_stock')
-                    ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->get();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
                     // Render modal for edit
-                    $editModal = view('component.modal-edit-action-kb', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs,'obats' => $obats])->render();
+                    $editModal = view('component.modal-edit-action-kb', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                             <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -1128,12 +1098,9 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
-        return view('content.action.index-kb', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
+        $poli = Poli::all();
+        return view('content.action.index-kb', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
 
     public function indexKia(Request $request)
@@ -1189,13 +1156,9 @@ class ActionController extends Controller
                     $rs = Hospital::all();
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
-                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-                    ->selectRaw('SUM(terima_obat.amount) as total_stock')
-                    ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->get();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter,'obats' => $obats])->render();
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -1226,12 +1189,9 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
-    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
-        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
+        $poli = Poli::all();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
     public function indexKb(Request $request)
     {
@@ -1286,13 +1246,9 @@ class ActionController extends Controller
                     $rs = Hospital::all();
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
-                     $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter,'obats' => $obats])->render();
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -1323,13 +1279,10 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
-         $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
+        $poli = Poli::all();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
     public function actionReport(Request $request)
     {
@@ -1351,7 +1304,7 @@ class ActionController extends Controller
         return view('content.action.print', compact('actions', 'startDate', 'endDate'));
     }
 
-     public function store(Request $request)
+    public function store(Request $request)
     {
         try {
             // Fetch the patient ID based on the provided NIK
@@ -1474,6 +1427,7 @@ class ActionController extends Controller
                 'pembekuan_darah' => 'nullable',
                 'tipe' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
+                'id_rujuk_poli' => 'nullable',
             ]);
             $existingAction = Action::where('id_patient', $validated['id_patient'])->where('tanggal', $validated['tanggal'])->where('tipe', $validated['tipe'])->first();
             if ($existingAction) {
@@ -1485,83 +1439,79 @@ class ActionController extends Controller
             if ($request->has('tindakan')) {
                 $validated['tindakan'] = implode(',', $request->tindakan);
             }
-            
-                $medications = json_decode($request->medications, true);
-             
-                // Jika tidak ada ID, buat data baru
-                $action = Action::create($validated);
-                if (!empty($request->jenis_pemeriksaan)) {
-                    HasilLab::create([
+
+            $medications = json_decode($request->medications, true);
+
+            // Jika tidak ada ID, buat data baru
+            $action = Action::create($validated);
+            if (!empty($request->jenis_pemeriksaan)) {
+                HasilLab::create([
+                    'id_action' => $action->id,
+                    'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                ]);
+            }
+
+            // Ensure medications is an array before using foreach
+            if (is_array($medications)) {
+                foreach ($medications as $medication) {
+                    // Process each medication
+                    $shapes = [
+                        'Tablet' => 1,
+                        'Botol' => 2,
+                        'Pcs' => 3,
+                        'Suppositoria' => 4,
+                        'Ovula' => 5,
+                        'Drop' => 6,
+                        'Tube' => 7,
+                        'Pot' => 8,
+                        'Injeksi' => 9,
+                    ];
+
+                    ActionObat::create([
                         'id_action' => $action->id,
-                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                        'number' => $medication['number'],
+                        'name' => $medication['name'],
+                        'dose' => $medication['dose'],
+                        'amount' => $medication['quantity'],
+                        'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
+                        'id_obat' => $medication['idObat'],
                     ]);
-                }
-             
-                // Ensure medications is an array before using foreach
-                if (is_array($medications)) {
-                    foreach ($medications as $medication) {
-                        // Process each medication
-                        $shapes = [
-                            'Tablet' => 1,
-                            'Botol' => 2,
-                            'Pcs' => 3,
-                            'Suppositoria' => 4,
-                            'Ovula' => 5,
-                            'Drop' => 6,
-                            'Tube' => 7,
-                            'Pot' => 8,
-                            'Injeksi' => 9,
-                        ];
-                        
-                        ActionObat::create([
-                            'id_action' =>  $action->id,
-                            'number' => $medication['number'],
-                            'name' => $medication['name'],
-                            'dose' => $medication['dose'],
-                            'amount' => $medication['quantity'],
-                            'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
-                            'id_obat' => $medication['idObat'],
-                        ]);
-                        
-                        $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
 
-                        if ($obats->isEmpty()) {
-                            return response()->json(['error' => 'Obat tidak ditemukan'], 404);
-                        }
-                        
-                        $remainingQuantity = $medication['quantity'];
-                        
-                        foreach ($obats as $obat) {
-                            if ($remainingQuantity <= 0) {
-                                break; // Jika sudah cukup, keluar dari loop
-                            }
-                        
-                            if ($obat->amount >= $remainingQuantity) {
-                                $obat->amount -= $remainingQuantity;
-                                $obat->save();
-                                $remainingQuantity = 0; // Semua jumlah sudah dikurangi
-                            } else {
-                                $remainingQuantity -= $obat->amount;
-                                $obat->amount = 0;
-                                $obat->save();
-                            }
-                        }
-                        
-                        if ($remainingQuantity > 0) {
-                            return response()->json(['error' => 'Stok tidak mencukupi'], 400);
-                        }
-                        
+                    $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
 
-                        
+                    if ($obats->isEmpty()) {
+                        return response()->json(['error' => 'Obat tidak ditemukan'], 404);
+                    }
+
+                    $remainingQuantity = $medication['quantity'];
+
+                    foreach ($obats as $obat) {
+                        if ($remainingQuantity <= 0) {
+                            break; // Jika sudah cukup, keluar dari loop
+                        }
+
+                        if ($obat->amount >= $remainingQuantity) {
+                            $obat->amount -= $remainingQuantity;
+                            $obat->save();
+                            $remainingQuantity = 0; // Semua jumlah sudah dikurangi
+                        } else {
+                            $remainingQuantity -= $obat->amount;
+                            $obat->amount = 0;
+                            $obat->save();
+                        }
+                    }
+
+                    if ($remainingQuantity > 0) {
+                        return response()->json(['error' => 'Stok tidak mencukupi'], 400);
                     }
                 }
-                return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
-           
+            }
+            return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-      public function update(Request $request, $id = null)
+    public function update(Request $request, $id = null)
     {
         try {
             $patient = Patients::where('nik', $request->nikEdit)->first();
@@ -1681,6 +1631,7 @@ class ActionController extends Controller
                 'diabetes' => 'nullable',
                 'pembekuan_darah' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
+                'id_rujuk_poli' => 'nullable',
             ]);
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
             $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
@@ -1691,12 +1642,12 @@ class ActionController extends Controller
             $validated['proteinuria'] = $validated['proteinuria'] ?? 0;
             $validated['periksa_usg'] = $validated['periksa_usg'] ?? 0;
             $medications = json_decode($request->medications, true);
-                // dd($request->medications);
-                $validated['alergi'] = $medications[0]['alergi'] ?? null;
-                $validated['usia_kehamilan'] = $medications[0]['hamil']  ?? 0;
-                $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
-                $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
-                // dd($validated);
+            // dd($request->medications);
+            $validated['alergi'] = $medications[0]['alergi'] ?? null;
+            $validated['usia_kehamilan'] = $medications[0]['hamil'] ?? 0;
+            $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
+            $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
+            // dd($validated);
             if ($request->has('tindakan_ruang_tindakan')) {
                 $validated['tindakan_ruang_tindakan'] = implode(',', $request->tindakan_ruang_tindakan);
             }
@@ -1714,7 +1665,7 @@ class ActionController extends Controller
                 }
                 $medications = json_decode($request->medications, true);
                 // dd($medications);
-             
+
                 // Ensure medications is an array before using foreach
                 if (is_array($medications)) {
                     foreach ($medications as $medication) {
@@ -1732,7 +1683,7 @@ class ActionController extends Controller
                         ];
                         // dd($medication['shape'] );
                         ActionObat::create([
-                            'id_action' =>  $action->id,
+                            'id_action' => $action->id,
                             'number' => $medication['number'],
                             'name' => $medication['name'],
                             'dose' => $medication['dose'],
@@ -1740,7 +1691,7 @@ class ActionController extends Controller
                             'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
                             'id_obat' => $medication['idObat'],
                         ]);
-                        
+
                         $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
 
                         if ($obats->isEmpty()) {
@@ -1768,9 +1719,6 @@ class ActionController extends Controller
                         if ($remainingQuantity > 0) {
                             return response()->json(['error' => 'Stok tidak mencukupi'], 400);
                         }
-
-
-
                     }
                 }
 
@@ -1781,7 +1729,7 @@ class ActionController extends Controller
                 return response()->json(['success' => 'Action has been successfully updated.']);
             } else {
                 $medications = json_decode($request->medications, true);
-             
+
                 // Jika tidak ada ID, buat data baru
                 $action = Action::create($validated);
                 if (!empty($request->jenis_pemeriksaan)) {
@@ -1790,7 +1738,7 @@ class ActionController extends Controller
                         'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
                     ]);
                 }
-             
+
                 // Ensure medications is an array before using foreach
                 if (is_array($medications)) {
                     foreach ($medications as $medication) {
@@ -1806,9 +1754,9 @@ class ActionController extends Controller
                             'Pot' => 8,
                             'Injeksi' => 9,
                         ];
-                        
+
                         ActionObat::create([
-                            'id_action' =>  $action->id,
+                            'id_action' => $action->id,
                             'number' => $medication['number'],
                             'name' => $medication['name'],
                             'dose' => $medication['dose'],
@@ -1816,20 +1764,20 @@ class ActionController extends Controller
                             'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
                             'id_obat' => $medication['idObat'],
                         ]);
-                        
+
                         $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
 
                         if ($obats->isEmpty()) {
                             return response()->json(['error' => 'Obat tidak ditemukan'], 404);
                         }
-                        
+
                         $remainingQuantity = $medication['quantity'];
-                        
+
                         foreach ($obats as $obat) {
                             if ($remainingQuantity <= 0) {
                                 break; // Jika sudah cukup, keluar dari loop
                             }
-                        
+
                             if ($obat->amount >= $remainingQuantity) {
                                 $obat->amount -= $remainingQuantity;
                                 $obat->save();
@@ -1840,13 +1788,10 @@ class ActionController extends Controller
                                 $obat->save();
                             }
                         }
-                        
+
                         if ($remainingQuantity > 0) {
                             return response()->json(['error' => 'Stok tidak mencukupi'], 400);
                         }
-                        
-
-                        
                     }
                 }
                 return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
@@ -1860,7 +1805,7 @@ class ActionController extends Controller
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-     public function updateDokter(Request $request, $id = null)
+    public function updateDokter(Request $request, $id = null)
     {
         try {
             $patient = Patients::where('nik', $request->nik)->first();
@@ -1980,6 +1925,7 @@ class ActionController extends Controller
                 'diabetes' => 'nullable',
                 'pembekuan_darah' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
+                'id_rujuk_poli' => 'nullable',
             ]);
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
             $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
@@ -1990,12 +1936,13 @@ class ActionController extends Controller
             $validated['proteinuria'] = $validated['proteinuria'] ?? 0;
             $validated['periksa_usg'] = $validated['periksa_usg'] ?? 0;
             $medications = json_decode($request->medications, true);
-                // dd($request->medications);
-                $validated['alergi'] = $medications[0]['alergi'] ?? null;
-                $validated['usia_kehamilan'] = $medications[0]['hamil']  ?? 0;
-                $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
-                $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
-                // dd($validated);
+            // dd($request->medications);
+            $validated['alergi'] = $medications[0]['alergi'] ?? null;
+            $validated['usia_kehamilan'] = $medications[0]['hamil'] ?? 0;
+            $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
+            $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
+            Log::info('id_rujuk_poli yang diterima:', ['value' => $request->id_rujuk_poli]);
+            // dd($validated);
             if ($request->has('tindakan_ruang_tindakan')) {
                 $validated['tindakan_ruang_tindakan'] = implode(',', $request->tindakan_ruang_tindakan);
             }
@@ -2013,7 +1960,7 @@ class ActionController extends Controller
                 }
                 $medications = json_decode($request->medications, true);
                 // dd($medications);
-             
+
                 // Ensure medications is an array before using foreach
                 if (is_array($medications)) {
                     foreach ($medications as $medication) {
@@ -2029,9 +1976,9 @@ class ActionController extends Controller
                             'Pot' => 8,
                             'Injeksi' => 9,
                         ];
-                        
+
                         ActionObat::create([
-                            'id_action' =>  $action->id,
+                            'id_action' => $action->id,
                             'number' => $medication['number'],
                             'name' => $medication['name'],
                             'dose' => $medication['dose'],
@@ -2039,7 +1986,7 @@ class ActionController extends Controller
                             'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
                             'id_obat' => $medication['idObat'],
                         ]);
-                        
+
                         $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
 
                         if ($obats->isEmpty()) {
@@ -2067,9 +2014,6 @@ class ActionController extends Controller
                         if ($remainingQuantity > 0) {
                             return response()->json(['error' => 'Stok tidak mencukupi'], 400);
                         }
-
-
-
                     }
                 }
 
@@ -2080,7 +2024,7 @@ class ActionController extends Controller
                 return response()->json(['success' => 'Action has been successfully updated.']);
             } else {
                 $medications = json_decode($request->medications, true);
-             
+
                 // Jika tidak ada ID, buat data baru
                 $action = Action::create($validated);
                 if (!empty($request->jenis_pemeriksaan)) {
@@ -2089,7 +2033,7 @@ class ActionController extends Controller
                         'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
                     ]);
                 }
-             
+
                 // Ensure medications is an array before using foreach
                 if (is_array($medications)) {
                     foreach ($medications as $medication) {
@@ -2105,9 +2049,9 @@ class ActionController extends Controller
                             'Pot' => 8,
                             'Injeksi' => 9,
                         ];
-                        
+
                         ActionObat::create([
-                            'id_action' =>  $action->id,
+                            'id_action' => $action->id,
                             'number' => $medication['number'],
                             'name' => $medication['name'],
                             'dose' => $medication['dose'],
@@ -2115,20 +2059,20 @@ class ActionController extends Controller
                             'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
                             'id_obat' => $medication['idObat'],
                         ]);
-                        
+
                         $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
 
                         if ($obats->isEmpty()) {
                             return response()->json(['error' => 'Obat tidak ditemukan'], 404);
                         }
-                        
+
                         $remainingQuantity = $medication['quantity'];
-                        
+
                         foreach ($obats as $obat) {
                             if ($remainingQuantity <= 0) {
                                 break; // Jika sudah cukup, keluar dari loop
                             }
-                        
+
                             if ($obat->amount >= $remainingQuantity) {
                                 $obat->amount -= $remainingQuantity;
                                 $obat->save();
@@ -2139,13 +2083,10 @@ class ActionController extends Controller
                                 $obat->save();
                             }
                         }
-                        
+
                         if ($remainingQuantity > 0) {
                             return response()->json(['error' => 'Stok tidak mencukupi'], 400);
                         }
-                        
-
-                        
                     }
                 }
                 return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
@@ -2316,164 +2257,158 @@ class ActionController extends Controller
             $medications = json_decode($request->medications, true);
             // dd($request->medications);
             $validated['alergi'] = $medications[0]['alergi'] ?? null;
-            $validated['usia_kehamilan'] = $medications[0]['hamil']  ?? 0;
+            $validated['usia_kehamilan'] = $medications[0]['hamil'] ?? 0;
             $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
             $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
             // dd($validated);
-        if ($request->has('tindakan_ruang_tindakan')) {
-            $validated['tindakan_ruang_tindakan'] = implode(',', $request->tindakan_ruang_tindakan);
-        }
-        if ($request->has('tindakan')) {
-            $validated['tindakan'] = implode(',', $request->tindakan);
-        }
-        if ($id != null) {
-            // Jika ID diberikan, update data yang sudah ada
-            $action = Action::find($id);
-            if (!empty($request->jenis_pemeriksaan)) {
-                HasilLab::create([
-                    'id_action' => $action->id,
-                    'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
-                ]);
+            if ($request->has('tindakan_ruang_tindakan')) {
+                $validated['tindakan_ruang_tindakan'] = implode(',', $request->tindakan_ruang_tindakan);
             }
-            $medications = json_decode($request->medications, true);
-            // dd($medications);
-         
-            // Ensure medications is an array before using foreach
-            if (is_array($medications)) {
-                foreach ($medications as $medication) {
-                    // Process each medication
-                    $shapes = [
-                        'Tablet' => 1,
-                        'Botol' => 2,
-                        'Pcs' => 3,
-                        'Suppositoria' => 4,
-                        'Ovula' => 5,
-                        'Drop' => 6,
-                        'Tube' => 7,
-                        'Pot' => 8,
-                        'Injeksi' => 9,
-                    ];
-                    
-                    ActionObat::create([
-                        'id_action' =>  $action->id,
-                        'number' => $medication['number'],
-                        'name' => $medication['name'],
-                        'dose' => $medication['dose'],
-                        'amount' => $medication['quantity'],
-                        'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
-                        'id_obat' => $medication['idObat'],
+            if ($request->has('tindakan')) {
+                $validated['tindakan'] = implode(',', $request->tindakan);
+            }
+            if ($id != null) {
+                // Jika ID diberikan, update data yang sudah ada
+                $action = Action::find($id);
+                if (!empty($request->jenis_pemeriksaan)) {
+                    HasilLab::create([
+                        'id_action' => $action->id,
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
                     ]);
-                    
-                    $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
-
-                    if ($obats->isEmpty()) {
-                        return response()->json(['error' => 'Obat tidak ditemukan'], 404);
-                    }
-
-                    $remainingQuantity = $medication['quantity'];
-
-                    foreach ($obats as $obat) {
-                        if ($remainingQuantity <= 0) {
-                            break; // Jika sudah cukup, keluar dari loop
-                        }
-
-                        if ($obat->amount >= $remainingQuantity) {
-                            $obat->amount -= $remainingQuantity;
-                            $obat->save();
-                            $remainingQuantity = 0; // Semua jumlah sudah dikurangi
-                        } else {
-                            $remainingQuantity -= $obat->amount;
-                            $obat->amount = 0;
-                            $obat->save();
-                        }
-                    }
-
-                    if ($remainingQuantity > 0) {
-                        return response()->json(['error' => 'Stok tidak mencukupi'], 400);
-                    }
-
-
-
                 }
-            }
+                $medications = json_decode($request->medications, true);
+                // dd($medications);
 
-            if (!$action) {
-                return response()->json(['error' => 'Action not found'], 404);
-            }
-            $action->update($validated);
-            return response()->json(['success' => 'Action has been successfully updated.']);
-        } else {
-            $medications = json_decode($request->medications, true);
-         
-            // Jika tidak ada ID, buat data baru
-            $action = Action::create($validated);
-            if (!empty($request->jenis_pemeriksaan)) {
-                HasilLab::create([
-                    'id_action' => $action->id,
-                    'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
-                ]);
-            }
-         
-            // Ensure medications is an array before using foreach
-            if (is_array($medications)) {
-                foreach ($medications as $medication) {
-                    // Process each medication
-                    $shapes = [
-                        'Tablet' => 1,
-                        'Botol' => 2,
-                        'Pcs' => 3,
-                        'Suppositoria' => 4,
-                        'Ovula' => 5,
-                        'Drop' => 6,
-                        'Tube' => 7,
-                        'Pot' => 8,
-                        'Injeksi' => 9,
-                    ];
-                    
-                    ActionObat::create([
-                        'id_action' =>  $action->id,
-                        'number' => $medication['number'],
-                        'name' => $medication['name'],
-                        'dose' => $medication['dose'],
-                        'amount' => $medication['quantity'],
-                        'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
-                        'id_obat' => $medication['idObat'],
+                // Ensure medications is an array before using foreach
+                if (is_array($medications)) {
+                    foreach ($medications as $medication) {
+                        // Process each medication
+                        $shapes = [
+                            'Tablet' => 1,
+                            'Botol' => 2,
+                            'Pcs' => 3,
+                            'Suppositoria' => 4,
+                            'Ovula' => 5,
+                            'Drop' => 6,
+                            'Tube' => 7,
+                            'Pot' => 8,
+                            'Injeksi' => 9,
+                        ];
+
+                        ActionObat::create([
+                            'id_action' => $action->id,
+                            'number' => $medication['number'],
+                            'name' => $medication['name'],
+                            'dose' => $medication['dose'],
+                            'amount' => $medication['quantity'],
+                            'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
+                            'id_obat' => $medication['idObat'],
+                        ]);
+
+                        $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
+
+                        if ($obats->isEmpty()) {
+                            return response()->json(['error' => 'Obat tidak ditemukan'], 404);
+                        }
+
+                        $remainingQuantity = $medication['quantity'];
+
+                        foreach ($obats as $obat) {
+                            if ($remainingQuantity <= 0) {
+                                break; // Jika sudah cukup, keluar dari loop
+                            }
+
+                            if ($obat->amount >= $remainingQuantity) {
+                                $obat->amount -= $remainingQuantity;
+                                $obat->save();
+                                $remainingQuantity = 0; // Semua jumlah sudah dikurangi
+                            } else {
+                                $remainingQuantity -= $obat->amount;
+                                $obat->amount = 0;
+                                $obat->save();
+                            }
+                        }
+
+                        if ($remainingQuantity > 0) {
+                            return response()->json(['error' => 'Stok tidak mencukupi'], 400);
+                        }
+                    }
+                }
+
+                if (!$action) {
+                    return response()->json(['error' => 'Action not found'], 404);
+                }
+                $action->update($validated);
+                return response()->json(['success' => 'Action has been successfully updated.']);
+            } else {
+                $medications = json_decode($request->medications, true);
+
+                // Jika tidak ada ID, buat data baru
+                $action = Action::create($validated);
+                if (!empty($request->jenis_pemeriksaan)) {
+                    HasilLab::create([
+                        'id_action' => $action->id,
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
                     ]);
-                    
-                    $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
-
-                    if ($obats->isEmpty()) {
-                        return response()->json(['error' => 'Obat tidak ditemukan'], 404);
-                    }
-                    
-                    $remainingQuantity = $medication['quantity'];
-                    
-                    foreach ($obats as $obat) {
-                        if ($remainingQuantity <= 0) {
-                            break; // Jika sudah cukup, keluar dari loop
-                        }
-                    
-                        if ($obat->amount >= $remainingQuantity) {
-                            $obat->amount -= $remainingQuantity;
-                            $obat->save();
-                            $remainingQuantity = 0; // Semua jumlah sudah dikurangi
-                        } else {
-                            $remainingQuantity -= $obat->amount;
-                            $obat->amount = 0;
-                            $obat->save();
-                        }
-                    }
-                    
-                    if ($remainingQuantity > 0) {
-                        return response()->json(['error' => 'Stok tidak mencukupi'], 400);
-                    }
-                    
-
-                    
                 }
+
+                // Ensure medications is an array before using foreach
+                if (is_array($medications)) {
+                    foreach ($medications as $medication) {
+                        // Process each medication
+                        $shapes = [
+                            'Tablet' => 1,
+                            'Botol' => 2,
+                            'Pcs' => 3,
+                            'Suppositoria' => 4,
+                            'Ovula' => 5,
+                            'Drop' => 6,
+                            'Tube' => 7,
+                            'Pot' => 8,
+                            'Injeksi' => 9,
+                        ];
+
+                        ActionObat::create([
+                            'id_action' => $action->id,
+                            'number' => $medication['number'],
+                            'name' => $medication['name'],
+                            'dose' => $medication['dose'],
+                            'amount' => $medication['quantity'],
+                            'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
+                            'id_obat' => $medication['idObat'],
+                        ]);
+
+                        $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
+
+                        if ($obats->isEmpty()) {
+                            return response()->json(['error' => 'Obat tidak ditemukan'], 404);
+                        }
+
+                        $remainingQuantity = $medication['quantity'];
+
+                        foreach ($obats as $obat) {
+                            if ($remainingQuantity <= 0) {
+                                break; // Jika sudah cukup, keluar dari loop
+                            }
+
+                            if ($obat->amount >= $remainingQuantity) {
+                                $obat->amount -= $remainingQuantity;
+                                $obat->save();
+                                $remainingQuantity = 0; // Semua jumlah sudah dikurangi
+                            } else {
+                                $remainingQuantity -= $obat->amount;
+                                $obat->amount = 0;
+                                $obat->save();
+                            }
+                        }
+
+                        if ($remainingQuantity > 0) {
+                            return response()->json(['error' => 'Stok tidak mencukupi'], 400);
+                        }
+                    }
+                }
+                return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
             }
-            return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
-        }
             return redirect()->route('action.dokter.ruang.tindakan.index')->with('success', 'Action tindakan has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
@@ -2481,7 +2416,7 @@ class ActionController extends Controller
                 ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
                 ->withInput();
         }
-    }    
+    }
     public function updateLab(Request $request, $id)
     {
         try {
@@ -2612,118 +2547,120 @@ class ActionController extends Controller
                 ->withInput();
         }
     }
-     public function updateApotik(Request $request, $id)
-{
-    try {
-        $action = Action::findOrFail($id);
+    public function updateApotik(Request $request, $id)
+    {
+        try {
+            $action = Action::findOrFail($id);
 
-        $patient = Patients::where('nik', $request->nik)->first();
+            $patient = Patients::where('nik', $request->nik)->first();
 
-        if (!$patient) {
-            return response()->json(['error' => 'Patient with the provided NIK does not exist.'], 404);
-        }
+            if (!$patient) {
+                return response()->json(['error' => 'Patient with the provided NIK does not exist.'], 404);
+            }
 
-        $request->merge([
-            'id_patient' => $patient->id,
-        ]);
-
-        $validated = $request->validate([
-            'id_patient' => 'required',
-            'update_obat' => 'nullable',
-            'verifikasi_awal' => 'array',
-            'verifikasi_akhir' => 'array',
-            'informasi_obat' => 'array',
-            'diagnosa' => 'array',
-        ]);
-
-        $action->update($validated);
-        $medications = json_decode($request->medications, true);
-
-        $validated['alergi'] = $medications[0]['alergi'] ?? null;
-        $validated['usia_kehamilan'] = $medications[0]['hamil']  ?? 0;
-        $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
-        $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
-
-        if (!empty($request->jenis_pemeriksaan)) {
-            HasilLab::create([
-                'id_action' => $action->id,
-                'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan),
+            $request->merge([
+                'id_patient' => $patient->id,
             ]);
-        }
 
-        if (is_array($medications)) {
-            foreach ($medications as $medication) {
-                 if ($medication['idObat']==null) {
-                    continue;
-                }
-                $shapes = [
-                    'Tablet' => 1,
-                    'Botol' => 2,
-                    'Pcs' => 3,
-                    'Suppositoria' => 4,
-                    'Ovula' => 5,
-                    'Drop' => 6,
-                    'Tube' => 7,
-                    'Pot' => 8,
-                    'Injeksi' => 9,
-                ];
+            $validated = $request->validate([
+                'id_patient' => 'required',
+                'update_obat' => 'nullable',
+                'verifikasi_awal' => 'array',
+                'verifikasi_akhir' => 'array',
+                'informasi_obat' => 'array',
+                'diagnosa' => 'array',
+            ]);
 
-                ActionObat::create([
+            $action->update($validated);
+            $medications = json_decode($request->medications, true);
+
+            $validated['alergi'] = $medications[0]['alergi'] ?? null;
+            $validated['usia_kehamilan'] = $medications[0]['hamil'] ?? 0;
+            $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
+            $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
+
+            if (!empty($request->jenis_pemeriksaan)) {
+                HasilLab::create([
                     'id_action' => $action->id,
-                    'number' => $medication['number'],
-                    'name' => $medication['name'],
-                    'dose' => $medication['dose'],
-                    'amount' => $medication['quantity'],
-                    'shape' => $shapes[$medication['shape']] ?? null,
-                    'id_obat' => $medication['idObat'],
+                    'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan),
                 ]);
+            }
 
-                $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
+            if (is_array($medications)) {
+                foreach ($medications as $medication) {
+                    if ($medication['idObat'] == null) {
+                        continue;
+                    }
+                    $shapes = [
+                        'Tablet' => 1,
+                        'Botol' => 2,
+                        'Pcs' => 3,
+                        'Suppositoria' => 4,
+                        'Ovula' => 5,
+                        'Drop' => 6,
+                        'Tube' => 7,
+                        'Pot' => 8,
+                        'Injeksi' => 9,
+                    ];
 
-                if ($obats->isEmpty()) {
-                    return response()->json(['error' => 'Obat tidak ditemukan'], 404);
-                }
+                    ActionObat::create([
+                        'id_action' => $action->id,
+                        'number' => $medication['number'],
+                        'name' => $medication['name'],
+                        'dose' => $medication['dose'],
+                        'amount' => $medication['quantity'],
+                        'shape' => $shapes[$medication['shape']] ?? null,
+                        'id_obat' => $medication['idObat'],
+                    ]);
 
-                $remainingQuantity = $medication['quantity'];
+                    $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
 
-                foreach ($obats as $obat) {
-                    if ($remainingQuantity <= 0) break;
+                    if ($obats->isEmpty()) {
+                        return response()->json(['error' => 'Obat tidak ditemukan'], 404);
+                    }
 
-                    if ($obat->amount >= $remainingQuantity) {
-                        $obat->amount -= $remainingQuantity;
-                        $obat->save();
-                        $remainingQuantity = 0;
-                    } else {
-                        $remainingQuantity -= $obat->amount;
-                        $obat->amount = 0;
-                        $obat->save();
+                    $remainingQuantity = $medication['quantity'];
+
+                    foreach ($obats as $obat) {
+                        if ($remainingQuantity <= 0) {
+                            break;
+                        }
+
+                        if ($obat->amount >= $remainingQuantity) {
+                            $obat->amount -= $remainingQuantity;
+                            $obat->save();
+                            $remainingQuantity = 0;
+                        } else {
+                            $remainingQuantity -= $obat->amount;
+                            $obat->amount = 0;
+                            $obat->save();
+                        }
+                    }
+
+                    if ($remainingQuantity > 0) {
+                        return response()->json(['error' => 'Stok tidak mencukupi'], 400);
                     }
                 }
-
-                if ($remainingQuantity > 0) {
-                    return response()->json(['error' => 'Stok tidak mencukupi'], 400);
-                }
             }
+
+            $action->update($validated);
+
+            return response()->json(['success' => 'Action has been successfully updated.']);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
-
-        $action->update($validated);
-
-        return response()->json(['success' => 'Action has been successfully updated.']);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json(['errors' => $e->errors()], 422);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
     }
-}
 
-      public function indexApotik(Request $request)
+    public function indexApotik(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_date');
             $endDate = $request->input('end_date');
             $poli = $request->input('poli');
-            
-            $actionsQuery = Action::with(['patient','actionObats.obat']) ->where(function ($q) {
+
+            $actionsQuery = Action::with(['patient', 'actionObats.obat'])->where(function ($q) {
                 $q->WhereHas('actionObats')->WhereNotNull('verifikasi_awal');
             });
 
@@ -2750,11 +2687,14 @@ class ActionController extends Controller
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('obat', function ($row) {
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats->map(function ($ao) {
-                            return optional($ao->obat)->name;
-                        })->filter()->implode(', ');
+                        return $row->actionObats
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
                     }
-                
+
                     return $row->obat ?: '-';
                 })
                 ->addColumn('tipe', function ($row) {
@@ -2776,13 +2716,9 @@ class ActionController extends Controller
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
                     $rs = Hospital::all();
-                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-                    ->selectRaw('SUM(terima_obat.amount) as total_stock')
-                    ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-                    ->get();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs,'obats' => $obats])->render();
+                    $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -2803,13 +2739,9 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')
-        ->selectRaw('SUM(terima_obat.amount) as total_stock')
-        ->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')
-        ->get();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index-apotik', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
+        return view('content.action.index-apotik', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats'));
     }
     public function destroy($id)
     {

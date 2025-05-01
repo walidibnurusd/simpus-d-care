@@ -49,13 +49,6 @@ class PatientsController extends Controller
             ->where('pasien', $patientId)
             ->get();
 
-        // Log the actions data to check if it's being loaded correctly
-        $query->each(function ($kunjungan) {
-            Log::info('Actions data for patient ID: ' . $kunjungan->patient->id, [
-                'actions' => $kunjungan->patient->actions,
-            ]);
-        });
-
         // Jika terdapat pencarian, filter berdasarkan data pasien (misalnya name, address, dll)
         if (!empty($request->input('search.value'))) {
             $searchValue = $request->input('search.value');
@@ -90,9 +83,6 @@ class PatientsController extends Controller
                 if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
                     // Get the first action for this patient
                     $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
-                    Log::info('First action for patient ID: ' . $kunjungan->patient->id, [
-                        'diagnosa' => $action->diagnosa ?? 'No diagnosa field',
-                    ]);
 
                     // Check if diagnosa is set and is either a string or an array
                     if ($action && isset($action->diagnosa)) {
@@ -101,19 +91,11 @@ class PatientsController extends Controller
                         // If diagnosa is a string of IDs separated by commas, convert it into an array
                         $diagnosaIds = is_array($diagnosa) ? $diagnosa : explode(',', $diagnosa);
 
-                        // Log the diagnosa IDs
-                        Log::info('Diagnosa IDs:', ['ids' => $diagnosaIds]);
-
                         // Ensure diagnosaIds are integers to avoid type mismatch
                         $diagnosaIds = array_map('intval', $diagnosaIds);
 
                         // Fetch diagnoses names using the IDs
                         $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-
-                        // Log the fetched diagnoses
-                        Log::info('Diagnoses found for patient ID: ' . $kunjungan->patient->id, [
-                            'diagnoses' => $diagnoses,
-                        ]);
 
                         // If there are diagnoses, return the matched names, otherwise return '-'
                         return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
@@ -141,6 +123,47 @@ class PatientsController extends Controller
 
                         // If there are ICD10 codes, return them, otherwise return '-'
                         return !empty($icd10Codes) ? implode(', ', $icd10Codes) : '-';
+                    }
+                }
+                return '-';
+            })
+            ->addColumn('obat', function ($kunjungan) {
+                if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+                    // Cari action berdasarkan tanggal kunjungan
+                    $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+
+                    if ($action && $action->actionObats->isNotEmpty()) {
+                        // Ambil nama-nama obat dari relasi
+                        $obatNames = $action->actionObats
+                            ->map(function ($actionObat) {
+                                return optional($actionObat->obat)->name;
+                            })
+                            ->filter()
+                            ->toArray();
+
+                        return !empty($obatNames) ? implode(', ', $obatNames) : '-';
+                    }
+                }
+                return '-';
+            })
+            ->addColumn('hasil_lab', function ($kunjungan) {
+                if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+                    // Cari action berdasarkan tanggal kunjungan
+                    $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+
+                    if ($action && $action->hasilLab) {
+                        // Ambil beberapa data penting dari hasil lab
+                        $lab = $action->hasilLab;
+                        $results = [];
+
+                        // Ambil data yang tidak null untuk ditampilkan
+                        foreach ($lab->getAttributes() as $key => $value) {
+                            if (!in_array($key, ['id', 'id_action', 'created_at', 'updated_at']) && $value !== null) {
+                                $results[] = ucfirst(str_replace('_', ' ', $key)) . ': ' . $value;
+                            }
+                        }
+
+                        return !empty($results) ? implode('<br>', $results) : '-';
                     }
                 }
                 return '-';
@@ -983,39 +1006,42 @@ class PatientsController extends Controller
             'data' => $patients->items(),
         ]);
     }
-        public function getPatientsApotik(Request $request)
-        {
-            $start = $request->input('start', 0);
-            $length = $request->input('length', 10);
-            $draw = $request->input('draw', 1);
-            $searchValue = $request->input('search.value', '');
-            $filterDate = $request->input('filterDate', null);
+    public function getPatientsApotik(Request $request)
+    {
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+        $draw = $request->input('draw', 1);
+        $searchValue = $request->input('search.value', '');
+        $filterDate = $request->input('filterDate', null);
 
-            $page = $start / $length + 1;
+        $page = $start / $length + 1;
 
-            $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations','actionObats.obat.terimaObat')->where(function ($q) {
-            $q->WhereHas('actionObats')->orWhereNotNull('obat');
-        })->whereNull('update_obat')->whereNull('verifikasi_awal');
+        $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'actionObats.obat.terimaObat')
+            ->where(function ($q) {
+                $q->WhereHas('actionObats')->orWhereNotNull('obat');
+            })
+            ->whereNull('update_obat')
+            ->whereNull('verifikasi_awal');
 
-            if ($filterDate) {
-                $query->whereDate('tanggal', $filterDate);
-            }
-
-            if (!empty($searchValue)) {
-                $query->whereHas('patient', function ($q) use ($searchValue) {
-                    $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
-                });
-            }
-
-            $patients = $query->paginate($length, ['*'], 'page', $page);
-
-            return response()->json([
-                'draw' => (int) $draw,
-                'recordsTotal' => $patients->total(),
-                'recordsFiltered' => $patients->total(),
-                'data' => $patients->items(),
-            ]);
+        if ($filterDate) {
+            $query->whereDate('tanggal', $filterDate);
         }
+
+        if (!empty($searchValue)) {
+            $query->whereHas('patient', function ($q) use ($searchValue) {
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+            });
+        }
+
+        $patients = $query->paginate($length, ['*'], 'page', $page);
+
+        return response()->json([
+            'draw' => (int) $draw,
+            'recordsTotal' => $patients->total(),
+            'recordsFiltered' => $patients->total(),
+            'data' => $patients->items(),
+        ]);
+    }
     public function getPatientsApotikGigi(Request $request)
     {
         // Ambil parameter DataTables
