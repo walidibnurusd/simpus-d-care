@@ -564,6 +564,9 @@
                     $('#displayNIK, #displayName, #displayAge, #displayPhone, #displayAddress, #displayBlood, #displayRmNumber')
                         .text('');
                     $('#addPatientForm')[0].reset();
+                          var tableBody = document.getElementById("medicationTableBody");
+                            tableBody.innerHTML = '';
+                            rowNumber = 1; // Reset row number when table is cleared
 
                     // Reload DataTable dan tunggu sampai selesai
                     await new Promise((resolve) => {

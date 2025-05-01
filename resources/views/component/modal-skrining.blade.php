@@ -60,11 +60,37 @@
                                 data: null,
                                 title: 'Action',
                                 render: function(data, type, row) {
-                                    const route =
-                                        `show/${data.poli}/${data.route_name}/${data.id}`;
-                                    return `<button class="btn btn-primary btn-sm" onclick="handleAction('${route}')">Detail</button>`;
-                                },
+                                    let actionButtons = '';
 
+                                    // Jika status skrining belum selesai, tampilkan tombol Mulai Skrining
+                                    if (row.status_skrining === 'Belum Selesai') {
+                                        const startRoute =
+                                            `${data.poliPatient}/${data.route_name}/${data.patientId}`;
+                                        console.log(startRoute);
+                                        actionButtons += `
+                    <button class="btn btn-success btn-sm" onclick="handleStartSkrining('${startRoute}')">
+                        Mulai Skrining
+                    </button>
+                `;
+                                    }
+
+                                    // Jika data skrining ada, tampilkan tombol Detail dan Delete
+                                    if (row.status_skrining == 'Selesai') {
+                                        const detailRoute =
+                                            `${data.poli}/${data.route_name}/${data.id}`;
+                                        const deleteRoute =
+                                            `admin/${data.poli}/${data.route_name}/${data.id}`;
+
+                                        actionButtons += `
+                    <button class="btn btn-primary btn-sm" onclick="handleAction('${detailRoute}')">
+                        Detail
+                    </button>
+                `;
+                                    }
+
+                                    return actionButtons ||
+                                        '<span class="text-muted">Tidak ada aksi</span>';
+                                }
                             },
                         ],
                         processing: true,
@@ -84,6 +110,9 @@
         });
     });
 
+    function handleStartSkrining(route) {
+        window.open(`/${route}`, '_blank');
+    }
     // Contoh fungsi untuk menangani aksi di tombol Action
     function handleAction(route) {
         const url = `/admin/${route}`;

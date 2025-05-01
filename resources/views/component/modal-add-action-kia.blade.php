@@ -478,7 +478,19 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mt-3">
+                            <div class="col-md-4 mt-3">
+                                <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                <select class="form-control" id="poli" name="id_rujuk_poli">
+                                    <option value="" disabled selected>pilih</option>
+                                    @foreach ($poli as $item)
+                                        <option value="{{ $item->id }}"
+                                            @if (in_array($item->id, old('poli', []))) selected @endif>
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mt-3">
                                 <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                 <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
                                     @foreach ($diagnosa as $item)
@@ -487,7 +499,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-6 mt-3">
+                            <div class="col-md-4 mt-3">
                                 <label for="hasil_usg">Hasil USG</label>
                                 <textarea class="form-control" id="hasil_usg" name="hasil_usg" placeholder="Hasil USG"></textarea>
                             </div>
@@ -720,7 +732,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#diagnosa').select2({
+        $('#diagnosa, #poli').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0

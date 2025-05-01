@@ -514,9 +514,15 @@
   margin-top: -87px;
 }
 
+<<<<<<< HEAD
 /*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>
+=======
+/*
+ * The MIT License
+ * Copyright (c) 2012 Matias Meno <m@tias.me>
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .dropzone {
   margin-right: auto;

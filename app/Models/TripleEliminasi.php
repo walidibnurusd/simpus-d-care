@@ -101,7 +101,7 @@ class TripleEliminasi extends Model
         'arv_check' => 'boolean',
         'gejala_pms' => 'boolean',
     ];
-    public function listPasien()
+    public function pasien()
     {
         return $this->belongsTo(Patients::class, 'pasien', 'id');
     }

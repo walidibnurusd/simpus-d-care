@@ -106,7 +106,7 @@ class Action extends Model
         'beri_tindakan',
         'tindakan_ruang_tindakan',
         'kasus','alergi', 'gangguan_ginjal', 'menyusui',
-        'verifikasi_awal', 'verifikasi_akhir', 'informasi_obat'
+        'verifikasi_awal', 'verifikasi_akhir', 'informasi_obat', 'id_rujuk_poli'
     ];
 
     protected $casts = [

@@ -1,6 +1,7 @@
 <!-- Modal Add Action -->
 @php
     $diagnosa = App\Models\Diagnosis::all();
+    $poli = App\Models\Poli::all();
     // dd($diagnosa);
 @endphp
 <style>
@@ -725,7 +726,7 @@
 
                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'tindakan')
                             <div class="row mt-3">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="skrining" class="form-label">Obat</label>
                                         <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
@@ -735,6 +736,19 @@
                                         </button>
 
                                     </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                    <select class="form-control" id="poliEdit{{ $action->id }}"
+                                        name="id_rujuk_poli">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($poli as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="diagnosaEditAction" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
@@ -771,12 +785,13 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Riwayat Berobat</label>
-                                            <button class="btn btn-success w-100 mt-2" type="button"
-                                                id="btnCariRiwayatBerobatEdit" data-bs-toggle="modal"
+                                            <button class="btn btn-success w-100 mt-2 btnCariRiwayatBerobatEdit"
+                                                type="button" data-bs-toggle="modal"
                                                 data-bs-target="#modalBerobatEdit"
                                                 data-patient-id="{{ $action->id_patient }}">
                                                 Riwayat Berobat
                                             </button>
+
 
                                         </div>
                                     </div>
@@ -1293,6 +1308,13 @@
 <script>
     $(document).ready(function() {
         $('#diagnosaEditAction{{ $action->id }}').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#poliEdit{{ $action->id }}').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0

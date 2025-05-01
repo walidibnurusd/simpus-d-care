@@ -1,6 +1,7 @@
 <!-- Modal Add Action -->
 @php
     $diagnosa = App\Models\Diagnosis::all();
+    $poli = App\Models\Poli::all();
     // dd($diagnosa);
 @endphp
 <style>
@@ -54,8 +55,8 @@
             </div>
 
             <div class="modal-body">
-                <form id="editPatientForm{{ $action->id }}" action="{{ route('action.update', $action->id) }}" method="POST"
-                    class="px-3">
+                <form id="editPatientForm{{ $action->id }}" action="{{ route('action.update', $action->id) }}"
+                    method="POST" class="px-3">
                     <div id="formSection1{{ $action->id }}" class="form-section">
                         @csrf
                         <input type="hidden" name="tipe" id="tipe" value="poli-kb">
@@ -643,7 +644,20 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4 mt-3">
+                                        <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                        <select class="form-control" id="poliEdit{{ $action->id }}"
+                                            name="id_rujuk_poli">
+                                            <option value="" disabled selected>pilih</option>
+                                            @foreach ($poli as $item)
+                                                <option value="{{ $item->id }}"
+                                                    @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mt-3">
                                         <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                         <select class="form-control" id="diagnosaEdit{{ $action->id }}"
                                             name="diagnosa[]" multiple>
@@ -661,7 +675,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-6 mt-3">
+                                    <div class="col-md-4 mt-3">
                                         <label for="kesimpulan">Kesimpulan</label>
                                         <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ isset($action->kesimpulan) ? $action->kesimpulan : '' }}</textarea>
                                     </div>
@@ -693,10 +707,11 @@
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Obat</label>
                                             <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
-                                                data-bs-toggle="modal" data-bs-target="#editActionObatModal{{$action->id}}">
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editActionObatModal{{ $action->id }}">
                                                 Obat
                                             </button>
-        
+
                                         </div>
                                     </div>
                                 </div>
@@ -908,6 +923,13 @@
     });
     $(document).ready(function() {
         $('#tindakanEdit').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#poliEdit{{ $action->id }}').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0

@@ -15,7 +15,7 @@ class Anemia extends Model
         'gaya_hidup' => 'array',
         'kadar_hemoglobin' => 'array',
     ];
-      public function listPasien()
+    public function pasien()
     {
         return $this->belongsTo(Patients::class, 'pasien', 'id');
     }

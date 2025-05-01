@@ -1,6 +1,7 @@
 <!-- Modal Add Action -->
 @php
     $diagnosa = App\Models\Diagnosis::all();
+    $poli = App\Models\Poli::all();
     // dd($diagnosa);
 @endphp
 <style>
@@ -43,8 +44,8 @@
             </div>
 
             <div class="modal-body">
-                <form id="editPatientForm{{ $action->id }}" action="{{ route('action.update', $action->id) }}" method="POST"
-                    class="px-3">
+                <form id="editPatientForm{{ $action->id }}" action="{{ route('action.update', $action->id) }}"
+                    method="POST" class="px-3">
                     <div id="formSection1{{ $action->id }}" class="form-section">
                         @csrf
                         <input type="hidden" name="tipe" id="tipe" value="poli-kia">
@@ -617,7 +618,20 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                    <select class="form-control" id="poliEdit{{ $action->id }}"
+                                        name="id_rujuk_poli">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($poli as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
                                     <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                     <select class="form-control" id="diagnosaEdit{{ $action->id }}"
                                         name="diagnosa[]" multiple>
@@ -635,7 +649,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <label for="hasil_usg">Hasil USG</label>
                                     <textarea class="form-control" id="hasil_usg" name="hasil_usg" placeholder="Hasil USG">{{ old('hasil_usg', $action->hasil_usg ?? '') }}</textarea>
                                 </div>
@@ -667,10 +681,11 @@
                                     <div class="form-group">
                                         <label for="skrining" class="form-label">Obat</label>
                                         <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
-                                            data-bs-toggle="modal" data-bs-target="#editActionObatModal{{$action->id}}">
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editActionObatModal{{ $action->id }}">
                                             Obat
                                         </button>
-    
+
                                     </div>
                                 </div>
                             </div>
@@ -688,10 +703,10 @@
                                     id="tanggal_kembali" placeholder="Pilih Tanggal"
                                     value="{{ $action->tanggal_kembali }}">
                             </div>
-                            <div class="col-md-6 mt-3">
-                                <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
-                                <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
-                            </div>
+                            <!--<div class="col-md-6 mt-3">-->
+                            <!--    <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>-->
+                            <!--    <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>-->
+                            <!--</div>-->
                             {{-- <div class="col-md-6 mt-3">
                                     <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
                                     <textarea class="form-control" id="pemeriksaan_penunjang" name="pemeriksaan_penunjang"
@@ -704,167 +719,174 @@
                         </div>
 
                     </div>
-           
-            <div id="formSection2{{ $action->id }}" class="form-section d-none">
-                <h6>Jenis Pemeriksaan Darah</h6>
-                @php
 
-                    $jenis_pemeriksaan = json_decode($action->hasilLab?->jenis_pemeriksaan ?? '[]', true) ?? [];
-                @endphp
-                <div class="row">
+                    <div id="formSection2{{ $action->id }}" class="form-section d-none">
+                        <h6>Jenis Pemeriksaan Darah</h6>
+                        @php
 
-                    <div class="col-md-6">
+                            $jenis_pemeriksaan = json_decode($action->hasilLab?->jenis_pemeriksaan ?? '[]', true) ?? [];
+                        @endphp
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gds"
+                                        name="jenis_pemeriksaan[]" value="GDS"
+                                        {{ in_array('GDS', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="gds">GDS
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gdp"
+                                        name="jenis_pemeriksaan[]" value="GDP"
+                                        {{ in_array('GDP', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="gdp">GDP</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gdp_2_jam_pp"
+                                        name="jenis_pemeriksaan[]" value="GDP 2 Jam pp"
+                                        {{ in_array('GDP 2 Jam pp', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="gdp_2_jam_pp">GDP 2 Jam pp</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="cholesterol"
+                                        name="jenis_pemeriksaan[]" value="Cholesterol"
+                                        {{ in_array('Cholesterol', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="cholesterol">Cholesterol</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="asam_urat"
+                                        name="jenis_pemeriksaan[]" value="Asam Urat"
+                                        {{ in_array('Asam Urat', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="asam_urat">Asam Urat</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="leukosit"
+                                        name="jenis_pemeriksaan[]" value="Leukosit"
+                                        {{ in_array('Leukosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="leukosit">Leukosit</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="eritrosit"
+                                        name="jenis_pemeriksaan[]" value="Eritrosit"
+                                        {{ in_array('Eritrosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="eritrosit">Eritrosit</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="trombosit"
+                                        name="jenis_pemeriksaan[]" value="Trombosit"
+                                        {{ in_array('Trombosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="trombosit">Trombosit</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="hemoglobin"
+                                        name="jenis_pemeriksaan[]" value="Hemoglobin"
+                                        {{ in_array('Hemoglobin', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="hemoglobin">Hemoglobin</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="sifilis"
+                                        name="jenis_pemeriksaan[]" value="Sifilis"
+                                        {{ in_array('Sifilis', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="sifilis">Sifilis</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="hiv"
+                                        name="jenis_pemeriksaan[]" value="HIV"
+                                        {{ in_array('HIV', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="hiv">HIV</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="golongan_darah"
+                                        name="jenis_pemeriksaan[]" value="Golongan Darah"
+                                        {{ in_array('Golongan Darah', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="golongan_darah">Golongan Darah</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="widal"
+                                        name="jenis_pemeriksaan[]" value="Widal"
+                                        {{ in_array('Widal', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="widal">Widal</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="malaria"
+                                        name="jenis_pemeriksaan[]" value="Malaria"
+                                        {{ in_array('Malaria', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="malaria">Malaria</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tambahan Pemeriksaan URINE -->
+                        <h6>Jenis Pemeriksaan URINE</h6>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="gds"
-                                name="jenis_pemeriksaan[]" value="GDS"
-                                {{ in_array('GDS', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="gds">GDS
-                            </label>
+                            <input class="form-check-input" type="checkbox" id="albumin"
+                                name="jenis_pemeriksaan[]" value="Albumin"
+                                {{ in_array('Albumin', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="albumin">Albumin</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="gdp"
-                                name="jenis_pemeriksaan[]" value="GDP"
-                                {{ in_array('GDP', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="gdp">GDP</label>
+                            <input class="form-check-input" type="checkbox" id="reduksi"
+                                name="jenis_pemeriksaan[]" value="Reduksi"
+                                {{ in_array('Reduksi', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="reduksi">Reduksi</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="gdp_2_jam_pp"
-                                name="jenis_pemeriksaan[]" value="GDP 2 Jam pp"
-                                {{ in_array('GDP 2 Jam pp', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="gdp_2_jam_pp">GDP 2 Jam pp</label>
+                            <input class="form-check-input" type="checkbox" id="urinalisa"
+                                name="jenis_pemeriksaan[]" value="Urinalisa"
+                                {{ in_array('Urinalisa', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="urinalisa">Urinalisa</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="cholesterol"
-                                name="jenis_pemeriksaan[]" value="Cholesterol"
-                                {{ in_array('Cholesterol', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="cholesterol">Cholesterol</label>
+                            <input class="form-check-input" type="checkbox" id="tes_kehamilan"
+                                name="jenis_pemeriksaan[]" value="Tes Kehamilan"
+                                {{ in_array('Tes Kehamilan', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="tes_kehamilan">Tes Kehamilan</label>
+                        </div>
+
+                        <!-- Tambahan Pemeriksaan FESES -->
+                        <h6>Jenis Pemeriksaan FESES</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="telur_cacing"
+                                name="jenis_pemeriksaan[]" value="Telur Cacing"
+                                {{ in_array('Telur Cacing', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="telur_cacing">Telur Cacing</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="asam_urat"
-                                name="jenis_pemeriksaan[]" value="Asam Urat"
-                                {{ in_array('Asam Urat', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="asam_urat">Asam Urat</label>
+                            <input class="form-check-input" type="checkbox" id="bta"
+                                name="jenis_pemeriksaan[]" value="BTA"
+                                {{ in_array('BTA', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="bta">BTA</label>
+                        </div>
+
+                        <!-- Tambahan Pemeriksaan IgM -->
+                        <h6>Pemeriksaan IgM</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="igm_dbd"
+                                name="jenis_pemeriksaan[]" value="IgM DBD"
+                                {{ in_array('IgM DBD', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="igm_dbd">IgM DBD</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="leukosit"
-                                name="jenis_pemeriksaan[]" value="Leukosit"
-                                {{ in_array('Leukosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="leukosit">Leukosit</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="eritrosit"
-                                name="jenis_pemeriksaan[]" value="Eritrosit"
-                                {{ in_array('Eritrosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="eritrosit">Eritrosit</label>
+                            <input class="form-check-input" type="checkbox" id="igm_typhoid"
+                                name="jenis_pemeriksaan[]" value="IgM Typhoid"
+                                {{ in_array('IgM Typhoid', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="trombosit"
-                                name="jenis_pemeriksaan[]" value="Trombosit"
-                                {{ in_array('Trombosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="trombosit">Trombosit</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="hemoglobin"
-                                name="jenis_pemeriksaan[]" value="Hemoglobin"
-                                {{ in_array('Hemoglobin', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="hemoglobin">Hemoglobin</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="sifilis"
-                                name="jenis_pemeriksaan[]" value="Sifilis"
-                                {{ in_array('Sifilis', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="sifilis">Sifilis</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="hiv"
-                                name="jenis_pemeriksaan[]" value="HIV"
-                                {{ in_array('HIV', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="hiv">HIV</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="golongan_darah"
-                                name="jenis_pemeriksaan[]" value="Golongan Darah"
-                                {{ in_array('Golongan Darah', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="golongan_darah">Golongan Darah</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="widal"
-                                name="jenis_pemeriksaan[]" value="Widal"
-                                {{ in_array('Widal', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="widal">Widal</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="malaria"
-                                name="jenis_pemeriksaan[]" value="Malaria"
-                                {{ in_array('Malaria', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="malaria">Malaria</label>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-success"
+                            id="nextSectionButton{{ $action->id }}">Lanjut
+                            Pemeriksaan</button>
+                        <button type="submit" class="btn btn-primary">Simpan Data</button>
                     </div>
-                </div>
-
-                <!-- Tambahan Pemeriksaan URINE -->
-                <h6>Jenis Pemeriksaan URINE</h6>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="albumin" name="jenis_pemeriksaan[]"
-                        value="Albumin" {{ in_array('Albumin', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="albumin">Albumin</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="reduksi" name="jenis_pemeriksaan[]"
-                        value="Reduksi" {{ in_array('Reduksi', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="reduksi">Reduksi</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="urinalisa" name="jenis_pemeriksaan[]"
-                        value="Urinalisa" {{ in_array('Urinalisa', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="urinalisa">Urinalisa</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="tes_kehamilan" name="jenis_pemeriksaan[]"
-                        value="Tes Kehamilan"
-                        {{ in_array('Tes Kehamilan', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="tes_kehamilan">Tes Kehamilan</label>
-                </div>
-
-                <!-- Tambahan Pemeriksaan FESES -->
-                <h6>Jenis Pemeriksaan FESES</h6>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="telur_cacing" name="jenis_pemeriksaan[]"
-                        value="Telur Cacing"
-                        {{ in_array('Telur Cacing', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="telur_cacing">Telur Cacing</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="bta" name="jenis_pemeriksaan[]"
-                        value="BTA" {{ in_array('BTA', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="bta">BTA</label>
-                </div>
-
-                <!-- Tambahan Pemeriksaan IgM -->
-                <h6>Pemeriksaan IgM</h6>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="igm_dbd" name="jenis_pemeriksaan[]"
-                        value="IgM DBD" {{ in_array('IgM DBD', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="igm_dbd">IgM DBD</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="igm_typhoid" name="jenis_pemeriksaan[]"
-                        value="IgM Typhoid" {{ in_array('IgM Typhoid', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
-                </div>
+                </form>
             </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-success" id="nextSectionButton{{ $action->id }}">Lanjut
-                    Pemeriksaan</button>
-                <button type="submit" class="btn btn-primary">Simpan Data</button>
-            </div>
-            </form>
-        </div>
         </div>
     </div>
 </div>
@@ -915,6 +937,13 @@
     });
     $(document).ready(function() {
         $('#tindakanEdit').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+    $(document).ready(function() {
+        $('#poliEdit{{ $action->id }}').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0

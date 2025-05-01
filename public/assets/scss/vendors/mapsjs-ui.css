@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Explanation why the layout looks so complicated:
  * The UI container needs a position (absolute or relative) to prevent z-index issues (DomMarker on top of UI)
@@ -13,6 +14,23 @@
  *  - center anchor (.H_l_center):   left: -50%;            (was left: 50%)
  *  - right anchor (.H_l_right):     right: 100%;           (was right: 0)
  *                                        margin-left: -100%;
+=======
+/*
+ * Explanation why the layout looks so complicated:
+ * The UI container needs a position (absolute or relative) to prevent z-index issues (DomMarker on top of UI)
+ * Therefore it has these additional styles:
+ *    position: absolute;
+ *    width: 100%;
+ *    height: 100%;
+ * To prevent that the UI container captures all events the container is displaced by
+ *   left: 100%;
+ * To neutralize the displacement for the UI elements within the UI container the following adjustments are needed:
+ *  - InfoBubble (.H_ib):            left: -100%;
+ *  - left anchor (.H_l_left):       margin-left: -100%;
+ *  - center anchor (.H_l_center):   left: -50%;            (was left: 50%)
+ *  - right anchor (.H_l_right):     right: 100%;           (was right: 0)
+ *                                        margin-left: -100%;
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .H_ui {
   font-size: 10px;
@@ -40,8 +58,13 @@
   pointer-events: none;
 }
 
+<<<<<<< HEAD
 /*
  * Layout
+=======
+/*
+ * Layout
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .H_l_left {
   position: absolute;
@@ -104,8 +127,13 @@
   float: right;
 }
 
+<<<<<<< HEAD
 /**
  *  Element styles
+=======
+/**
+ *  Element styles
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .H_ctl {
   margin: .6em;
@@ -153,8 +181,13 @@
   cursor: default;
 }
 
+<<<<<<< HEAD
 /**
  *   Base Elements
+=======
+/**
+ *   Base Elements
+>>>>>>> 9df8fede466960d27744a11e4cb830e2a9437611
  */
 .H_l_vertical .H_grp > .H_btn {
   border-radius: 0;

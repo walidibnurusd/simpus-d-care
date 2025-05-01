@@ -85,7 +85,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                         <div class="col-md-3">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="kasus">Kasus</label>
                                                 <select class="form-control" id="kasus" name="kasus" required>
@@ -463,6 +463,18 @@
                         @if (Auth::user()->role != 'tindakan')
                             <div class="row mt-3">
                                 <div class="col-md-4">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                    <select class="form-control" id="poli" name="id_rujuk_poli">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($poli as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
                                     <label for="diagnosa" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                     <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
                                         @foreach ($diagnosa as $item)
@@ -485,17 +497,17 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="skrining" class="form-label">Riwayat Berobat</label>
-                                        <button class="btn btn-success w-100 mt-2" type="button"
-                                            id="btnCariRiwayatBerobat" data-bs-toggle="modal"
-                                            data-bs-target="#modalBerobat">
-                                            Riwayat Berobat
-                                        </button>
+                                <!--<div class="col-md-4">-->
+                                <!--    <div class="form-group">-->
+                                <!--        <label for="skrining" class="form-label">Riwayat Berobat</label>-->
+                                <!--        <button class="btn btn-success w-100 mt-2" type="button"-->
+                                <!--            id="btnCariRiwayatBerobat" data-bs-toggle="modal"-->
+                                <!--            data-bs-target="#modalBerobat">-->
+                                <!--            Riwayat Berobat-->
+                                <!--        </button>-->
 
-                                    </div>
-                                </div>
+                                <!--    </div>-->
+                                <!--</div>-->
 
                                 {{-- <div class="col-md-4">
                                     <label for="pemeriksaan_penunjang" style="color: rgb(19, 11, 241);">Pemeriksaan
@@ -643,6 +655,17 @@
                                     <button class="btn btn-primary w-100 mt-2" type="button" id="btnAddObat"
                                         data-bs-toggle="modal" data-bs-target="#addActionObatModal">
                                         Obat
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="skrining" class="form-label">Riwayat Berobat</label>
+                                    <button class="btn btn-success w-100 mt-2" type="button"
+                                        id="btnCariRiwayatBerobat" data-bs-toggle="modal"
+                                        data-bs-target="#modalBerobat">
+                                        Riwayat Berobat
                                     </button>
 
                                 </div>
@@ -805,11 +828,11 @@
                                     name="jenis_pemeriksaan[]" value="Telur Cacing">
                                 <label class="form-check-label" for="telur_cacing">Telur Cacing</label>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="bta"
-                                    name="jenis_pemeriksaan[]" value="BTA">
-                                <label class="form-check-label" for="bta">BTA</label>
-                            </div>
+                            <!--<div class="form-check">-->
+                            <!--    <input class="form-check-input" type="checkbox" id="bta"-->
+                            <!--        name="jenis_pemeriksaan[]" value="BTA">-->
+                            <!--    <label class="form-check-label" for="bta">BTA</label>-->
+                            <!--</div>-->
 
                             <!-- Tambahan Pemeriksaan IgM -->
                             <h6>Pemeriksaan IgM</h6>
@@ -822,6 +845,17 @@
                                 <input class="form-check-input" type="checkbox" id="igm_typhoid"
                                     name="jenis_pemeriksaan[]" value="IgM Typhoid">
                                 <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
+                            </div>
+                            <h6>Jenis Pemeriksaan Dahak</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="bta"
+                                    name="jenis_pemeriksaan[]" value="BTA">
+                                <label class="form-check-label" for="bta">BTA</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tcm"
+                                    name="jenis_pemeriksaan[]" value="TCM">
+                                <label class="form-check-label" for="bta">TCM</label>
                             </div>
                         </div>
                     @endif
@@ -871,7 +905,7 @@
     $(document).ready(function() {
         // Initialize select2 for all relevant elements
 
-        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan')
+        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli')
             .select2({
                 placeholder: "Pilih",
                 allowClear: true,

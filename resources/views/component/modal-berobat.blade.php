@@ -14,6 +14,9 @@
                             <th>Poli Berobat</th>
                             <th>Diagnosa</th>
                             <th>ICD10</th>
+                            <th>Obat</th>
+                            <th>Hasil Lab</th>
+                            <th>Rujuk RS</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,6 +65,16 @@
                             {
                                 data: 'icd10',
                                 name: 'icd10'
+                            }, {
+                                data: 'obat',
+                                name: 'obat'
+                            }, {
+                                data: 'hasil_lab',
+                                name: 'hasil_lab'
+                            },
+                            {
+                                data: 'rujuk_rs',
+                                name: 'rujuk_rs'
                             }
                         ]
                     });

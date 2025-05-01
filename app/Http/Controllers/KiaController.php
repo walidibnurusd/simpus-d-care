@@ -428,9 +428,9 @@ class KiaController extends Controller
         return redirect()->back()->with('success', 'Data Hepatitis created successfully!');
     }
 
-    public function showKekerasanAnak(Request $request)
+    public function showKekerasanAnak(Request $request, $id)
     {
-        $pasien = Patients::all();
+        $pasien = Patients::find($id);
         $routeName = $request->route()->getName();
         return view('kia.kekerasan_anak', compact('pasien', 'routeName'));
     }
@@ -472,9 +472,9 @@ class KiaController extends Controller
         return redirect()->back()->with('success', 'Data Kekerasan Anak created successfully!');
     }
 
-    public function showKekerasanPerempuan(Request $request)
+    public function showKekerasanPerempuan(Request $request, $id)
     {
-        $pasien = Patients::all();
+        $pasien = Patients::find($id);
         $routeName = $request->route()->getName();
         return view('kia.kekerasan_perempuan', compact('pasien', 'routeName'));
     }
@@ -793,7 +793,6 @@ class KiaController extends Controller
         if ($request->has('surveyNyamuk')) {
             foreach ($request->input('surveyNyamuk') as $surveyData) {
                 $malaria->surveyNyamuk()->create($surveyData);
-
             }
         }
         if ($request->has('kelompok')) {
@@ -804,7 +803,6 @@ class KiaController extends Controller
         // Redirect with success message
         return redirect()->back()->with('success', 'Data Malaria created successfully!');
     }
-
 
     public function showTripleEliminasi($id)
     {
