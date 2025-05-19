@@ -462,18 +462,22 @@
                         </div>
                         @if (Auth::user()->role != 'tindakan')
                             <div class="row mt-3">
-                                <div class="col-md-4">
-                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
-                                    <select class="form-control" id="poli" name="id_rujuk_poli">
-                                        <option value="" disabled selected>pilih</option>
-                                        @foreach ($poli as $item)
-                                            <option value="{{ $item->id }}"
-                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <!--<div class="col-md-4">-->
+                                <!--    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>-->
+                                <!--    <select class="form-control" id="poli" name="id_rujuk_poli">-->
+                                <!--        <option value="" disabled selected>pilih</option>-->
+                                <!--        @foreach ($poli as $item)
+-->
+                                <!--            <option value="{{ $item->id }}"-->
+                                <!--                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id)
+selected
+@endif>-->
+                                <!--                {{ $item->name }}-->
+                                <!--            </option>-->
+                                <!--
+@endforeach-->
+                                <!--    </select>-->
+                                <!--</div>-->
                                 <div class="col-md-4">
                                     <label for="diagnosa" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                     <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
@@ -684,20 +688,30 @@
                                 </div>
 
                             @endif
-                            @if (Auth::user()->role != 'tindakan')
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
-                                        <select class="form-control" id="rujuk_rs" name="rujuk_rs"
-                                            data-placeholder="Pilih Rumah Sakit">
-                                            <option></option> <!-- Empty option to show placeholder -->
-                                            @foreach ($rs as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                                    <select class="form-control" id="rujuk_rs" name="rujuk_rs"
+                                        data-placeholder="Pilih Rumah Sakit">
+                                        <option></option> <!-- Empty option to show placeholder -->
+                                        @foreach ($rs as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                            @endif
+                            </div>
+                            <div class="col-md-4">
+                                <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                <select class="form-control" id="poli" name="id_rujuk_poli">
+                                    <option value="" disabled selected>pilih</option>
+                                    @foreach ($poli as $item)
+                                        <option value="{{ $item->id }}"
+                                            @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             @if ($routeName === 'action.dokter.index')
                                 <div class="col-md-4">
                                     <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang
@@ -882,7 +896,7 @@
 
 
 <script>
-    @if ($routeName != 'action.dokter.ruang.tindakan.index')
+    @if (Auth::user()->role == 'dokter' || $routeName === 'action.dokter.ugd.index')
         let currentSection = 1;
         document.getElementById('nextSectionButton').addEventListener('click', function() {
             const section1 = document.getElementById('formSection1');

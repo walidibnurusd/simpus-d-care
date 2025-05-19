@@ -694,15 +694,41 @@
                                     <div class="col-md-6 mt-3">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Riwayat Berobat</label>
-                                            <button class="btn btn-success w-100 mt-2" type="button"
-                                                id="btnCariRiwayatBerobatEdit" data-bs-toggle="modal"
+                                            <button class="btn btn-success w-100 mt-2 btnCariRiwayatBerobatEdit"
+                                                type="button" data-bs-toggle="modal"
                                                 data-bs-target="#modalBerobatEdit"
                                                 data-patient-id="{{ $action->id_patient }}">
                                                 Riwayat Berobat
                                             </button>
 
+
                                         </div>
                                     </div>
+                                      <div class="col-md-6 mt-3">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                    <select class="form-control" id="poliEdit{{ $action->id }}"
+                                        name="id_rujuk_poli">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($poli as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                 <div class="col-md-6 mt-3">
+                                    <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                                    <select class="form-control" id="rujuk_rs{{ $action->id }}" name="rujuk_rs">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($rs as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ old('rujuk_rs', $action->rujuk_rs ?? '') == $item->id ? 'selected' : '' }}>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                     <div class="col-md-6 mt-3">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Obat</label>
@@ -856,12 +882,12 @@
                                     {{ in_array('Telur Cacing', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="telur_cacing">Telur Cacing</label>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="bta"
-                                    name="jenis_pemeriksaan[]" value="BTA"
-                                    {{ in_array('BTA', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="bta">BTA</label>
-                            </div>
+                            <!--<div class="form-check">-->
+                            <!--    <input class="form-check-input" type="checkbox" id="bta"-->
+                            <!--        name="jenis_pemeriksaan[]" value="BTA"-->
+                            <!--        {{ in_array('BTA', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>-->
+                            <!--    <label class="form-check-label" for="bta">BTA</label>-->
+                            <!--</div>-->
 
                             <!-- Tambahan Pemeriksaan IgM -->
                             <h6>Pemeriksaan IgM</h6>
@@ -876,6 +902,19 @@
                                     name="jenis_pemeriksaan[]" value="IgM Typhoid"
                                     {{ in_array('IgM Typhoid', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
+                            </div>
+                               <h6>Jenis Pemeriksaan Dahak</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="bta"
+                                    name="jenis_pemeriksaan[]" value="BTA"
+                                    {{ in_array('BTA', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="bta">BTA</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tcm"
+                                    name="jenis_pemeriksaan[]" value="TCM"
+                                    {{ in_array('TCM', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="tcm">TCM</label>
                             </div>
                         </div>
                     @endif
@@ -903,10 +942,15 @@
 @include('component.modal-berobat-edit')
 @include('component.modal-edit-action-obat')
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<!-- jQuery harus PERTAMA -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<!-- CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+<!-- JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <script>
@@ -923,6 +967,13 @@
     });
     $(document).ready(function() {
         $('#tindakanEdit').select2({
+            placeholder: "Pilih",
+            allowClear: true,
+            minimumResultsForSearch: 0
+        });
+    });
+       $(document).ready(function() {
+        $('#rujuk_rs{{ $action->id }}').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0

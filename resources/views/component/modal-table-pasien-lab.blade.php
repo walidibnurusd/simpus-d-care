@@ -356,7 +356,19 @@
                     label: "label-igm_typhoid",
                     input: "igm_typhoid",
                     section: "pi"
-                }
+                },
+                {
+                    name: "TCM",
+                    label: "label-tcm",
+                    input: "tcm",
+                    section: "pa"
+                },
+                // {
+                //     name: "BTA",
+                //     label: "label-bta",
+                //     input: "bta",
+                //     section: "pa"
+                // },
             ];
 
             // Loop melalui pemeriksaan dan aktifkan elemen yang sesuai

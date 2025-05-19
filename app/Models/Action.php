@@ -147,6 +147,10 @@ class Action extends Model
     {
         return $this->belongsTo(Disease::class, 'riwayat_penyakit_tidak_menular');
     }
+     public function rujukPoli()
+    {
+        return $this->belongsTo(Poli::class, 'id_rujuk_poli');
+    }
 
     /**
      * Relasi ke model Diagnosis

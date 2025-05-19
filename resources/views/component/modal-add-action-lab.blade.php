@@ -242,13 +242,7 @@
                                         <input class="form-control" type="text" id="telur_cacing"
                                             name="telur_cacing" placeholder="Telur Cacing" style="display: none;">
                                     </div>
-                                    <div class="col-md-6">
-                                        <!-- BTA Field -->
-                                        <label for="bta" class="form-label" id="label-bta"
-                                            style="display: none;">Hasil BTA</label>
-                                        <input class="form-control" type="text" id="bta" name="bta"
-                                            placeholder="BTA" style="display: none;">
-                                    </div>
+                                 
                                 </div>
                             </div>
 
@@ -272,6 +266,29 @@
                                             style="display: none;">Hasil IgM Typhoid</label>
                                         <input class="form-control" type="text" id="igm_typhoid"
                                             name="igm_typhoid" placeholder="IgM Typhoid" style="display: none;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: none; align-items: center; text-align: center;" id="pa">
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                                <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan Dahak</span>
+                                <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+                            </div>
+                            <div class="container">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <!-- IgM DBD Field -->
+                                        <label for="tcm" class="form-label" id="label-tcm"
+                                            style="display: none;">Hasil TCM</label>
+                                        <input class="form-control" type="text" id="tcm" name="tcm"
+                                            placeholder="TCM" style="display: none;">
+                                    </div>
+                                     <div class="col-md-6">
+                                        <!-- BTA Field -->
+                                        <label for="bta" class="form-label" id="label-bta"
+                                            style="display: none;">Hasil BTA</label>
+                                        <input class="form-control" type="text" id="bta" name="bta"
+                                            placeholder="BTA" style="display: none;">
                                     </div>
                                 </div>
                             </div>

@@ -16,6 +16,7 @@
                             <th>ICD10</th>
                             <th>Obat</th>
                             <th>Hasil Lab</th>
+                            <th>Rujuk Poli</th>
                             <th>Rujuk RS</th>
                         </tr>
                     </thead>
@@ -68,9 +69,14 @@
                             }, {
                                 data: 'obat',
                                 name: 'obat'
-                            }, {
+                            }, 
+                            {
                                 data: 'hasil_lab',
                                 name: 'hasil_lab'
+                            },
+                            {
+                                data: 'rujuk_poli',
+                                name: 'rujuk_poli'
                             },
                             {
                                 data: 'rujuk_rs',

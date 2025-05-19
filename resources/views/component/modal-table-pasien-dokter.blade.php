@@ -179,8 +179,8 @@
                         name: 'dob'
                     },
                     {
-                        data: 'created_at',
-                        name: 'created_at',
+                        data: 'tanggal',
+                        name: 'tanggal',
                         render: function(data) {
                             if (!data)
                                 return '-'; // Jika data kosong, tampilkan tanda "-"
@@ -197,7 +197,7 @@
                             const seconds = String(dateObj.getSeconds()).padStart(2,
                                 '0');
 
-                            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+                            return `${day}-${month}-${year}`;
                         }
                     },
                     {
@@ -549,18 +549,12 @@
 
                     // Sembunyikan detail pasien & reset form
                     $('#patientDetails').hide();
-                    $('#tindakan_ruang_tindakan').val(response.tindakan || [])
-                        .trigger(
-                            'change');
-                    $('#rujuk_rs').val(response.tindakan || [])
-                        .trigger(
-                            'change');
-                    $('#diagnosa').val(response.tindakan || []).trigger(
-                        'change');
-                    $('#diagnosaEdit').val(response.tindakan || []).trigger(
-                        'change');
-                    $('#tindakan').val(response.tindakan || []).trigger(
-                        'change');
+                    // Reset Select2 fields
+                    $('#addPatientForm').find('select').each(function() {
+                        $(this).val(null).trigger('change');
+                    });
+                     $('#tindakan_ruang_tindakan, #rujuk_rs, #diagnosa, #diagnosaEdit, #tindakan, #poli')
+            .val(null).trigger('change');
                     $('#displayNIK, #displayName, #displayAge, #displayPhone, #displayAddress, #displayBlood, #displayRmNumber')
                         .text('');
                     $('#addPatientForm')[0].reset();

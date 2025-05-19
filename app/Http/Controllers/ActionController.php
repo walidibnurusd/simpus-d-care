@@ -32,8 +32,9 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
+         $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
     }
     public function indexData(Request $request)
     {
@@ -79,9 +80,10 @@ class ActionController extends Controller
                 $rs = Hospital::all();
                 $dokter = User::where('role', 'dokter')->get();
                 $routeName = request()->route()->getName();
+                $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
                 // Render modal edit with route name
-                $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'obats'=>$obats])->render();
 
                 return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -160,9 +162,10 @@ class ActionController extends Controller
                     $rs = Hospital::all();
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
+                     $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter,'obats'=>$obats])->render();
 
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -193,8 +196,9 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
+         $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName','obats'));
     }
     public function indexUgd(Request $request)
     {
@@ -249,9 +253,10 @@ class ActionController extends Controller
                     $rs = Hospital::all();
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
+                     $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'obats'=>$obats])->render();
 
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -814,7 +819,7 @@ class ActionController extends Controller
             $actionsQuery->where('tipe', $poli);
         }
 
-        $actions = $actionsQuery->get();
+        $actions = $actionsQuery->orderBy('created_at', 'desc')->get();
 
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
@@ -1657,12 +1662,24 @@ class ActionController extends Controller
             if ($id != null) {
                 // Jika ID diberikan, update data yang sudah ada
                 $action = Action::find($id);
+               $action = Action::updateOrCreate(['id' => $request->id], $validated);
+
                 if (!empty($request->jenis_pemeriksaan)) {
-                    HasilLab::create([
+                    $dataLab = [
                         'id_action' => $action->id,
-                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
-                    ]);
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan),
+                    ];
+                
+                    // Cek apakah sudah ada hasil lab untuk action ini
+                    $existingLab = HasilLab::where('id_action', $action->id)->first();
+                
+                    if ($existingLab) {
+                        $existingLab->update($dataLab);
+                    } else {
+                        HasilLab::create($dataLab);
+                    }
                 }
+
                 $medications = json_decode($request->medications, true);
                 // dd($medications);
 
