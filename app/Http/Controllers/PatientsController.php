@@ -103,6 +103,16 @@ class PatientsController extends Controller
                 }
                 return '-';
             })
+               ->addColumn('rujuk_poli', function ($kunjungan) {
+                if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+                    $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+
+                    if ($action && $action->rujukPoli) {
+                        return $action->rujukPoli->name ?? '-';
+                    }
+                }
+                return '-';
+            })
             ->addColumn('icd10', function ($kunjungan) {
                 // Log the first action's diagnosa to debug
                 if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
@@ -146,24 +156,45 @@ class PatientsController extends Controller
                 }
                 return '-';
             })
-            ->addColumn('hasil_lab', function ($kunjungan) {
-                if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
-                    // Cari action berdasarkan tanggal kunjungan
-                    $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+           ->addColumn('hasil_lab', function ($kunjungan) {
+    if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+        $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
 
-                    if ($action && $action->hasilLab) {
-                        // Ambil beberapa data penting dari hasil lab
-                        $lab = $action->hasilLab;
-                        $results = [];
+        if ($action && $action->hasilLab) {
+            $lab = $action->hasilLab;
+            $results = [];
 
-                        // Ambil data yang tidak null untuk ditampilkan
-                        foreach ($lab->getAttributes() as $key => $value) {
-                            if (!in_array($key, ['id', 'id_action', 'created_at', 'updated_at']) && $value !== null) {
-                                $results[] = ucfirst(str_replace('_', ' ', $key)) . ': ' . $value;
-                            }
+            foreach ($lab->getAttributes() as $key => $value) {
+                if (!in_array($key, ['id', 'id_action', 'created_at', 'updated_at']) && $value !== null) {
+
+                    // Tangani nilai JSON string ganda
+                    if (is_string($value)) {
+                        $decoded = json_decode($value, true);
+                        if (is_string($decoded)) {
+                            $decoded = json_decode($decoded, true);
                         }
+                        if (is_array($decoded)) {
+                            $value = implode(', ', $decoded);
+                        }
+                    }
 
-                        return !empty($results) ? implode('<br>', $results) : '-';
+                    $label = ucwords(str_replace('_', ' ', $key));
+                    $results[] = "<strong>$label:</strong> $value";
+                }
+            }
+
+            return !empty($results) ? implode('<br>', $results) : '-';
+        }
+    }
+    return '-';
+})
+
+
+            ->addColumn('rujuk_rs', function ($kunjungan) {
+                if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+                    $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+                    if ($action && $action->hospitalReferral) {
+                        return $action->hospitalReferral->name; // atau kolom lain seperti `nama_rs`
                     }
                 }
                 return '-';
@@ -179,6 +210,7 @@ class PatientsController extends Controller
             //     // }
             //     return '-';
             // })
+            ->rawColumns(['hasil_lab'])
             ->make(true);
     }
 

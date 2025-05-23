@@ -209,14 +209,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
     Route::prefix('skrining')->group(function () {
-        Route::get('/', [App\Http\Controllers\SkriningController::class, 'index'])->name('skrining.index');
+        Route::get('/', [SkriningController::class, 'index'])->name('skrining.index');
     });
     Route::prefix('kunjungan')->group(function () {
-        Route::get('/', [App\Http\Controllers\KunjunganController::class, 'index'])->name('kunjungan.index');
-        Route::get('/dashboard', [App\Http\Controllers\KunjunganController::class, 'kunjunganDashboard'])->name('kunjungan.dashboard');
-        Route::post('/', [App\Http\Controllers\KunjunganController::class, 'store'])->name('kunjungan.store');
-        Route::put('/{id}', [App\Http\Controllers\KunjunganController::class, 'update'])->name('kunjungan.update');
-        Route::delete('/{id}', [App\Http\Controllers\KunjunganController::class, 'destroy'])->name('kunjungan.delete');
+        Route::get('/', [KunjunganController::class, 'index'])->name('kunjungan.index');
+        Route::get('/dashboard', [KunjunganController::class, 'kunjunganDashboard'])->name('kunjungan.dashboard');
+        Route::post('/', [KunjunganController::class, 'store'])->name('kunjungan.store');
+        Route::put('/{id}', [KunjunganController::class, 'update'])->name('kunjungan.update');
+        Route::delete('/{id}', [KunjunganController::class, 'destroy'])->name('kunjungan.delete');
     });
     Route::prefix('admin')->group(function () {
         Route::prefix('kia')->group(function () {
@@ -443,21 +443,26 @@ Route::get('/get-patients-apotik/poli-kia', [PatientsController::class, 'getPati
 Route::get('/get-patients-apotik/poli-kb', [PatientsController::class, 'getPatientsApotikKb'])->name('get-patients-apotik-kb');
 
 Route::prefix('dashboard')->group(function () {
-    Route::get('/pasien', [App\Http\Controllers\DashboardController::class, 'indexPatient'])->name('dashboard.patient');
-    Route::get('/kunjungan', [App\Http\Controllers\DashboardController::class, 'indexKunjungan'])->name('dashboard.kunjungan');
+    Route::get('/pasien', [DashboardController::class, 'indexPatient'])->name('dashboard.patient');
+    Route::get('/kunjungan', [DashboardController::class, 'indexKunjungan'])->name('dashboard.kunjungan');
 });
 Route::prefix('obat')->group(function () {
     //master obat
-    Route::get('master-data', [App\Http\Controllers\ObatController::class, 'indexMasterData'])->name('obat-master-data');
-    Route::post('master-data', [App\Http\Controllers\ObatController::class, 'storeMasterData'])->name('store-obat-master-data');
-    Route::put('master-data/{id}', [App\Http\Controllers\ObatController::class, 'updateMasterData'])->name('update-obat-master-data');
-    Route::get('table-master-data', [App\Http\Controllers\ObatController::class, 'getObatMasterData'])->name('table-obat-master-data');
+    Route::get('master-data', [ObatController::class, 'indexMasterData'])->name('obat-master-data');
+    Route::post('master-data', [ObatController::class, 'storeMasterData'])->name('store-obat-master-data');
+    Route::put('master-data/{id}', [ObatController::class, 'updateMasterData'])->name('update-obat-master-data');
+    Route::get('table-master-data', [ObatController::class, 'getObatMasterData'])->name('table-obat-master-data');
 
     //terima obat
-    Route::get('terima-obat', [App\Http\Controllers\ObatController::class, 'indexTerimaObat'])->name('terima-obat');
-    Route::post('terima-obat', [App\Http\Controllers\ObatController::class, 'storeTerimaObat'])->name('store-terima-obat');
-    Route::put('terima-obat/{id}', [App\Http\Controllers\ObatController::class, 'updateTerimaObat'])->name('update-terima-obat');
-    Route::get('table-terima-obat', [App\Http\Controllers\ObatController::class, 'getTerimaObat'])->name('table-terima-obat');
+    Route::get('terima-obat', [ObatController::class, 'indexTerimaObat'])->name('terima-obat');
+    Route::post('terima-obat', [ObatController::class, 'storeTerimaObat'])->name('store-terima-obat');
+    Route::put('terima-obat/{id}', [ObatController::class, 'updateTerimaObat'])->name('update-terima-obat');
+    Route::get('table-terima-obat', [ObatController::class, 'getTerimaObat'])->name('table-terima-obat');
+
+    //pengeluaran obat
+    Route::get('pengeluaran-obat', [ObatController::class, 'indexPengeluaranObat'])->name('pengeluaran-obat');
+    Route::get('get-stock/{id}', [ObatController::class, 'getStock']);
+
 });
 //diagnosa
 Route::get('/get-diagnosa', [DiagnosaController::class, 'getDiagnosa']);
@@ -471,22 +476,6 @@ Route::get('lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang');
 
-Route::prefix('widgets')->group(function () {
-    Route::view('chart-widget', 'widgets.chart-widget')->name('chart-widget');
-});
-
-Route::prefix('page-layouts')->group(function () {
-    Route::view('box-layout', 'page-layout.box-layout')->name('box-layout');
-    Route::view('layout-rtl', 'page-layout.layout-rtl')->name('layout-rtl');
-    Route::view('layout-dark', 'page-layout.layout-dark')->name('layout-dark');
-    Route::view('hide-on-scroll', 'page-layout.hide-on-scroll')->name('hide-on-scroll');
-    Route::view('footer-light', 'page-layout.footer-light')->name('footer-light');
-    Route::view('footer-dark', 'page-layout.footer-dark')->name('footer-dark');
-    Route::view('footer-fixed', 'page-layout.footer-fixed')->name('footer-fixed');
-});
-
-Route::view('sample-page', 'pages.sample-page')->name('sample-page');
-Route::view('internationalization', 'pages.internationalization')->name('internationalization');
 
 // Route::prefix('starter-kit')->group(function () {
 // });
@@ -500,105 +489,6 @@ Route::prefix('others')->group(function () {
     Route::view('503', 'errors.503')->name('error-503');
 });
 
-Route::prefix('authentication')->group(function () {
-    // Route::view('login', 'authentication.login')->name('login');
-    Route::view('login-one', 'authentication.login-one')->name('login-one');
-    Route::view('login-two', 'authentication.login-two')->name('login-two');
-    Route::view('login-bs-validation', 'authentication.login-bs-validation')->name('login-bs-validation');
-    Route::view('login-bs-tt-validation', 'authentication.login-bs-tt-validation')->name('login-bs-tt-validation');
-    Route::view('login-sa-validation', 'authentication.login-sa-validation')->name('login-sa-validation');
-    Route::view('sign-up', 'authentication.sign-up')->name('sign-up');
-    Route::view('sign-up-one', 'authentication.sign-up-one')->name('sign-up-one');
-    Route::view('sign-up-two', 'authentication.sign-up-two')->name('sign-up-two');
-    Route::view('sign-up-wizard', 'authentication.sign-up-wizard')->name('sign-up-wizard');
-    Route::view('unlock', 'authentication.unlock')->name('unlock');
-    Route::view('forget-password', 'authentication.forget-password')->name('forget-password');
-    Route::view('reset-password', 'authentication.reset-password')->name('reset-password');
-    Route::view('maintenance', 'authentication.maintenance')->name('maintenance');
-});
-
-Route::view('comingsoon', 'comingsoon.comingsoon')->name('comingsoon');
-Route::view('comingsoon-bg-video', 'comingsoon.comingsoon-bg-video')->name('comingsoon-bg-video');
-Route::view('comingsoon-bg-img', 'comingsoon.comingsoon-bg-img')->name('comingsoon-bg-img');
-
-Route::view('basic-template', 'email-templates.basic-template')->name('basic-template');
-Route::view('email-header', 'email-templates.email-header')->name('email-header');
-Route::view('template-email', 'email-templates.template-email')->name('template-email');
-Route::view('template-email-2', 'email-templates.template-email-2')->name('template-email-2');
-Route::view('ecommerce-templates', 'email-templates.ecommerce-templates')->name('ecommerce-templates');
-Route::view('email-order-success', 'email-templates.email-order-success')->name('email-order-success');
-
-Route::prefix('gallery')->group(function () {
-    Route::view('index', 'apps.gallery')->name('gallery');
-    Route::view('with-gallery-description', 'apps.gallery-with-description')->name('gallery-with-description');
-    Route::view('gallery-masonry', 'apps.gallery-masonry')->name('gallery-masonry');
-    Route::view('masonry-gallery-with-disc', 'apps.masonry-gallery-with-disc')->name('masonry-gallery-with-disc');
-    Route::view('gallery-hover', 'apps.gallery-hover')->name('gallery-hover');
-});
-
-Route::prefix('blog')->group(function () {
-    Route::view('index', 'apps.blog')->name('blog');
-    Route::view('blog-single', 'apps.blog-single')->name('blog-single');
-    Route::view('add-post', 'apps.add-post')->name('add-post');
-});
-
-Route::view('faq', 'apps.faq')->name('faq');
-
-Route::prefix('job-search')->group(function () {
-    Route::view('job-cards-view', 'apps.job-cards-view')->name('job-cards-view');
-    Route::view('job-list-view', 'apps.job-list-view')->name('job-list-view');
-    Route::view('job-details', 'apps.job-details')->name('job-details');
-    Route::view('job-apply', 'apps.job-apply')->name('job-apply');
-});
-
-Route::prefix('learning')->group(function () {
-    Route::view('learning-list-view', 'apps.learning-list-view')->name('learning-list-view');
-    Route::view('learning-detailed', 'apps.learning-detailed')->name('learning-detailed');
-});
-
-Route::prefix('maps')->group(function () {
-    Route::view('map-js', 'apps.map-js')->name('map-js');
-    Route::view('vector-map', 'apps.vector-map')->name('vector-map');
-});
-
-Route::prefix('editors')->group(function () {
-    Route::view('summernote', 'apps.summernote')->name('summernote');
-    Route::view('ckeditor', 'apps.ckeditor')->name('ckeditor');
-    Route::view('simple-mde', 'apps.simple-mde')->name('simple-mde');
-    Route::view('ace-code-editor', 'apps.ace-code-editor')->name('ace-code-editor');
-});
-
-Route::view('knowledgebase', 'apps.knowledgebase')->name('knowledgebase');
-Route::view('support-ticket', 'apps.support-ticket')->name('support-ticket');
-Route::view('landing-page', 'pages.landing-page')->name('landing-page');
-
-Route::prefix('layouts')->group(function () {
-    Route::view('compact-sidebar', 'admin_unique_layouts.compact-sidebar'); //default //Dubai
-    Route::view('box-layout', 'admin_unique_layouts.box-layout'); //default //New York //
-    Route::view('dark-sidebar', 'admin_unique_layouts.dark-sidebar');
-
-    Route::view('default-body', 'admin_unique_layouts.default-body');
-    Route::view('compact-wrap', 'admin_unique_layouts.compact-wrap');
-    Route::view('enterprice-type', 'admin_unique_layouts.enterprice-type');
-
-    Route::view('compact-small', 'admin_unique_layouts.compact-small');
-    Route::view('advance-type', 'admin_unique_layouts.advance-type');
-    Route::view('material-layout', 'admin_unique_layouts.material-layout');
-
-    Route::view('color-sidebar', 'admin_unique_layouts.color-sidebar');
-    Route::view('material-icon', 'admin_unique_layouts.material-icon');
-    Route::view('modern-layout', 'admin_unique_layouts.modern-layout');
-});
-
-Route::get('layout-{light}', function ($light) {
-    session()->put('layout', $light);
-    session()->get('layout');
-    if ($light == 'vertical-layout') {
-        return redirect()->route('pages-vertical-layout');
-    }
-    return redirect()->route('index');
-    return 1;
-});
 Route::get('/clear-cache', function () {
     Artisan::call('config:cache');
     Artisan::call('cache:clear');

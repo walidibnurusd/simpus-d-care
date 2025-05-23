@@ -32,8 +32,9 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats'));
     }
     public function indexData(Request $request)
     {
@@ -79,9 +80,10 @@ class ActionController extends Controller
                 $rs = Hospital::all();
                 $dokter = User::where('role', 'dokter')->get();
                 $routeName = request()->route()->getName();
+                $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
                 // Render modal edit with route name
-                $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'obats' => $obats])->render();
 
                 return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -160,9 +162,10 @@ class ActionController extends Controller
                     $rs = Hospital::all();
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -193,8 +196,9 @@ class ActionController extends Controller
         $penyakit = Disease::all();
         $rs = Hospital::all();
         $routeName = $request->route()->getName();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
-        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
+        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats'));
     }
     public function indexUgd(Request $request)
     {
@@ -249,9 +253,10 @@ class ActionController extends Controller
                     $rs = Hospital::all();
                     $dokter = User::where('role', 'dokter')->get();
                     $routeName = request()->route()->getName();
+                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
 
                     // Render modal edit with route name
-                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter])->render();
+                    $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -814,7 +819,7 @@ class ActionController extends Controller
             $actionsQuery->where('tipe', $poli);
         }
 
-        $actions = $actionsQuery->get();
+        $actions = $actionsQuery->orderBy('created_at', 'desc')->get();
 
         $routeName = $request->route()->getName();
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
@@ -1657,12 +1662,24 @@ class ActionController extends Controller
             if ($id != null) {
                 // Jika ID diberikan, update data yang sudah ada
                 $action = Action::find($id);
+                $action = Action::updateOrCreate(['id' => $request->id], $validated);
+
                 if (!empty($request->jenis_pemeriksaan)) {
-                    HasilLab::create([
+                    $dataLab = [
                         'id_action' => $action->id,
-                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
-                    ]);
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan),
+                    ];
+
+                    // Cek apakah sudah ada hasil lab untuk action ini
+                    $existingLab = HasilLab::where('id_action', $action->id)->first();
+
+                    if ($existingLab) {
+                        $existingLab->update($dataLab);
+                    } else {
+                        HasilLab::create($dataLab);
+                    }
                 }
+
                 $medications = json_decode($request->medications, true);
                 // dd($medications);
 
@@ -2420,26 +2437,24 @@ class ActionController extends Controller
     public function updateLab(Request $request, $id)
     {
         try {
-            // Find the action record to be updated
             $action = Action::findOrFail($id);
-
-            // Fetch the patient ID based on the provided NIK
             $patient = Patients::where('nik', $request->nik)->first();
 
             if (!$patient) {
-                return redirect()
-                    ->back()
-                    ->withErrors(['nik' => 'Patient with the provided NIK does not exist.'])
-                    ->withInput();
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Patient with the provided NIK does not exist.',
+                        'errors' => ['nik' => 'Patient with the provided NIK does not exist.'],
+                    ],
+                    422,
+                );
             }
 
-            // Format the date and merge the patient ID into the request
             $request->merge([
                 'id_patient' => $patient->id,
             ]);
 
-            // dd($request->);
-            // Validate the request
             $validated = $request->validate([
                 'id_patient' => 'required',
                 'hasil_lab' => 'nullable|string',
@@ -2466,85 +2481,48 @@ class ActionController extends Controller
                 'igm_dbd' => 'nullable|string',
                 'igm_typhoid' => 'nullable|string',
             ]);
+
             $hasilLab = HasilLab::where('id_action', $id)->first();
 
-            if ($request->has('gds')) {
-                $hasilLab->gds = $request->gds;
+            if (!$hasilLab) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Hasil lab not found.',
+                    ],
+                    404,
+                );
             }
-            if ($request->has('gdp')) {
-                $hasilLab->gdp = $request->gdp;
-            }
-            if ($request->has('gdp_2_jam_pp')) {
-                $hasilLab->gdp_2_jam_pp = $request->gdp_2_jam_pp;
-            }
-            if ($request->has('cholesterol')) {
-                $hasilLab->cholesterol = $request->cholesterol;
-            }
-            if ($request->has('asam_urat')) {
-                $hasilLab->asam_urat = $request->asam_urat;
-            }
-            if ($request->has('leukosit')) {
-                $hasilLab->leukosit = $request->leukosit;
-            }
-            if ($request->has('eritrosit')) {
-                $hasilLab->eritrosit = $request->eritrosit;
-            }
-            if ($request->has('trombosit')) {
-                $hasilLab->trombosit = $request->trombosit;
-            }
-            if ($request->has('hemoglobin')) {
-                $hasilLab->hemoglobin = $request->hemoglobin;
-            }
-            if ($request->has('sifilis')) {
-                $hasilLab->sifilis = $request->sifilis;
-            }
-            if ($request->has('hiv')) {
-                $hasilLab->hiv = $request->hiv;
-            }
-            if ($request->has('golongan_darah')) {
-                $hasilLab->golongan_darah = $request->golongan_darah;
-            }
-            if ($request->has('widal')) {
-                $hasilLab->widal = $request->widal;
-            }
-            if ($request->has('malaria')) {
-                $hasilLab->malaria = $request->malaria;
-            }
-            if ($request->has('albumin')) {
-                $hasilLab->albumin = $request->albumin;
-            }
-            if ($request->has('reduksi')) {
-                $hasilLab->reduksi = $request->reduksi;
-            }
-            if ($request->has('urinalisa')) {
-                $hasilLab->urinalisa = $request->urinalisa;
-            }
-            if ($request->has('tes_kehamilan')) {
-                $hasilLab->tes_kehamilan = $request->tes_kehamilan;
-            }
-            if ($request->has('telur_cacing')) {
-                $hasilLab->telur_cacing = $request->telur_cacing;
-            }
-            if ($request->has('bta')) {
-                $hasilLab->bta = $request->bta;
-            }
-            if ($request->has('igm_dbd')) {
-                $hasilLab->igm_dbd = $request->igm_dbd;
-            }
-            if ($request->has('igm_typhoid')) {
-                $hasilLab->igm_typhoid = $request->igm_typhoid;
+
+            foreach ($validated as $key => $value) {
+                if (in_array($key, ['gds', 'gdp', 'gdp_2_jam_pp', 'cholesterol', 'asam_urat', 'leukosit', 'eritrosit', 'trombosit', 'hemoglobin', 'sifilis', 'hiv', 'golongan_darah', 'widal', 'malaria', 'albumin', 'reduksi', 'urinalisa', 'tes_kehamilan', 'telur_cacing', 'bta', 'igm_dbd', 'igm_typhoid']) && $request->has($key)) {
+                    $hasilLab->$key = $value;
+                }
             }
 
             $hasilLab->save();
-
             $action->update($validated);
 
-            return redirect()->back()->with('success', 'Action has been successfully updated.');
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Action has been successfully updated.',
+                    'data' => [
+                        'action' => $action,
+                        'hasil_lab' => $hasilLab,
+                    ],
+                ],
+                200,
+            );
         } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])
-                ->withInput();
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'An error occurred.',
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
     public function updateApotik(Request $request, $id)

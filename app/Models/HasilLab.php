@@ -35,6 +35,7 @@ class HasilLab extends Model
         'bta',
         'igm_dbd',
         'igm_typhoid',
+        'tcm',
     ];
     protected $casts = [
         'jenis_pemeriksaan' => 'array',

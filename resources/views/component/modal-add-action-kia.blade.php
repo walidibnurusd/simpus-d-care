@@ -547,6 +547,19 @@
                                 <input type="date" class="form-control" name="tanggal_kembali"
                                     id="tanggal_kembali" placeholder="Pilih Tanggal">
                             </div>
+                           
+                                  <div class="col-md-6 mt-3">
+                                    <div class="form-group">
+                                        <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                                        <select class="form-control" id="rujuk_rs" name="rujuk_rs"
+                                            data-placeholder="Pilih Rumah Sakit">
+                                            <option></option> <!-- Empty option to show placeholder -->
+                                            @foreach ($rs as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             <!--<div class="col-md-6 mt-3">-->
                             <!--    <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>-->
                             <!--    <textarea class="form-control" id="obat" name="obat" placeholder="Obat"></textarea>-->
@@ -672,11 +685,11 @@
                                 name="jenis_pemeriksaan[]" value="Telur Cacing">
                             <label class="form-check-label" for="telur_cacing">Telur Cacing</label>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="bta"
-                                name="jenis_pemeriksaan[]" value="BTA">
-                            <label class="form-check-label" for="bta">BTA</label>
-                        </div>
+                        <!--<div class="form-check">-->
+                        <!--    <input class="form-check-input" type="checkbox" id="bta"-->
+                        <!--        name="jenis_pemeriksaan[]" value="BTA">-->
+                        <!--    <label class="form-check-label" for="bta">BTA</label>-->
+                        <!--</div>-->
 
                         <!-- Tambahan Pemeriksaan IgM -->
                         <h6>Pemeriksaan IgM</h6>
@@ -690,6 +703,17 @@
                                 name="jenis_pemeriksaan[]" value="IgM Typhoid">
                             <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
                         </div>
+                        <h6>Jenis Pemeriksaan Dahak</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="bta"
+                                    name="jenis_pemeriksaan[]" value="BTA">
+                                <label class="form-check-label" for="bta">BTA</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tcm"
+                                    name="jenis_pemeriksaan[]" value="TCM">
+                                <label class="form-check-label" for="bta">TCM</label>
+                            </div>
                     </div>
             </div>
 
@@ -732,7 +756,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#diagnosa, #poli').select2({
+        $('#diagnosa, #poli,#rujuk_rs').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0
