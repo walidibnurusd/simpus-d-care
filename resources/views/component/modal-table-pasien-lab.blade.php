@@ -399,4 +399,5 @@
             table.ajax.reload(null, false);
         });
     });
+    
 </script>

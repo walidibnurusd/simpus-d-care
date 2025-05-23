@@ -1,8 +1,8 @@
 <div class="sidebar-wrapper" sidebar-layout="stroke-svg">
     <div>
         <div class="logo-wrapper" style="margin: 2px;text-align:center"><a href="{{ route('profile') }}"><img
-                    class="img-fluid for-light" src="{{ asset('assets/assets/img/logo-app1.png') }}"
-                    style="height: 80px" alt=""><img class="img-fluid for-dark"
+                    class="img-fluid for-light" src="{{ asset('assets/assets/img/logo-app1.png') }}" style="height: 80px"
+                    alt=""><img class="img-fluid for-dark"
                     src="{{ asset('assets/assets/img/logo-app1.png') }}"style="height: 80px" alt=""></a>
             <div class="back-btn"><i class="fa fa-angle-left"></i></div>
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
@@ -108,6 +108,18 @@
                             </a>
                         </li>
                         <li class="sidebar-list">
+                            <a class="sidebar-link sidebar-title link-nav" href="{{ route('pengeluaran-obat') }}">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                </svg>
+                                <span class="sidebar-text nowrap">Pengeluaran Obat Lain</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('obat-master-data') }}">
                                 <svg class="stroke-icon">
                                     <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
@@ -123,8 +135,8 @@
                             Auth::user()->role == 'admin-kajian-awal' ||
                             Auth::user()->role == 'apotik' ||
                             Auth::user()->role == 'lab')
-                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                                href="#">
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+                                class="sidebar-link sidebar-title" href="#">
                                 <svg class="stroke-icon">
                                     <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>

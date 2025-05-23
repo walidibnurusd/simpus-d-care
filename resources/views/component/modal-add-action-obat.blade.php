@@ -116,14 +116,15 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveToPreviousModalBtn"  >Simpan</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    id="saveToPreviousModalBtn">Simpan</button>
             </div>
         </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         let obatData = @json($obats); // Ambil data obat dari Laravel
         let originalStock = 0;
 
@@ -133,7 +134,7 @@
             minimumResultsForSearch: 0
         });
 
-        $('#code_obat').change(function () {
+        $('#code_obat').change(function() {
             let selectedId = $(this).val();
             let selectedObat = obatData.find(obat => obat.id == selectedId);
 
@@ -142,9 +143,7 @@
                 $('#stok').val(originalStock);
                 $('#jumlah').val('');
 
-                // Set sediaan (shape)
-                console.log(selectedObat.shape);
-                
+
                 $('#shape').val(selectedObat.shape).trigger('change');
             } else {
                 $('#stok').val('');
@@ -153,7 +152,7 @@
             }
         });
 
-        $('#jumlah').on('input', function () {
+        $('#jumlah').on('input', function() {
             let jumlah = parseInt($(this).val()) || 0;
             let stokTersisa = originalStock - jumlah;
 

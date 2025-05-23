@@ -23,7 +23,17 @@ class ObatController extends Controller
         $obats = Obat::all();
         return view('content.obat.terima-obat', compact('obats'));
     }
-      public function storeMasterData(Request $request)
+    public function indexPengeluaranObat()
+    {
+        $obats = Obat::all();
+        return view('content.obat.pengeluaran-obat', compact('obats'));
+    }
+    public function getStock($id)
+    {
+        $stock = TerimaObat::where('id_obat', $id)->sum('amount');
+        return response()->json(['stock' => $stock]);
+    }
+    public function storeMasterData(Request $request)
     {
         try {
             // Validate the request data
@@ -219,7 +229,7 @@ class ObatController extends Controller
             return redirect()->back()->withErrors('Eror saat membuat terima obat');
         }
     }
-      public function getTerimaObat(Request $request)
+    public function getTerimaObat(Request $request)
     {
         $obats = TerimaObat::with('obat')->get();
 

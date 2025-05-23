@@ -122,66 +122,6 @@
     });
 
     // Submit form utama
-    $('#addPatientForm').submit(function(e) {
-        e.preventDefault();
-
-        const rows = document.getElementById("medicationTableBody").rows;
-        const medicationsData = [];
-
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            medicationsData.push({
-                number: row.cells[0].textContent.trim(),
-                name: row.cells[1].textContent.trim(),
-                dose: row.cells[2].textContent.trim(),
-                quantity: row.cells[3].textContent.trim(),
-                shape: row.cells[4].textContent.trim(),
-                stock: row.cells[5].textContent.trim(),
-                idObat: row.getAttribute("data-medication-code"),
-                menyusui: row.cells[7]?.textContent.trim() || '',
-                gangguan_ginjal: row.cells[8]?.textContent.trim() || '',
-                alergi: row.cells[9]?.textContent.trim() || '',
-                hamil: row.cells[10]?.textContent.trim() || '',
-            });
-        }
-
-        let formData = $('#addPatientForm').serialize();
-        formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
-        formData += "&medications=" + encodeURIComponent(JSON.stringify(medicationsData));
-
-        const actionId = $('#idAction').val() ?? null;
-        const url = actionId ? `/tindakan-apotik/${actionId}` : '/tindakan';
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: formData,
-            success: async function(response) {
-                await Swal.fire({
-                    title: 'Success!',
-                    text: response.success || 'Data berhasil disimpan!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-
-                // Reset form dan elemen terkait
-                $('#addPatientForm')[0].reset(); // Reset form HTML
-                $('#medicationTableBody').empty(); // Kosongkan tabel obat
-
-                resetPatientDetails
-            (); // Kosongkan dan sembunyikan detail pasien (fungsi harus sudah didefinisikan)
-            },
-            error: function(xhr) {
-                const errorMsg = xhr.responseJSON?.error || "Terjadi kesalahan!";
-                Swal.fire({
-                    title: 'Error!',
-                    text: errorMsg,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    });
 
     function resetPatientDetails() {
         document.getElementById("displayNIK").textContent = "";
@@ -452,7 +392,65 @@ data-bs-dismiss="modal">
             table.ajax.reload(null, false);
         });
 
+        $('#addPatientForm').submit(function(e) {
+            e.preventDefault();
 
+            const rows = document.getElementById("medicationTableBody").rows;
+            const medicationsData = [];
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                medicationsData.push({
+                    number: row.cells[0].textContent.trim(),
+                    name: row.cells[1].textContent.trim(),
+                    dose: row.cells[2].textContent.trim(),
+                    quantity: row.cells[3].textContent.trim(),
+                    shape: row.cells[4].textContent.trim(),
+                    stock: row.cells[5].textContent.trim(),
+                    idObat: row.getAttribute("data-medication-code"),
+                    menyusui: row.cells[7]?.textContent.trim() || '',
+                    gangguan_ginjal: row.cells[8]?.textContent.trim() || '',
+                    alergi: row.cells[9]?.textContent.trim() || '',
+                    hamil: row.cells[10]?.textContent.trim() || '',
+                });
+            }
+
+            let formData = $('#addPatientForm').serialize();
+            formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
+            formData += "&medications=" + encodeURIComponent(JSON.stringify(medicationsData));
+
+            const actionId = $('#idAction').val() ?? null;
+            const url = actionId ? `/tindakan-apotik/${actionId}` : '/tindakan';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: async function(response) {
+                    await Swal.fire({
+                        title: 'Success!',
+                        text: response.success || 'Data berhasil disimpan!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+
+                    // Reset form dan elemen terkait
+                    $('#addPatientForm')[0].reset(); // Reset form HTML
+                    $('#medicationTableBody').empty(); // Kosongkan tabel obat
+                     table.ajax.reload(null, false);
+                    resetPatientDetails(); // Kosongkan dan sembunyikan detail pasien (fungsi harus sudah didefinisikan)
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON?.error || "Terjadi kesalahan!";
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMsg,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
 
     });
 </script>
