@@ -164,14 +164,15 @@
                                         <div class="col-md-8">
                                             <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                             <select class="form-control" id="diagnosaEdit" name="diagnosa[]"
-                                                multiple>
-                                                <option value="" disabled selected>Pilih</option>
+                                                disabled>
+                                                <option value="" disabled selected>pilih</option>
                                                 @foreach ($diagnosa as $item)
                                                     <option value="{{ $item->id }}">
-                                                        {{ $item->name }}-{{ $item->icd10 }}
+                                                        {{ $item->name }} - {{ $item->icd10 }}
                                                     </option>
                                                 @endforeach
                                             </select>
+
                                         </div>
                                     </div>
 
@@ -332,24 +333,17 @@
         console.log("Data Obat:", obatData);
 
         let originalStock = 0; // Simpan stok awal
-        $('#diagnosaEdit')
-            .select2({
-                placeholder: "Pilih",
-                allowClear: true,
-                minimumResultsForSearch: 0
-            });
+
         $('#code_obat').select2({
             placeholder: "Pilih Obat",
             allowClear: true,
             minimumResultsForSearch: 0
         });
 
+
         $('#code_obat').change(function() {
             let selectedId = $(this).val();
             let selectedObat = obatData.find(obat => obat.id == selectedId); // Cari obat berdasarkan ID
-
-
-
             if (selectedObat) {
                 originalStock = parseInt(selectedObat.total_stock) || 0; // Pastikan nilai angka
                 $('#stok').val(originalStock); // Tampilkan stok awal

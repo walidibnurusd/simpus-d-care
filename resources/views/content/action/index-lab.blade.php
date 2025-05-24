@@ -242,6 +242,10 @@
                                                                 $hasilLabValues[] =
                                                                     'BTA: ' . ($action->hasilLab->bta ?? '-');
                                                             }
+                                                            if (in_array('TCM', $jenis_pemeriksaan)) {
+                                                                $hasilLabValues[] =
+                                                                    'TCM: ' . ($action->hasilLab->tcm ?? '-');
+                                                            }
                                                             if (in_array('IgM DBD', $jenis_pemeriksaan)) {
                                                                 $hasilLabValues[] =
                                                                     'IgM DBD: ' . ($action->hasilLab->igm_dbd ?? '-');

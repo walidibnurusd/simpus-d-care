@@ -103,7 +103,7 @@ class PatientsController extends Controller
                 }
                 return '-';
             })
-               ->addColumn('rujuk_poli', function ($kunjungan) {
+            ->addColumn('rujuk_poli', function ($kunjungan) {
                 if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
                     $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
 
@@ -156,39 +156,37 @@ class PatientsController extends Controller
                 }
                 return '-';
             })
-           ->addColumn('hasil_lab', function ($kunjungan) {
-    if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
-        $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+            ->addColumn('hasil_lab', function ($kunjungan) {
+                if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+                    $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
 
-        if ($action && $action->hasilLab) {
-            $lab = $action->hasilLab;
-            $results = [];
+                    if ($action && $action->hasilLab) {
+                        $lab = $action->hasilLab;
+                        $results = [];
 
-            foreach ($lab->getAttributes() as $key => $value) {
-                if (!in_array($key, ['id', 'id_action', 'created_at', 'updated_at']) && $value !== null) {
+                        foreach ($lab->getAttributes() as $key => $value) {
+                            if (!in_array($key, ['id', 'id_action', 'created_at', 'updated_at']) && $value !== null) {
+                                // Tangani nilai JSON string ganda
+                                if (is_string($value)) {
+                                    $decoded = json_decode($value, true);
+                                    if (is_string($decoded)) {
+                                        $decoded = json_decode($decoded, true);
+                                    }
+                                    if (is_array($decoded)) {
+                                        $value = implode(', ', $decoded);
+                                    }
+                                }
 
-                    // Tangani nilai JSON string ganda
-                    if (is_string($value)) {
-                        $decoded = json_decode($value, true);
-                        if (is_string($decoded)) {
-                            $decoded = json_decode($decoded, true);
+                                $label = ucwords(str_replace('_', ' ', $key));
+                                $results[] = "<strong>$label:</strong> $value";
+                            }
                         }
-                        if (is_array($decoded)) {
-                            $value = implode(', ', $decoded);
-                        }
+
+                        return !empty($results) ? implode('<br>', $results) : '-';
                     }
-
-                    $label = ucwords(str_replace('_', ' ', $key));
-                    $results[] = "<strong>$label:</strong> $value";
                 }
-            }
-
-            return !empty($results) ? implode('<br>', $results) : '-';
-        }
-    }
-    return '-';
-})
-
+                return '-';
+            })
 
             ->addColumn('rujuk_rs', function ($kunjungan) {
                 if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
@@ -1050,7 +1048,7 @@ class PatientsController extends Controller
 
         $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'actionObats.obat.terimaObat')
             ->where(function ($q) {
-                $q->WhereHas('actionObats')->orWhereNotNull('obat');
+                $q->whereHas('actionObats');
             })
             ->whereNull('update_obat')
             ->whereNull('verifikasi_awal');
@@ -1061,7 +1059,7 @@ class PatientsController extends Controller
 
         if (!empty($searchValue)) {
             $query->whereHas('patient', function ($q) use ($searchValue) {
-                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('address', 'LIKE', "%{$searchValue}%");
+                $q->where('name', 'LIKE', "%{$searchValue}%")->orWhere('nik', 'LIKE', "%{$searchValue}%");
             });
         }
 
@@ -1074,6 +1072,7 @@ class PatientsController extends Controller
             'data' => $patients->items(),
         ]);
     }
+
     public function getPatientsApotikGigi(Request $request)
     {
         // Ambil parameter DataTables

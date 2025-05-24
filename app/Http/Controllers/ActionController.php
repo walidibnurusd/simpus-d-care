@@ -2478,6 +2478,7 @@ class ActionController extends Controller
                 'tes_kehamilan' => 'nullable|string',
                 'telur_cacing' => 'nullable|string',
                 'bta' => 'nullable|string',
+                'tcm' => 'nullable|string',
                 'igm_dbd' => 'nullable|string',
                 'igm_typhoid' => 'nullable|string',
             ]);
@@ -2495,7 +2496,7 @@ class ActionController extends Controller
             }
 
             foreach ($validated as $key => $value) {
-                if (in_array($key, ['gds', 'gdp', 'gdp_2_jam_pp', 'cholesterol', 'asam_urat', 'leukosit', 'eritrosit', 'trombosit', 'hemoglobin', 'sifilis', 'hiv', 'golongan_darah', 'widal', 'malaria', 'albumin', 'reduksi', 'urinalisa', 'tes_kehamilan', 'telur_cacing', 'bta', 'igm_dbd', 'igm_typhoid']) && $request->has($key)) {
+                if (in_array($key, ['gds', 'gdp', 'gdp_2_jam_pp', 'cholesterol', 'asam_urat', 'leukosit', 'eritrosit', 'trombosit', 'hemoglobin', 'sifilis', 'hiv', 'golongan_darah', 'widal', 'malaria', 'albumin', 'reduksi', 'urinalisa', 'tes_kehamilan', 'telur_cacing', 'bta','tcm', 'igm_dbd', 'igm_typhoid']) && $request->has($key)) {
                     $hasilLab->$key = $value;
                 }
             }
@@ -2525,6 +2526,75 @@ class ActionController extends Controller
             );
         }
     }
+    public function updateLabEdit(Request $request, $id)
+    {
+        try {
+            $action = Action::findOrFail($id);
+            $patient = Patients::where('nik', $request->nik)->first();
+
+            if (!$patient) {
+                return redirect()->back()
+                    ->withErrors(['nik' => 'Patient with the provided NIK does not exist.'])
+                    ->withInput();
+            }
+
+            $request->merge([
+                'id_patient' => $patient->id,
+            ]);
+
+            $validated = $request->validate([
+                'id_patient' => 'required',
+                'hasil_lab' => 'nullable|string',
+                'gds' => 'nullable|string',
+                'gdp' => 'nullable|string',
+                'gdp_2_jam_pp' => 'nullable|string',
+                'cholesterol' => 'nullable|string',
+                'asam_urat' => 'nullable|string',
+                'leukosit' => 'nullable|string',
+                'eritrosit' => 'nullable|string',
+                'trombosit' => 'nullable|string',
+                'hemoglobin' => 'nullable|string',
+                'sifilis' => 'nullable|string',
+                'hiv' => 'nullable|string',
+                'golongan_darah' => 'nullable|string',
+                'widal' => 'nullable|string',
+                'malaria' => 'nullable|string',
+                'albumin' => 'nullable|string',
+                'reduksi' => 'nullable|string',
+                'urinalisa' => 'nullable|string',
+                'tes_kehamilan' => 'nullable|string',
+                'telur_cacing' => 'nullable|string',
+                'bta' => 'nullable|string',
+                'tcm' => 'nullable|string',
+                'igm_dbd' => 'nullable|string',
+                'igm_typhoid' => 'nullable|string',
+            ]);
+
+            $hasilLab = HasilLab::where('id_action', $id)->first();
+
+            if (!$hasilLab) {
+                return redirect()->back()->with('error', 'Hasil lab not found.');
+            }
+
+             foreach ($validated as $key => $value) {
+                if (in_array($key, ['gds', 'gdp', 'gdp_2_jam_pp', 'cholesterol', 'asam_urat', 'leukosit', 'eritrosit', 'trombosit', 'hemoglobin', 'sifilis', 'hiv', 'golongan_darah', 'widal', 'malaria', 'albumin', 'reduksi', 'urinalisa', 'tes_kehamilan', 'telur_cacing', 'bta','tcm', 'igm_dbd', 'igm_typhoid']) && $request->has($key)) {
+                    $hasilLab->$key = $value;
+                }
+            }
+
+            $hasilLab->save();
+            $action->update($validated);
+
+
+        return redirect()->back()->with('success', 'Data lab berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
     public function updateApotik(Request $request, $id)
     {
         try {

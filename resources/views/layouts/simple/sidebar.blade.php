@@ -99,10 +99,10 @@
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('terima-obat') }}">
                                 <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>
                                 <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>
                                 <span>Penerimaan Obat</span>
                             </a>
@@ -110,10 +110,10 @@
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('pengeluaran-obat') }}">
                                 <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>
                                 <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>
                                 <span class="sidebar-text nowrap">Pengeluaran Obat Lain</span>
                             </a>
@@ -122,10 +122,10 @@
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('obat-master-data') }}">
                                 <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>
                                 <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#user-visitor') }}"></use>
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>
                                 <span>Master Data Obat</span>
                             </a>

@@ -12,7 +12,7 @@ class PengeluaranObatLain extends Model
        protected $table = 'pengeluaran_obat_lain';
 
     protected $fillable = [
-        'id_obat','amount','date'
+        'id_obat','amount','date','remarks','unit'
     ];
      public function obat()
     {
