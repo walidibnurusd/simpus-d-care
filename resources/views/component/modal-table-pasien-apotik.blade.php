@@ -33,14 +33,12 @@
     </div>
 </div>
 
+<!-- jQuery harus di-load lebih dulu -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-<!-- CSS Select2 -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Bootstrap Bundle harus setelah jQuery -->
+{{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> --}}
 
-<!-- JS Select2 -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
     let rowNumber = 1;
@@ -143,7 +141,7 @@
 
         function initializeTable() {
             const tipe = $('#tipe').val();
-            const url = `/get-patients-apotik/${tipe}`;
+            const url = `/get-patients-apotik`;
             const filterDate = $('#filterDate').val();
             table = $('#pasienApotik').DataTable({
                 ajax: {
@@ -359,7 +357,7 @@ data-bs-dismiss="modal">
                 diagnosaArray = diagnosaData.map(val => parseInt(val));
             }
 
-            console.log(diagnosaArray);
+
 
             if (diagnosaArray.length > 0) {
                 $('#diagnosaEdit').val([]).trigger('change');
@@ -437,8 +435,9 @@ data-bs-dismiss="modal">
                     // Reset form dan elemen terkait
                     $('#addPatientForm')[0].reset(); // Reset form HTML
                     $('#medicationTableBody').empty(); // Kosongkan tabel obat
-                     table.ajax.reload(null, false);
-                    resetPatientDetails(); // Kosongkan dan sembunyikan detail pasien (fungsi harus sudah didefinisikan)
+                    table.ajax.reload(null, false);
+                    resetPatientDetails
+                        (); // Kosongkan dan sembunyikan detail pasien (fungsi harus sudah didefinisikan)
                 },
                 error: function(xhr) {
                     const errorMsg = xhr.responseJSON?.error || "Terjadi kesalahan!";

@@ -176,6 +176,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tindakan-dokter/{id}', [ActionController::class, 'updateDokter'])->name('action.update.dokter');
     Route::post('/dokter-tindakan/{id}', [ActionController::class, 'updateTindakan'])->name('action.update.dokter.tindakan');
     Route::post('/tindakan-lab/{id}', [ActionController::class, 'updateLab'])->name('action.update.lab');
+    Route::post('/tindakan-lab-edit/{id}', [ActionController::class, 'updateLabEdit'])->name('action.update.lab.edit');
     Route::post('/tindakan-apotik/{id}', [ActionController::class, 'updateApotik'])->name('action.update.apotik');
     Route::delete('/tindakan/{id}', [ActionController::class, 'destroy'])->name('action.destroy');
     Route::get('/laporan/tindakan', [ActionController::class, 'actionReport'])->name('action.report');
@@ -436,7 +437,7 @@ Route::get('/get-patients-lab/ruang-tindakan', [PatientsController::class, 'getP
 Route::get('/get-patients-lab/poli-kia', [PatientsController::class, 'getPatientsLabKia'])->name('get-patients-lab-kia');
 Route::get('/get-patients-lab/poli-kb', [PatientsController::class, 'getPatientsLabKb'])->name('get-patients-lab-kb');
 
-Route::get('/get-patients-apotik/poli-umum', [PatientsController::class, 'getPatientsApotik'])->name('get-patients-apotik');
+Route::get('/get-patients-apotik', [PatientsController::class, 'getPatientsApotik'])->name('get-patients-apotik');
 Route::get('/get-patients-apotik/poli-gigi', [PatientsController::class, 'getPatientsApotikGigi'])->name('get-patients-apotik-gigi');
 Route::get('/get-patients-apotik/ruang-tindakan', [PatientsController::class, 'getPatientsApotikRuangTindakan'])->name('get-patients-apotik-ruang-tindakan');
 Route::get('/get-patients-apotik/poli-kia', [PatientsController::class, 'getPatientsApotikKia'])->name('get-patients-apotik-kia');

@@ -10,7 +10,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('action.update.lab', $action->id) }}" method="POST"
+                <form id="addPatientForm" action="{{ route('action.update.lab.edit', $action->id) }}" method="POST"
                     class="px-3">
                     @csrf
                     @if ($routeName === 'action.lab.index' || 'action.dokter.index')
@@ -299,7 +299,7 @@
                                             value="{{ $action->hasilLab->telur_cacing ?? '' }}" name="telur_cacing"
                                             placeholder="Telur Cacing" style="display: none;">
                                     </div>
-                                  
+
                                 </div>
                             </div>
 
@@ -442,6 +442,8 @@
             "telur_cacing{{ $action->id }}", "pf{{ $action->id }}");
         if (hasilLab.bta !== null) toggleDisplay("label-bta{{ $action->id }}", "bta{{ $action->id }}",
             "pf{{ $action->id }}");
+        if (hasilLab.tcm !== null) toggleDisplay("label-tcm{{ $action->id }}", "tcm{{ $action->id }}",
+            "pf{{ $action->id }}");
         if (hasilLab.igm_dbd !== null) toggleDisplay("label-igm_dbd{{ $action->id }}",
             "igm_dbd{{ $action->id }}", "pi{{ $action->id }}");
         if (hasilLab.igm_typhoid !== null) toggleDisplay("label-igm_typhoid{{ $action->id }}",
@@ -558,28 +560,225 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Display success message if session has a success
-        @if (session('success'))
-            Swal.fire({
-                title: 'Success!',
-                text: "{{ session('success') }}",
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        @endif
+        document.getElementById('btn-submit').addEventListener('click', async function(e) {
+            e.preventDefault();
 
-        // Display error message if validation errors exist
-        @if ($errors->any())
-            Swal.fire({
-                title: 'Error!',
-                html: '<ul>' +
-                    '@foreach ($errors->all() as $error)' +
-                    '<li>{{ $error }}</li>' +
-                    '@endforeach' +
-                    '</ul>',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        @endif
+            const idAction = document.getElementById('idAction').value;
+            const form = document.getElementById('addPatientForm');
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(`/tindakan-lab/${idAction}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content'),
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: result.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+
+                        resetPatientDetails();
+                        resetHasilLabFields();
+                        form.reset();
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Failed!',
+                        text: result.message || 'Update failed.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            } catch (err) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: err.message || 'An unexpected error occurred.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     });
+
+    function resetPatientDetails() {
+        document.getElementById("displayNIK").textContent = "";
+        document.getElementById("displayName").textContent = "";
+        document.getElementById("displayAge").textContent = "";
+        document.getElementById("displayPhone").textContent = "";
+        document.getElementById("displayAddress").textContent = "";
+        document.getElementById("displayBlood").textContent = "";
+        document.getElementById("displayRmNumber").textContent = "";
+        document.getElementById("patientDetails").style.display = "none";
+    }
+
+    const pemeriksaanMapping = [{
+            name: "GDS",
+            label: "label-gds",
+            input: "gds",
+            section: "pd"
+        },
+        {
+            name: "GDP",
+            label: "label-gdp",
+            input: "gdp",
+            section: "pd"
+        },
+        {
+            name: "GDP 2 Jam pp",
+            label: "label-gdp_2_jam_pp",
+            input: "gdp_2_jam_pp",
+            section: "pd"
+        },
+        {
+            name: "Cholesterol",
+            label: "label-cholesterol",
+            input: "cholesterol",
+            section: "pd"
+        },
+        {
+            name: "Asam Urat",
+            label: "label-asam_urat",
+            input: "asam_urat",
+            section: "pd"
+        },
+        {
+            name: "Leukosit",
+            label: "label-leukosit",
+            input: "leukosit",
+            section: "pd"
+        },
+        {
+            name: "Eritrosit",
+            label: "label-eritrosit",
+            input: "eritrosit",
+            section: "pd"
+        },
+        {
+            name: "Trombosit",
+            label: "label-trombosit",
+            input: "trombosit",
+            section: "pd"
+        },
+        {
+            name: "Hemoglobin",
+            label: "label-hemoglobin",
+            input: "hemoglobin",
+            section: "pd"
+        },
+        {
+            name: "Sifilis",
+            label: "label-sifilis",
+            input: "sifilis",
+            section: "pd"
+        },
+        {
+            name: "HIV",
+            label: "label-hiv",
+            input: "hiv",
+            section: "pd"
+        },
+        {
+            name: "Golongan Darah",
+            label: "label-golongan_darah",
+            input: "golongan_darah",
+            section: "pd"
+        },
+        {
+            name: "Widal",
+            label: "label-widal",
+            input: "widal",
+            section: "pd"
+        },
+        {
+            name: "Malaria",
+            label: "label-malaria",
+            input: "malaria",
+            section: "pd"
+        },
+        {
+            name: "Albumin",
+            label: "label-albumin",
+            input: "albumin",
+            section: "pu"
+        },
+        {
+            name: "Reduksi",
+            label: "label-reduksi",
+            input: "reduksi",
+            section: "pu"
+        },
+        {
+            name: "Urinalisa",
+            label: "label-urinalisa",
+            input: "urinalisa",
+            section: "pu"
+        },
+        {
+            name: "Tes Kehamilan",
+            label: "label-tes_kehamilan",
+            input: "tes_kehamilan",
+            section: "pu"
+        },
+        {
+            name: "Telur Cacing",
+            label: "label-telur_cacing",
+            input: "telur_cacing",
+            section: "pf"
+        },
+        {
+            name: "BTA",
+            label: "label-bta",
+            input: "bta",
+            section: "pf"
+        },
+        {
+            name: "IgM DBD",
+            label: "label-igm_dbd",
+            input: "igm_dbd",
+            section: "pi"
+        },
+        {
+            name: "IgM Typhoid",
+            label: "label-igm_typhoid",
+            input: "igm_typhoid",
+            section: "pi"
+        },
+        {
+            name: "TCM",
+            label: "label-tcm",
+            input: "tcm",
+            section: "pa"
+        },
+    ];
+
+    function resetHasilLabFields() {
+        pemeriksaanMapping.forEach(({
+            label,
+            input,
+            section
+        }) => {
+            const labelEl = document.getElementById(label);
+            const inputEl = document.getElementById(input);
+            const sectionEl = document.getElementById(section);
+
+            if (labelEl) labelEl.style.display = "none";
+            if (inputEl) {
+                inputEl.style.display = "none";
+                inputEl.value = "";
+            }
+
+            if (sectionEl) sectionEl.style.display = "none";
+        });
+    }
 </script>
