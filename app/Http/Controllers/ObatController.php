@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Obat;
+use App\Models\PengeluaranObatLain;
 use App\Models\TerimaObat;
 use Carbon\Carbon;
 use Exception;
@@ -176,22 +177,11 @@ class ObatController extends Controller
     public function storeTerimaObat(Request $request)
     {
         try {
-            Log::info('Received request: ', $request->all());
-
-            // Validate the request data
-            $validatedData = $request->validate([
-                'id_obat' => 'required',
-                'date' => 'required|date',
-                'amount' => 'required|integer',
-            ]);
-
             $obat = new TerimaObat();
             $obat->id_obat = $request->id_obat;
             $obat->amount = $request->amount;
             $obat->date = $request->date;
             $obat->save();
-
-            Log::info('Data saved successfully.');
 
             return redirect()->back()->with('success', 'Data berhasil tersimpan');
         } catch (Exception $e) {
@@ -282,6 +272,171 @@ class ObatController extends Controller
                 return '<div class="action-buttons">
                         <!-- Edit Button -->
                         <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editTerimaObatModal' .
+                    $row->id .
+                    '">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        
+                       
+                    </div>' .
+                    $modal;
+            })
+            ->make(true);
+    }
+    public function storePengeluaranObat(Request $request)
+    {
+        try {
+            $obat = new PengeluaranObatLain();
+            $obat->id_obat = $request->id_obat;
+            $obat->amount = $request->amount;
+            $obat->date = $request->date;
+            $obat->remarks = $request->remarks;
+            $obat->unit = $request->unit;
+            $obat->save();
+            $terimaObat = TerimaObat::where('id_obat', $request->id_obat)->first();
+
+            if ($terimaObat) {
+                $newAmount = $terimaObat->amount - $request->amount;
+
+                if ($newAmount < 0) {
+                    throw new Exception('Stok tidak cukup');
+                }
+                $terimaObat->amount = $newAmount;
+                $terimaObat->save();
+            } else {
+                throw new Exception('Obat tidak ditemukan');
+            }
+            return redirect()->back()->with('success', 'Data berhasil tersimpan');
+        } catch (Exception $e) {
+            Log::error('Error while saving data: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Eror saat membuat pengeluaran obat');
+        }
+    }
+    public function updatePengeluaranObat(Request $request, $id)
+    {
+        try {
+            // Find and update the record
+            $obat = PengeluaranObatLain::find($id);
+
+            if (!$obat) {
+                return redirect()->back()->withErrors('Data tidak ditemukan');
+            }
+
+            // Get the previous amount
+            $previousAmount = $obat->amount;
+
+            // Update the record with the new data
+            $obat->id_obat = $request->id_obat;
+            $obat->amount = $request->amount;
+            $obat->date = $request->date;
+            $obat->remarks = $request->remarks;
+            $obat->unit = $request->unit;
+            $obat->save();
+
+            // Find the obat in the TerimaObat table
+            $terimaObat = TerimaObat::where('id_obat', $request->id_obat)->first();
+
+            if ($terimaObat) {
+                // Calculate the new stock amount based on the difference in amount
+                $newAmount = $terimaObat->amount - ($request->amount - $previousAmount); // Adjust the stock by the difference in amounts
+
+                if ($newAmount < 0) {
+                    // If the new amount is less than 0, throw an exception
+                    throw new Exception('Stok tidak cukup');
+                }
+
+                // Update the stock amount in TerimaObat
+                $terimaObat->amount = $newAmount;
+                $terimaObat->save();
+            } else {
+                throw new Exception('Obat tidak ditemukan');
+            }
+
+            return redirect()->back()->with('success', 'Data berhasil diedit');
+        } catch (Exception $e) {
+            // Catch any errors and redirect back with an error message
+            return redirect()
+                ->back()
+                ->withErrors('Error saat mengedit data: ' . $e->getMessage());
+        }
+    }
+
+    public function getPengeluaranObat(Request $request)
+    {
+        $obats = PengeluaranObatLain::with('obat')->get();
+
+        // Return the datatables response
+        return datatables()
+            ->of($obats)
+            ->addIndexColumn()
+            ->editColumn('date', function ($row) {
+                return $row->date;
+            })
+            ->editColumn('name', function ($row) {
+                return $row->obat->name;
+            })
+            ->editColumn('code', function ($row) {
+                return $row->obat->code ?? '';
+            })
+            ->editColumn('amount', function ($row) {
+                return $row->amount ?? '';
+            })
+            ->editColumn('shape', function ($row) {
+                // Check the value of shape and return appropriate value
+                switch ($row->obat->shape) {
+                    case 1:
+                        return 'Tablet';
+                    case 2:
+                        return 'Botol';
+                    case 3:
+                        return 'Pcs';
+                    case 4:
+                        return 'Suppositoria';
+                    case 5:
+                        return 'Ovula';
+                    case 6:
+                        return 'Drop';
+                    case 7:
+                        return 'Tube';
+                    case 8:
+                        return 'Pot';
+                    case 9:
+                        return 'Injeksi';
+                    default:
+                        return '';
+                }
+            })
+            ->editColumn('unit', function ($row) {
+                // Check the value of shape and return appropriate value
+                switch ($row->unit) {
+                    case 1:
+                        return 'Home Care';
+                    case 2:
+                        return 'P3K';
+                    case 3:
+                        return 'Pustu';
+                    case 4:
+                        return 'Puskel';
+                    case 5:
+                        return 'IGD';
+                    case 6:
+                        return 'Lab';
+                    case 7:
+                        return 'Lansia';
+                    case 8:
+                        return 'Poli Gigi';
+                    default:
+                        return '';
+                }
+            })
+
+            ->addColumn('action', function ($row) {
+                // Render the modal HTML for this specific row
+                $modal = view('component.modal-edit-pengeluaran-obat', ['obat' => $row])->render();
+
+                return '<div class="action-buttons">
+                        <!-- Edit Button -->
+                        <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editPengeluaranObatModal' .
                     $row->id .
                     '">
                             <i class="fas fa-edit"></i>

@@ -49,7 +49,7 @@
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-4">
-                            <table id="terima-obat-table" class="table align-items-center mb-0">
+                            <table id="pengeluaran-table" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -73,6 +73,9 @@
                                             JUMLAH</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            UNIT</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             AKSI</th>
 
                                     </tr>
@@ -93,17 +96,11 @@
     <script>
         $(document).ready(function() {
             // Initialize DataTable with pagination
-            var table = $('#terima-obat-table').DataTable({
+            var table = $('#pengeluaran-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('table-terima-obat') }}',
-                    // data: function(d) {
-                    //     // Send filter data along with the request
-                    //     d.start_date = $('#start_date').val();
-                    //     d.end_date = $('#end_date').val();
-                    //     d.poli = $('#poli').val();
-                    // }
+                    url: '{{ route('table-pengeluaran-obat') }}',
                 },
                 columns: [{
                         data: 'DT_RowIndex',
@@ -126,8 +123,12 @@
                         name: 'shape'
                     },
                     {
-                        data: 'mount',
-                        name: 'mount'
+                        data: 'amount',
+                        name: 'amount'
+                    },
+                    {
+                        data: 'unit',
+                        name: 'unit'
                     },
                     {
                         data: 'action',

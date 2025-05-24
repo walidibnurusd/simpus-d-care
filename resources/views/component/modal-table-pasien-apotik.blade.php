@@ -33,6 +33,9 @@
     </div>
 </div>
 
+<style>
+
+</style>
 <!-- jQuery harus di-load lebih dulu -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -41,6 +44,7 @@
 
 
 <script>
+
     let rowNumber = 1;
 
     // Fungsi untuk menghitung umur dari tanggal lahir
@@ -225,7 +229,11 @@ data-bs-dismiss="modal">
             $('#pasienApotik tbody').empty();
             initializeTable();
         });
-
+        //     $('#diagnosaEdit').select2({
+        //     placeholder: "Pilih",
+        //     minimumResultsForSearch: 0,
+        //     width: '100%' // menyesuaikan dengan .form-control
+        // });
 
 
         $(document).on('click', '.btnPilihPasien', function(event) {
@@ -357,7 +365,10 @@ data-bs-dismiss="modal">
                 diagnosaArray = diagnosaData.map(val => parseInt(val));
             }
 
-
+            console.log(diagnosaArray);
+      if ($.fn.select2 && $('#diagnosaEdit').data('select2')) {
+            $('#diagnosaEdit').select2('destroy');
+        }
 
             if (diagnosaArray.length > 0) {
                 $('#diagnosaEdit').val([]).trigger('change');
@@ -374,8 +385,14 @@ data-bs-dismiss="modal">
             }
 
             if (!$('#diagnosaEdit').hasClass('select2-hidden-accessible')) {
-                $('#diagnosaEdit').select2();
+
+                $('#diagnosaEdit').attr('multiple', 'multiple').select2({
+                    placeholder: 'Pilih Diagnosa',
+                    width: '100%'
+                });
+                console.log('diagnosa selected',$('#diagnosaEdit').val());
             }
+
 
             $('#modalPasienApotik').modal('hide');
         });

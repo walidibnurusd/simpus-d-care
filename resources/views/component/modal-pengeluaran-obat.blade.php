@@ -8,18 +8,18 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-apotikel="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="pengeluaranObat" action="{{ route('store-terima-obat') }}" method="POST" class="px-3">
+                <form id="pengeluaranObat" action="{{ route('store-pengeluaran-obat') }}" method="POST" class="px-3">
                     @csrf
                     @method('POST')
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label for="date" style="color: rgb(19, 11, 241);">Tanggal</label>
-                            <input type="date" class="form-control" id="date" name="date">
+                            <input type="date" class="form-control" id="date" name="date" required>
                         </div>
 
                         <div class="col-md-6">
                             <label for="id_obat" style="color: rgb(19, 11, 241);">Kode dan Nama Obat</label>
-                            <select class="form-control" id="id_obat" name="id_obat">
+                            <select class="form-control" id="id_obat" name="id_obat" required>
                                 <option value="" disabled selected>pilih</option>
                                 @foreach ($obats as $item)
                                     <option value="{{ $item->id }}"data-shape="{{ $item->shape }}">
@@ -30,10 +30,9 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-
                         <div class="col-md-6" style="margin-bottom: 15px;">
                             <label for="unit" style="color: rgb(19, 11, 241);">Nama Unit</label>
-                            <select class="form-control" id="unit" name="unit">
+                            <select class="form-control" id="unit" name="unit" required>
                                 <option value="1">Home Care</option>
                                 <option value="2">P3K</option>
                                 <option value="3">Pustu</option>
@@ -47,7 +46,7 @@
                         <div class="col-md-6 " style="margin-bottom: 15px;">
                             <label for="amount" style="color: rgb(19, 11, 241);">Jumlah</label>
                             <input type="text" class="form-control" id="amount" name="amount"
-                                placeholder="Jumlah">
+                                placeholder="Jumlah" required>
                         </div>
 
                         <div class="col-md-6" style="margin-bottom: 15px;">

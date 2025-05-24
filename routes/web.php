@@ -462,7 +462,10 @@ Route::prefix('obat')->group(function () {
 
     //pengeluaran obat
     Route::get('pengeluaran-obat', [ObatController::class, 'indexPengeluaranObat'])->name('pengeluaran-obat');
+    Route::post('pengeluaran-obat', [ObatController::class, 'storePengeluaranObat'])->name('store-pengeluaran-obat');
+    Route::put('pengeluaran-obat/{id}', [ObatController::class, 'updatePengeluaranObat'])->name('update-pengeluaran-obat');
     Route::get('get-stock/{id}', [ObatController::class, 'getStock']);
+    Route::get('table-pengeluaran-obat', [ObatController::class, 'getPengeluaranObat'])->name('table-pengeluaran-obat');
 
 });
 //diagnosa

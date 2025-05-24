@@ -165,15 +165,18 @@
                                             <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
                                             <select class="form-control" id="diagnosaEdit" name="diagnosa[]"
                                                 disabled>
-                                                <option value="" disabled selected>Pilih</option>
+                                                <option value="" disabled selected>pilih</option>
                                                 @foreach ($diagnosa as $item)
                                                     <option value="{{ $item->id }}">
-                                                        {{ $item->name }}-{{ $item->icd10 }}
+                                                        {{ $item->name }} - {{ $item->icd10 }}
                                                     </option>
                                                 @endforeach
                                             </select>
+
                                         </div>
                                     </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -326,8 +329,8 @@
 
 <script>
     $(document).ready(function() {
-
         let obatData = @json($obats); // Ambil data obat dari Laravel
+        console.log("Data Obat:", obatData);
 
         let originalStock = 0; // Simpan stok awal
 
@@ -336,6 +339,7 @@
             allowClear: true,
             minimumResultsForSearch: 0
         });
+
 
         $('#code_obat').change(function() {
             let selectedId = $(this).val();

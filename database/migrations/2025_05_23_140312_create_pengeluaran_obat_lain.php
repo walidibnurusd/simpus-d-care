@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('pengeluaran_obat_lain', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_obat');
+            $table->foreign('id_obat')->references('id')->on('obat')->onDelete('cascade');
+            $table->integer('amount');
+            $table->integer('unit');
+            $table->date('date');
+            $table->longText('remarks')->nullable();
             $table->timestamps();
         });
     }
