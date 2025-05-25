@@ -38,18 +38,11 @@ class ActionController extends Controller
     }
     public function indexData(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+        $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
+        $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-umum');
 
-        $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-umum'); // Ensure 'diagnosa' is not null
-
-        if ($startDate) {
-            $actionsQuery->whereDate('tanggal', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $actionsQuery->whereDate('tanggal', '<=', $endDate);
-        }
+        $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
         $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
@@ -112,18 +105,11 @@ class ActionController extends Controller
     public function indexPoliGigi(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
             $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-gigi'); // Ensure 'diagnosa' is not null
-
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
@@ -203,18 +189,12 @@ class ActionController extends Controller
     public function indexUgd(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
 
             $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'ruang-tindakan'); // Ensure 'diagnosa' is not null
 
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
@@ -314,16 +294,42 @@ class ActionController extends Controller
                 ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
+                    $doctorRole = 'dokter';
+
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($doctorRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
                             })
                             ->filter()
                             ->implode(', ');
+
+                        return $medications ?: '-';
                     }
 
-                    return $row->obat ?: '-';
+                    return '-';
+                })
+                ->addColumn('update_obat', function ($row) {
+                    $apotikRole = 'apotik';
+
+                    if ($row->actionObats->isNotEmpty()) {
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($apotikRole) {
+                                return $ao->created_by == $apotikRole;
+                            })
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
+
+                        return $medications ?: '-';
+                    }
+
+                    return '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
@@ -452,18 +458,43 @@ class ActionController extends Controller
                 ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
+                    $doctorRole = 'dokter';
+
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($doctorRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
                             })
                             ->filter()
                             ->implode(', ');
+
+                        return $medications ?: '-';
                     }
 
-                    return $row->obat;
+                    return '-';
                 })
+                ->addColumn('update_obat', function ($row) {
+                    $apotikRole = 'apotik';
 
+                    if ($row->actionObats->isNotEmpty()) {
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($apotikRole) {
+                                return $ao->created_by == $apotikRole;
+                            })
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
+
+                        return $medications ?: '-';
+                    }
+
+                    return '-';
+                })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
                     $diagnosa = $row->diagnosa;
@@ -584,16 +615,42 @@ class ActionController extends Controller
                 ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
+                    $doctorRole = 'dokter';
+
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($doctorRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
                             })
                             ->filter()
                             ->implode(', ');
+
+                        return $medications ?: '-';
                     }
 
-                    return $row->obat ?: '-';
+                    return '-';
+                })
+                ->addColumn('update_obat', function ($row) {
+                    $apotikRole = 'apotik';
+
+                    if ($row->actionObats->isNotEmpty()) {
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($apotikRole) {
+                                return $ao->created_by == $apotikRole;
+                            })
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
+
+                        return $medications ?: '-';
+                    }
+
+                    return '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
@@ -714,16 +771,42 @@ class ActionController extends Controller
                 ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
+                    $doctorRole = 'dokter';
+
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($doctorRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
                             })
                             ->filter()
                             ->implode(', ');
+
+                        return $medications ?: '-';
                     }
 
-                    return $row->obat ?: '-';
+                    return '-';
+                })
+                ->addColumn('update_obat', function ($row) {
+                    $apotikRole = 'apotik';
+
+                    if ($row->actionObats->isNotEmpty()) {
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($apotikRole) {
+                                return $ao->created_by == $apotikRole;
+                            })
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
+
+                        return $medications ?: '-';
+                    }
+
+                    return '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
@@ -867,16 +950,42 @@ class ActionController extends Controller
                 ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
+                    $doctorRole = 'dokter';
+
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($doctorRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
                             })
                             ->filter()
                             ->implode(', ');
+
+                        return $medications ?: '-';
                     }
 
-                    return $row->obat ?: '-';
+                    return '-';
+                })
+                ->addColumn('update_obat', function ($row) {
+                    $apotikRole = 'apotik';
+
+                    if ($row->actionObats->isNotEmpty()) {
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($apotikRole) {
+                                return $ao->created_by == $apotikRole;
+                            })
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
+
+                        return $medications ?: '-';
+                    }
+
+                    return '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
@@ -999,16 +1108,42 @@ class ActionController extends Controller
                 ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
+                    $doctorRole = 'dokter';
+
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($doctorRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
                             })
                             ->filter()
                             ->implode(', ');
+
+                        return $medications ?: '-';
                     }
 
-                    return $row->obat ?: '-';
+                    return '-';
+                })
+                ->addColumn('update_obat', function ($row) {
+                    $apotikRole = 'apotik';
+
+                    if ($row->actionObats->isNotEmpty()) {
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($apotikRole) {
+                                return $ao->created_by == $apotikRole;
+                            })
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
+
+                        return $medications ?: '-';
+                    }
+
+                    return '-';
                 })
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('diagnosa', function ($row) {
@@ -1111,18 +1246,11 @@ class ActionController extends Controller
     public function indexKia(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
-
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
             $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-kia'); // Ensure 'diagnosa' is not null
 
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
@@ -1201,18 +1329,11 @@ class ActionController extends Controller
     public function indexKb(Request $request)
     {
         if ($request->ajax()) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
-
+            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
             $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-kb'); // Ensure 'diagnosa' is not null
 
-            if ($startDate) {
-                $actionsQuery->whereDate('tanggal', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $actionsQuery->whereDate('tanggal', '<=', $endDate);
-            }
+            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
@@ -1527,6 +1648,7 @@ class ActionController extends Controller
             $request->merge([
                 'id_patient' => $patient->id,
             ]);
+            $userRole = Auth::user()->role;
 
             // Validate the request
             $validated = $request->validate([
@@ -1707,6 +1829,7 @@ class ActionController extends Controller
                             'amount' => $medication['quantity'],
                             'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
                             'id_obat' => $medication['idObat'],
+                            'created_by' => $userRole,
                         ]);
 
                         $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
@@ -1780,6 +1903,7 @@ class ActionController extends Controller
                             'amount' => $medication['quantity'],
                             'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
                             'id_obat' => $medication['idObat'],
+                            'created_by' => $userRole,
                         ]);
 
                         $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
@@ -1792,13 +1916,13 @@ class ActionController extends Controller
 
                         foreach ($obats as $obat) {
                             if ($remainingQuantity <= 0) {
-                                break; // Jika sudah cukup, keluar dari loop
+                                break;
                             }
 
                             if ($obat->amount >= $remainingQuantity) {
                                 $obat->amount -= $remainingQuantity;
                                 $obat->save();
-                                $remainingQuantity = 0; // Semua jumlah sudah dikurangi
+                                $remainingQuantity = 0;
                             } else {
                                 $remainingQuantity -= $obat->amount;
                                 $obat->amount = 0;
@@ -1834,6 +1958,7 @@ class ActionController extends Controller
                 'id_patient' => $patient->id,
             ]);
 
+            $userRole = Auth::user()->role;
             // Validate the request
             $validated = $request->validate([
                 'id_patient' => 'required',
@@ -1958,7 +2083,7 @@ class ActionController extends Controller
             $validated['usia_kehamilan'] = $medications[0]['hamil'] ?? 0;
             $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
             $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
-            Log::info('id_rujuk_poli yang diterima:', ['value' => $request->id_rujuk_poli]);
+
             // dd($validated);
             if ($request->has('tindakan_ruang_tindakan')) {
                 $validated['tindakan_ruang_tindakan'] = implode(',', $request->tindakan_ruang_tindakan);
@@ -2002,6 +2127,7 @@ class ActionController extends Controller
                             'amount' => $medication['quantity'],
                             'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
                             'id_obat' => $medication['idObat'],
+                            'created_by' => $userRole,
                         ]);
 
                         $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
@@ -2075,6 +2201,7 @@ class ActionController extends Controller
                             'amount' => $medication['quantity'],
                             'shape' => $shapes[$medication['shape']] ?? null, // Konversi teks ke angka
                             'id_obat' => $medication['idObat'],
+                            'created_by' => $userRole,
                         ]);
 
                         $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
@@ -2496,7 +2623,7 @@ class ActionController extends Controller
             }
 
             foreach ($validated as $key => $value) {
-                if (in_array($key, ['gds', 'gdp', 'gdp_2_jam_pp', 'cholesterol', 'asam_urat', 'leukosit', 'eritrosit', 'trombosit', 'hemoglobin', 'sifilis', 'hiv', 'golongan_darah', 'widal', 'malaria', 'albumin', 'reduksi', 'urinalisa', 'tes_kehamilan', 'telur_cacing', 'bta','tcm', 'igm_dbd', 'igm_typhoid']) && $request->has($key)) {
+                if (in_array($key, ['gds', 'gdp', 'gdp_2_jam_pp', 'cholesterol', 'asam_urat', 'leukosit', 'eritrosit', 'trombosit', 'hemoglobin', 'sifilis', 'hiv', 'golongan_darah', 'widal', 'malaria', 'albumin', 'reduksi', 'urinalisa', 'tes_kehamilan', 'telur_cacing', 'bta', 'tcm', 'igm_dbd', 'igm_typhoid']) && $request->has($key)) {
                     $hasilLab->$key = $value;
                 }
             }
@@ -2533,7 +2660,8 @@ class ActionController extends Controller
             $patient = Patients::where('nik', $request->nik)->first();
 
             if (!$patient) {
-                return redirect()->back()
+                return redirect()
+                    ->back()
                     ->withErrors(['nik' => 'Patient with the provided NIK does not exist.'])
                     ->withInput();
             }
@@ -2576,8 +2704,8 @@ class ActionController extends Controller
                 return redirect()->back()->with('error', 'Hasil lab not found.');
             }
 
-             foreach ($validated as $key => $value) {
-                if (in_array($key, ['gds', 'gdp', 'gdp_2_jam_pp', 'cholesterol', 'asam_urat', 'leukosit', 'eritrosit', 'trombosit', 'hemoglobin', 'sifilis', 'hiv', 'golongan_darah', 'widal', 'malaria', 'albumin', 'reduksi', 'urinalisa', 'tes_kehamilan', 'telur_cacing', 'bta','tcm', 'igm_dbd', 'igm_typhoid']) && $request->has($key)) {
+            foreach ($validated as $key => $value) {
+                if (in_array($key, ['gds', 'gdp', 'gdp_2_jam_pp', 'cholesterol', 'asam_urat', 'leukosit', 'eritrosit', 'trombosit', 'hemoglobin', 'sifilis', 'hiv', 'golongan_darah', 'widal', 'malaria', 'albumin', 'reduksi', 'urinalisa', 'tes_kehamilan', 'telur_cacing', 'bta', 'tcm', 'igm_dbd', 'igm_typhoid']) && $request->has($key)) {
                     $hasilLab->$key = $value;
                 }
             }
@@ -2585,11 +2713,10 @@ class ActionController extends Controller
             $hasilLab->save();
             $action->update($validated);
 
-
-        return redirect()->back()->with('success', 'Data lab berhasil diperbarui.');
-
+            return redirect()->back()->with('success', 'Data lab berhasil diperbarui.');
         } catch (\Exception $e) {
-            return redirect()->back()
+            return redirect()
+                ->back()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
@@ -2650,8 +2777,9 @@ class ActionController extends Controller
                         'Pot' => 8,
                         'Injeksi' => 9,
                     ];
+                    $userRole = Auth::user()->role;
 
-                    ActionObat::create([
+                    $actionObat = ActionObat::create([
                         'id_action' => $action->id,
                         'number' => $medication['number'],
                         'name' => $medication['name'],
@@ -2659,6 +2787,7 @@ class ActionController extends Controller
                         'amount' => $medication['quantity'],
                         'shape' => $shapes[$medication['shape']] ?? null,
                         'id_obat' => $medication['idObat'],
+                        'created_by' => $userRole,
                     ]);
 
                     $obats = TerimaObat::where('id_obat', $medication['idObat'])->get();
@@ -2734,16 +2863,42 @@ class ActionController extends Controller
                 ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('obat', function ($row) {
+                    $doctorRole = 'dokter';
+
                     if ($row->actionObats->isNotEmpty()) {
-                        return $row->actionObats
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($doctorRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
                             })
                             ->filter()
                             ->implode(', ');
+
+                        return $medications ?: '-';
                     }
 
-                    return $row->obat ?: '-';
+                    return '-';
+                })
+                ->addColumn('update_obat', function ($row) {
+                    $apotikRole = 'apotik';
+
+                    if ($row->actionObats->isNotEmpty()) {
+                        $medications = $row->actionObats
+                            ->filter(function ($ao) use ($apotikRole) {
+                                return $ao->created_by == $apotikRole;
+                            })
+                            ->map(function ($ao) {
+                                return optional($ao->obat)->name;
+                            })
+                            ->filter()
+                            ->implode(', ');
+
+                        return $medications ?: '-';
+                    }
+
+                    return '-';
                 })
                 ->addColumn('tipe', function ($row) {
                     if ($row->tipe === 'poli-umum') {

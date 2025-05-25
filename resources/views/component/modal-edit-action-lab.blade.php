@@ -60,7 +60,8 @@
                                                     placeholder="NIK" required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-primary" type="button" id="btnCariNIK"
-                                                        data-bs-toggle="modal" data-bs-target="#modalPasienEdit">
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalPasienEdit{{ $action->id }}">
                                                         Cari
                                                     </button>
                                                 </div>
@@ -341,13 +342,13 @@
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <!-- IgM DBD Field -->
-                                        <label for="tcm" class="form-label"
-                                            id="label-tcm{{ $action->id }}" style="display: none;">Hasil TCM</label>
+                                        <label for="tcm" class="form-label" id="label-tcm{{ $action->id }}"
+                                            style="display: none;">Hasil TCM</label>
                                         <input class="form-control" type="text" id="tcm{{ $action->id }}"
                                             value="{{ $action->hasilLab->tcm ?? '' }}" name="tcm"
                                             placeholder="TCM" style="display: none;">
                                     </div>
-                                      <div class="col-md-6">
+                                    <div class="col-md-6">
                                         <!-- BTA Field -->
                                         <label for="bta" class="form-label" id="label-bta{{ $action->id }}"
                                             style="display: none;">Hasil BTA</label>

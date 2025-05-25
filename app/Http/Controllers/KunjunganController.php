@@ -457,24 +457,40 @@ class KunjunganController extends Controller
     }
 
     public function destroy(Request $request, $id)
-    {
-        try {
-            $kunjungan = Kunjungan::findOrFail($id);
-            $kunjungan->delete();
+{
+    try {
+        // Temukan Kunjungan berdasarkan ID
+        $kunjungan = Kunjungan::findOrFail($id);
 
-            if ($request->ajax()) {
-                return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
-            }
+        $actions = Action::where('id_patient', $kunjungan->pasien)
+                         ->whereDate('tanggal', $kunjungan->tanggal) 
+                         ->get();
 
-            return redirect()->back()->with('success', 'Data berhasil dihapus');
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
-            }
-
-            return redirect()
-                ->route('kunjungan.index')
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        // Hapus Action yang ditemukan
+        foreach ($actions as $action) {
+            $action->delete();
         }
+
+        // Hapus data Kunjungan
+        $kunjungan->delete();
+
+        // Jika request adalah ajax
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
+        }
+
+        // Jika tidak ajax, redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
+    } catch (\Exception $e) {
+        // Tangani error jika terjadi
+        if ($request->ajax()) {
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
+
+        return redirect()
+            ->route('kunjungan.index')
+            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
+}
+
 }
