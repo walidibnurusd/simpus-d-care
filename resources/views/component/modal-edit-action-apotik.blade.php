@@ -355,6 +355,7 @@
                                 <div class="col-md-4" style="margin-bottom: 15px;">
                                     <label for="menyusui" style="color: rgb(19, 11, 241);">Menyusui</label>
                                     <select class="form-control" id="menyusui{{ $action->id }}" name="menyusui[]">
+                                        <option value="" disabled selected>Pilih</option>
                                         <option value="1">Ya</option>
                                         <option value="0">Tidak</option>
                                     </select>
@@ -604,6 +605,10 @@
         let rowNumber = 0; // d
         const codeElement = document.getElementById("code_obat{{ $action->id }}");
         const shape = document.getElementById("shape{{ $action->id }}");
+        const menyusuiSelect = document.getElementById("menyusui{{ $action->id }}");
+        const menyusuiValue = menyusuiSelect.value; // value terpilih
+        const menyusuiText = menyusuiSelect.options[menyusuiSelect.selectedIndex].text; // label teks terpilih
+
 
         const selectedOption = codeElement.options[codeElement.selectedIndex];
         const selectedOptionShape = shape.options[shape.selectedIndex];
@@ -618,7 +623,7 @@
         const gangguanGinjal = document.getElementById("gangguan_ginjal{{ $action->id }}").value;
         const dosis = document.getElementById("dosis{{ $action->id }}").value;
         const hamil = document.getElementById("hamil{{ $action->id }}").value;
-        const menyusui = document.getElementById("menyusui{{ $action->id }}").value;
+
 
         // Validasi sederhana (opsional)
         if (!jumlah || !dosis || !medicationCode) {
@@ -638,16 +643,15 @@
 
         newRow.setAttribute("data-medication-code", medicationCode);
         newRow.innerHTML = `
-
             <td>${medicationName}</td>
             <td>${medicationName}</td>
             <td>${dosis}</td>
             <td>${jumlah}</td>
             <td>${shapeName}</td>
             <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
-            <td  style="display: none;"">${stok}</td>
-             <td style="display: none;>${rowNumber}</td>
-            <td style="display: none;">${menyusui}</td>
+            <td  style="display: none;">${stok}</td>
+             <td style="display: none;">${rowNumber}</td>
+            <td style="display: none;">${menyusuiValue}</td>
             <td style="display: none;">${gangguanGinjal}</td>
             <td style="display: none;">${alergi}</td>
             <td style="display: none;">${hamil}</td>
@@ -670,12 +674,13 @@
                 shape: row.cells[4].textContent.trim(),
                 stock: row.cells[6].textContent.trim(),
                 idObat: row.getAttribute("data-medication-code"),
-                menyusui: row.cells[8]?.textContent.trim() || '',
+                menyusui: row.cells[8].textContent.trim(),
                 gangguan_ginjal: row.cells[9]?.textContent.trim() || '',
                 alergi: row.cells[10]?.textContent.trim() || '',
                 hamil: row.cells[11]?.textContent.trim() || '',
             });
         }
+        console.table(medicationsData);
 
         let formData = $('#addPatientForm{{ $action->id }}').serialize();
         formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
@@ -716,7 +721,7 @@
                 $('#addPatientForm').find('select.select2').val(null).trigger('change');
                 table.ajax.reload(null, false);
                 resetPatientDetails
-            (); // Kosongkan dan sembunyikan detail pasien (fungsi harus sudah didefinisikan)
+                    (); // Kosongkan dan sembunyikan detail pasien (fungsi harus sudah didefinisikan)
             },
             error: function(xhr) {
                 const errorMsg = xhr.responseJSON?.error || "Terjadi kesalahan!";

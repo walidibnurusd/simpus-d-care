@@ -29,6 +29,10 @@ class ObatController extends Controller
         $obats = Obat::all();
         return view('content.obat.pengeluaran-obat', compact('obats'));
     }
+    public function indexStokObat()
+    {
+        return view('content.obat.stok-obat');
+    }
     public function getStock($id)
     {
         $stock = TerimaObat::where('id_obat', $id)->sum('amount');
@@ -283,6 +287,59 @@ class ObatController extends Controller
             })
             ->make(true);
     }
+    
+    public function getStokObat(Request $request)
+    {
+        $obats = TerimaObat::with('obat')->get();
+
+        // Return the datatables response
+        return datatables()
+            ->of($obats)
+            ->addIndexColumn()
+            ->editColumn('date', function ($row) {
+                return $row->date;
+            })
+            ->editColumn('name', function ($row) {
+                return $row->obat->name;
+            })
+            ->editColumn('code', function ($row) {
+                return $row->obat->code ?? '';
+            })
+            ->editColumn('mount', function ($row) {
+                return $row->amount ?? '';
+            })
+            ->editColumn('updated_at', function ($row) {
+                return $row->updated_at ?? '';
+            })
+            ->editColumn('shape', function ($row) {
+                // Check the value of shape and return appropriate value
+                switch ($row->obat->shape) {
+                    case 1:
+                        return 'Tablet';
+                    case 2:
+                        return 'Botol';
+                    case 3:
+                        return 'Pcs';
+                    case 4:
+                        return 'Suppositoria';
+                    case 5:
+                        return 'Ovula';
+                    case 6:
+                        return 'Drop';
+                    case 7:
+                        return 'Tube';
+                    case 8:
+                        return 'Pot';
+                    case 9:
+                        return 'Injeksi';
+                    default:
+                        return '';
+                }
+            })
+
+            ->make(true);
+    }
+    
     public function storePengeluaranObat(Request $request)
     {
         try {
