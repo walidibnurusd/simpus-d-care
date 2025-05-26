@@ -44,7 +44,6 @@
 
 
 <script>
-
     let rowNumber = 1;
 
     // Fungsi untuk menghitung umur dari tanggal lahir
@@ -134,6 +133,26 @@
         document.getElementById("displayBlood").textContent = "";
         document.getElementById("displayRmNumber").textContent = "";
         document.getElementById("patientDetails").style.display = "none";
+    }
+
+    function resetAddActionObatForm() {
+        const container = $('#addActionObat');
+
+        // Reset semua input text dan textarea
+        container.find('input[type="text"], textarea').val('');
+
+        // Reset semua select biasa (non-select2)
+        container.find('select').val('').prop('selectedIndex', 0);
+
+        // Jika ada select2, reset dengan trigger change
+        container.find('select.select2').val(null).trigger('change');
+
+        // Kosongkan semua tbody tabel obat
+        $('#medicationTableBody').empty();
+        $('#medicationTableBody1').empty();
+
+        // Reset input hidden data obat
+        $('#medicationsData').val('');
     }
 </script>
 <script>
@@ -366,9 +385,9 @@ data-bs-dismiss="modal">
             }
 
             console.log(diagnosaArray);
-      if ($.fn.select2 && $('#diagnosaEdit').data('select2')) {
-            $('#diagnosaEdit').select2('destroy');
-        }
+            if ($.fn.select2 && $('#diagnosaEdit').data('select2')) {
+                $('#diagnosaEdit').select2('destroy');
+            }
 
             if (diagnosaArray.length > 0) {
                 $('#diagnosaEdit').val([]).trigger('change');
@@ -390,7 +409,7 @@ data-bs-dismiss="modal">
                     placeholder: 'Pilih Diagnosa',
                     width: '100%'
                 });
-                console.log('diagnosa selected',$('#diagnosaEdit').val());
+                console.log('diagnosa selected', $('#diagnosaEdit').val());
             }
 
 
@@ -450,8 +469,23 @@ data-bs-dismiss="modal">
                     });
 
                     // Reset form dan elemen terkait
+
                     $('#addPatientForm')[0].reset(); // Reset form HTML
                     $('#medicationTableBody').empty(); // Kosongkan tabel obat
+                    $('#diagnosaEdit').val([]).trigger('change');
+                    $('#code_obat').val([]).trigger('change');
+                    $('#addActionObat').find('input, select, textarea').each(function() {
+                        if (this.type === 'select-one' || this.tagName ===
+                            'SELECT') {
+                            $(this).val('').trigger(
+                                'change'); // handle Select2 juga
+                        } else {
+                            $(this).val('');
+                        }
+                    });
+
+
+                    $('#addPatientForm').find('select.select2').val(null).trigger('change');
                     table.ajax.reload(null, false);
                     resetPatientDetails
                         (); // Kosongkan dan sembunyikan detail pasien (fungsi harus sudah didefinisikan)

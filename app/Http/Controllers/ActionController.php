@@ -2752,7 +2752,7 @@ class ActionController extends Controller
             $validated['alergi'] = $medications[0]['alergi'] ?? null;
             $validated['usia_kehamilan'] = $medications[0]['hamil'] ?? 0;
             $validated['gangguan_ginjal'] = $medications[0]['gangguan_ginjal'] ?? null;
-            $validated['menyusui'] = $medications[0]['menyusui'] ?? 0;
+            $validated['menyusui'] = (int) ($medications[0]['menyusui'] ?? 0);
 
             if (!empty($request->jenis_pemeriksaan)) {
                 HasilLab::create([

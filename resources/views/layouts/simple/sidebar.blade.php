@@ -107,7 +107,7 @@
                                 <span>Penerimaan Obat</span>
                             </a>
                         </li>
-                        {{-- <li class="sidebar-list">
+                        <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('pengeluaran-obat') }}">
                                 <svg class="stroke-icon">
                                     <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
@@ -117,7 +117,7 @@
                                 </svg>
                                 <span class="sidebar-text nowrap">Pengeluaran Obat Lain</span>
                             </a>
-                        </li> --}}
+                        </li>
 
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('obat-master-data') }}">
@@ -135,8 +135,8 @@
                             Auth::user()->role == 'admin-kajian-awal' ||
                             Auth::user()->role == 'apotik' ||
                             Auth::user()->role == 'lab')
-                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title"
-                                href="#">
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+                                class="sidebar-link sidebar-title" href="#">
                                 <svg class="stroke-icon">
                                     <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>
