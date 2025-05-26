@@ -35,8 +35,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="addPatientForm" action="{{ route('action.update.apotik', $action->id) }}" method="POST"
-                    class="px-3">
+                <form id="addPatientForm{{ $action->id }}" class="px-3">
                     @csrf
                     @if ($routeName === 'action.apotik.index')
                         <input type="hidden" name="tipe" value="poli-umum">
@@ -75,6 +74,8 @@
 
                         <div class="row col-8">
                             <div class="col-12">
+                                <input type="text" hidden id="idAction{{ $action->id }}"
+                                    name="idAction{{ $action->id }}" value="{{ $action->id }}">
                                 <div class="row g-2">
                                     <div class="col-md-3">
                                         <div class="form-group">
@@ -115,16 +116,25 @@
                                         </div>
                                     </div>
                                     @php
-                                    $verifikasi_awal_raw = old('verifikasi_awal', $action->verifikasi_awal ?? []);
-                                    $verifikasi_awal = is_array($verifikasi_awal_raw) ? $verifikasi_awal_raw : json_decode($verifikasi_awal_raw, true);
-                                
-                                    $verifikasi_akhir_raw = old('verifikasi_akhir', $action->verifikasi_akhir ?? []);
-                                    $verifikasi_akhir = is_array($verifikasi_akhir_raw) ? $verifikasi_akhir_raw : json_decode($verifikasi_akhir_raw, true);
-                                
-                                    $informasi_obat_raw = old('informasi_obat', $action->informasi_obat ?? []);
-                                    $informasi_obat = is_array($informasi_obat_raw) ? $informasi_obat_raw : json_decode($informasi_obat_raw, true);
-                                @endphp
-                                
+                                        $verifikasi_awal_raw = old('verifikasi_awal', $action->verifikasi_awal ?? []);
+                                        $verifikasi_awal = is_array($verifikasi_awal_raw)
+                                            ? $verifikasi_awal_raw
+                                            : json_decode($verifikasi_awal_raw, true);
+
+                                        $verifikasi_akhir_raw = old(
+                                            'verifikasi_akhir',
+                                            $action->verifikasi_akhir ?? [],
+                                        );
+                                        $verifikasi_akhir = is_array($verifikasi_akhir_raw)
+                                            ? $verifikasi_akhir_raw
+                                            : json_decode($verifikasi_akhir_raw, true);
+
+                                        $informasi_obat_raw = old('informasi_obat', $action->informasi_obat ?? []);
+                                        $informasi_obat = is_array($informasi_obat_raw)
+                                            ? $informasi_obat_raw
+                                            : json_decode($informasi_obat_raw, true);
+                                    @endphp
+
 
                                     <div class="col-md-12">
                                         <div class="card">
@@ -132,20 +142,22 @@
                                             <div class="card-body row p-2">
                                                 @php
                                                     $verifikasi_awal_list = [
-                                                        "Benar Pasien",
-                                                        "Benar Waktu Pemberian",
-                                                        "Benar Obat",
-                                                        "Tidak Ada Duplikasi",
-                                                        "Benar Dosis",
-                                                        "Tidak Ada Interaksi Obat",
-                                                        "Benar Rute"
+                                                        'Benar Pasien',
+                                                        'Benar Waktu Pemberian',
+                                                        'Benar Obat',
+                                                        'Tidak Ada Duplikasi',
+                                                        'Benar Dosis',
+                                                        'Tidak Ada Interaksi Obat',
+                                                        'Benar Rute',
                                                     ];
                                                 @endphp
 
                                                 @foreach ($verifikasi_awal_list as $value)
                                                     <div class="col-md-6 mb-2 d-flex align-items-center">
-                                                        <input type="checkbox" name="verifikasi_awal[]" value="{{ $value }}"
-                                                            {{ in_array($value, $verifikasi_awal ?? []) ? 'checked' : '' }} /> {{ $value }}
+                                                        <input type="checkbox" name="verifikasi_awal[]"
+                                                            value="{{ $value }}"
+                                                            {{ in_array($value, $verifikasi_awal ?? []) ? 'checked' : '' }} />
+                                                        {{ $value }}
                                                     </div>
                                                 @endforeach
                                             </div>
@@ -154,25 +166,28 @@
 
                                     <div class="col-md-12 mt-2">
                                         <div class="card">
-                                            <div class="card-header font-weight-bold p-2">Verifikasi Akhir Resep :</div>
+                                            <div class="card-header font-weight-bold p-2">Verifikasi Akhir Resep :
+                                            </div>
                                             <div class="card-body row p-2">
                                                 @php
                                                     $verifikasi_akhir_list = [
-                                                        "Benar Pasien",
-                                                        "Benar Waktu Pemberian",
-                                                        "Benar Obat",
-                                                        "Benar Informasi",
-                                                        "Benar Dosis",
-                                                        "Benar Dokumentasi",
-                                                        "Benar Rute",
-                                                        "Cek Kadaluarsa Obat"
+                                                        'Benar Pasien',
+                                                        'Benar Waktu Pemberian',
+                                                        'Benar Obat',
+                                                        'Benar Informasi',
+                                                        'Benar Dosis',
+                                                        'Benar Dokumentasi',
+                                                        'Benar Rute',
+                                                        'Cek Kadaluarsa Obat',
                                                     ];
                                                 @endphp
 
                                                 @foreach ($verifikasi_akhir_list as $value)
                                                     <div class="col-md-6 mb-2 d-flex align-items-center">
-                                                        <input type="checkbox" name="verifikasi_akhir[]" value="{{ $value }}"
-                                                            {{ in_array($value, $verifikasi_akhir ?? []) ? 'checked' : '' }} /> {{ $value }}
+                                                        <input type="checkbox" name="verifikasi_akhir[]"
+                                                            value="{{ $value }}"
+                                                            {{ in_array($value, $verifikasi_akhir ?? []) ? 'checked' : '' }} />
+                                                        {{ $value }}
                                                     </div>
                                                 @endforeach
                                             </div>
@@ -181,27 +196,30 @@
 
                                     <div class="col-md-12 mt-2">
                                         <div class="card">
-                                            <div class="card-header font-weight-bold p-2">Pemberian Informasi Obat :</div>
+                                            <div class="card-header font-weight-bold p-2">Pemberian Informasi Obat :
+                                            </div>
                                             <div class="card-body row p-2">
                                                 @php
                                                     $informasi_obat_list = [
-                                                        "Nama Obat",
-                                                        "Kontra Indikasi",
-                                                        "Sediaan",
-                                                        "Stabilitas",
-                                                        "Dosis",
-                                                        "Efek Samping",
-                                                        "Cara Pakai",
-                                                        "Interaksi",
-                                                        "Indikasi",
-                                                        "Lain-Lain"
+                                                        'Nama Obat',
+                                                        'Kontra Indikasi',
+                                                        'Sediaan',
+                                                        'Stabilitas',
+                                                        'Dosis',
+                                                        'Efek Samping',
+                                                        'Cara Pakai',
+                                                        'Interaksi',
+                                                        'Indikasi',
+                                                        'Lain-Lain',
                                                     ];
                                                 @endphp
 
                                                 @foreach ($informasi_obat_list as $value)
                                                     <div class="col-md-6 mb-2 d-flex align-items-center">
-                                                        <input type="checkbox" name="informasi_obat[]" value="{{ $value }}"
-                                                            {{ in_array($value, $informasi_obat ?? []) ? 'checked' : '' }} /> {{ $value }}
+                                                        <input type="checkbox" name="informasi_obat[]"
+                                                            value="{{ $value }}"
+                                                            {{ in_array($value, $informasi_obat ?? []) ? 'checked' : '' }} />
+                                                        {{ $value }}
                                                     </div>
                                                 @endforeach
                                             </div>
@@ -258,14 +276,16 @@
                         </div>
                     </div> --}}
                     <div class="col-md-12">
-                        <div id="addActionObat" class="px-3">
-                            
-                            <input type="hidden" name="medications" id="medicationsData">
+                        <div id="addActionObat{{ $action->id }}" class="px-3">
+
+                            <input type="hidden" name="medications" id="medicationsData{{ $action->id }}">
                             <div class="row mt-3">
                                 <!-- Kode Obat -->
                                 <div class="col-md-4" style="margin-bottom: 15px;">
-                                    <label for="code_obat{{$action->id}}" style="color: rgb(19, 11, 241);">Kode dan Nama Obat</label>
-                                    <select class="form-control" id="code_obat{{$action->id}}" name="code_obat[]">
+                                    <label for="code_obat{{ $action->id }}" style="color: rgb(19, 11, 241);">Kode
+                                        dan Nama Obat</label>
+                                    <select class="form-control" id="code_obat{{ $action->id }}"
+                                        name="code_obat[]">
                                         <option value="" disabled selected>pilih</option>
                                         @foreach ($obats as $item)
                                             <option value="{{ $item->id }}">
@@ -274,11 +294,11 @@
                                         @endforeach
                                     </select>
                                 </div>
-        
+
                                 <!-- Sediaan Obat -->
                                 <div class="col-md-4" style="margin-bottom: 15px;">
                                     <label for="shape" style="color: rgb(19, 11, 241);">Sediaan</label>
-                                    <select class="form-control" id="shape" name="shape[]">
+                                    <select class="form-control" id="shape{{ $action->id }}" name="shape[]">
                                         <option value="1">Tablet</option>
                                         <option value="2">Botol</option>
                                         <option value="3">Pcs</option>
@@ -290,58 +310,61 @@
                                         <option value="9">Injeksi</option>
                                     </select>
                                 </div>
-        
+
                                 <!-- Alergi Obat -->
                                 <div class="col-md-4" style="margin-bottom: 15px;">
                                     <label for="alergi" style="color: rgb(19, 11, 241);">Alergi Obat</label>
-                                    <input type="text" class="form-control" id="alergi" name="alergi[]"
-                                        placeholder="Alergi obat apa saja">
+                                    <input type="text" class="form-control" id="alergi{{ $action->id }}"
+                                        name="alergi[]" placeholder="Alergi obat apa saja">
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-md-4" style="margin-bottom: 15px;">
                                     <label for="jumlah" style="color: rgb(19, 11, 241);">Jumlah</label>
-                                    <input type="text" class="form-control" id="jumlah" name="jumlah[]"
-                                        placeholder="Jumlah">
+                                    <input type="text" class="form-control" id="jumlah{{ $action->id }}"
+                                        name="jumlah[]" placeholder="Jumlah">
                                 </div>
-        
+
                                 <div class="col-md-4" style="margin-bottom: 15px;">
                                     <label for="stok" style="color: rgb(19, 11, 241);">Stok</label>
-                                    <input type="text" class="form-control" id="stok" name="stok[]" readonly
-                                        placeholder="Stok">
+                                    <input type="text" class="form-control" id="stok{{ $action->id }}"
+                                        name="stok[]" readonly placeholder="Stok">
                                 </div>
-        
+
                                 <div class="col-md-4" style="margin-bottom: 15px;">
                                     <label for="gangguan_ginjal" style="color: rgb(19, 11, 241);">Gangguan Fungsi
                                         Hati/Ginjal</label>
-                                    <input type="text" class="form-control" id="gangguan_ginjal" name="gangguan_ginjal[]"
+                                    <input type="text" class="form-control"
+                                        id="gangguan_ginjal{{ $action->id }}" name="gangguan_ginjal[]"
                                         placeholder="Detail Gangguan Hati/Ginjal">
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-md-4" style="margin-bottom: 15px;">
                                     <label for="dosis" style="color: rgb(19, 11, 241);">Dosis</label>
-                                    <input type="text" class="form-control" id="dosis" name="dosis[]"
-                                        placeholder="Dosis">
+                                    <input type="text" class="form-control" id="dosis{{ $action->id }}"
+                                        name="dosis[]" placeholder="Dosis">
                                 </div>
-        
+
                                 <div class="col-md-4" style="margin-bottom: 15px;">
                                     <label for="hamil" style="color: rgb(19, 11, 241);">Hamil ?</label>
-                                    <input type="text" class="form-control" id="hamil" name="hamil[]"
-                                        placeholder="Berapa bulan">
+                                    <input type="text" class="form-control" id="hamil{{ $action->id }}"
+                                        name="hamil[]" placeholder="Berapa bulan">
                                 </div>
-        
+
                                 <div class="col-md-4" style="margin-bottom: 15px;">
                                     <label for="menyusui" style="color: rgb(19, 11, 241);">Menyusui</label>
-                                    <select class="form-control" id="menyusui" name="menyusui[]">
+                                    <select class="form-control" id="menyusui{{ $action->id }}" name="menyusui[]">
+                                        <option value="" disabled selected>Pilih</option>
                                         <option value="1">Ya</option>
                                         <option value="0">Tidak</option>
                                     </select>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-success" id="addMedicationBtn">Tambah Obat</button>
+                            <button type="button" class="btn btn-success"
+                                id="addMedicationBtn{{ $action->id }}">Tambah Obat</button>
                             <!-- Tabel untuk Menampilkan Data Obat yang Ditambahkan -->
-                            <table class="table mt-3" id="medicationTable">
+                            <table class="table mt-3" id="medicationTable{{ $action->id }}">
                                 <thead>
                                     <tr>
                                         <th>Kode</th>
@@ -353,7 +376,7 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="medicationTableBody{{ $action->id }}" data-medication-code="{{$action->id}}">
+                                <tbody id="medicationTableBody1{{ $action->id }}">
                                     @forelse ($action->actionObats as $item)
                                         <tr>
                                             <td>{{ $item->obat->code }}</td>
@@ -374,12 +397,13 @@
                                                         9 => 'Injeksi',
                                                     ];
                                                 @endphp
-                                            
+
                                                 {{ $shapes[$item->shape] ?? 'Tidak diketahui' }}
                                             </td>
-                                            
+
                                             {{-- <td>{{ $item->obat->total_stock }}</td> --}}
-                                            <td><button class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+                                            <td><button class="btn btn-danger btn-sm"
+                                                    onclick="removeRow(this)">Hapus</button></td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -387,18 +411,20 @@
                                         </tr>
                                     @endforelse
                                 </tbody>
+                                <tbody id="medicationTableBody{{ $action->id }}">
+                                </tbody>
                             </table>
-        
+
                             <!-- Tombol untuk Menambah dan Menghapus Obat -->
                             <div class="d-flex justify-content-between">
                                 <button type="button" class="btn btn-danger" id="clearTableBtn">Hapus Tabel</button>
                             </div>
-                            <input type="hidden" id="medicationsData" name="medicationsData">
+                            <input type="hidden" id="medicationsData{{ $action->id }}" name="medicationsData">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        {{-- <button type="submit" class="btn btn-primary">Simpan Data</button> --}}
+                        <button type="submit" class="btn btn-primary" id="btnSubmit">Simpan Data</button>
                     </div>
                 </form>
             </div>
@@ -420,36 +446,36 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         let obatData = @json($obats); // Ambil data obat dari Laravel
         console.log("Data Obat:", obatData);
-        
+
         let originalStock = 0; // Simpan stok awal
 
-        $('#code_obat{{$action->id}}').select2({
+        $('#code_obat{{ $action->id }}').select2({
             placeholder: "Pilih Obat",
             allowClear: true,
             minimumResultsForSearch: 0
         });
 
-        $('#code_obat{{$action->id}}').change(function () {
+        $('#code_obat{{ $action->id }}').change(function() {
             let selectedId = $(this).val();
             let selectedObat = obatData.find(obat => obat.id == selectedId); // Cari obat berdasarkan ID
-            
+
             console.log("Obat Terpilih:", selectedObat, "ID:", selectedId);
-            
+
             if (selectedObat) {
                 originalStock = parseInt(selectedObat.total_stock) || 0; // Pastikan nilai angka
-                     console.log(" stock Obat Terpilih:",  originalStock);
-                $('#stok{{$action->id}}').val(originalStock); // Tampilkan stok awal
-                $('#jumlah{{$action->id}}').val(''); // Reset jumlah saat obat diganti
+                console.log(" stock Obat Terpilih:", originalStock);
+                $('#stok{{ $action->id }}').val(originalStock); // Tampilkan stok awal
+                $('#jumlah{{ $action->id }}').val(''); // Reset jumlah saat obat diganti
             } else {
-                $('#stok{{$action->id}}').val('');
-                $('#jumlah{{$action->id}}').val('');
+                $('#stok{{ $action->id }}').val('');
+                $('#jumlah{{ $action->id }}').val('');
             }
         });
 
-        $('#jumlah{{$action->id}}').on('input', function () {
+        $('#jumlah{{ $action->id }}').on('input', function() {
             let jumlah = parseInt($(this).val()) || 0; // Ambil nilai jumlah, default 0 jika kosong
             let stokTersisa = originalStock - jumlah; // Hitung stok setelah dikurangi jumlah
 
@@ -463,7 +489,7 @@
                 stokTersisa = 0;
             }
 
-            $('#stok{{$action->id}}').val(stokTersisa); // Update stok di input stok
+            $('#stok{{ $action->id }}').val(stokTersisa); // Update stok di input stok
         });
     });
 </script>
@@ -575,32 +601,142 @@
             }
         }
     }
-</script>
+    document.getElementById("addMedicationBtn{{ $action->id }}").addEventListener("click", function() {
+        let rowNumber = 0; // d
+        const codeElement = document.getElementById("code_obat{{ $action->id }}");
+        const shape = document.getElementById("shape{{ $action->id }}");
+        const menyusuiSelect = document.getElementById("menyusui{{ $action->id }}");
+        const menyusuiValue = menyusuiSelect.value; // value terpilih
+        const menyusuiText = menyusuiSelect.options[menyusuiSelect.selectedIndex].text; // label teks terpilih
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Display success message if session has a success
-        @if (session('success'))
+
+        const selectedOption = codeElement.options[codeElement.selectedIndex];
+        const selectedOptionShape = shape.options[shape.selectedIndex];
+
+        const medicationName = selectedOption.text;
+        const medicationCode = selectedOption.value;
+        const shapeName = selectedOptionShape.text;
+
+        const alergi = document.getElementById("alergi{{ $action->id }}").value;
+        const jumlah = document.getElementById("jumlah{{ $action->id }}").value;
+        const stok = document.getElementById("stok{{ $action->id }}").value;
+        const gangguanGinjal = document.getElementById("gangguan_ginjal{{ $action->id }}").value;
+        const dosis = document.getElementById("dosis{{ $action->id }}").value;
+        const hamil = document.getElementById("hamil{{ $action->id }}").value;
+
+
+        // Validasi sederhana (opsional)
+        if (!jumlah || !dosis || !medicationCode) {
             Swal.fire({
-                title: 'Success!',
-                text: "{{ session('success') }}",
-                icon: 'success',
+                icon: 'warning',
+                title: 'Peringatan!',
+                text: 'Harap lengkapi data obat sebelum menambahkan.',
                 confirmButtonText: 'OK'
             });
-        @endif
+            return;
+        }
 
-        // Display error message if validation errors exist
-        @if ($errors->any())
-            Swal.fire({
-                title: 'Error!',
-                html: '<ul>' +
-                    '@foreach ($errors->all() as $error)' +
-                    '<li>{{ $error }}</li>' +
-                    '@endforeach' +
-                    '</ul>',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        @endif
+        const tableBody = document.getElementById("medicationTableBody{{ $action->id }}");
+        console.log(tableBody);
+
+        const newRow = tableBody.insertRow();
+
+        newRow.setAttribute("data-medication-code", medicationCode);
+        newRow.innerHTML = `
+            <td>${medicationName}</td>
+            <td>${medicationName}</td>
+            <td>${dosis}</td>
+            <td>${jumlah}</td>
+            <td>${shapeName}</td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+            <td  style="display: none;">${stok}</td>
+             <td style="display: none;">${rowNumber}</td>
+            <td style="display: none;">${menyusuiValue}</td>
+            <td style="display: none;">${gangguanGinjal}</td>
+            <td style="display: none;">${alergi}</td>
+            <td style="display: none;">${hamil}</td>
+        `;
+        rowNumber++;
     });
+    $('#addPatientForm{{ $action->id }}').submit(function(e) {
+        e.preventDefault();
+
+        const rows = document.getElementById("medicationTableBody{{ $action->id }}").rows;
+        const medicationsData = [];
+
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            medicationsData.push({
+                number: row.cells[7].textContent.trim(),
+                name: row.cells[1].textContent.trim(),
+                dose: row.cells[2].textContent.trim(),
+                quantity: row.cells[3].textContent.trim(),
+                shape: row.cells[4].textContent.trim(),
+                stock: row.cells[6].textContent.trim(),
+                idObat: row.getAttribute("data-medication-code"),
+                menyusui: row.cells[8].textContent.trim(),
+                gangguan_ginjal: row.cells[9]?.textContent.trim() || '',
+                alergi: row.cells[10]?.textContent.trim() || '',
+                hamil: row.cells[11]?.textContent.trim() || '',
+            });
+        }
+        console.table(medicationsData);
+
+        let formData = $('#addPatientForm{{ $action->id }}').serialize();
+        formData += "&_token=" + $('meta[name="csrf-token"]').attr('content');
+        formData += "&medications=" + encodeURIComponent(JSON.stringify(medicationsData));
+
+        const actionId = $('#idAction{{ $action->id }}').val() ?? null;
+        const url = actionId ? `/tindakan-apotik/${actionId}` : '/tindakan';
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            success: async function(response) {
+                await Swal.fire({
+                    title: 'Success!',
+                    text: response.success || 'Data berhasil disimpan!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    location.reload(); // ⬅ reload halaman setelah tombol OK diklik
+                });
+
+                // Reset form dan elemen terkait
+
+                $('#addPatientForm{{ $action->id }}')[0].reset(); // Reset form HTML
+                $('#medicationTableBody{{ $action->id }}').empty(); // Kosongkan tabel obat
+                $('#diagnosaEdit').val([]).trigger('change');
+                $('#code_obat').val([]).trigger('change');
+                $('#addActionObat').find('input, select, textarea').each(function() {
+                    if (this.type === 'select-one' || this.tagName === 'SELECT') {
+                        $(this).val('').trigger('change'); // handle Select2 juga
+                    } else {
+                        $(this).val('');
+                    }
+                });
+
+
+                $('#addPatientForm').find('select.select2').val(null).trigger('change');
+                table.ajax.reload(null, false);
+                resetPatientDetails
+                    (); // Kosongkan dan sembunyikan detail pasien (fungsi harus sudah didefinisikan)
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseJSON?.error || "Terjadi kesalahan!";
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMsg,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    });
+
+    function removeRow(button) {
+        const row = button.closest('tr');
+        if (row) row.remove();
+    }
 </script>

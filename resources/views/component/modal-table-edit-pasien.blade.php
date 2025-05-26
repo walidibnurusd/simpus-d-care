@@ -76,19 +76,19 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `
-                            <button class="btn btn-success btnPilihPasienEdit{{ $action->id }}" 
-                                data-id="${row.id}" 
-                                data-jenis_kartu="${row.jenis_kartu}" 
-                                data-nomor_kartu="${row.nomor_kartu}" 
-                                data-nik="${row.nik}" 
-                                data-name="${row.name}" 
-                                data-gender="${row.gender}" 
-                                data-age="${row.dob}" 
-                                data-phone="${row.phone}" 
-                                data-address="${row.address}" 
-                                data-blood="${row.blood_type}" 
-                                data-education="${row.education}" 
-                                data-job="${row.occupation}" 
+                            <button class="btn btn-success btnPilihPasienEdit{{ $action->id }}"
+                                data-id="${row.id}"
+                                data-jenis_kartu="${row.jenis_kartu}"
+                                data-nomor_kartu="${row.nomor_kartu}"
+                                data-nik="${row.nik}"
+                                data-name="${row.name}"
+                                data-gender="${row.gender}"
+                                data-age="${row.dob}"
+                                data-phone="${row.phone}"
+                                data-address="${row.address}"
+                                data-blood="${row.blood_type}"
+                                data-education="${row.education}"
+                                data-job="${row.occupation}"
                                 data-rm="${row.no_rm}" data-bs-dismiss="modal" >
                                 Pilih
                             </button>
@@ -101,7 +101,7 @@
                 serverSide: true,
             });
         }
-        initializeTable();
+
         // Handle tombol "Pilih" diklik
         $(document).on('click', '.btnPilihPasienEdit{{ $action->id }}', function() {
             const data = $(this).data();
@@ -136,12 +136,13 @@
 
                 let rowNumber = 1;
                 parsedObats.forEach(obat => {
-                let newRow = tableBody.insertRow();
-                let totalAmount = Array.isArray(obat.obat.terima_obat) 
-                    ? obat.obat.terima_obat.reduce((total, item) => total + (item.amount || 0), 0) 
-                    : 0; // Jika bukan array, kembalikan 0
+                    let newRow = tableBody.insertRow();
+                    let totalAmount = Array.isArray(obat.obat.terima_obat) ?
+                        obat.obat.terima_obat.reduce((total, item) => total + (item.amount ||
+                            0), 0) :
+                        0; // Jika bukan array, kembalikan 0
 
-                newRow.innerHTML = `
+                    newRow.innerHTML = `
                     <td>${rowNumber}</td>
                     <td>${obat.obat.name}</td>
                     <td>${obat.dose}</td>
@@ -150,8 +151,8 @@
                     <td>${totalAmount}</td> <!-- Menampilkan jumlah total amount -->
                     <td><button class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
                 `;
-                rowNumber++;
-            });
+                    rowNumber++;
+                });
 
             }
             // Get the age
@@ -192,11 +193,11 @@
             $('#patientDetailsEdit').show();
 
             // Tutup modal
-            $('#modalPasienEdit').modal('hide');
+            $('#modalPasienEdit{{ $action->id }}').modal('hide');
         });
 
         // Inisialisasi ulang DataTables saat modal ditampilkan
-        $('#modalPasienEdit').on('shown.bs.modal', function() {
+        $('#modalPasienEdit{{ $action->id }}').on('shown.bs.modal', function() {
             initializeTable();
         });
         $('#refreshTable{{ $action->id }}').on('click', function() {

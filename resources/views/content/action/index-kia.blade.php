@@ -224,9 +224,9 @@
                             let faskes = data || row.patient.wilayah_faskes;
 
 
-                            if (faskes === 1 || faskes === 'ya') {
+                            if (faskes == 1 || faskes == 'ya') {
                                 return 'Ya';
-                            } else if (faskes === 0 || faskes === 'tidak') {
+                            } else if (faskes == 0 || faskes == 'tidak') {
                                 return 'Luar Wilayah';
                             } else {
                                 return faskes;

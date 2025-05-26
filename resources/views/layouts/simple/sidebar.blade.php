@@ -115,10 +115,20 @@
                                 <svg class="fill-icon">
                                     <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
                                 </svg>
-                                <span class="sidebar-text nowrap">Pengeluaran Obat Lain</span>
+                                <span class="sidebar-text nowrap">Pengeluaran Obat</span>
                             </a>
                         </li>
-
+                        <li class="sidebar-list">
+                            <a class="sidebar-link sidebar-title link-nav" href="{{ route('stok-obat') }}">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                </svg>
+                                <span class="sidebar-text nowrap">Stok Obat</span>
+                            </a>
+                        </li>
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('obat-master-data') }}">
                                 <svg class="stroke-icon">

@@ -467,6 +467,10 @@ Route::prefix('obat')->group(function () {
     Route::get('get-stock/{id}', [ObatController::class, 'getStock']);
     Route::get('table-pengeluaran-obat', [ObatController::class, 'getPengeluaranObat'])->name('table-pengeluaran-obat');
 
+    //stok obat
+    Route::get('stok-obat', [ObatController::class, 'indexStokObat'])->name('stok-obat');
+    Route::get('table-stok-obat', [ObatController::class, 'getStokObat'])->name('table-stok-obat');
+
 });
 //diagnosa
 Route::get('/get-diagnosa', [DiagnosaController::class, 'getDiagnosa']);

@@ -219,9 +219,9 @@
                                 let faskes = data || row.patient.wilayah_faskes;
 
 
-                                if (faskes === 1 || faskes === 'ya') {
+                                if (faskes == 1 || faskes == 'ya') {
                                     return 'Ya';
-                                } else if (faskes === 0 || faskes === 'tidak') {
+                                } else if (faskes == 0 || faskes == 'tidak') {
                                     return 'Luar Wilayah';
                                 } else {
                                     return faskes;
@@ -245,10 +245,9 @@
                     }
                 });
 
-                // Filter Form Submission (on change)
-                $('#filter-form').on('submit', function(e) {
-                    e.preventDefault(); // Prevent default form submission
-                    table.draw(); // Redraw DataTable with new filters
+                $('#filterButton').on('click', function() {
+                    // Redraw the DataTable with updated filter data
+                    table.ajax.reload();
                 });
             });
         </script>
@@ -355,12 +354,11 @@
                         console.log('Total Pages:', totalPages);
                     }
                 });
-
-                // Filter Form Submission (on change)
-                $('#filter-form').on('submit', function(e) {
-                    e.preventDefault(); // Prevent default form submission
-                    table.draw(); // Redraw DataTable with new filters
+                $('#filterButton').on('click', function() {
+                    // Redraw the DataTable with updated filter data
+                    table.ajax.reload();
                 });
+
             });
         </script>
     @elseif ($routeName == 'action.index.ugd')
@@ -466,12 +464,11 @@
                         console.log('Total Pages:', totalPages);
                     }
                 });
-
-                // Filter Form Submission (on change)
-                $('#filter-form').on('submit', function(e) {
-                    e.preventDefault(); // Prevent default form submission
-                    table.draw(); // Redraw DataTable with new filters
+                $('#filterButton').on('click', function() {
+                    // Redraw the DataTable with updated filter data
+                    table.ajax.reload();
                 });
+
             });
         </script>
     @elseif ($routeName == 'action.kia.index')
@@ -559,12 +556,11 @@
                         console.log('Total Pages:', totalPages);
                     }
                 });
-
-                // Filter Form Submission (on change)
-                $('#filter-form').on('submit', function(e) {
-                    e.preventDefault(); // Prevent default form submission
-                    table.draw(); // Redraw DataTable with new filters
+                $('#filterButton').on('click', function() {
+                    // Redraw the DataTable with updated filter data
+                    table.ajax.reload();
                 });
+
             });
         </script>
     @elseif ($routeName == 'action.kb.index')
@@ -664,11 +660,9 @@
                         console.log('Total Pages:', totalPages);
                     }
                 });
-
-                // Filter Form Submission (on change)
-                $('#filter-form').on('submit', function(e) {
-                    e.preventDefault(); // Prevent default form submission
-                    table.draw(); // Redraw DataTable with new filters
+                $('#filterButton').on('click', function() {
+                    // Redraw the DataTable with updated filter data
+                    table.ajax.reload();
                 });
             });
         </script>
