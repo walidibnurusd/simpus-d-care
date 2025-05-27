@@ -1561,7 +1561,7 @@ class PatientsController extends Controller
             return redirect()->back()->with('success', 'Data berhasil diubah');
         } catch (Exception $e) {
             // Log the error
-            Log::error('Error updating patient: ' . $e->getMessage());
+           
 
             // Redirect back with an error message
             return redirect()->back()->withErrors('An error occurred while updating the patient. Please try again.');

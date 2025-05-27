@@ -472,6 +472,10 @@ Route::prefix('obat')->group(function () {
     Route::get('table-stok-obat', [ObatController::class, 'getStokObat'])->name('table-stok-obat');
 
 });
+// delete patient action & kunjungan
+Route::post('/patient/action', [ActionController::class, 'destroyPatientAction'])->name('patient.action.destroy');
+
+
 //diagnosa
 Route::get('/get-diagnosa', [DiagnosaController::class, 'getDiagnosa']);
 //Language Change

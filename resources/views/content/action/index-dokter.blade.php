@@ -17,6 +17,38 @@
     <li class="breadcrumb-item">{{ Auth::user()->name }}</li>
     <li class="breadcrumb-item active">Tindakan Dokter</li>
 @endsection
+@php
+    // Helper function to determine the print option label
+    function getPrintOptionLabel()
+    {
+        $routeName = Route::currentRouteName();
+        if ($routeName == 'action.dokter.index') {
+            return 'Poli Umum';
+        } elseif ($routeName == 'action.dokter.gigi.index') {
+            return 'Poli Gigi';
+        } elseif ($routeName == 'action.dokter.ugd.index') {
+            return 'UGD';
+        } else {
+            return 'Ruang Tindakan';
+        }
+    }
+
+    // Helper function to determine the print option value
+    function getPrintOptionValue()
+    {
+        $routeName = Route::currentRouteName();
+
+        if ($routeName == 'action.dokter.index') {
+            return 'poli-umum';
+        } elseif ($routeName == 'action.dokter.gigi.index') {
+            return 'poli-gigi';
+        } elseif ($routeName == 'action.dokter.ugd.index') {
+            return 'tindakan';
+        } else {
+            return 'ruang-tindakan';
+        }
+    }
+@endphp
 
 @section('content')
     <div class="main-content content mt-6" id="main-content">
@@ -39,7 +71,8 @@
                         </button>
                     @endif
                     <!-- Form untuk Print dan Filter -->
-                    <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3">
+                    <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3"
+                        id="printForm">
                         <div class="row">
                             <!-- Start Date -->
                             <div class="col-md-4">
@@ -55,7 +88,7 @@
 
                             <!-- Tombol Print -->
                             <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-warning w-100">
+                                <button type="button" class="btn btn-warning w-100" id="printButton">
                                     Print
                                     <i class="fas fa-print ms-2"></i> <!-- Ikon Print -->
                                 </button>
@@ -120,9 +153,62 @@
     </div>
 
 @endsection
+<div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="printModalLabel">Pilih</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Pilih:</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="poli_report" id="printAll" value="all"
+                        checked>
+                    <label class="form-check-label" for="printAll">
+                        Semua Poli
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="poli_report" id="printPoli"
+                        value="{{ getPrintOptionValue() }}">
+                    <label class="form-check-label" for="printPoli">
+                        {{ getPrintOptionLabel() }}
+                    </label>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" id="confirmPrint">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $('#printButton').on('click', function() {
+                $('#printModal').modal('show');
+            });
+
+            $('#confirmPrint').on('click', function() {
+
+                $('#printForm').find('input[name="poli_report"]').remove();
+
+                const printOption = $('input[name="poli_report"]:checked').val();
+
+                $('#printForm').append('<input type="hidden" name="poli_report" value="' + printOption +
+                    '">');
+
+                $('#printForm').submit();
+                $('#printModal').modal('hide');
+            });
+        });
+    </script>
     @if ($routeName == 'action.dokter.index')
         <script>
             $(document).ready(function() {
@@ -235,118 +321,116 @@
         </script>
     @elseif ($routeName == 'action.dokter.gigi.index')
         <script>
-            $(document).ready(function() {
-                var table = $('#actionTable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: "{{ route('action.dokter.gigi.index') }}",
-                        type: 'GET',
-                        data: function(d) {
-                            // Add date filters if available
-                            var start_date = $('#start_date').val();
-                            var end_date = $('#end_date').val();
-                            if (start_date) {
-                                d.start_date = start_date;
-                            }
-                            if (end_date) {
-                                d.end_date = end_date;
-                            }
+            var table = $('#actionTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('action.dokter.gigi.index') }}",
+                    type: 'GET',
+                    data: function(d) {
+                        // Add date filters if available
+                        var start_date = $('#start_date').val();
+                        var end_date = $('#end_date').val();
+                        if (start_date) {
+                            d.start_date = start_date;
+                        }
+                        if (end_date) {
+                            d.end_date = end_date;
+                        }
 
-                            // console.log("Start Date: ", start_date);
-                            // console.log("End Date: ", end_date);
+                        // console.log("Start Date: ", start_date);
+                        // console.log("End Date: ", end_date);
+                    }
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
+                    {
+                        data: 'patient_nik',
+                        name: 'patient.nik'
+                    },
+                    {
+                        data: 'patient_name',
+                        name: 'patient.name'
+                    },
+                    {
+                        data: 'patient_age',
+                        name: 'patient.dob'
+                    },
+                    {
+                        data: 'kartu',
+                        name: 'patient.jenis_kartu'
+                    },
+                    {
+                        data: 'keluhan',
+                        name: 'keluhan'
+                    },
+                    {
+                        data: 'diagnosa',
+                        name: 'diagnosa'
+                    },
+                    {
+                        data: 'tindakan',
+                        name: 'tindakan'
+                    },
+                    {
+                        data: 'hasil_lab',
+                        name: 'hasil_lab'
+                    },
+                    {
+                        data: 'obat',
+                        name: 'obat'
+                    }, {
+                        data: 'update_obat',
+                        name: 'update_obat'
+                    },
+                    {
+                        data: 'hospital_referral.name',
+                        name: 'hospitalReferral.name'
+                    },
+                    {
+                        data: 'kunjungan',
+                        name: 'kunjungan'
+                    },
+                    {
+                        data: 'faskes',
+                        render: function(data, type, row) {
+
+                            let faskes = data || row.patient.wilayah_faskes;
+
+
+                            if (faskes == 1 || faskes == 'ya') {
+                                return 'Ya';
+                            } else if (faskes == 0 || faskes == 'tidak') {
+                                return 'Luar Wilayah';
+                            } else {
+                                return faskes;
+                            }
                         }
                     },
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
+                    @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
+                        {
+                            data: 'action',
+                            name: 'action',
                             orderable: false,
                             searchable: false
-                        },
-                        {
-                            data: 'tanggal',
-                            name: 'tanggal'
-                        },
-                        {
-                            data: 'patient_nik',
-                            name: 'patient.nik'
-                        },
-                        {
-                            data: 'patient_name',
-                            name: 'patient.name'
-                        },
-                        {
-                            data: 'patient_age',
-                            name: 'patient.dob'
-                        },
-                        {
-                            data: 'kartu',
-                            name: 'patient.jenis_kartu'
-                        },
-                        {
-                            data: 'keluhan',
-                            name: 'keluhan'
-                        },
-                        {
-                            data: 'diagnosa',
-                            name: 'diagnosa'
-                        },
-                        {
-                            data: 'tindakan',
-                            name: 'tindakan'
-                        },
-                        {
-                            data: 'hasil_lab',
-                            name: 'hasil_lab'
-                        },
-                        {
-                            data: 'obat',
-                            name: 'obat'
-                        }, {
-                            data: 'update_obat',
-                            name: 'update_obat'
-                        },
-                        {
-                            data: 'hospital_referral.name',
-                            name: 'hospitalReferral.name'
-                        },
-                        {
-                            data: 'kunjungan',
-                            name: 'kunjungan'
-                        },
-                        {
-                            data: 'faskes',
-                            render: function(data, type, row) {
+                        }
+                    @endif
+                ],
+                order: [
+                    [1, 'desc']
+                ]
+            });
 
-                                let faskes = data || row.patient.wilayah_faskes;
-
-
-                                if (faskes == 1 || faskes == 'ya') {
-                                    return 'Ya';
-                                } else if (faskes == 0 || faskes == 'tidak') {
-                                    return 'Luar Wilayah';
-                                } else {
-                                    return faskes;
-                                }
-                            }
-                        },
-                        @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
-                            {
-                                data: 'action',
-                                name: 'action',
-                                orderable: false,
-                                searchable: false
-                            }
-                        @endif
-                    ],
-                    order: [
-                        [1, 'desc']
-                    ]
-                });
-
-                $('#filterButton').on('click', function() {
-                    table.ajax.reload(); // Corrected reload function
-                });
+            $('#filterButton').on('click', function() {
+                table.ajax.reload(); // Corrected reload function
             });
         </script>
     @elseif ($routeName == 'action.dokter.ugd.index')

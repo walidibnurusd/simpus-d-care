@@ -1414,6 +1414,7 @@ class ActionController extends Controller
     {
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
+        $poli = $request->query('poli_report');
 
         $query = Action::query();
 
@@ -1422,6 +1423,9 @@ class ActionController extends Controller
         } else {
             $startDate = Action::min('tanggal');
             $endDate = Action::max('tanggal');
+        }
+        if ($poli && $poli !== 'all') {
+            $query->where('tipe', $poli); 
         }
         $query->orderBy('tanggal', 'asc');
 
@@ -2959,4 +2963,60 @@ class ActionController extends Controller
                 ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
+    public function destroyPatientAction(Request $request)
+    {
+        try {
+            
+            if (!$request->has('idPasien') || !$request->has('tanggal')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tanggal atau ID Pasien tidak diberikan.'
+                ], 400); 
+            }
+    
+         
+            if ($request->id) {
+                $action = Action::where('id', $request->id)
+                    ->whereDate('tanggal', $request->tanggal)
+                    ->first();
+    
+                if (!$action) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Data tindakan tidak ditemukan.'
+                    ], 404); 
+                }
+    
+                $action->delete();
+            }
+    
+          
+            $kunjungan = Kunjungan::where('pasien', $request->idPasien)
+                ->whereDate('tanggal', $request->tanggal)
+                ->first();
+    
+            if (!$kunjungan) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data kunjungan tidak ditemukan.'
+                ], 404); 
+            }
+    
+            $kunjungan->delete();
+    
+           
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+    
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500); 
+        }
+    }
+
+
 }

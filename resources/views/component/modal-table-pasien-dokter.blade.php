@@ -205,7 +205,7 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            // console.log(data);
+
                             return `
                         <button class="btn btn-success btnPilihPasien" 
                         data-idpatient="${row.patient_id}" 
@@ -296,7 +296,11 @@
                         data-zinc="${row.zinc}" data-bs-dismiss="modal" >
                         Pilih
                     </button>
-
+                    <button class="btn btn-danger btnDeletePasien" 
+                        data-id="${row.action_id ? row.action_id : null}" 
+                        data-tanggal="${row.tanggal}" data-idpasien="${row.patient_id}"  >
+                        Hapus
+                    </button>                                                                                                                                                                                   
                         `;
                         },
                     },
@@ -318,14 +322,13 @@
         $(document).on('click', '.btnPilihPasien', function() {
 
             const data = $(this).data();
-            var dob = data.age; // data.dob should be in the format 'YYYY-MM-DD'
+            var dob = data.age;
 
-            // Function to calculate age from dob
             function calculateAge(dob) {
                 var birthDate = new Date(dob);
-                var ageDifMs = Date.now() - birthDate.getTime(); // Difference in milliseconds
-                var ageDate = new Date(ageDifMs); // Convert ms to date object
-                return Math.abs(ageDate.getUTCFullYear() - 1970); // Get the age in years
+                var ageDifMs = Date.now() - birthDate.getTime();
+                var ageDate = new Date(ageDifMs);
+                return Math.abs(ageDate.getUTCFullYear() - 1970);
             }
 
             // Get the age
@@ -553,14 +556,14 @@
                     $('#addPatientForm').find('select').each(function() {
                         $(this).val(null).trigger('change');
                     });
-                     $('#tindakan_ruang_tindakan, #rujuk_rs, #diagnosa, #diagnosaEdit, #tindakan, #poli')
-            .val(null).trigger('change');
+                    $('#tindakan_ruang_tindakan, #rujuk_rs, #diagnosa, #diagnosaEdit, #tindakan, #poli')
+                        .val(null).trigger('change');
                     $('#displayNIK, #displayName, #displayAge, #displayPhone, #displayAddress, #displayBlood, #displayRmNumber')
                         .text('');
                     $('#addPatientForm')[0].reset();
-                          var tableBody = document.getElementById("medicationTableBody");
-                            tableBody.innerHTML = '';
-                            rowNumber = 1; // Reset row number when table is cleared
+                    var tableBody = document.getElementById("medicationTableBody");
+                    tableBody.innerHTML = '';
+                    rowNumber = 1; // Reset row number when table is cleared
 
                     // Reload DataTable dan tunggu sampai selesai
                     await new Promise((resolve) => {
@@ -606,6 +609,55 @@
                 }
             });
         });
+        $(document).on('click', '.btnDeletePasien', function() {
+            const data = $(this).data();
+            const actionId = data.id;
+            const tanggal = data.tanggal;
+            const idPasien = data.idpasien;
+            console.log(data);
+
+            if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                $.ajax({
+                    url: `/patient/action`,
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id: actionId,
+                        tanggal: tanggal,
+                        idPasien: idPasien
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message || 'Data berhasil dihapus!',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+
+                            // Refresh the DataTable to reflect the deletion
+                            table.ajax.reload(null, false);
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: response.message || 'Terjadi kesalahan!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: xhr.responseJSON.message || 'Terjadi kesalahan!',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        });
+
 
     });
 
@@ -632,6 +684,9 @@
                                 <td>${patient.phone}</td>
                                 <td>
                                     <button class="btn btn-primary pilih-pasien" data-id="${patient.id}">Pilih</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger hapus-pasien" data-id="${patient.id}">Hapus</button>
                                 </td>
                             </tr>
                         `);
