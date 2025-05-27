@@ -458,6 +458,29 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4 mt-3">
+                                <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA SEKUNDER</label>
+                                <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
+                                    @foreach ($diagnosa as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mt-3">
+                                <label for="diagnosa_primer" style="color: rgb(19, 11, 241);">DIAGNOSA
+                                    PRIMER</label>
+                                <select class="form-control" id="diagnosa_primer" name="diagnosa_primer"
+                                    data-placeholder="pilih">
+                                    <option></option>
+                                    @foreach ($diagnosa as $item)
+                                        <option value="{{ $item->id }}"
+                                            @if (in_array($item->id, old('diagnosa_primer', []))) selected @endif>
+                                            {{ $item->name }} - {{ $item->icd10 }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mt-3">
                                 <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
                                 <select class="form-control" id="poli" name="id_rujuk_poli">
                                     <option value="" disabled selected>pilih</option>
@@ -469,26 +492,17 @@
                                     @endforeach
                                 </select>
                             </div>
-                              <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
-                                        <select class="form-control" id="rujuk_rs" name="rujuk_rs"
-                                            data-placeholder="Pilih Rumah Sakit">
-                                            <option></option> <!-- Empty option to show placeholder -->
-                                            @foreach ($rs as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                                    <select class="form-control" id="rujuk_rs" name="rujuk_rs"
+                                        data-placeholder="Pilih Rumah Sakit">
+                                        <option></option> <!-- Empty option to show placeholder -->
+                                        @foreach ($rs as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                            <div class="col-md-4 mt-3">
-                                <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
-                                    @foreach ($diagnosa as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
-                                        </option>
-                                    @endforeach
-                                </select>
                             </div>
                             {{-- <div class="col-md-6 mt-3">
                                 <label for="pemeriksaan_penunjang">Pemeriksaan Penunjang</label>
@@ -669,16 +683,16 @@
                             <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
                         </div>
                         <h6>Jenis Pemeriksaan Dahak</h6>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="bta"
-                                    name="jenis_pemeriksaan[]" value="BTA">
-                                <label class="form-check-label" for="bta">BTA</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="tcm"
-                                    name="jenis_pemeriksaan[]" value="TCM">
-                                <label class="form-check-label" for="bta">TCM</label>
-                            </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="bta"
+                                name="jenis_pemeriksaan[]" value="BTA">
+                            <label class="form-check-label" for="bta">BTA</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="tcm"
+                                name="jenis_pemeriksaan[]" value="TCM">
+                            <label class="form-check-label" for="bta">TCM</label>
+                        </div>
                     </div>
 
             </div>
@@ -777,7 +791,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#diagnosa,#poli,#rujuk_rs').select2({
+        $('#diagnosa,#poli,#rujuk_rs,#diagnosa_primer').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0

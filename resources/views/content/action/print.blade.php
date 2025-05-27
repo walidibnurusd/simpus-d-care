@@ -90,7 +90,8 @@
                     <th>LP</th>
                     <th>KASUS</th>
                     <th>KELUHAN</th>
-                    <th>DIAGNOSA</th>
+                    <th>DIAGNOSA SEKUNDER</th>
+                    <th>DIAGNOSA PRIMER</th>
                     <th>ICD10</th>
                     <th>TINDAKAN</th>
                     <th>RUJUKAN</th>
@@ -158,10 +159,11 @@
                                     : [];
                             $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
                         @endphp
-
+                        <td>{{ optional($actions->diagnosaPrimer)->name ?? '-' }}</td>
                         <td>
                             {{ implode(', ', $diagnosa->pluck('icd10')->toArray()) }}
                         </td>
+
                         <td>{{ $actions->tindakan }}</td>
                         <td>{{ $actions->hospitalReferral->name ?? '' }}</td>
 

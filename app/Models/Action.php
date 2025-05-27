@@ -106,7 +106,7 @@ class Action extends Model
         'beri_tindakan',
         'tindakan_ruang_tindakan',
         'kasus','alergi', 'gangguan_ginjal', 'menyusui',
-        'verifikasi_awal', 'verifikasi_akhir', 'informasi_obat', 'id_rujuk_poli'
+        'verifikasi_awal', 'verifikasi_akhir', 'informasi_obat', 'id_rujuk_poli','diagnosa_primer'
     ];
 
     protected $casts = [
@@ -170,5 +170,9 @@ class Action extends Model
     public function actionObats()
     {
         return $this->hasMany(ActionObat::class, 'id_action');
+    }
+    public function diagnosaPrimer()
+    {
+        return $this->belongsTo(Diagnosis::class, 'diagnosa_primer');
     }
 }

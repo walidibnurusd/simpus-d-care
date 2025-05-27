@@ -479,11 +479,25 @@ selected
                                 <!--    </select>-->
                                 <!--</div>-->
                                 <div class="col-md-4">
-                                    <label for="diagnosa" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                    <label for="diagnosa" style="color: rgb(19, 11, 241);">DIAGNOSA SEKUNDER</label>
                                     <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
                                         @foreach ($diagnosa as $item)
                                             <option value="{{ $item->id }}"
                                                 @if (in_array($item->id, old('diagnosa', []))) selected @endif>
+                                                {{ $item->name }} - {{ $item->icd10 }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="diagnosa_primer" style="color: rgb(19, 11, 241);">DIAGNOSA
+                                        PRIMER</label>
+                                    <select class="form-control" id="diagnosa_primer" name="diagnosa_primer"
+                                        data-placeholder="pilih">
+                                        <option></option>
+                                        @foreach ($diagnosa as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (in_array($item->id, old('diagnosa_primer', []))) selected @endif>
                                                 {{ $item->name }} - {{ $item->icd10 }}
                                             </option>
                                         @endforeach
@@ -919,7 +933,7 @@ selected
     $(document).ready(function() {
         // Initialize select2 for all relevant elements
 
-        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli')
+        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli, #diagnosa_primer')
             .select2({
                 placeholder: "Pilih",
                 allowClear: true,

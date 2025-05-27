@@ -1425,7 +1425,7 @@ class ActionController extends Controller
             $endDate = Action::max('tanggal');
         }
         if ($poli && $poli !== 'all') {
-            $query->where('tipe', $poli); 
+            $query->where('tipe', $poli);
         }
         $query->orderBy('tanggal', 'asc');
 
@@ -1558,6 +1558,7 @@ class ActionController extends Controller
                 'tipe' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
                 'id_rujuk_poli' => 'nullable',
+                'diagnosa_primer' => 'nullable',
             ]);
             $existingAction = Action::where('id_patient', $validated['id_patient'])->where('tanggal', $validated['tanggal'])->where('tipe', $validated['tipe'])->first();
             if ($existingAction) {
@@ -1763,6 +1764,7 @@ class ActionController extends Controller
                 'pembekuan_darah' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
                 'id_rujuk_poli' => 'nullable',
+                'diagnosa_primer' => 'nullable',
             ]);
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
             $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
@@ -2072,6 +2074,7 @@ class ActionController extends Controller
                 'pembekuan_darah' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
                 'id_rujuk_poli' => 'nullable',
+                'diagnosa_primer' => 'nullable',
             ]);
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
             $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
@@ -2966,57 +2969,58 @@ class ActionController extends Controller
     public function destroyPatientAction(Request $request)
     {
         try {
-            
             if (!$request->has('idPasien') || !$request->has('tanggal')) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Tanggal atau ID Pasien tidak diberikan.'
-                ], 400); 
-            }
-    
-         
-            if ($request->id) {
-                $action = Action::where('id', $request->id)
-                    ->whereDate('tanggal', $request->tanggal)
-                    ->first();
-    
-                if (!$action) {
-                    return response()->json([
+                return response()->json(
+                    [
                         'success' => false,
-                        'message' => 'Data tindakan tidak ditemukan.'
-                    ], 404); 
+                        'message' => 'Tanggal atau ID Pasien tidak diberikan.',
+                    ],
+                    400,
+                );
+            }
+
+            if ($request->id) {
+                $action = Action::where('id', $request->id)->whereDate('tanggal', $request->tanggal)->first();
+
+                if (!$action) {
+                    return response()->json(
+                        [
+                            'success' => false,
+                            'message' => 'Data tindakan tidak ditemukan.',
+                        ],
+                        404,
+                    );
                 }
-    
+
                 $action->delete();
             }
-    
-          
-            $kunjungan = Kunjungan::where('pasien', $request->idPasien)
-                ->whereDate('tanggal', $request->tanggal)
-                ->first();
-    
+
+            $kunjungan = Kunjungan::where('pasien', $request->idPasien)->whereDate('tanggal', $request->tanggal)->first();
+
             if (!$kunjungan) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Data kunjungan tidak ditemukan.'
-                ], 404); 
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Data kunjungan tidak ditemukan.',
+                    ],
+                    404,
+                );
             }
-    
+
             $kunjungan->delete();
-    
-           
+
             return response()->json([
                 'success' => true,
-                'message' => 'Data berhasil dihapus.'
+                'message' => 'Data berhasil dihapus.',
             ]);
         } catch (\Exception $e) {
-    
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500); 
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
-
-
 }
