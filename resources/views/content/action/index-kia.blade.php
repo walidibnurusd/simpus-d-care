@@ -146,39 +146,39 @@
 
 
     </div>
-
-@endsection
-<div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="printModalLabel">Pilih</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Pilih:</p>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="poli_report" id="printAll" value="all"
-                        checked>
-                    <label class="form-check-label" for="printAll">
-                        Semua Poli
-                    </label>
+    <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="printModalLabel">Pilih</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="poli_report" id="printPoli" value="poli-kia">
-                    <label class="form-check-label" for="printPoli">
-                        Poli KIA
-                    </label>
-                </div>
+                <div class="modal-body">
+                    <p>Pilih:</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="poli_report" id="printAll" value="all"
+                            checked>
+                        <label class="form-check-label" for="printAll">
+                            Semua Poli
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="poli_report" id="printPoli" value="poli-kia">
+                        <label class="form-check-label" for="printPoli">
+                            Poli KIA
+                        </label>
+                    </div>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" id="confirmPrint">Print</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-warning" id="confirmPrint">Print</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endsection
+
 
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
@@ -186,21 +186,20 @@
         $(document).ready(function() {
 
             $('#printButton').on('click', function() {
-                $('#printModal').modal('show');
+                var myModal = new bootstrap.Modal(document.getElementById('printModal'));
+                myModal.show();
             });
 
             $('#confirmPrint').on('click', function() {
-
                 $('#printForm').find('input[name="poli_report"]').remove();
-
                 const printOption = $('input[name="poli_report"]:checked').val();
-
                 $('#printForm').append('<input type="hidden" name="poli_report" value="' + printOption +
                     '">');
-
                 $('#printForm').submit();
-                $('#printModal').modal('hide');
+                var myModal = new bootstrap.Modal(document.getElementById('printModal'));
+                myModal.hide();
             });
+
         });
     </script>
     <script>

@@ -690,8 +690,19 @@ selected
                             </div>
                             @if ($routeName == 'action.dokter.ruang.tindakan.index')
                                 <div class="col-md-4">
-                                    <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                    <select class="form-control" id="diagnosaEdit" name="diagnosa[]" multiple>
+                                    <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA SEKUNDER</label>
+                                    <select class="form-control" id="diagnosaEdit" name="diagnosa[]">
+                                        <option value="" disabled selected>Pilih</option>
+                                        @foreach ($diagnosa as $item)
+                                            <option value="{{ $item->id }}">
+                                                {{ $item->name }}-{{ $item->icd10 }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA PRIMER</label>
+                                    <select class="form-control" id="diagnosaEditPrimer" name="diagnosa_primer">
                                         <option value="" disabled selected>Pilih</option>
                                         @foreach ($diagnosa as $item)
                                             <option value="{{ $item->id }}">
@@ -933,7 +944,7 @@ selected
     $(document).ready(function() {
         // Initialize select2 for all relevant elements
 
-        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli, #diagnosa_primer')
+        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli, #diagnosa_primer,#diagnosaEditPrimer')
             .select2({
                 placeholder: "Pilih",
                 allowClear: true,

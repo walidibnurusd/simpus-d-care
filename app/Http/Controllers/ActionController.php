@@ -348,6 +348,13 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
+                })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
@@ -512,6 +519,13 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
+                })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
@@ -669,6 +683,13 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
+                })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
@@ -824,6 +845,13 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
                 })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
@@ -1004,6 +1032,13 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
+                })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
@@ -1161,6 +1196,13 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
                 })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
@@ -1428,7 +1470,7 @@ class ActionController extends Controller
             $query->where('tipe', $poli);
         }
         $query->orderBy('tanggal', 'asc');
-
+        $query->with('diagnosaPrimer');
         $actions = $query->get();
 
         return view('content.action.print', compact('actions', 'startDate', 'endDate'));
@@ -2099,16 +2141,14 @@ class ActionController extends Controller
                 $validated['tindakan'] = implode(',', $request->tindakan);
             }
             if ($id != null) {
-                // Jika ID diberikan, update data yang sudah ada
                 $action = Action::find($id);
                 if (!empty($request->jenis_pemeriksaan)) {
                     HasilLab::create([
                         'id_action' => $action->id,
-                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan),
                     ]);
                 }
                 $medications = json_decode($request->medications, true);
-                // dd($medications);
 
                 // Ensure medications is an array before using foreach
                 if (is_array($medications)) {

@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="id_obat" style="color: rgb(19, 11, 241);">Kode dan Nama Obat</label>
-                            <select class="form-control" id="id_obat_edit" name="id_obat">
+                            <select class="form-control" id="id_obat_edit{{ $obat->id }}" name="id_obat">
                                 <option value="" disabled selected>pilih</option>
                                 @foreach ($obats as $item)
                                     <option value="{{ $item->id }}" data-shape="{{ $item->shape }}"
@@ -53,12 +53,12 @@
                         </div>
                         <div class="col-md-6" style="margin-bottom: 15px;">
                             <label for="amount" style="color: rgb(19, 11, 241);">Jumlah</label>
-                            <input type="text" class="form-control" id="amountEdit" name="amount"
-                                placeholder="Jumlah" required value="{{ $obat->amount }}">
+                            <input type="text" class="form-control" id="amountEdit{{ $obat->id }}"
+                                name="amount" placeholder="Jumlah" required value="{{ $obat->amount }}">
                         </div>
                         <div class="col-md-6">
                             <label for="shape" style="color: rgb(19, 11, 241);">Sediaan</label>
-                            <select class="form-control" id="shape_edit" name="shape" disabled>
+                            <select class="form-control" id="shape_edit{{ $obat->id }}" name="shape" disabled>
                                 <option value="1">Tablet</option>
                                 <option value="2">Botol</option>
                                 <option value="3">Pcs</option>
@@ -72,7 +72,8 @@
                         </div>
                         <div class="col-md-6" style="margin-bottom: 15px;">
                             <label for="stock" style="color: rgb(19, 11, 241);">Stock</label>
-                            <input type="text" class="form-control" id="stockEdit" name="stock" disabled>
+                            <input type="text" class="form-control" id="stockEdit{{ $obat->id }}" name="stock"
+                                disabled>
                         </div>
                         <div class="col-md-12" style="margin-bottom: 15px;">
                             <label for="remarks" style="color: rgb(19, 11, 241);">Keterangan</label>
@@ -122,97 +123,131 @@
     });
     $(document).ready(function() {
         let originalStock = 0;
+        let previousAmount = 0;
+        let obatId = 0;
+        const obatEdit = {{ $obat->id_obat }};
 
-        // Initialize Select2 for the obat dropdown
-        $('#id_obat_edit').select2({
+        // Select2 init
+        $('#id_obat_edit{{ $obat->id }}').select2({
             placeholder: "Pilih Obat",
             allowClear: true,
             minimumResultsForSearch: 0
         });
 
-        // Function to update the shape and stock fields
-        function updateFields() {
-            const selectedOption = $('#id_obat_edit option:selected');
-            const shapeValue = selectedOption.data('shape'); // Get the shape from the selected option
-            const obatId = $('#id_obat_edit').val();
+        function validateAmountAndUpdateStock() {
+            const currentAmount = parseInt($('#amountEdit{{ $obat->id }}').val()) || 0;
+            console.log('[validate] currentAmount:', currentAmount, 'previousAmount:', previousAmount,
+                'originalStock:', originalStock);
 
-            // Set shape
-            if (shapeValue) {
-                $('#shape_edit').val(shapeValue).prop('disabled', false); // Enable and set value for shape
-                console.log('Shape updated:', shapeValue); // Log if shape is updated
-            } else {
-                $('#shape_edit').val('').prop('disabled',
-                    true); // Disable and clear shape dropdown if no shape found
-                console.log('Shape disabled'); // Log if shape is disabled
+            if (currentAmount < 0) {
+                alert('Jumlah tidak boleh negatif!');
+                $('#amountEdit{{ $obat->id }}').val(previousAmount);
+                $('#stockEdit{{ $obat->id }}').val(originalStock);
+                console.log('[validate] Jumlah negatif - reset nilai');
+                return;
             }
 
-            // Fetch stock for the selected obat
+            // if (currentAmount === previousAmount) {
+            //     $('#stockEdit{{ $obat->id }}').val(originalStock);
+            //     console.log('[validate] Jumlah tidak berubah - stock tetap:', originalStock);
+            //     return;
+            // }
+
+            const remainingStock = originalStock - (currentAmount - previousAmount);
+            console.log('[validate] remainingStock:', remainingStock);
+
+            if (remainingStock < 0) {
+                alert('Jumlah melebihi stok tersedia!');
+                $('#amountEdit{{ $obat->id }}').val(previousAmount);
+                $('#stockEdit{{ $obat->id }}').val(originalStock);
+                console.log('[validate] Melebihi stok - reset nilai');
+                return;
+            }
+
+            $('#stockEdit{{ $obat->id }}').val(remainingStock);
+            console.log('[validate] Stock updated to:', remainingStock);
+        }
+
+        function updateFields(callback) {
+            const selectedOption = $('#id_obat_edit{{ $obat->id }} option:selected');
+            obatId = $('#id_obat_edit{{ $obat->id }}').val();
+            const shapeValue = selectedOption.data('shape');
+            if (shapeValue) {
+                $('#shape_edit{{ $obat->id }}').val(shapeValue).prop('disabled', false);
+            } else {
+                $('#shape_edit{{ $obat->id }}').val('').prop('disabled', true);
+            }
+
             if (obatId) {
                 $.ajax({
-                    url: '/obat/get-stock/' + obatId, // Ensure this route exists and works
+                    url: '/obat/get-stock/' + obatId,
                     method: 'GET',
                     success: function(res) {
-                        console.log('Stock response:', res); // Log the response from the server
+                        originalStock = parseInt(res.stock) || 0;
+                        $('#stockEdit{{ $obat->id }}').val(originalStock);
 
-                        if (res && res.stock !== undefined) {
-                            originalStock = parseInt(res.stock) || 0; // Set originalStock
-                            console.log('Original stock:',
-                                originalStock); // Log the original stock value
-                            $('#stockEdit').val(
-                                originalStock); // Display stockEdit in the input field
+                        initialAmount = parseInt($('#amountEdit{{ $obat->id }}').val()) || 0;
+                        // previousAmount = initialAmount;
 
-                        } else {
-                            console.error('Invalid stockEdit response:', res);
-                            $('#stockEdit').val(
-                                '0'); // If the stockEdit response is invalid, display 0
+                        console.log('[updateFields] Stock:', originalStock, '| initialAmount:',
+                            initialAmount);
+
+                        // Jalankan callback setelah AJAX selesai (jika ada)
+                        if (typeof callback === 'function') {
+                            callback();
                         }
                     },
                     error: function() {
                         originalStock = 0;
-
-                        console.error(
-                            'Failed to fetch stockEdit'); // Log error if fetching stock fails
+                        $('#stockEdit{{ $obat->id }}').val(0);
                         alert('Gagal mengambil stok obat.');
+
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
                     }
                 });
+            } else {
+                originalStock = 0;
+                $('#stockEdit{{ $obat->id }}').val(0);
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }
         }
 
-        // Trigger when the obat selection changes
-        $('#id_obat_edit').change(function() {
-            console.log('Obat selection changed');
-            updateFields();
+        $('#id_obat_edit{{ $obat->id }}').change(function() {
+            console.log('[event] Obat diubah');
+            updateFields(function() {
+                console.log(obatId, obatEdit);
+
+                if (obatId != obatEdit) {
+                    validateAmountAndUpdateStock();
+                }
+                // Panggil hanya setelah update selesai
+            });
+
         });
 
-        // On page load, set the initial value for shape and stock based on the selected obat
+        $('#amountEdit{{ $obat->id }}').on('focus', function() {
+
+            const currentObatId = parseInt(obatId) || 0;
+            const currentObatEdit = parseInt(obatEdit) || 0;
+
+            console.log('obatId:', currentObatId, 'obatEdit:', currentObatEdit);
+
+            if (currentObatId === currentObatEdit) {
+                previousAmount = parseInt($(this).val()) || 0;
+                console.log('previousAmount set to:', previousAmount);
+            }
+        });
+
+        $('#amountEdit{{ $obat->id }}').on('input', function() {
+            console.log('[event] Input pada amountEdit{{ $obat->id }}');
+            validateAmountAndUpdateStock();
+        });
+
+        // Inisialisasi awal
         updateFields();
-
-        // Handle amount input validation
-        $('#amountEdit').on('input', function() {
-            const amount = parseInt($(this).val()) || 0;
-
-
-            // Check if amount is valid
-            if (amount < 0) {
-                alert('Jumlah tidak boleh negatif!');
-                $(this).val(0);
-                $('#stockEdit').val(originalStock);
-                return;
-            }
-
-            const remainingStock = originalStock - amount;
-
-            // Check if the amount exceeds the available stock
-            if (remainingStock < 0) {
-                alert('Jumlah melebihi stok tersedia!');
-                $(this).val(originalStock); // Set value back to the stock
-                $('#stockEdit').val(0);
-                return;
-            }
-
-            $('#stockEdit').val(remainingStock); // Update stock field with the remaining stock
-        });
-
-
     });
 </script>

@@ -38,6 +38,7 @@ class ObatController extends Controller
         $stock = TerimaObat::where('id_obat', $id)->sum('amount');
         return response()->json(['stock' => $stock]);
     }
+
     public function storeMasterData(Request $request)
     {
         try {
@@ -75,6 +76,7 @@ class ObatController extends Controller
             return redirect()->back()->withErrors('Eror saat membuat master data obat');
         }
     }
+
     public function updateMasterData(Request $request, $id)
     {
         try {
@@ -119,6 +121,7 @@ class ObatController extends Controller
             return redirect()->back()->withErrors('Eror saat membuat master data obat');
         }
     }
+
     public function getObatMasterData(Request $request)
     {
         $obats = Obat::all();
@@ -287,7 +290,7 @@ class ObatController extends Controller
             })
             ->make(true);
     }
-    
+
     public function getStokObat(Request $request)
     {
         $obats = TerimaObat::with('obat')->get();
@@ -339,7 +342,7 @@ class ObatController extends Controller
 
             ->make(true);
     }
-    
+
     public function storePengeluaranObat(Request $request)
     {
         try {
@@ -371,47 +374,77 @@ class ObatController extends Controller
     }
     public function updatePengeluaranObat(Request $request, $id)
     {
+        $obat = PengeluaranObatLain::find($id);
+
+        if (!$obat) {
+            return redirect()->back()->withErrors('Data tidak ditemukan');
+        }
+
+        $previousAmount = $obat->amount;
+        $previousObatId = $obat->id_obat;
+        $previousDate = $obat->date;
+
+        // Update PengeluaranObatLain data
+        $obat->id_obat = $request->id_obat;
+        $obat->amount = $request->amount;
+        $obat->date = $request->date;
+        $obat->remarks = $request->remarks;
+        $obat->unit = $request->unit;
+        $obat->save();
+
         try {
-            // Find and update the record
-            $obat = PengeluaranObatLain::find($id);
+            // Jika obat berubah
+            if ($previousObatId !== $request->id_obat) {
+                //Kembalikan stok untuk obat lama (Obat A)
+                $previousTerimaObat = TerimaObat::where('id_obat', $previousObatId)
+                    ->whereDate('date', '<=', $previousDate) // Periksa apakah stok yang dimaksud adalah stok sebelum update
+                    ->orderBy('date', 'desc') // Ambil yang terakhir berdasarkan tanggal
+                    ->first();
 
-            if (!$obat) {
-                return redirect()->back()->withErrors('Data tidak ditemukan');
-            }
-
-            // Get the previous amount
-            $previousAmount = $obat->amount;
-
-            // Update the record with the new data
-            $obat->id_obat = $request->id_obat;
-            $obat->amount = $request->amount;
-            $obat->date = $request->date;
-            $obat->remarks = $request->remarks;
-            $obat->unit = $request->unit;
-            $obat->save();
-
-            // Find the obat in the TerimaObat table
-            $terimaObat = TerimaObat::where('id_obat', $request->id_obat)->first();
-
-            if ($terimaObat) {
-                // Calculate the new stock amount based on the difference in amount
-                $newAmount = $terimaObat->amount - ($request->amount - $previousAmount); // Adjust the stock by the difference in amounts
-
-                if ($newAmount < 0) {
-                    // If the new amount is less than 0, throw an exception
-                    throw new Exception('Stok tidak cukup');
+                if ($previousTerimaObat) {
+                    // Kembalikan stok dengan menambahkan jumlah sebelumnya
+                    $previousTerimaObat->amount += $previousAmount;
+                    $previousTerimaObat->save();
                 }
 
-                // Update the stock amount in TerimaObat
-                $terimaObat->amount = $newAmount;
-                $terimaObat->save();
+                //Kurangi stok untuk obat baru (Obat B)
+                $terimaObat = TerimaObat::where('id_obat', $request->id_obat)->first();
+
+                if ($terimaObat) {
+                    // Hitung stok yang baru setelah dikurangi dengan jumlah baru yang dimasukkan
+                    $newAmount = $terimaObat->amount - $request->amount;
+
+                    if ($newAmount < 0) {
+                        throw new Exception('Stok tidak cukup');
+                    }
+
+                    $terimaObat->amount = $newAmount;
+                    $terimaObat->save();
+                } else {
+                    throw new Exception('Obat baru tidak ditemukan');
+                }
             } else {
-                throw new Exception('Obat tidak ditemukan');
+                // Jika obat tidak berubah, cukup perbarui stok obat yang sama
+                $terimaObat = TerimaObat::where('id_obat', $previousObatId)->first();
+
+                if ($terimaObat) {
+                    // Hitung stok yang baru setelah perubahan jumlah
+                    $newAmount = $terimaObat->amount - ($request->amount - $previousAmount);
+
+                    if ($newAmount < 0) {
+                        throw new Exception('Stok tidak cukup');
+                    }
+
+                    $terimaObat->amount = $newAmount;
+                    $terimaObat->save();
+                } else {
+                    throw new Exception('Obat tidak ditemukan');
+                }
             }
 
             return redirect()->back()->with('success', 'Data berhasil diedit');
         } catch (Exception $e) {
-            // Catch any errors and redirect back with an error message
+            // Menangkap error dan redirect kembali dengan pesan error
             return redirect()
                 ->back()
                 ->withErrors('Error saat mengedit data: ' . $e->getMessage());

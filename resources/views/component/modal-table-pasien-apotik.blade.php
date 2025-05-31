@@ -33,16 +33,8 @@
     </div>
 </div>
 
-<style>
-
-</style>
-<!-- jQuery harus di-load lebih dulu -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap Bundle harus setelah jQuery -->
-{{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> --}}
-
-
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <script>
     let rowNumber = 1;
 
@@ -157,9 +149,6 @@
 </script>
 <script>
     $(document).ready(function() {
-
-
-
         let table;
 
         function initializeTable() {
@@ -257,8 +246,6 @@ data-bs-dismiss="modal">
 
         $(document).on('click', '.btnPilihPasien', function(event) {
             const data = $(this).data();
-            console.log(data);
-
             var dob = data.age;
 
             function calculateAge(dob) {
@@ -364,7 +351,6 @@ data-bs-dismiss="modal">
             $('#update_obat').val(data.updateobat);
 
             var diagnosaData = data.diagnosa;
-            console.log(diagnosaData);
 
             var diagnosaArray = [];
 
@@ -384,7 +370,7 @@ data-bs-dismiss="modal">
                 diagnosaArray = diagnosaData.map(val => parseInt(val));
             }
 
-            console.log(diagnosaArray);
+
             if ($.fn.select2 && $('#diagnosaEdit').data('select2')) {
                 $('#diagnosaEdit').select2('destroy');
             }
@@ -409,7 +395,6 @@ data-bs-dismiss="modal">
                     placeholder: 'Pilih Diagnosa',
                     width: '100%'
                 });
-                console.log('diagnosa selected', $('#diagnosaEdit').val());
             }
 
 
