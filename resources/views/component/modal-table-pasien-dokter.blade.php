@@ -61,8 +61,22 @@
 
             var medicationName = selectedOption.text;
             var medicationCode = selectedOption.value;
-            var shapeName = selectedOptionShape.text;
+            var shapeValue = selectedOptionShape.text;
 
+            const shapeMapping = {
+                1: 'Tablet',
+                2: 'Botol',
+                3: 'Pcs',
+                4: 'Suppositoria',
+                5: 'Ovula',
+                6: 'Drop',
+                7: 'Tube',
+                8: 'Pot',
+                9: 'Injeksi'
+            };
+
+            // Get the shape name from the mapping using the shape value
+            var shapeName = shapeMapping[shapeValue] || 'Unknown';
             // Cek apakah sudah ada
             if (document.getElementById(`medication-${medicationCode}`)) {
                 alert("Obat ini sudah ditambahkan.");
@@ -258,6 +272,7 @@
                         data-riwayatpenyakitlainnyakeluarga='${row.riwayat_penyakit_lainnya_keluarga}'
                         data-keluhan="${row.keluhan}"
                         data-diagnosa='${JSON.stringify(row.diagnosa)}'
+                        data-diagnosaPrimer='${row.diagnosa_primer}'
                         data-tindakan="${row.tindakan}"
                         data-rujukrs="${row.rujuk_rs}"
                         data-keterangan="${row.keterangan}"
@@ -323,6 +338,7 @@
 
             const data = $(this).data();
             var dob = data.age;
+            console.log(data);
 
             function calculateAge(dob) {
                 var birthDate = new Date(dob);
@@ -464,7 +480,8 @@
 
             $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
             $('#keluhan').val(data.keluhan);
-            var diagnosaArray = JSON.parse(data.diagnosa); // Parse the diagnosa data
+
+            var diagnosaArray = JSON.parse(data.diagnosa);
 
             // Clear previous selections before setting new ones
             // Ensure that there's data in diagnosaArray before proceeding
@@ -498,14 +515,13 @@
                 placeholder: 'Pilih Diagnosa',
                 width: '100%'
             });
-            console.log('diagnosa selected', $('#diagnosaEdit').val());
             $('#icd10').val(data.icd10);
             $('#tindakan').val(data.tindakan).trigger('change');
             $('#rujuk_rs').val(data.rujukrs);
             $('#keterangan').val(data.keterangan);
             $('#riwayat_pengobatan').val(data.riwayatpengobatan);
             $('#riwayat_alergi').val(data.riwayatalergi);
-
+            $('#diagnosaEditPrimer').val(String(data.diagnosaprimer)).trigger('change');
 
             $('#patientDetails').show();
             const patientId = data.idpatient;

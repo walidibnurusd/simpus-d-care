@@ -160,6 +160,8 @@
                                 Poli KIA
                             @elseif ($actions->tipe === 'ruang-tindakan')
                                 UGD
+                            @elseif ($actions->tipe === 'tindakan')
+                                Ruang Tindakan
                             @else
                                 Poli Gigi
                             @endif

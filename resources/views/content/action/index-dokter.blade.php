@@ -43,9 +43,9 @@
         } elseif ($routeName == 'action.dokter.gigi.index') {
             return 'poli-gigi';
         } elseif ($routeName == 'action.dokter.ugd.index') {
-            return 'tindakan';
-        } else {
             return 'ruang-tindakan';
+        } else {
+            return 'tindakan';
         }
     }
 @endphp
@@ -58,7 +58,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
+        <div class="row mb-3">
+            <div class="col-md-12 d-flex justify-content-start">
+                <button type="button" class="btn btn-primary" id="sendToSatuSehatButton">
+                    Kirim ke Satu Sehat
+                </button>
+            </div>
+        </div>
         <div class="row">
             <div class="col-12 mb-4">
                 <div class="button-container">
@@ -118,6 +124,7 @@
                             <table id="actionTable" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
+                                        <th><input type="checkbox" id="checkAll"></th> <!-- Checkbox for each row -->
                                         <th>No</th>
                                         <th>TANGGAL</th>
                                         <th>NIK/NO.RM</th>
@@ -155,29 +162,40 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="printModalLabel">Pilih</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Pilih:</p>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="poli_report" id="printAll" value="all"
                             checked>
-                        <label class="form-check-label" for="printAll">
-                            Semua Poli
-                        </label>
+                        <label class="form-check-label" for="printAll">Semua Poli</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="poli_report" id="printPoli"
                             value="{{ getPrintOptionValue() }}">
-                        <label class="form-check-label" for="printPoli">
-                            {{ getPrintOptionLabel() }}
-                        </label>
+                        <label class="form-check-label" for="printPoli">{{ getPrintOptionLabel() }}</label>
                     </div>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" id="closeModalButton">Tutup</button>
                     <button type="button" class="btn btn-warning" id="confirmPrint">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="sendModal" tabindex="-1" aria-labelledby="sendModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sendModalLabel">Konfirmasi Kirim ke Satu Sehat</h5>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin mengirim data yang dipilih ke Satu Sehat?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="closeSendModalButton">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="confirmSend">Kirim</button>
                 </div>
             </div>
         </div>
@@ -189,12 +207,80 @@
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 
     <script>
+        // Pastikan menggunakan JavaScript murni untuk modal Bootstrap 5
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('sendToSatuSehatButton').addEventListener('click', function() {
+                var selectedActions = [];
+                document.querySelectorAll('#actionTable tbody input[type="checkbox"]:checked').forEach(
+                    function(checkbox) {
+                        selectedActions.push(checkbox.value); // Menyimpan ID baris yang dipilih
+                    });
+
+                if (selectedActions.length > 0) {
+                    // Menampilkan modal kirim
+                    var sendModal = new bootstrap.Modal(document.getElementById('sendModal'));
+                    sendModal.show();
+                    document.getElementById('closeSendModalButton').addEventListener('click', function() {
+                        sendModal.hide(); // Menyembunyikan modal setelah tombol diklik
+                    });
+                } else {
+                    alert('Pilih setidaknya satu tindakan');
+                }
+            });
+
+            document.getElementById('confirmSend').addEventListener('click', function() {
+                var selectedActions = [];
+                document.querySelectorAll('#actionTable tbody input[type="checkbox"]:checked').forEach(
+                    function(checkbox) {
+                        selectedActions.push(checkbox.value); // Menyimpan ID baris yang dipilih
+                    });
+
+                if (selectedActions.length > 0) {
+                    // Mengirim data melalui AJAX
+                    fetch("{{ route('sendToSatuSehat') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                actions: selectedActions
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('Berhasil', 'Data berhasil dikirim ke Satu Sehat', 'success');
+                            } else {
+                                Swal.fire('Gagal', 'Data gagal dikirim ke Satu Sehat', 'error');
+                            }
+                            var sendModal = new bootstrap.Modal(document.getElementById('sendModal'));
+                            sendModal.hide();
+                        })
+                        .catch(error => {
+                            Swal.fire('Gagal', 'Terjadi kesalahan saat mengirim data', 'error');
+                            var sendModal = new bootstrap.Modal(document.getElementById('sendModal'));
+                            sendModal.hide(); // Menyembunyikan modal jika terjadi kesalahan
+                        });
+                }
+            });
+        });
+
         $(document).ready(function() {
 
+
+            var printModal = new bootstrap.Modal(document.getElementById('printModal'));
+
+            // Open modal when 'Print' button is clicked
             $('#printButton').on('click', function() {
-                var myModal = new bootstrap.Modal(document.getElementById('printModal'));
-                myModal.show();
+                printModal.show(); // Show the modal explicitly
             });
+
+            // Close modal when 'Tutup' button is clicked
+            document.getElementById('closeModalButton').addEventListener('click', function() {
+                printModal.hide(); // Hide the modal
+            });
+
 
             $('#confirmPrint').on('click', function() {
                 $('#printForm').find('input[name="poli_report"]').remove();
@@ -205,6 +291,60 @@
                 var myModal = new bootstrap.Modal(document.getElementById('printModal'));
                 myModal.hide();
             });
+            $('#checkAll').on('change', function() {
+                var isChecked = $(this).prop('checked');
+                $('#actionTable tbody input[type="checkbox"]').prop('checked', isChecked);
+            });
+
+            // Send selected actions to Satu Sehat
+            $('#sendToSatuSehatButton').on('click', function() {
+                var selectedActions = [];
+                $('#actionTable tbody input[type="checkbox"]:checked').each(function() {
+                    selectedActions.push($(this).val()); // Get the selected row IDs
+                });
+
+                if (selectedActions.length > 0) {
+                    // Show confirmation modal before sending
+                    $('#sendModal').modal('show');
+                } else {
+                    alert('Please select at least one action');
+                }
+            });
+
+            $('#confirmSend').on('click', function() {
+                var selectedActions = [];
+                $('#actionTable tbody input[type="checkbox"]:checked').each(function() {
+                    selectedActions.push($(this).val()); // Menyimpan ID baris yang dipilih
+                });
+
+                if (selectedActions.length > 0) {
+                    // Melakukan AJAX untuk mengirim data ke controller
+                    $.ajax({
+                        url: "{{ route('sendToSatuSehat') }}", // Pastikan rute ini ada di web.php
+                        method: 'POST',
+                        data: {
+                            actions: selectedActions, // Mengirim data ID tindakan yang dipilih
+                            _token: '{{ csrf_token() }}' // Token CSRF untuk keamanan
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Berhasil', 'Data berhasil dikirim ke Satu Sehat',
+                                    'success');
+                            } else {
+                                Swal.fire('Gagal', 'Data gagal dikirim ke Satu Sehat', 'error');
+                            }
+                            $('#sendModal').modal(
+                                'hide'); // Menutup modal setelah proses selesai
+                        },
+                        error: function() {
+                            Swal.fire('Gagal', 'Terjadi kesalahan saat mengirim data', 'error');
+                            $('#sendModal').modal(
+                                'hide'); // Menutup modal jika terjadi kesalahan
+                        }
+                    });
+                }
+            });
+
         });
     </script>
     @if ($routeName == 'action.dokter.index')
@@ -226,8 +366,19 @@
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
                             orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                return `<input type="checkbox" class="actionCheckbox" value="${row.id}">`; // Checkbox for each row
+                            }
+                        },
+
+                        {
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
                             searchable: false
                         },
+
                         {
                             data: 'tanggal',
                             name: 'tanggal'
@@ -257,8 +408,8 @@
                             name: 'diagnosa'
                         },
                         {
-                            data: 'diagnosa_sekunder',
-                            name: 'diagnosa_sekunder'
+                            data: 'diagnosa_primer',
+                            name: 'diagnosa_primer'
                         },
                         {
                             data: 'tindakan',
@@ -348,6 +499,15 @@
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `<input type="checkbox" class="actionCheckbox" value="${row.id}">`; // Checkbox for each row
+                        }
+                    },
+                    {
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
                         searchable: false
                     },
                     {
@@ -379,8 +539,8 @@
                         name: 'diagnosa'
                     },
                     {
-                        data: 'diagnosa_sekunder',
-                        name: 'diagnosa_sekunder'
+                        data: 'diagnosa_primer',
+                        name: 'diagnosa_primer'
                     },
                     {
                         data: 'tindakan',
@@ -465,6 +625,15 @@
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
                             orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                return `<input type="checkbox" class="actionCheckbox" value="${row.id}">`; // Checkbox for each row
+                            }
+                        },
+                        {
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
                             searchable: false
                         },
                         {
@@ -496,8 +665,8 @@
                             name: 'diagnosa'
                         },
                         {
-                            data: 'diagnosa_sekunder',
-                            name: 'diagnosa_sekunder'
+                            data: 'diagnosa_primer',
+                            name: 'diagnosa_primer'
                         },
                         {
                             data: 'tindakan',
@@ -584,6 +753,15 @@
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
                             orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                return `<input type="checkbox" class="actionCheckbox" value="${row.id}">`; // Checkbox for each row
+                            }
+                        },
+                        {
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
                             searchable: false
                         },
                         {
@@ -615,8 +793,8 @@
                             name: 'diagnosa'
                         },
                         {
-                            data: 'diagnosa_sekunder',
-                            name: 'diagnosa_sekunder'
+                            data: 'diagnosa_primer',
+                            name: 'diagnosa_primer'
                         },
                         {
                             data: 'tindakan',

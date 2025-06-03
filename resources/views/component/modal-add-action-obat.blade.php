@@ -134,6 +134,8 @@
             minimumResultsForSearch: 0
         });
 
+
+
         $('#code_obat').change(function() {
             let selectedId = $(this).val();
             let selectedObat = obatData.find(obat => obat.id == selectedId);

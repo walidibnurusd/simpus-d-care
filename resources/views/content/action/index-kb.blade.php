@@ -113,7 +113,10 @@
                                             KELUHAN</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            DIAGNOSA</th>
+                                            DIAGNOSA SEKUNDER</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            DIAGNOSA PRIMER</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             OBAT</th>
@@ -152,7 +155,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="printModalLabel">Pilih</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Pilih:</p>
@@ -172,7 +174,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="closeModalButton">Tutup</button>
                     <button type="button" class="btn btn-warning" id="confirmPrint">Print</button>
                 </div>
             </div>
@@ -186,9 +189,16 @@
     <script>
         $(document).ready(function() {
 
+            var printModal = new bootstrap.Modal(document.getElementById('printModal'));
+
+            // Open modal when 'Print' button is clicked
             $('#printButton').on('click', function() {
-                var myModal = new bootstrap.Modal(document.getElementById('printModal'));
-                myModal.show();
+                printModal.show(); // Show the modal explicitly
+            });
+
+            // Close modal when 'Tutup' button is clicked
+            document.getElementById('closeModalButton').addEventListener('click', function() {
+                printModal.hide(); // Hide the modal
             });
 
             $('#confirmPrint').on('click', function() {
@@ -253,6 +263,10 @@
                     {
                         data: 'diagnosa',
                         name: 'diagnosa'
+                    },
+                    {
+                        data: 'diagnosa_primer',
+                        name: 'diagnosa_primer'
                     },
                     {
                         data: 'obat',

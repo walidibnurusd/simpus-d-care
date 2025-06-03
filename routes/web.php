@@ -473,7 +473,9 @@ Route::prefix('obat')->group(function () {
 
 });
 // delete patient action & kunjungan
-Route::post('/patient/action', [ActionController::class, 'destroyPatientAction'])->name('patient.action.destroy');
+Route::post('patient/action', [ActionController::class, 'destroyPatientAction'])->name('patient.action.destroy');
+Route::post('sendToSatuSehat', [ActionController::class, 'sendToSatuSehat'])->name('sendToSatuSehat');
+
 
 
 //diagnosa
