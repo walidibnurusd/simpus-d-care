@@ -33,16 +33,8 @@
     </div>
 </div>
 
-<style>
-
-</style>
-<!-- jQuery harus di-load lebih dulu -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap Bundle harus setelah jQuery -->
-{{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> --}}
-
-
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <script>
     let rowNumber = 1;
 
@@ -135,31 +127,47 @@
         document.getElementById("patientDetails").style.display = "none";
     }
 
+    // function resetAddActionObatForm() {
+    //     const container = $('#  ');
+    //     $('#code_obat').val('').trigger('change');
+    //     // Reset semua input text dan textarea
+    //     container.find('input[type="text"], textarea').val('');
+
+    //     // Reset semua select biasa (non-select2)
+    //     container.find('select').val('').prop('selectedIndex', 0);
+
+    //     // Jika ada select2, reset dengan trigger change
+    //     container.find('select.select2').val(null).trigger('change');
+
+    //     // Kosongkan semua tbody tabel obat
+    //     $('#medicationTableBody').empty();
+    //     $('#medicationTableBody1').empty();
+
+    //     // Reset input hidden data obat
+    //     $('#medicationsData').val('');
+    // }
     function resetAddActionObatForm() {
-        const container = $('#addActionObat');
+        // Reset semua input biasa
+        $('#addActionObat').find('input[type="text"], input[type="hidden"]').val('');
 
-        // Reset semua input text dan textarea
-        container.find('input[type="text"], textarea').val('');
+        // Reset semua select biasa
+        $('#addActionObat').find('select').val('').trigger('change');
 
-        // Reset semua select biasa (non-select2)
-        container.find('select').val('').prop('selectedIndex', 0);
+        // Jika menggunakan Select2
+        $('#code_obat').val('').trigger('change');
 
-        // Jika ada select2, reset dengan trigger change
-        container.find('select.select2').val(null).trigger('change');
-
-        // Kosongkan semua tbody tabel obat
+        // Kosongkan tabel jika diperlukan
         $('#medicationTableBody').empty();
         $('#medicationTableBody1').empty();
-
-        // Reset input hidden data obat
-        $('#medicationsData').val('');
     }
+
+    // Contoh: ketika tombol "Hapus Tabel" ditekan
+    $('#clearTableBtn').on('click', function() {
+        resetFormInputs();
+    });
 </script>
 <script>
     $(document).ready(function() {
-
-
-
         let table;
 
         function initializeTable() {
@@ -224,6 +232,7 @@
     data-job="${row.patient.occupation}"
     data-rm="${row.patient.no_rm}"
     data-diagnosa='${JSON.stringify(row.diagnosa)}'
+    data-diagnosaprimer='${row.diagnosa_primer}'
     data-tanggal="${row.tanggal}"
     data-doctor="${row.doctor}"
     data-kunjungan="${row.kunjungan}"
@@ -257,8 +266,6 @@ data-bs-dismiss="modal">
 
         $(document).on('click', '.btnPilihPasien', function(event) {
             const data = $(this).data();
-            console.log(data);
-
             var dob = data.age;
 
             function calculateAge(dob) {
@@ -364,7 +371,6 @@ data-bs-dismiss="modal">
             $('#update_obat').val(data.updateobat);
 
             var diagnosaData = data.diagnosa;
-            console.log(diagnosaData);
 
             var diagnosaArray = [];
 
@@ -384,7 +390,7 @@ data-bs-dismiss="modal">
                 diagnosaArray = diagnosaData.map(val => parseInt(val));
             }
 
-            console.log(diagnosaArray);
+
             if ($.fn.select2 && $('#diagnosaEdit').data('select2')) {
                 $('#diagnosaEdit').select2('destroy');
             }
@@ -409,9 +415,8 @@ data-bs-dismiss="modal">
                     placeholder: 'Pilih Diagnosa',
                     width: '100%'
                 });
-                console.log('diagnosa selected', $('#diagnosaEdit').val());
             }
-
+            $('#diagnosaEditPrimer').val(String(data.diagnosaprimer)).trigger('change');
 
             $('#modalPasienApotik').modal('hide');
         });
@@ -483,6 +488,7 @@ data-bs-dismiss="modal">
                             $(this).val('');
                         }
                     });
+                    resetAddActionObatForm();
 
 
                     $('#addPatientForm').find('select.select2').val(null).trigger('change');

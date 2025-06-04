@@ -738,20 +738,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
-                                    <select class="form-control" id="poliEdit{{ $action->id }}"
-                                        name="id_rujuk_poli">
-                                        <option value="" disabled selected>pilih</option>
-                                        @foreach ($poli as $item)
-                                            <option value="{{ $item->id }}"
-                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="diagnosaEditAction" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                    <label for="diagnosaEditAction" style="color: rgb(19, 11, 241);">DIAGNOSA
+                                        SEKUNDER</label>
                                     <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
                                         name="diagnosa[]" multiple>
                                         @php
@@ -764,6 +752,32 @@
                                             <option value="{{ $item->id }}"
                                                 {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
                                                 {{ $item->name }}-{{ $item->icd10 }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">DIAGNOSA PRIMER</label>
+                                    <select class="form-control" id="diagnosaPrimerEdit{{ $action->id }}"
+                                        name="diagnosa_primer">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($diagnosa as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('diagnosa_primer', $action->diagnosa_primer ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                    <select class="form-control" id="poliEdit{{ $action->id }}"
+                                        name="id_rujuk_poli">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($poli as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -1315,31 +1329,22 @@
 </script>
 <script>
     $(document).ready(function() {
-        $('#diagnosaEditAction{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#poliEdit{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#rujuk_rs{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#tindakanEdit{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
+        // Array of element IDs
+        const elementIds = [
+            '#diagnosaEditAction{{ $action->id }}',
+            '#poliEdit{{ $action->id }}',
+            '#rujuk_rs{{ $action->id }}',
+            '#tindakanEdit{{ $action->id }}',
+            '#diagnosaPrimerEdit{{ $action->id }}',
+        ];
+
+        // Apply select2 to each element in the array
+        elementIds.forEach(function(id) {
+            $(id).select2({
+                placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+            });
         });
     });
 </script>

@@ -12,7 +12,7 @@
                     @csrf
                     <input type="hidden" name="medications" id="medicationsData">
                     <div class="row mt-3">
-                        <!-- Kode Obat -->
+                
                         <div class="col-md-4" style="margin-bottom: 15px;">
                             <label for="code_obat" style="color: rgb(19, 11, 241);">Kode dan Nama Obat</label>
                             <select class="form-control" id="code_obat" name="code_obat[]">
@@ -25,7 +25,7 @@
                             </select>
                         </div>
 
-                        <!-- Sediaan Obat -->
+                     
                         <div class="col-md-4" style="margin-bottom: 15px;">
                             <label for="shape" style="color: rgb(19, 11, 241);">Sediaan</label>
                             <select class="form-control" id="shape" name="shape[]">
@@ -133,6 +133,8 @@
             allowClear: true,
             minimumResultsForSearch: 0
         });
+
+
 
         $('#code_obat').change(function() {
             let selectedId = $(this).val();

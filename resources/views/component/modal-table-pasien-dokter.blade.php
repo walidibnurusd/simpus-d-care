@@ -39,6 +39,17 @@
 
 
 <script>
+    const isDokter = @json($routeName === 'action.dokter.index');
+    $(document).ready(function() {
+        // Initialize select2 for all relevant elements
+
+        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli, #diagnosa_primer,#diagnosaEditPrimer')
+            .select2({
+                placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+            });
+    });
     $(document).ready(function() {
         let rowNumber = 1;
 
@@ -205,98 +216,102 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            // console.log(data);
+
                             return `
-                        <button class="btn btn-success btnPilihPasien" 
-                        data-idpatient="${row.patient_id}" 
+                        <button class="btn btn-success btnPilihPasien"
+                        data-idpatient="${row.patient_id}"
                         data-id="${row.action_id ? row.action_id : null}"
-                        data-nik="${row.nik}" 
-                        data-name="${row.name}" 
-                        data-gender="${row.gender}" 
-                        data-age="${row.dob}" 
-                        data-phone="${row.phone}" 
-                        data-address="${row.address}" 
-                        data-blood="${row.blood_type}" 
-                        data-education="${row.education}" 
-                        data-job="${row.occupation}" 
-                        data-rm="${row.no_rm}" 
-                        data-tanggal="${row.tanggal}" 
-                        data-doctor="${row.doctor}" 
-                        data-kasus="${row.kasus}" 
-                        data-kartu="${row.jenis_kartu}" 
-                        data-nomor="${row.nomor_kartu}" 
-                        data-wilayahfaskes="${row.wilayah_faskes}" 
-                        data-sistol="${row.sistol}" 
-                        data-diastol="${row.diastol}" 
-                        data-beratbadan="${row.beratBadan}" 
-                        data-tinggibadan="${row.tinggiBadan}" 
-                        data-lingkarpinggang="${row.lingkarPinggang}" 
-                        data-gula="${row.gula}" 
-                        data-merokok="${row.merokok}" 
-                        data-fisik="${row.fisik}" 
-                        data-garam="${row.garam}" 
-                        data-gulalebih="${row.gula_lebih}" 
-                        data-lemak="${row.lemak}" 
-                        data-alkohol="${row.alkohol}" 
-                        data-hidup="${row.hidup}" 
-                        data-buahsayur="${row.buah_sayur}" 
-                        data-hasiliva="${row.hasil_iva}" 
-                        data-tindakiva="${row.tindak_iva}" 
-                        data-hasilsadanis="${row.hasil_sadanis}" 
-                        data-tindaksadanis="${row.tindak_sadanis}" 
-                        data-konseling="${row.konseling}" 
-                        data-car="${row.car}" 
-                        data-rujukubm="${row.rujuk_ubm}" 
-                        data-kondisi="${row.kondisi}" 
-                        data-edukasi="${row.edukasi}" 
-                        data-riwayatpenyakitsekarang='${row.riwayat_penyakit_sekarang}' 
-                        data-riwayatpenyakitdulu='${row.riwayat_penyakit_dulu}' 
-                        data-riwayatpengobatan='${row.riwayat_pengobatan}' 
-                        data-riwayatalergi='${row.riwayat_alergi}' 
-                        data-riwayatpenyakitlainnya='${row.riwayat_penyakit_lainnya}' 
-                        data-riwayatpenyakitkeluarga='${row.riwayat_penyakit_keluarga}' 
-                        data-riwayatpenyakitlainnyakeluarga='${row.riwayat_penyakit_lainnya_keluarga}' 
-                        data-keluhan="${row.keluhan}" 
-                        data-diagnosa='${JSON.stringify(row.diagnosa)}' 
-                        data-tindakan="${row.tindakan}" 
-                        data-rujukrs="${row.rujuk_rs}" 
-                        data-keterangan="${row.keterangan}" 
-                        data-nadi="${row.nadi}" 
-                        data-nafas="${row.nafas}" 
-                        data-suhu="${row.suhu}" 
-                        data-mataanemia="${row.mata_anemia}" 
-                        data-pupil="${row.pupil}" 
-                        data-ikterus="${row.ikterus}" 
-                        data-udempalpebral="${row.udem_palpebral}" 
-                        data-nyeritekan="${row.nyeri_tekan}" 
-                        data-peristaltik="${row.peristaltik}" 
-                        data-ascites="${row.ascites}" 
-                        data-lokasiabdomen="${row.lokasi_abdomen}" 
-                        data-thorax="${row.thorax}" 
-                        data-thoraxbj="${row.thorax_bj}" 
-                        data-paru="${row.paru}" 
-                        data-suara-nafas="${row.suara_nafas}" 
-                        data-ronchi="${row.ronchi}" 
-                        data-wheezing="${row.wheezing}" 
-                        data-ekstremitas="${row.ekstremitas}" 
-                        data-edema="${row.edema}" 
-                        data-tonsil="${row.tonsil}" 
-                        data-fharing="${row.fharing}" 
-                        data-kelenjar="${row.kelenjar}" 
-                        data-genetalia="${row.genetalia}" 
-                        data-warnakulit="${row.warna_kulit}" 
-                        data-turgor="${row.turgor}" 
-                        data-neurologis="${row.neurologis}" 
-                        data-hasillab="${row.hasil_lab}" 
-                        data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}" 
-                        data-hamil="${row.hamil}" 
-                        data-tipe="${row.tipe}" 
-                        data-icd10="${row.icd10}" 
-                        data-oralit="${row.oralit}" 
+                        data-nik="${row.nik}"
+                        data-name="${row.name}"
+                        data-gender="${row.gender}"
+                        data-age="${row.dob}"
+                        data-phone="${row.phone}"
+                        data-address="${row.address}"
+                        data-blood="${row.blood_type}"
+                        data-education="${row.education}"
+                        data-job="${row.occupation}"
+                        data-rm="${row.no_rm}"
+                        data-tanggal="${row.tanggal}"
+                        data-doctor="${row.doctor}"
+                        data-kasus="${row.kasus}"
+                        data-kartu="${row.jenis_kartu}"
+                        data-nomor="${row.nomor_kartu}"
+                        data-wilayahfaskes="${row.wilayah_faskes}"
+                        data-sistol="${row.sistol}"
+                        data-diastol="${row.diastol}"
+                        data-beratbadan="${row.beratBadan}"
+                        data-tinggibadan="${row.tinggiBadan}"
+                        data-lingkarpinggang="${row.lingkarPinggang}"
+                        data-gula="${row.gula}"
+                        data-merokok="${row.merokok}"
+                        data-fisik="${row.fisik}"
+                        data-garam="${row.garam}"
+                        data-gulalebih="${row.gula_lebih}"
+                        data-lemak="${row.lemak}"
+                        data-alkohol="${row.alkohol}"
+                        data-hidup="${row.hidup}"
+                        data-buahsayur="${row.buah_sayur}"
+                        data-hasiliva="${row.hasil_iva}"
+                        data-tindakiva="${row.tindak_iva}"
+                        data-hasilsadanis="${row.hasil_sadanis}"
+                        data-tindaksadanis="${row.tindak_sadanis}"
+                        data-konseling="${row.konseling}"
+                        data-car="${row.car}"
+                        data-rujukubm="${row.rujuk_ubm}"
+                        data-kondisi="${row.kondisi}"
+                        data-edukasi="${row.edukasi}"
+                        data-riwayatpenyakitsekarang='${row.riwayat_penyakit_sekarang}'
+                        data-riwayatpenyakitdulu='${row.riwayat_penyakit_dulu}'
+                        data-riwayatpengobatan='${row.riwayat_pengobatan}'
+                        data-riwayatalergi='${row.riwayat_alergi}'
+                        data-riwayatpenyakitlainnya='${row.riwayat_penyakit_lainnya}'
+                        data-riwayatpenyakitkeluarga='${row.riwayat_penyakit_keluarga}'
+                        data-riwayatpenyakitlainnyakeluarga='${row.riwayat_penyakit_lainnya_keluarga}'
+                        data-keluhan="${row.keluhan}"
+                        data-diagnosa='${JSON.stringify(row.diagnosa)}'
+                        data-tindakan="${row.tindakan}"
+                        data-rujukrs="${row.rujuk_rs}"
+                        data-keterangan="${row.keterangan}"
+                        data-nadi="${row.nadi}"
+                        data-nafas="${row.nafas}"
+                        data-suhu="${row.suhu}"
+                        data-mataanemia="${row.mata_anemia}"
+                        data-pupil="${row.pupil}"
+                        data-ikterus="${row.ikterus}"
+                        data-udempalpebral="${row.udem_palpebral}"
+                        data-nyeritekan="${row.nyeri_tekan}"
+                        data-peristaltik="${row.peristaltik}"
+                        data-ascites="${row.ascites}"
+                        data-lokasiabdomen="${row.lokasi_abdomen}"
+                        data-thorax="${row.thorax}"
+                        data-thoraxbj="${row.thorax_bj}"
+                        data-paru="${row.paru}"
+                        data-suara-nafas="${row.suara_nafas}"
+                        data-ronchi="${row.ronchi}"
+                        data-wheezing="${row.wheezing}"
+                        data-ekstremitas="${row.ekstremitas}"
+                        data-edema="${row.edema}"
+                        data-tonsil="${row.tonsil}"
+                        data-fharing="${row.fharing}"
+                        data-kelenjar="${row.kelenjar}"
+                        data-genetalia="${row.genetalia}"
+                        data-warnakulit="${row.warna_kulit}"
+                        data-turgor="${row.turgor}"
+                        data-neurologis="${row.neurologis}"
+                        data-hasillab="${row.hasil_lab}"
+                        data-pemeriksaanpenunjang="${row.pemeriksaan_penunjang}"
+                        data-hamil="${row.hamil}"
+                        data-tipe="${row.tipe}"
+                        data-icd10="${row.icd10}"
+                        data-oralit="${row.oralit}"
                         data-zinc="${row.zinc}" data-bs-dismiss="modal" >
                         Pilih
                     </button>
-
+                    <button class="btn btn-danger btnDeletePasien"
+                        data-id="${row.action_id ? row.action_id : null}"
+                        data-tanggal="${row.tanggal}" data-idpasien="${row.patient_id}"  >
+                        Hapus
+                    </button>
                         `;
                         },
                     },
@@ -318,14 +333,13 @@
         $(document).on('click', '.btnPilihPasien', function() {
 
             const data = $(this).data();
-            var dob = data.age; // data.dob should be in the format 'YYYY-MM-DD'
+            var dob = data.age;
 
-            // Function to calculate age from dob
             function calculateAge(dob) {
                 var birthDate = new Date(dob);
-                var ageDifMs = Date.now() - birthDate.getTime(); // Difference in milliseconds
-                var ageDate = new Date(ageDifMs); // Convert ms to date object
-                return Math.abs(ageDate.getUTCFullYear() - 1970); // Get the age in years
+                var ageDifMs = Date.now() - birthDate.getTime();
+                var ageDate = new Date(ageDifMs);
+                return Math.abs(ageDate.getUTCFullYear() - 1970);
             }
 
             // Get the age
@@ -434,64 +448,59 @@
             $('#turgor').val(data.turgor);
             $('#neurologis').val(data.neurologis);
             $('#hasil_lab').val(data.hasillab);
-            // Set nilai dari riwayat_penyakit_sekarang dan trigger 'change'
+
             $('#riwayat_penyakit_sekarang').val(data.riwayatpenyakitsekarang).trigger('change');
 
-            // Cek apakah nilai dari riwayat_penyakit_sekarang tidak kosong
             if (data.riwayatpenyakitlainnya) {
-                $('#penyakit_lainnya_container').css('display', 'block'); // Tampilkan div
+                $('#penyakit_lainnya_container').css('display', 'block');
             } else {
-                $('#penyakit_lainnya_container').css('display', 'none'); // Sembunyikan div
+                $('#penyakit_lainnya_container').css('display', 'none');
+
             }
 
             $('#riwayat_penyakit_dulu').val(data.riwayatpenyakitdulu).trigger('change');
             $('#riwayat_penyakit_lainnya').val(data.riwayatpenyakitlainnya);
             $('#riwayat_penyakit_keluarga').val(data.riwayatpenyakitkeluarga).trigger('change');
-            // Atur nilai untuk riwayat_penyakit_lainnya_keluarga
             $('#riwayat_penyakit_lainnya_keluarga').val(data.riwayatpenyakitlainnyakeluarga);
 
-            // Cek apakah nilai riwayat_penyakit_lainnya_keluarga tidak kosong
             if (data.riwayatpenyakitlainnyakeluarga) {
                 $('#penyakit_lainnya_keluarga_container').css('display',
-                    'block'); // Tampilkan container
+                    'block');
             } else {
                 $('#penyakit_lainnya_keluarga_container').css('display',
-                    'none'); // Sembunyikan container
+                    'none');
             }
 
             $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
             $('#keluhan').val(data.keluhan);
-            var diagnosaArray = JSON.parse(data.diagnosa); // Parse the diagnosa data
+            var diagnosaArray = JSON.parse(data.diagnosa);
 
-            // Clear previous selections before setting new ones
-            // Ensure that there's data in diagnosaArray before proceeding
+
             if (diagnosaArray && diagnosaArray.length > 0) {
-                // Clear previous selections
+
                 $('#diagnosaEdit').val([]).trigger('change');
 
-                // Ensure the select element has the 'multiple' attribute for multi-selection
+
                 $('#diagnosaEdit').attr('multiple', 'multiple');
 
-                // Manually mark options as selected based on diagnosaArray
                 $('#diagnosaEdit option').each(function() {
                     if (diagnosaArray.includes(parseInt($(this).val()))) {
-                        $(this).prop('selected', true); // Mark the option as selected
+                        $(this).prop('selected', true);
                     }
                 });
 
-                // Trigger a change event to update the select input UI
                 $('#diagnosaEdit').trigger('change');
             } else {
-                // If diagnosaArray is empty or undefined, handle it accordingly
-                $('#diagnosaEdit').val([]).trigger('change'); // Clear any selections (optional)
+                $('#diagnosaEdit').val([]).trigger('change');
             }
 
-            // Trigger the change event to update Select2 after manually selecting options
-            $('#diagnosaEdit').trigger('change'); // This should update Select2 if it's used
+            $('#diagnosaEdit').trigger('change');
 
-            // Reinitialize Select2 if necessary to ensure the selected options are displayed
-
-            $('#diagnosaEdit').select2();
+            $('#diagnosaEdit').attr('multiple', 'multiple').select2({
+                placeholder: 'Pilih Diagnosa',
+                width: '100%'
+            });
+            console.log('diagnosa selected', $('#diagnosaEdit').val());
             $('#icd10').val(data.icd10);
             $('#tindakan').val(data.tindakan).trigger('change');
             $('#rujuk_rs').val(data.rujukrs);
@@ -507,11 +516,8 @@
             $('#btnCariRiwayatBerobat').data('id', patientId);
 
 
-            // Tutup modal
-            $('#modalPasienDokter').modal('hide');
-
         });
-        // table.ajax.reload(null, false);
+
 
         initializeTable();
 
@@ -553,14 +559,137 @@
                     $('#addPatientForm').find('select').each(function() {
                         $(this).val(null).trigger('change');
                     });
-                     $('#tindakan_ruang_tindakan, #rujuk_rs, #diagnosa, #diagnosaEdit, #tindakan, #poli')
-            .val(null).trigger('change');
+                    $('#diagnosa').empty().trigger('change');
+
+                    const select2Fields = [
+                        '#diagnosa',
+                        '#tindakan',
+                        '#rujuk_rs',
+                        '#tindakan_ruang_tindakan',
+                        '#poli',
+                        '#diagnosa_primer',
+                        '#diagnosaEditPrimer'
+                    ];
+
+                    select2Fields.forEach(selector => {
+                        const $el = $(selector);
+                        $el.empty().trigger('change');
+
+                    });
+                    const tindakanOptions = isDokter ? [{
+                            value: "Diberikan Obat",
+                            text: "Diberikan Obat"
+                        },
+                        {
+                            value: "Dirujuk",
+                            text: "Dirujuk"
+                        }
+                    ] : [
+                        "Gigi Sulung Tumpatan Sementara",
+                        "Gigi Tetap Tumpatan Sementara",
+                        "Gigi Tetap Tumpatan Tetap",
+                        "Gigi Sulung Tumpatan Tetap",
+                        "Perawatan Saluran Akar",
+                        "Gigi Sulung Pencabutan",
+                        "Gigi Tetap Pencabutan",
+                        "Pembersihan Karang Gigi",
+                        "Odontectomy",
+                        "Sebagian Prothesa",
+                        "Penuh Prothesa",
+                        "Reparasi Prothesa",
+                        "Premedikasi/Pengobatan",
+                        "Tindakan Lain",
+                        "Incici Abses Gigi"
+                    ].map(text => ({
+                        value: text,
+                        text
+                    }));
+
+                    const rumahSakitList = @json($rs);
+                    const tindakanRuangOptions = [
+                        "Observasi Tanpa Tindakan Invasif",
+                        "Observasi Dengan Tindakan Invasif",
+                        "Tidak Ada",
+                        "Corpus Alineum",
+                        "Ekstraksi Kuku",
+                        "Sircumsisi (Bedah Ringan)",
+                        "Incisi Abses",
+                        "Rawat Luka",
+                        "Ganti Verban",
+                        "Spooling",
+                        "Toilet Telinga",
+                        "Tetes Telinga",
+                        "Aff Hecting",
+                        "Hecting (Jahit Luka)",
+                        "Tampon/Off Tampon"
+                    ];
+                    const poliOptions = @json($poli);
+                    const diagnosaOptions = @json($diagnosa);
+
+                    const $select = $('#tindakan');
+                    $select.append('<option value="" disabled selected>pilih</option>');
+
+                    // Tambahkan opsi baru
+                    tindakanOptions.forEach(opt => {
+                        $select.append(new Option(opt.text, opt.value));
+                    });
+
+                    $select.append(
+                        '<option></option>');
+                    const $selectRujukRS = $('#rujuk_rs');
+
+                    $selectRujukRS.append(
+                        '<option value="" disabled selected>pilih</option>');
+                    rumahSakitList.forEach(item => {
+                        $selectRujukRS.append(new Option(item.name, item.id));
+                    });
+
+                    const $selectTindakan = $('#tindakan_ruang_tindakan');
+                    $selectTindakan.append(
+                        '<option value="" disabled selected>pilih</option>');
+                    tindakanRuangOptions.forEach(item => {
+                        $selectTindakan.append(new Option(item, item));
+                    });
+
+                    const $poli = $('#poli');
+                    $poli.append('<option value="" disabled selected>pilih</option>');
+
+                    poliOptions.forEach(item => {
+                        $poli.append(new Option(item.name, item.id));
+                    });
+
+                    const $diagnosa = $('#diagnosa_primer');
+                    $diagnosa.append(
+                        '<option value="" disabled selected>pilih</option>');
+                    diagnosaOptions.forEach(item => {
+                        $diagnosa.append(
+                            $('<option>', {
+                                value: item.id,
+                                text: `${item.name} - ${item.icd10}`
+                            })
+                        );
+                    });
+
+                    const $diagnosaEditPrimer = $('#diagnosaEditPrimer');
+                    $diagnosaEditPrimer.append(
+                        '<option value="" disabled selected>pilih</option>');
+                    diagnosaOptions.forEach(item => {
+                        $diagnosaEditPrimer.append(
+                            $('<option>', {
+                                value: item.id,
+                                text: `${item.name} - ${item.icd10}`
+                            })
+                        );
+                    });
+
+
+
                     $('#displayNIK, #displayName, #displayAge, #displayPhone, #displayAddress, #displayBlood, #displayRmNumber')
                         .text('');
                     $('#addPatientForm')[0].reset();
-                          var tableBody = document.getElementById("medicationTableBody");
-                            tableBody.innerHTML = '';
-                            rowNumber = 1; // Reset row number when table is cleared
+                    var tableBody = document.getElementById("medicationTableBody");
+                    tableBody.innerHTML = '';
+                    rowNumber = 1; // Reset row number when table is cleared
 
                     // Reload DataTable dan tunggu sampai selesai
                     await new Promise((resolve) => {
@@ -580,19 +709,6 @@
 
                     // Perbarui daftar diagnosa
                     await updateDiagnosaList();
-
-                    // Tunggu hingga data pasien benar-benar diperbarui sebelum menampilkan modal
-                    await refreshPatientData();
-
-                    // Cek apakah ada data dalam tabel sebelum menampilkan modal
-                    setTimeout(() => {
-                        if ($('#patientTableBody tr').length > 0) {
-                            // Tampilkan modal hanya setelah data pasien berhasil diperbarui
-                            $('#modalPasienDokter').modal('show');
-                        } else {
-                            // console.warn("Data pasien belum ter-refresh.");
-                        }
-                    }, 500); // Delay 500ms untuk memastikan data sudah ter-load
                 },
                 error: function(xhr) {
                     console.error(xhr);
@@ -606,10 +722,57 @@
                 }
             });
         });
+        $(document).on('click', '.btnDeletePasien', function() {
+            const data = $(this).data();
+            const actionId = data.id;
+            const tanggal = data.tanggal;
+            const idPasien = data.idpasien;
+            console.log(data);
+
+            if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                $.ajax({
+                    url: `/patient/action`,
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id: actionId,
+                        tanggal: tanggal,
+                        idPasien: idPasien
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message || 'Data berhasil dihapus!',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+
+                            // Refresh the DataTable to reflect the deletion
+                            table.ajax.reload(null, false);
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: response.message || 'Terjadi kesalahan!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: xhr.responseJSON.message || 'Terjadi kesalahan!',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        });
+
 
     });
-
-
 
     // Ubah function refreshPatientData agar mengembalikan Promise
     function refreshPatientData() {
@@ -632,6 +795,9 @@
                                 <td>${patient.phone}</td>
                                 <td>
                                     <button class="btn btn-primary pilih-pasien" data-id="${patient.id}">Pilih</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger hapus-pasien" data-id="${patient.id}">Hapus</button>
                                 </td>
                             </tr>
                         `);

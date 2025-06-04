@@ -82,15 +82,19 @@
                     <th>TGL.LAHIR</th>
                     <th>KEPESERTAAN</th>
                     <th>ALAMAT</th>
+                    <th>RW</th>
                     <th>JENIS KELAMIN</th>
                     <th>SISTOL</th>
                     <th>DIASTOL</th>
                     <th>TB</th>
                     <th>BB</th>
                     <th>LP</th>
+                    <th>KUNJUNGAN</th>
                     <th>KASUS</th>
+                    <th>POLI</th>
                     <th>KELUHAN</th>
-                    <th>DIAGNOSA</th>
+                    <th>DIAGNOSA SEKUNDER</th>
+                    <th>DIAGNOSA PRIMER</th>
                     <th>ICD10</th>
                     <th>TINDAKAN</th>
                     <th>RUJUKAN</th>
@@ -100,6 +104,10 @@
             </thead>
             <tbody>
                 @foreach ($actions as $index => $actions)
+                    @php
+                        // Hitung jumlah kunjungan berdasarkan pasien
+                        $kunjunganCount = App\Models\Kunjungan::where('pasien', $actions->patient->id)->count();
+                    @endphp
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ \Carbon\Carbon::parse($actions->tanggal)->format('d-m-Y') }}</td>
@@ -124,6 +132,9 @@
                             <br>{{ $actions->patient->nomor_kartu ?? '' }}
                         </td>
                         <td>{{ $actions->patient->address }}</td>
+                        <td>
+                            {{ $actions->patient->rw === 'luar-wilayah' ? 'Luar Wilayah' : $actions->patient->rw }}
+                        </td>
                         <td>{{ $actions->patient->genderName->name }}</td>
                         <td>{{ $actions->sistol }}</td>
                         <td>{{ $actions->diastol }}</td>
@@ -131,12 +142,31 @@
                         <td>{{ $actions->beratBadan }}</td>
                         <td>{{ $actions->lingkarPinggang }}</td>
                         <td>
+                            {{ $kunjunganCount == 1 ? 'Baru' : 'Lama' }}
+                        </td>
+                        <td>
                             @if ($actions->kasus == '1')
                                 Baru
                             @else
                                 Lama
                             @endif
                         </td>
+                        <td>
+                            @if ($actions->tipe === 'poli-umum')
+                                Poli Umum
+                            @elseif ($actions->tipe === 'poli-kb')
+                                Poli KB
+                            @elseif ($actions->tipe === 'poli-kia')
+                                Poli KIA
+                            @elseif ($actions->tipe === 'ruang-tindakan')
+                                UGD
+                            @elseif ($actions->tipe === 'tindakan')
+                                Ruang Tindakan
+                            @else
+                                Poli Gigi
+                            @endif
+                        </td>
+
                         <td>{{ $actions->keluhan }}</td>
                         @php
                             // Assuming $actions->diagnosa is an array of Diagnosis IDs
@@ -158,10 +188,11 @@
                                     : [];
                             $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
                         @endphp
-
+                        <td>{{ optional($actions->diagnosaPrimer)->name ?? '-' }}</td>
                         <td>
                             {{ implode(', ', $diagnosa->pluck('icd10')->toArray()) }}
                         </td>
+
                         <td>{{ $actions->tindakan }}</td>
                         <td>{{ $actions->hospitalReferral->name ?? '' }}</td>
 

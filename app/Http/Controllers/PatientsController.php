@@ -79,26 +79,24 @@ class PatientsController extends Controller
                 }
             })
             ->addColumn('diagnosa', function ($kunjungan) {
-                // Log the first action's diagnosa to debug
                 if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
-                    // Get the first action for this patient
                     $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
-
-                    // Check if diagnosa is set and is either a string or an array
                     if ($action && isset($action->diagnosa)) {
                         $diagnosa = $action->diagnosa;
-
-                        // If diagnosa is a string of IDs separated by commas, convert it into an array
                         $diagnosaIds = is_array($diagnosa) ? $diagnosa : explode(',', $diagnosa);
-
-                        // Ensure diagnosaIds are integers to avoid type mismatch
                         $diagnosaIds = array_map('intval', $diagnosaIds);
-
-                        // Fetch diagnoses names using the IDs
                         $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-
-                        // If there are diagnoses, return the matched names, otherwise return '-'
                         return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                    }
+                }
+                return '-';
+            })
+            ->addColumn('diagnosa_primer', function ($kunjungan) {
+                if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
+                    $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+
+                    if ($action && $action->diagnosa_primer) {
+                        return $action->diagnosaPrimer->name ?? '-';
                     }
                 }
                 return '-';
@@ -114,29 +112,33 @@ class PatientsController extends Controller
                 return '-';
             })
             ->addColumn('icd10', function ($kunjungan) {
-                // Log the first action's diagnosa to debug
                 if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
-                    // Get the first action for this patient
                     $action = $kunjungan->patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
-                    // Check if diagnosa is set and is either a string or an array
-                    if ($action && isset($action->diagnosa)) {
-                        $diagnosa = $action->diagnosa;
-
-                        // If diagnosa is a string of IDs separated by commas, convert it into an array
-                        $diagnosaIds = is_array($diagnosa) ? $diagnosa : explode(',', $diagnosa);
-
-                        // Ensure diagnosaIds are integers to avoid type mismatch
-                        $diagnosaIds = array_map('intval', $diagnosaIds);
-
-                        // Fetch diagnoses ICD10 codes using the IDs
-                        $icd10Codes = Diagnosis::whereIn('id', $diagnosaIds)->pluck('icd10')->toArray();
-
-                        // If there are ICD10 codes, return them, otherwise return '-'
-                        return !empty($icd10Codes) ? implode(', ', $icd10Codes) : '-';
+                    
+                    if ($action) {
+                        $icd10Codes = [];
+                        
+                        // Handle diagnosa (if available)
+                        if (isset($action->diagnosa)) {
+                            $diagnosa = $action->diagnosa;
+                            $diagnosaIds = is_array($diagnosa) ? $diagnosa : explode(',', $diagnosa);
+                            $diagnosaIds = array_map('intval', $diagnosaIds);
+                            $icd10Codes = array_merge($icd10Codes, Diagnosis::whereIn('id', $diagnosaIds)->pluck('icd10')->toArray());
+                        }
+            
+                        // Handle diagnosa_primer (if available)
+                        if (isset($action->diagnosa_primer)) {
+                            $diagnosaPrimer = $action->diagnosa_primer;
+                            $diagnosaPrimerIds = is_array($diagnosaPrimer) ? $diagnosaPrimer : explode(',', $diagnosaPrimer);
+                            $diagnosaPrimerIds = array_map('intval', $diagnosaPrimerIds);
+                            $icd10Codes = array_merge($icd10Codes, Diagnosis::whereIn('id', $diagnosaPrimerIds)->pluck('icd10')->toArray());
+                        }
+                        
+                        return !empty($icd10Codes) ? implode(', ', array_unique($icd10Codes)) : '-';
                     }
                 }
                 return '-';
-            })
+            })            
             ->addColumn('obat', function ($kunjungan) {
                 if ($kunjungan->patient && $kunjungan->patient->actions->isNotEmpty()) {
                     // Cari action berdasarkan tanggal kunjungan
@@ -858,7 +860,7 @@ class PatientsController extends Controller
         $page = $start / $length + 1;
 
         $query = Action::with('patient.genderName', 'patient.educations', 'patient.occupations', 'hasilLab')->whereHas('hasilLab', function ($q) {
-            $q->whereNull('gds')->whereNull('gdp')->whereNull('gdp_2_jam_pp')->whereNull('cholesterol')->whereNull('asam_urat')->whereNull('leukosit')->whereNull('eritrosit')->whereNull('trombosit')->whereNull('hemoglobin')->whereNull('sifilis')->whereNull('hiv')->whereNull('golongan_darah')->whereNull('widal')->whereNull('malaria')->whereNull('albumin')->whereNull('reduksi')->whereNull('urinalisa')->whereNull('tes_kehamilan')->whereNull('telur_cacing')->whereNull('bta')->whereNull('igm_dbd')->whereNull('igm_typhoid');
+            $q->whereNull('gds')->whereNull('gdp')->whereNull('gdp_2_jam_pp')->whereNull('cholesterol')->whereNull('asam_urat')->whereNull('leukosit')->whereNull('tcm')->whereNull('eritrosit')->whereNull('trombosit')->whereNull('hemoglobin')->whereNull('sifilis')->whereNull('hiv')->whereNull('golongan_darah')->whereNull('widal')->whereNull('malaria')->whereNull('albumin')->whereNull('reduksi')->whereNull('urinalisa')->whereNull('tes_kehamilan')->whereNull('telur_cacing')->whereNull('bta')->whereNull('igm_dbd')->whereNull('igm_typhoid');
         });
 
         if ($filterDate) {
@@ -1561,7 +1563,7 @@ class PatientsController extends Controller
             return redirect()->back()->with('success', 'Data berhasil diubah');
         } catch (Exception $e) {
             // Log the error
-            Log::error('Error updating patient: ' . $e->getMessage());
+           
 
             // Redirect back with an error message
             return redirect()->back()->withErrors('An error occurred while updating the patient. Please try again.');

@@ -160,23 +160,31 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-8">
-                                            <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                            <select class="form-control" id="diagnosaEdit" name="diagnosa[]"
-                                                disabled>
-                                                <option value="" disabled selected>pilih</option>
-                                                @foreach ($diagnosa as $item)
-                                                    <option value="{{ $item->id }}">
-                                                        {{ $item->name }} - {{ $item->icd10 }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
 
-                                        </div>
+                                    <div class="col-md-4">
+                                        <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA
+                                            SEKUNDER</label>
+                                        <select class="form-control" id="diagnosaEdit" name="diagnosa[]" disabled>
+                                            <option value="" disabled selected>pilih</option>
+                                            @foreach ($diagnosa as $item)
+                                                <option value="{{ $item->id }}">
+                                                    {{ $item->name }} - {{ $item->icd10 }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
-
-
+                                    <div class="col-md-4">
+                                        <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA PRIMER</label>
+                                        <select class="form-control" id="diagnosaEditPrimer" name="diagnosa_primer"
+                                            disabled>
+                                            <option value="" disabled selected>Pilih</option>
+                                            @foreach ($diagnosa as $item)
+                                                <option value="{{ $item->id }}">
+                                                    {{ $item->name }}-{{ $item->icd10 }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -344,15 +352,25 @@
         $('#code_obat').change(function() {
             let selectedId = $(this).val();
             let selectedObat = obatData.find(obat => obat.id == selectedId); // Cari obat berdasarkan ID
+
             if (selectedObat) {
-                originalStock = parseInt(selectedObat.total_stock) || 0; // Pastikan nilai angka
-                $('#stok').val(originalStock); // Tampilkan stok awal
-                $('#jumlah').val(''); // Reset jumlah saat obat diganti
+                originalStock = parseInt(selectedObat.total_stock) || 0;
+                $('#stok').val(originalStock);
+                $('#jumlah').val('');
+
+                // Atur sediaan jika tersedia
+                if (selectedObat.shape) {
+                    $('#shape').val(selectedObat.shape).trigger('change');
+                } else {
+                    $('#shape').val('').trigger('change'); // Reset jika tidak ada shape
+                }
             } else {
                 $('#stok').val('');
                 $('#jumlah').val('');
+                $('#shape').val('').trigger('change');
             }
         });
+
 
         $('#jumlah').on('input', function() {
             let jumlah = parseInt($(this).val()) || 0; // Ambil nilai jumlah, default 0 jika kosong

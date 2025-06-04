@@ -43,7 +43,8 @@
                         </button>
                     @endif
                     <!-- Form untuk Print dan Filter -->
-                    <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3">
+                    <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3"
+                        id="printForm">
                         <div class="row">
                             <!-- Start Date -->
                             <div class="col-md-4">
@@ -59,7 +60,7 @@
 
                             <!-- Tombol Print -->
                             <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-warning w-100">
+                                <button type="button" class="btn btn-warning w-100" id="printButton">
                                     Print
                                     <i class="fas fa-print ms-2"></i> <!-- Ikon Print -->
                                 </button>
@@ -111,7 +112,10 @@
                                             KELUHAN</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            DIAGNOSA</th>
+                                            DIAGNOSA SEKUNDER</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            DIAGNOSA PRIMER</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             OBAT</th>
@@ -145,12 +149,70 @@
 
 
     </div>
+    <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="printModalLabel">Pilih</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Pilih:</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="poli_report" id="printAll" value="all"
+                            checked>
+                        <label class="form-check-label" for="printAll">
+                            Semua Poli
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="poli_report" id="printPoli" value="poli-kia">
+                        <label class="form-check-label" for="printPoli">
+                            Poli KIA
+                        </label>
+                    </div>
 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="closeModalButton">Tutup</button>
+                    <button type="button" class="btn btn-warning" id="confirmPrint">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
 
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script>
+        $(document).ready(function() {
 
+            var printModal = new bootstrap.Modal(document.getElementById('printModal'));
+
+            // Open modal when 'Print' button is clicked
+            $('#printButton').on('click', function() {
+                printModal.show(); // Show the modal explicitly
+            });
+
+            // Close modal when 'Tutup' button is clicked
+            document.getElementById('closeModalButton').addEventListener('click', function() {
+                printModal.hide(); // Hide the modal
+            });
+
+
+            $('#confirmPrint').on('click', function() {
+                $('#printForm').find('input[name="poli_report"]').remove();
+                const printOption = $('input[name="poli_report"]:checked').val();
+                $('#printForm').append('<input type="hidden" name="poli_report" value="' + printOption +
+                    '">');
+                $('#printForm').submit();
+                var myModal = new bootstrap.Modal(document.getElementById('printModal'));
+                myModal.hide();
+            });
+
+        });
+    </script>
     <script>
         $(document).ready(function() {
             var table = $('#actionTable').DataTable({
@@ -201,6 +263,10 @@
                     {
                         data: 'diagnosa',
                         name: 'diagnosa'
+                    },
+                    {
+                        data: 'diagnosa_primer',
+                        name: 'diagnosa_primer'
                     },
                     {
                         data: 'obat',

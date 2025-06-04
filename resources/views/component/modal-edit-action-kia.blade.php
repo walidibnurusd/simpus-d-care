@@ -630,7 +630,7 @@
                             </div>
                             <div class="row">
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
                                     <select class="form-control" id="rujuk_rs{{ $action->id }}" name="rujuk_rs">
                                         <option value="" disabled selected>pilih</option>
@@ -643,7 +643,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                    <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA
+                                        SEKUNDER</label>
                                     <select class="form-control" id="diagnosaEdit{{ $action->id }}"
                                         name="diagnosa[]" multiple>
                                         @php
@@ -656,6 +657,19 @@
                                             <option value="{{ $item->id }}"
                                                 {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
                                                 {{ $item->name }}-{{ $item->icd10 }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">DIAGNOSA PRIMER</label>
+                                    <select class="form-control" id="diagnosaPrimerEdit{{ $action->id }}"
+                                        name="diagnosa_primer">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($diagnosa as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('diagnosa_primer', $action->diagnosa_primer ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -971,32 +985,24 @@
             button.textContent = 'Kembali';
         }
     });
+
     $(document).ready(function() {
-        $('#diagnosaEdit{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#tindakanEdit').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#rujuk_rs{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#poliEdit{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
+        // Array of element IDs
+        const elementIds = [
+            '#diagnosaEdit{{ $action->id }}',
+            '#poliEdit{{ $action->id }}',
+            '#rujuk_rs{{ $action->id }}',
+            '#tindakanEdit{{ $action->id }}',
+            '#diagnosaPrimerEdit{{ $action->id }}',
+        ];
+
+        // Apply select2 to each element in the array
+        elementIds.forEach(function(id) {
+            $(id).select2({
+                placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+            });
         });
     });
 </script>

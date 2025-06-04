@@ -8,7 +8,7 @@ use App\Models\Diagnosis;
 use App\Models\Disease;
 use App\Models\Poli;
 use App\Models\TerimaObat;
-use App\Models\Kia;
+use App\Helpers\SatuSehatHelper;
 use App\Models\User;
 use App\Models\Hospital;
 use App\Models\Patients;
@@ -348,6 +348,13 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
+                })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
@@ -512,6 +519,13 @@ class ActionController extends Controller
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
                 })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
+                })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
@@ -616,11 +630,12 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
                     $doctorRole = 'dokter';
+                    $tindakanRole = 'tindakan';
 
                     if ($row->actionObats->isNotEmpty()) {
                         $medications = $row->actionObats
-                            ->filter(function ($ao) use ($doctorRole) {
-                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            ->filter(function ($ao) use ($doctorRole, $tindakanRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null || $ao->created_by == $tindakanRole;
                             })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
@@ -668,6 +683,13 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
                 })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
@@ -772,11 +794,12 @@ class ActionController extends Controller
                 ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
                 ->addColumn('obat', function ($row) {
                     $doctorRole = 'dokter';
+                    $tindakanRole = 'tindakan';
 
                     if ($row->actionObats->isNotEmpty()) {
                         $medications = $row->actionObats
-                            ->filter(function ($ao) use ($doctorRole) {
-                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            ->filter(function ($ao) use ($doctorRole, $tindakanRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null || $ao->created_by == $tindakanRole;
                             })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
@@ -824,6 +847,13 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
                 })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
@@ -888,7 +918,7 @@ class ActionController extends Controller
         $actionsQuery = Action::with('hasilLab')
             ->whereNotNull('hasil_lab')
             ->orWhereHas('hasilLab', function ($q) {
-                $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid');
+                $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid')->orWhereNotNull('tcm');;
             });
 
         if ($startDate) {
@@ -908,26 +938,6 @@ class ActionController extends Controller
         return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
     }
 
-    // public function indexDokterKia(Request $request)
-    // {
-    //     $startDate = $request->input('start_date');
-    //     $endDate = $request->input('end_date');
-    //     $dokter = User::where('role', 'dokter')->get();
-    //     $actionsQuery = Action::where('tipe', 'poli-kia')->where('usia_kehamilan', '!=', 0);
-    //     if ($startDate) {
-    //         $actionsQuery->whereDate('tanggal', '>=', $startDate);
-    //     }
-
-    //     if ($endDate) {
-    //         $actionsQuery->whereDate('tanggal', '<=', $endDate);
-    //     }
-
-    //   $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
-
-    // $actions = $actionsQuery->get();
-    //     $routeName = $request->route()->getName();
-    //     return view('content.action.index-lab', compact('actions', 'dokter', 'penyakit', 'rs', 'diagnosa', 'routeName'));
-    // }
     public function indexDokterKia(Request $request)
     {
         if ($request->ajax()) {
@@ -1003,6 +1013,13 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
                 })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
@@ -1161,6 +1178,13 @@ class ActionController extends Controller
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
 
                     return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                })
+                ->addColumn('diagnosa_primer', function ($row) {
+                    $diagnosaId = $row->diagnosa_primer;
+
+                    $diagnosa = Diagnosis::where('id', $diagnosaId)->first();
+
+                    return !empty($diagnosa) ? $diagnosa->name : '-';
                 })
                 ->addColumn('kunjungan', function ($row) {
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
@@ -1414,6 +1438,7 @@ class ActionController extends Controller
     {
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
+        $poli = $request->query('poli_report');
 
         $query = Action::query();
 
@@ -1423,8 +1448,11 @@ class ActionController extends Controller
             $startDate = Action::min('tanggal');
             $endDate = Action::max('tanggal');
         }
+        if ($poli && $poli !== 'all') {
+            $query->where('tipe', $poli);
+        }
         $query->orderBy('tanggal', 'asc');
-
+        $query->with('diagnosaPrimer');
         $actions = $query->get();
 
         return view('content.action.print', compact('actions', 'startDate', 'endDate'));
@@ -1554,6 +1582,7 @@ class ActionController extends Controller
                 'tipe' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
                 'id_rujuk_poli' => 'nullable',
+                'diagnosa_primer' => 'nullable',
             ]);
             $existingAction = Action::where('id_patient', $validated['id_patient'])->where('tanggal', $validated['tanggal'])->where('tipe', $validated['tipe'])->first();
             if ($existingAction) {
@@ -1570,6 +1599,7 @@ class ActionController extends Controller
 
             // Jika tidak ada ID, buat data baru
             $action = Action::create($validated);
+
             if (!empty($request->jenis_pemeriksaan)) {
                 HasilLab::create([
                     'id_action' => $action->id,
@@ -1759,6 +1789,7 @@ class ActionController extends Controller
                 'pembekuan_darah' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
                 'id_rujuk_poli' => 'nullable',
+                'diagnosa_primer' => 'nullable',
             ]);
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
             $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
@@ -2068,6 +2099,7 @@ class ActionController extends Controller
                 'pembekuan_darah' => 'nullable',
                 'tindakan_ruang_tindakan' => 'nullable',
                 'id_rujuk_poli' => 'nullable',
+                'diagnosa_primer' => 'nullable',
             ]);
             $validated['lingkar_lengan_atas'] = $validated['lingkar_lengan_atas'] ?? 0;
             $validated['tinggi_fundus_uteri'] = $validated['tinggi_fundus_uteri'] ?? 0;
@@ -2092,16 +2124,14 @@ class ActionController extends Controller
                 $validated['tindakan'] = implode(',', $request->tindakan);
             }
             if ($id != null) {
-                // Jika ID diberikan, update data yang sudah ada
                 $action = Action::find($id);
                 if (!empty($request->jenis_pemeriksaan)) {
                     HasilLab::create([
                         'id_action' => $action->id,
-                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan), // Simpan sebagai JSON
+                        'jenis_pemeriksaan' => json_encode($request->jenis_pemeriksaan),
                     ]);
                 }
                 $medications = json_decode($request->medications, true);
-                // dd($medications);
 
                 // Ensure medications is an array before using foreach
                 if (is_array($medications)) {
@@ -2553,7 +2583,6 @@ class ActionController extends Controller
                 }
                 return response()->json(['success' => 'Action has been successfully created.', 'data' => $action]);
             }
-            return redirect()->route('action.dokter.ruang.tindakan.index')->with('success', 'Action tindakan has been successfully updated.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -2864,11 +2893,12 @@ class ActionController extends Controller
                 ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
                 ->addColumn('obat', function ($row) {
                     $doctorRole = 'dokter';
+                    $tindakanRole = 'tindakan';
 
                     if ($row->actionObats->isNotEmpty()) {
                         $medications = $row->actionObats
-                            ->filter(function ($ao) use ($doctorRole) {
-                                return $ao->created_by == $doctorRole || $ao->created_by == null;
+                            ->filter(function ($ao) use ($doctorRole, $tindakanRole) {
+                                return $ao->created_by == $doctorRole || $ao->created_by == null || $ao->created_by == $tindakanRole;
                             })
                             ->map(function ($ao) {
                                 return optional($ao->obat)->name;
@@ -2881,6 +2911,7 @@ class ActionController extends Controller
 
                     return '-';
                 })
+
                 ->addColumn('update_obat', function ($row) {
                     $apotikRole = 'apotik';
 
@@ -2957,6 +2988,196 @@ class ActionController extends Controller
             return redirect()
                 ->back()
                 ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
+    }
+    public function destroyPatientAction(Request $request)
+    {
+        try {
+            if (!$request->has('idPasien') || !$request->has('tanggal')) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Tanggal atau ID Pasien tidak diberikan.',
+                    ],
+                    400,
+                );
+            }
+
+            if ($request->id) {
+                $action = Action::where('id', $request->id)->whereDate('tanggal', $request->tanggal)->first();
+
+                if (!$action) {
+                    return response()->json(
+                        [
+                            'success' => false,
+                            'message' => 'Data tindakan tidak ditemukan.',
+                        ],
+                        404,
+                    );
+                }
+
+                $action->delete();
+            }
+
+            $kunjungan = Kunjungan::where('pasien', $request->idPasien)->whereDate('tanggal', $request->tanggal)->first();
+
+            if (!$kunjungan) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Data kunjungan tidak ditemukan.',
+                    ],
+                    404,
+                );
+            }
+
+            $kunjungan->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dihapus.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+                ],
+                500,
+            );
+        }
+    }
+
+    public function sendToSatuSehat(Request $request)
+    {
+        try {
+            $selectedActions = $request->actions;
+
+            // Iterate over each selected action and send it to Satu Sehat
+            foreach ($selectedActions as $actionId) {
+                $action = Action::findOrFail($actionId);
+                $docter = User::where('name', $action->doctor)->first();
+
+                // Fetch patient info based on NIK
+                $patientSatuSehat = SatuSehatHelper::getPatientByNik($action->patient->nik);
+                $docterSatuSehat = SatuSehatHelper::getDocterByNik($docter->nik);
+                $currentTime = Carbon::now(); // Current time in server's timezone (probably WIB)
+
+                $currentTime->subHours(8);
+
+                // Format the time to UTC (add the timezone offset as +00:00)
+                $formattedTime = $currentTime->format('Y-m-d\TH:i:s\+00:00');
+
+                // Prepare data for Satu Sehat
+                $encounterBody = [
+                    'resourceType' => 'Encounter',
+                    'identifier' => [
+                        [
+                            'system' => 'http://sys-ids.kemkes.go.id/encounter/' . env('Organization_ID_SANDBOX'),
+                            'value' => $action->id,
+                        ],
+                    ],
+                    'status' => 'arrived',
+                    'class' => [
+                        'system' => 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+                        'code' => 'AMB',
+                        'display' => 'ambulatory',
+                    ],
+                    'subject' => [
+                        'reference' => 'Patient/' . $patientSatuSehat['id'],
+                        'display' => $action->patient->name,
+                    ],
+                    'participant' => [
+                        [
+                            'type' => [
+                                [
+                                    'coding' => [
+                                        [
+                                            'system' => 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType',
+                                            'code' => 'ATND',
+                                            'display' => 'attender',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'individual' => [
+                                'reference' => 'Practitioner/' . $docterSatuSehat['id'],
+                                'display' => $docter->name, // Corrected this line
+                            ],
+                        ],
+                    ],
+                    'period' => [
+                        'start' => $formattedTime,
+                    ],
+                    'location' => [
+                        [
+                            'location' => [
+                                'reference' => 'Location/b13081cb-d36f-4008-91df-2d2824b90207',
+                                'display' => 'Ruang Poli Gigi',
+                            ],
+                            'period' => [
+                                'start' => $formattedTime,
+                            ],
+                            'extension' => [
+                                [
+                                    'url' => 'https://fhir.kemkes.go.id/r4/StructureDefinition/ServiceClass',
+                                    'extension' => [
+                                        [
+                                            'url' => 'value',
+                                            'valueCodeableConcept' => [
+                                                'coding' => [
+                                                    [
+                                                        'system' => 'http://terminology.kemkes.go.id/CodeSystem/locationServiceClass-Outpatient',
+                                                        'code' => 'reguler',
+                                                        'display' => 'Kelas Reguler',
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                        [
+                                            'url' => 'upgradeClassIndicator',
+                                            'valueCodeableConcept' => [
+                                                'coding' => [
+                                                    [
+                                                        'system' => 'http://terminology.kemkes.go.id/CodeSystem/locationUpgradeClass',
+                                                        'code' => 'kelas-tetap',
+                                                        'display' => 'Kelas Tetap Perawatan',
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'statusHistory' => [
+                        [
+                            'status' => 'arrived',
+                            'period' => [
+                                'start' => $formattedTime,
+                            ],
+                        ],
+                    ],
+                    'serviceProvider' => [
+                        'reference' => 'Organization/' . env('Organization_ID_SANDBOX'),
+                    ],
+                ];
+
+                // Send to Satu Sehat
+                $response = SatuSehatHelper::postEncounterToSatuSehat($encounterBody);
+
+                if ($response['status'] == 'arrived') {
+                    // Update the action's status to 1 (successful)
+                    Action::where('id', $actionId)->update(['status_satu_sehat' => 1]);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Failed to send one or more actions to Satu Sehat']);
+                }
+            }
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 }

@@ -12,7 +12,8 @@
                         <tr>
                             <th>Tgl Kunjungan</th>
                             <th>Poli Berobat</th>
-                            <th>Diagnosa</th>
+                            <th>Diagnosa Sekunder</th>
+                            <th>Diagnosa Primer</th>
                             <th>ICD10</th>
                             <th>Obat</th>
                             <th>Hasil Lab</th>
@@ -65,6 +66,10 @@
                                 name: 'diagnosa'
                             },
                             {
+                                data: 'diagnosa_primer',
+                                name: 'diagnosa_primer'
+                            },
+                            {
                                 data: 'icd10',
                                 name: 'icd10'
                             },
@@ -72,11 +77,12 @@
                                 data: 'obat',
                                 name: 'obat'
                             },
-                           {
+                            {
                                 data: 'hasil_lab',
                                 name: 'hasil_lab',
                                 render: function(data, type, row) {
-                                    return type === 'display' ? data : data.replace(/<br\s*\/?>/g, '\n');
+                                    return type === 'display' ? data : data.replace(
+                                        /<br\s*\/?>/g, '\n');
                                 }
                             },
 

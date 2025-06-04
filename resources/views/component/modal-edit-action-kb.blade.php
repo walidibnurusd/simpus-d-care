@@ -658,7 +658,8 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4 mt-3">
-                                        <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA</label>
+                                        <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA
+                                            SEKUNDER</label>
                                         <select class="form-control" id="diagnosaEdit{{ $action->id }}"
                                             name="diagnosa[]" multiple>
                                             @php
@@ -671,6 +672,19 @@
                                                 <option value="{{ $item->id }}"
                                                     {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
                                                     {{ $item->name }}-{{ $item->icd10 }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mt-3">
+                                        <label for="poli" style="color: rgb(19, 11, 241);">DIAGNOSA PRIMER</label>
+                                        <select class="form-control" id="diagnosaPrimerEdit{{ $action->id }}"
+                                            name="diagnosa_primer">
+                                            <option value="" disabled selected>pilih</option>
+                                            @foreach ($diagnosa as $item)
+                                                <option value="{{ $item->id }}"
+                                                    @if (old('diagnosa_primer', $action->diagnosa_primer ?? '') == $item->id) selected @endif>
+                                                    {{ $item->name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -704,31 +718,32 @@
 
                                         </div>
                                     </div>
-                                      <div class="col-md-6 mt-3">
-                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
-                                    <select class="form-control" id="poliEdit{{ $action->id }}"
-                                        name="id_rujuk_poli">
-                                        <option value="" disabled selected>pilih</option>
-                                        @foreach ($poli as $item)
-                                            <option value="{{ $item->id }}"
-                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                 <div class="col-md-6 mt-3">
-                                    <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
-                                    <select class="form-control" id="rujuk_rs{{ $action->id }}" name="rujuk_rs">
-                                        <option value="" disabled selected>pilih</option>
-                                        @foreach ($rs as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('rujuk_rs', $action->rujuk_rs ?? '') == $item->id ? 'selected' : '' }}>
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                        <select class="form-control" id="poliEdit{{ $action->id }}"
+                                            name="id_rujuk_poli">
+                                            <option value="" disabled selected>pilih</option>
+                                            @foreach ($poli as $item)
+                                                <option value="{{ $item->id }}"
+                                                    @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                                        <select class="form-control" id="rujuk_rs{{ $action->id }}"
+                                            name="rujuk_rs">
+                                            <option value="" disabled selected>pilih</option>
+                                            @foreach ($rs as $item)
+                                                <option value="{{ $item->id }}"
+                                                    {{ old('rujuk_rs', $action->rujuk_rs ?? '') == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     <div class="col-md-6 mt-3">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Obat</label>
@@ -903,7 +918,7 @@
                                     {{ in_array('IgM Typhoid', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
                             </div>
-                               <h6>Jenis Pemeriksaan Dahak</h6>
+                            <h6>Jenis Pemeriksaan Dahak</h6>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="bta"
                                     name="jenis_pemeriksaan[]" value="BTA"
@@ -959,31 +974,21 @@
 </script>
 <script>
     $(document).ready(function() {
-        $('#diagnosaEdit{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#tindakanEdit').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-       $(document).ready(function() {
-        $('#rujuk_rs{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
-        });
-    });
-    $(document).ready(function() {
-        $('#poliEdit{{ $action->id }}').select2({
-            placeholder: "Pilih",
-            allowClear: true,
-            minimumResultsForSearch: 0
+        const elementIds = [
+            '#diagnosaEdit{{ $action->id }}',
+            '#poliEdit{{ $action->id }}',
+            '#rujuk_rs{{ $action->id }}',
+            '#tindakanEdit{{ $action->id }}',
+            '#diagnosaPrimerEdit{{ $action->id }}',
+        ];
+
+        // Apply select2 to each element in the array
+        elementIds.forEach(function(id) {
+            $(id).select2({
+                placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+            });
         });
     });
 </script>
