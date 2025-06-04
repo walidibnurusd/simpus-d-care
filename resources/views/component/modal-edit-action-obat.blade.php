@@ -182,7 +182,9 @@
                 $('#jumlah{{ $action->id }}').val('');
 
                 // Set sediaan (shape)
-                $('#shape{{ $action->id }}').val(selectedObat.shape).trigger('change');
+                // $('#shape{{ $action->id }}').val(selectedObat.shape).trigger('change');
+                  let shapeValue = selectedObat.shape != null ? selectedObat.shape : selectedObat.obat?.shape;
+                $('#shape{{ $action->id }}').val(shapeValue).trigger('change');
             } else {
                 $('#stok{{ $action->id }}').val('');
                 $('#jumlah{{ $action->id }}').val('');

@@ -39,6 +39,17 @@
 
 
 <script>
+    const isDokter = @json($routeName === 'action.dokter.index');
+    $(document).ready(function() {
+        // Initialize select2 for all relevant elements
+
+        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli, #diagnosa_primer,#diagnosaEditPrimer')
+            .select2({
+                placeholder: "Pilih",
+                allowClear: true,
+                minimumResultsForSearch: 0
+            });
+    });
     $(document).ready(function() {
         let rowNumber = 1;
 
@@ -61,22 +72,8 @@
 
             var medicationName = selectedOption.text;
             var medicationCode = selectedOption.value;
-            var shapeValue = selectedOptionShape.text;
+            var shapeName = selectedOptionShape.text;
 
-            const shapeMapping = {
-                1: 'Tablet',
-                2: 'Botol',
-                3: 'Pcs',
-                4: 'Suppositoria',
-                5: 'Ovula',
-                6: 'Drop',
-                7: 'Tube',
-                8: 'Pot',
-                9: 'Injeksi'
-            };
-
-            // Get the shape name from the mapping using the shape value
-            var shapeName = shapeMapping[shapeValue] || 'Unknown';
             // Cek apakah sudah ada
             if (document.getElementById(`medication-${medicationCode}`)) {
                 alert("Obat ini sudah ditambahkan.");
@@ -272,7 +269,6 @@
                         data-riwayatpenyakitlainnyakeluarga='${row.riwayat_penyakit_lainnya_keluarga}'
                         data-keluhan="${row.keluhan}"
                         data-diagnosa='${JSON.stringify(row.diagnosa)}'
-                        data-diagnosaPrimer='${row.diagnosa_primer}'
                         data-tindakan="${row.tindakan}"
                         data-rujukrs="${row.rujuk_rs}"
                         data-keterangan="${row.keterangan}"
@@ -338,7 +334,6 @@
 
             const data = $(this).data();
             var dob = data.age;
-            console.log(data);
 
             function calculateAge(dob) {
                 var birthDate = new Date(dob);
@@ -453,75 +448,66 @@
             $('#turgor').val(data.turgor);
             $('#neurologis').val(data.neurologis);
             $('#hasil_lab').val(data.hasillab);
-            // Set nilai dari riwayat_penyakit_sekarang dan trigger 'change'
+
             $('#riwayat_penyakit_sekarang').val(data.riwayatpenyakitsekarang).trigger('change');
 
-            // Cek apakah nilai dari riwayat_penyakit_sekarang tidak kosong
             if (data.riwayatpenyakitlainnya) {
-                $('#penyakit_lainnya_container').css('display', 'block'); // Tampilkan div
+                $('#penyakit_lainnya_container').css('display', 'block');
             } else {
-                $('#penyakit_lainnya_container').css('display', 'none'); // Sembunyikan div
+                $('#penyakit_lainnya_container').css('display', 'none');
+
             }
 
             $('#riwayat_penyakit_dulu').val(data.riwayatpenyakitdulu).trigger('change');
             $('#riwayat_penyakit_lainnya').val(data.riwayatpenyakitlainnya);
             $('#riwayat_penyakit_keluarga').val(data.riwayatpenyakitkeluarga).trigger('change');
-            // Atur nilai untuk riwayat_penyakit_lainnya_keluarga
             $('#riwayat_penyakit_lainnya_keluarga').val(data.riwayatpenyakitlainnyakeluarga);
 
-            // Cek apakah nilai riwayat_penyakit_lainnya_keluarga tidak kosong
             if (data.riwayatpenyakitlainnyakeluarga) {
                 $('#penyakit_lainnya_keluarga_container').css('display',
-                    'block'); // Tampilkan container
+                    'block');
             } else {
                 $('#penyakit_lainnya_keluarga_container').css('display',
-                    'none'); // Sembunyikan container
+                    'none');
             }
 
             $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
             $('#keluhan').val(data.keluhan);
-
             var diagnosaArray = JSON.parse(data.diagnosa);
 
-            // Clear previous selections before setting new ones
-            // Ensure that there's data in diagnosaArray before proceeding
+
             if (diagnosaArray && diagnosaArray.length > 0) {
-                // Clear previous selections
+
                 $('#diagnosaEdit').val([]).trigger('change');
 
-                // Ensure the select element has the 'multiple' attribute for multi-selection
+
                 $('#diagnosaEdit').attr('multiple', 'multiple');
 
-                // Manually mark options as selected based on diagnosaArray
                 $('#diagnosaEdit option').each(function() {
                     if (diagnosaArray.includes(parseInt($(this).val()))) {
-                        $(this).prop('selected', true); // Mark the option as selected
+                        $(this).prop('selected', true);
                     }
                 });
 
-                // Trigger a change event to update the select input UI
                 $('#diagnosaEdit').trigger('change');
             } else {
-                // If diagnosaArray is empty or undefined, handle it accordingly
-                $('#diagnosaEdit').val([]).trigger('change'); // Clear any selections (optional)
+                $('#diagnosaEdit').val([]).trigger('change');
             }
 
-            // Trigger the change event to update Select2 after manually selecting options
-            $('#diagnosaEdit').trigger('change'); // This should update Select2 if it's used
-
-            // Reinitialize Select2 if necessary to ensure the selected options are displayed
+            $('#diagnosaEdit').trigger('change');
 
             $('#diagnosaEdit').attr('multiple', 'multiple').select2({
                 placeholder: 'Pilih Diagnosa',
                 width: '100%'
             });
+            console.log('diagnosa selected', $('#diagnosaEdit').val());
             $('#icd10').val(data.icd10);
             $('#tindakan').val(data.tindakan).trigger('change');
             $('#rujuk_rs').val(data.rujukrs);
             $('#keterangan').val(data.keterangan);
             $('#riwayat_pengobatan').val(data.riwayatpengobatan);
             $('#riwayat_alergi').val(data.riwayatalergi);
-            $('#diagnosaEditPrimer').val(String(data.diagnosaprimer)).trigger('change');
+
 
             $('#patientDetails').show();
             const patientId = data.idpatient;
@@ -530,11 +516,8 @@
             $('#btnCariRiwayatBerobat').data('id', patientId);
 
 
-            // Tutup modal
-            $('#modalPasienDokter').modal('hide');
-
         });
-        // table.ajax.reload(null, false);
+
 
         initializeTable();
 
@@ -576,8 +559,131 @@
                     $('#addPatientForm').find('select').each(function() {
                         $(this).val(null).trigger('change');
                     });
-                    $('#tindakan_ruang_tindakan, #rujuk_rs, #diagnosa, #diagnosaEdit, #tindakan, #poli')
-                        .val(null).trigger('change');
+                    $('#diagnosa').empty().trigger('change');
+
+                    const select2Fields = [
+                        '#diagnosa',
+                        '#tindakan',
+                        '#rujuk_rs',
+                        '#tindakan_ruang_tindakan',
+                        '#poli',
+                        '#diagnosa_primer',
+                        '#diagnosaEditPrimer'
+                    ];
+
+                    select2Fields.forEach(selector => {
+                        const $el = $(selector);
+                        $el.empty().trigger('change');
+
+                    });
+                    const tindakanOptions = isDokter ? [{
+                            value: "Diberikan Obat",
+                            text: "Diberikan Obat"
+                        },
+                        {
+                            value: "Dirujuk",
+                            text: "Dirujuk"
+                        }
+                    ] : [
+                        "Gigi Sulung Tumpatan Sementara",
+                        "Gigi Tetap Tumpatan Sementara",
+                        "Gigi Tetap Tumpatan Tetap",
+                        "Gigi Sulung Tumpatan Tetap",
+                        "Perawatan Saluran Akar",
+                        "Gigi Sulung Pencabutan",
+                        "Gigi Tetap Pencabutan",
+                        "Pembersihan Karang Gigi",
+                        "Odontectomy",
+                        "Sebagian Prothesa",
+                        "Penuh Prothesa",
+                        "Reparasi Prothesa",
+                        "Premedikasi/Pengobatan",
+                        "Tindakan Lain",
+                        "Incici Abses Gigi"
+                    ].map(text => ({
+                        value: text,
+                        text
+                    }));
+
+                    const rumahSakitList = @json($rs);
+                    const tindakanRuangOptions = [
+                        "Observasi Tanpa Tindakan Invasif",
+                        "Observasi Dengan Tindakan Invasif",
+                        "Tidak Ada",
+                        "Corpus Alineum",
+                        "Ekstraksi Kuku",
+                        "Sircumsisi (Bedah Ringan)",
+                        "Incisi Abses",
+                        "Rawat Luka",
+                        "Ganti Verban",
+                        "Spooling",
+                        "Toilet Telinga",
+                        "Tetes Telinga",
+                        "Aff Hecting",
+                        "Hecting (Jahit Luka)",
+                        "Tampon/Off Tampon"
+                    ];
+                    const poliOptions = @json($poli);
+                    const diagnosaOptions = @json($diagnosa);
+
+                    const $select = $('#tindakan');
+                    $select.append('<option value="" disabled selected>pilih</option>');
+
+                    // Tambahkan opsi baru
+                    tindakanOptions.forEach(opt => {
+                        $select.append(new Option(opt.text, opt.value));
+                    });
+
+                    $select.append(
+                        '<option></option>');
+                    const $selectRujukRS = $('#rujuk_rs');
+
+                    $selectRujukRS.append(
+                        '<option value="" disabled selected>pilih</option>');
+                    rumahSakitList.forEach(item => {
+                        $selectRujukRS.append(new Option(item.name, item.id));
+                    });
+
+                    const $selectTindakan = $('#tindakan_ruang_tindakan');
+                    $selectTindakan.append(
+                        '<option value="" disabled selected>pilih</option>');
+                    tindakanRuangOptions.forEach(item => {
+                        $selectTindakan.append(new Option(item, item));
+                    });
+
+                    const $poli = $('#poli');
+                    $poli.append('<option value="" disabled selected>pilih</option>');
+
+                    poliOptions.forEach(item => {
+                        $poli.append(new Option(item.name, item.id));
+                    });
+
+                    const $diagnosa = $('#diagnosa_primer');
+                    $diagnosa.append(
+                        '<option value="" disabled selected>pilih</option>');
+                    diagnosaOptions.forEach(item => {
+                        $diagnosa.append(
+                            $('<option>', {
+                                value: item.id,
+                                text: `${item.name} - ${item.icd10}`
+                            })
+                        );
+                    });
+
+                    const $diagnosaEditPrimer = $('#diagnosaEditPrimer');
+                    $diagnosaEditPrimer.append(
+                        '<option value="" disabled selected>pilih</option>');
+                    diagnosaOptions.forEach(item => {
+                        $diagnosaEditPrimer.append(
+                            $('<option>', {
+                                value: item.id,
+                                text: `${item.name} - ${item.icd10}`
+                            })
+                        );
+                    });
+
+
+
                     $('#displayNIK, #displayName, #displayAge, #displayPhone, #displayAddress, #displayBlood, #displayRmNumber')
                         .text('');
                     $('#addPatientForm')[0].reset();
@@ -603,19 +709,6 @@
 
                     // Perbarui daftar diagnosa
                     await updateDiagnosaList();
-
-                    // Tunggu hingga data pasien benar-benar diperbarui sebelum menampilkan modal
-                    await refreshPatientData();
-
-                    // Cek apakah ada data dalam tabel sebelum menampilkan modal
-                    setTimeout(() => {
-                        if ($('#patientTableBody tr').length > 0) {
-                            // Tampilkan modal hanya setelah data pasien berhasil diperbarui
-                            $('#modalPasienDokter').modal('show');
-                        } else {
-                            // console.warn("Data pasien belum ter-refresh.");
-                        }
-                    }, 500); // Delay 500ms untuk memastikan data sudah ter-load
                 },
                 error: function(xhr) {
                     console.error(xhr);
@@ -680,8 +773,6 @@
 
 
     });
-
-
 
     // Ubah function refreshPatientData agar mengembalikan Promise
     function refreshPatientData() {

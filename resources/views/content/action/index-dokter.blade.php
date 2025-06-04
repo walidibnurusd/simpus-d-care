@@ -58,13 +58,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <div class="row mb-3">
+        {{-- <div class="row mb-3">
             <div class="col-md-12 d-flex justify-content-start">
                 <button type="button" class="btn btn-primary" id="sendToSatuSehatButton">
                     Kirim ke Satu Sehat
                 </button>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-12 mb-4">
                 <div class="button-container">

@@ -918,7 +918,7 @@ class ActionController extends Controller
         $actionsQuery = Action::with('hasilLab')
             ->whereNotNull('hasil_lab')
             ->orWhereHas('hasilLab', function ($q) {
-                $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid');
+                $q->whereNotNull('gdp')->orWhereNotNull('gdp_2_jam_pp')->orWhereNotNull('cholesterol')->orWhereNotNull('asam_urat')->orWhereNotNull('leukosit')->orWhereNotNull('eritrosit')->orWhereNotNull('trombosit')->orWhereNotNull('hemoglobin')->orWhereNotNull('sifilis')->orWhereNotNull('hiv')->orWhereNotNull('golongan_darah')->orWhereNotNull('widal')->orWhereNotNull('malaria')->orWhereNotNull('albumin')->orWhereNotNull('reduksi')->orWhereNotNull('urinalisa')->orWhereNotNull('tes_kehamilan')->orWhereNotNull('telur_cacing')->orWhereNotNull('bta')->orWhereNotNull('igm_dbd')->orWhereNotNull('igm_typhoid')->orWhereNotNull('tcm');;
             });
 
         if ($startDate) {
