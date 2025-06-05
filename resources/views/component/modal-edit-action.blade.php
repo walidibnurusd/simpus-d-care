@@ -740,7 +740,7 @@
                                 <div class="col-md-4">
                                     <label for="diagnosaEditAction" style="color: rgb(19, 11, 241);">DIAGNOSA
                                         SEKUNDER</label>
-                                    <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
+                                    <select class="form-select select2" id="diagnosaEditAction{{ $action->id }}"
                                         name="diagnosa[]" multiple>
                                         @php
                                             // Decode JSON if it exists
@@ -1312,15 +1312,6 @@
 @include('component.modal-edit-action-obat')
 
 <!-- jQuery harus PERTAMA -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- CSS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-
-<!-- JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <script>
     var nikValue = "{{ $action->patient->nik ?? '' }}";
