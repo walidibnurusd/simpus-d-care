@@ -145,6 +145,7 @@
                                         <th>RUJUK RS</th>
                                         <th>KUNJ</th>
                                         <th>FASKES</th>
+                                        <th>KONEKSI SATU SEHAT</th>
                                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik' || Auth::user()->role == 'tindakan')
                                             <th>AKSI</th>
                                         @endif
@@ -467,6 +468,10 @@
                                 }
                             }
                         },
+                        {
+                            data: 'status_satu_sehat',
+                            name: 'status_satu_sehat'
+                        },
                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
                             {
                                 data: 'action',
@@ -596,6 +601,10 @@
                             }
                         }
                     },
+                    {
+                        data: 'status_satu_sehat',
+                        name: 'status_satu_sehat'
+                    },
                     @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
                         {
                             data: 'action',
@@ -705,6 +714,10 @@
                         {
                             data: 'kunjungan',
                             name: 'kunjungan'
+                        },
+                        {
+                            data: 'status_satu_sehat',
+                            name: 'status_satu_sehat'
                         },
                         {
                             data: 'faskes',
@@ -837,6 +850,10 @@
                         {
                             data: 'kunjungan',
                             name: 'kunjungan'
+                        },
+                        {
+                            data: 'status_satu_sehat',
+                            name: 'status_satu_sehat'
                         },
                         {
                             data: 'faskes',

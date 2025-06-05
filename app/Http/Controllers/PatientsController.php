@@ -572,17 +572,6 @@ class PatientsController extends Controller
         $filterDate = $request->input('filterDate', null);
 
         $page = $start / $length + 1;
-        // $query = DB::table('patients')
-        // ->leftJoin('actions', 'patients.id', '=', 'actions.id_patient')
-        // ->leftJoin('kunjungan', 'patients.id', '=', 'kunjungan.pasien')
-        // ->select(
-        //     'patients.id as patient_id', 'patients.*',
-        //     'actions.id as action_id', 'actions.*',
-        //     'kunjungan.id as kunjungan_id', 'kunjungan.*'
-        // )
-        // ->whereNotNull('kunjungan.id')
-        // ->whereNull('actions.diagnosa')
-        // ->where('kunjungan.poli', 'poli-umum');
         $query = DB::table('kunjungan')
             ->leftJoin('actions', function ($join) {
                 $join->on('kunjungan.pasien', '=', 'actions.id_patient')->whereRaw('DATE(kunjungan.tanggal) = DATE(actions.tanggal)'); // Pastikan tanggal sama
@@ -590,18 +579,9 @@ class PatientsController extends Controller
             ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
-            ->whereNull('actions.diagnosa')
+            ->whereNull('actions.diagnosa_primer')
             ->where('kunjungan.poli', 'poli-umum');
 
-        // $query = Kunjungan::with(['patient', 'patient.actions']) // ✅ Ambil relasi pasien & tindakan
-        // ->whereHas('patient.actions', function ($query) {
-        //     $query->whereNull('diagnosa'); // ✅ Filter yang belum punya diagnosa
-        // })
-        // ->where('poli', 'poli-umum');
-
-        // if ($filterDate) {
-        //     $query->whereBetween('kunjungan.created_at', [Carbon::parse($filterDate)->startOfDay(), Carbon::parse($filterDate)->endOfDay()]);
-        // }
         if ($filterDate) {
             $query->where('kunjungan.tanggal', '=', $filterDate);
         }
@@ -642,7 +622,7 @@ class PatientsController extends Controller
             ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
-            ->whereNull('actions.diagnosa')
+            ->whereNull('actions.diagnosa_primer')
             ->where('kunjungan.poli', 'poli-gigi');
 
         if ($filterDate) {
@@ -731,7 +711,7 @@ class PatientsController extends Controller
             ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
-            ->whereNull('actions.diagnosa')
+            ->whereNull('actions.diagnosa_primer')
             ->where('kunjungan.poli', 'poli-kb');
         if ($filterDate) {
             $query->where('kunjungan.tanggal', '=', $filterDate);
@@ -773,7 +753,7 @@ class PatientsController extends Controller
             ->leftJoin('patients', 'kunjungan.pasien', '=', 'patients.id')
             ->select('patients.id as patient_id', 'patients.*', 'actions.id as action_id', 'actions.*', 'kunjungan.id as kunjungan_id', 'kunjungan.*')
             ->whereNotNull('kunjungan.id')
-            ->whereNull('actions.diagnosa')
+            ->whereNull('actions.diagnosa_primer')
             ->where('kunjungan.poli', 'poli-kia');
 
         if ($filterDate) {

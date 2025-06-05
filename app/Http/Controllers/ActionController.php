@@ -361,6 +361,11 @@ class ActionController extends Controller
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
+                })
 
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
@@ -532,6 +537,11 @@ class ActionController extends Controller
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
+                })
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
                         $dokter = User::where('role', 'dokter')->get();
@@ -697,6 +707,11 @@ class ActionController extends Controller
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
+                })
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
                         $dokter = User::where('role', 'dokter')->get();
@@ -860,6 +875,11 @@ class ActionController extends Controller
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
                 })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -1026,6 +1046,11 @@ class ActionController extends Controller
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
                 })
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
@@ -3191,6 +3216,9 @@ class ActionController extends Controller
                 ]);
 
                 $successActions[] = $action->patient->nik;
+                $action->update([
+                    'status_satu_sehat' => 1,
+                ]);
             } catch (\Exception $e) {
                 \Log::error("Gagal kirim Action ID {$action->patient->nik}: " . $e->getMessage());
                 $failedActions[] = [
