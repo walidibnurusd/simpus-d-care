@@ -192,6 +192,12 @@
                 </div>
                 <div class="modal-body">
                     Apakah Anda yakin ingin mengirim data yang dipilih ke Satu Sehat?
+                    <div id="loadingIndicator" style="display:none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Memproses pengiriman...</p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
@@ -230,42 +236,7 @@
                 }
             });
 
-            // document.getElementById('confirmSend').addEventListener('click', function() {
-            //     var selectedActions = [];
-            //     document.querySelectorAll('#actionTable tbody input[type="checkbox"]:checked').forEach(
-            //         function(checkbox) {
-            //             selectedActions.push(checkbox.value); // Menyimpan ID baris yang dipilih
-            //         });
 
-            //     if (selectedActions.length ) {
-            //         // Mengirim data melalui AJAX
-            //         fetch("{{ route('sendToSatuSehat') }}", {
-            //                 method: 'POST',
-            //                 headers: {
-            //                         'Content-Type': 'application/json',
-            //                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            //                     },
-            //                 body: JSON.stringify({
-            //                     actions: selectedActions
-            //                 })
-            //             })
-            //             .then(response => response.json())
-            //             .then(data => {
-            //                 if (data.success) {
-            //                     Swal.fire('Berhasil', 'Data berhasil dikirim ke Satu Sehat', 'success');
-            //                 } else {
-            //                     Swal.fire('Gagal', 'Data gagal dikirim ke Satu Sehat', 'error');
-            //                 }
-            //                 var sendModal = new bootstrap.Modal(document.getElementById('sendModal'));
-            //                 sendModal.hide();
-            //             })
-            //             .catch(error => {
-            //                 Swal.fire('Gagal', 'Terjadi kesalahan saat mengirim data', 'error');
-            //                 var sendModal = new bootstrap.Modal(document.getElementById('sendModal'));
-            //                 sendModal.hide(); // Menyembunyikan modal jika terjadi kesalahan
-            //             });
-            //     }
-            // });
         });
 
         $(document).ready(function() {
@@ -320,6 +291,9 @@
                 });
 
                 if (selectedActions.length > 0) {
+                    $('#loadingIndicator').show();
+                    $('#confirmSend').prop('disabled', true);
+                    $('#closeSendModalButton').prop('disabled', true);
                     $.ajax({
                         url: "{{ route('sendToSatuSehat') }}",
                         method: 'POST',
@@ -330,6 +304,11 @@
                         success: function(response) {
                             if (response.success) {
                                 if (response.failed.length > 0) {
+                                    $('#loadingIndicator').hide();
+
+                                    // Aktifkan tombol Kirim dan Tutup Modal kembali
+                                    $('#confirmSend').prop('disabled', false);
+                                    $('#closeSendModalButton').prop('disabled', false);
                                     // Jika ada yang gagal dikirim, tampilkan detailnya
                                     let failedList = response.failed.map(f =>
                                         `ID ${f.action_id}: ${f.reason}`).join('<br>');
@@ -353,6 +332,11 @@
                             $('#sendModal').modal('hide');
                         },
                         error: function(xhr, status, error) {
+                            $('#loadingIndicator').hide();
+
+                            // Aktifkan tombol Kirim dan Tutup Modal kembali
+                            $('#confirmSend').prop('disabled', false);
+                            $('#closeSendModalButton').prop('disabled', false);
                             console.error(xhr.responseText);
                             Swal.fire('Gagal', 'Kesalahan server atau jaringan.', 'error');
                             $('#sendModal').modal('hide');
