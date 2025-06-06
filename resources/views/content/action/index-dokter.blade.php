@@ -219,7 +219,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('sendToSatuSehatButton').addEventListener('click', function() {
                 var selectedActions = [];
-                document.querySelectorAll('#actionTable tbody input[type="checkbox"]:checked').forEach(
+                document.querySelectorAll('#actionTable tbody input.actionCheckbox:checked').forEach(
                     function(checkbox) {
                         selectedActions.push(checkbox.value); // Menyimpan ID baris yang dipilih
                     });
@@ -273,9 +273,10 @@
             // Send selected actions to Satu Sehat
             $('#sendToSatuSehatButton').on('click', function() {
                 const selectedActions = [];
-                $('#actionTable tbody input[type="checkbox"]:checked').each(function() {
+               $('#actionTable tbody input.actionCheckbox:checked').each(function() {
                     selectedActions.push($(this).val());
                 });
+
 
                 if (selectedActions.length > 0) {
                     $('#sendModal').modal('show');
@@ -286,7 +287,7 @@
 
             $('#confirmSend').on('click', function() {
                 const selectedActions = [];
-                $('#actionTable tbody input[type="checkbox"]:checked').each(function() {
+                $('#actionTable tbody input.actionCheckbox:checked').each(function() {
                     selectedActions.push($(this).val());
                 });
 

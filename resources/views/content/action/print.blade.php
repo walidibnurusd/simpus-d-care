@@ -107,6 +107,11 @@
                     @php
                         // Hitung jumlah kunjungan berdasarkan pasien
                         $kunjunganCount = App\Models\Kunjungan::where('pasien', $actions->patient->id)->count();
+                        $diagnosaIds =
+                            is_array($actions->diagnosa) || $actions->diagnosa instanceof \Countable
+                                ? $actions->diagnosa
+                                : [];
+                        $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
                     @endphp
                     <tr>
                         <td>{{ $index + 1 }}</td>
@@ -168,29 +173,13 @@
                         </td>
 
                         <td>{{ $actions->keluhan }}</td>
-                        @php
-                            // Assuming $actions->diagnosa is an array of Diagnosis IDs
-                            $diagnosaIds =
-                                is_array($actions->diagnosa) || $actions->diagnosa instanceof \Countable
-                                    ? $actions->diagnosa
-                                    : [];
-                            $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
-                        @endphp
 
                         <td>
                             {{ implode(', ', $diagnosa->pluck('name')->toArray()) }}
                         </td>
-                        @php
-                            // Assuming $actions->diagnosa is an array of Diagnosis IDs
-                            $diagnosaIds =
-                                is_array($actions->diagnosa) || $actions->diagnosa instanceof \Countable
-                                    ? $actions->diagnosa
-                                    : [];
-                            $diagnosa = App\Models\Diagnosis::whereIn('id', $diagnosaIds)->get();
-                        @endphp
                         <td>{{ optional($actions->diagnosaPrimer)->name ?? '-' }}</td>
                         <td>
-                            {{ implode(', ', $diagnosa->pluck('icd10')->toArray()) }}
+                            {{ implode(', ', array_merge($diagnosa->pluck('icd10')->toArray(), [$actions->diagnosaPrimer->icd10 ?? ''])) }}
                         </td>
 
                         <td>{{ $actions->tindakan }}</td>

@@ -625,7 +625,8 @@ selected
                                 @else
                                     <div class="col-md-4">
                                         <label for="tindakan" style="color: rgb(19, 11, 241);">TINDAKAN</label>
-                                        <select class="form-control" id="tindakan" name="tindakan[]" multiple>
+                                        <select class="form-control" id="tindakan_ruang_tindakan" name="tindakan[]"
+                                            multiple>
                                             <option value="Observasi Tanpa Tindakan Invasif">Observasi Tanpa Tindakan
                                                 Invasif
                                             </option>
