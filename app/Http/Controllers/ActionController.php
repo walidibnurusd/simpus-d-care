@@ -280,7 +280,7 @@ class ActionController extends Controller
 
             $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab', 'actionObats.obat'])
                 ->where('tipe', 'poli-umum')
-                ->whereNotNull('diagnosa');
+                ->whereNotNull('diagnosa_primer');
 
             $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
@@ -360,6 +360,11 @@ class ActionController extends Controller
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
                 })
 
                 ->addColumn('hasil_lab', function ($row) {
@@ -451,7 +456,7 @@ class ActionController extends Controller
 
             $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab', 'actionObats.obat'])
                 ->where('tipe', 'poli-gigi') // Adjust the type to 'poli-gigi'
-                ->whereNotNull('diagnosa'); // Ensure 'diagnosa' is not null
+                ->whereNotNull('diagnosa_primer'); // Ensure 'diagnosa' is not null
 
             $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
@@ -531,6 +536,11 @@ class ActionController extends Controller
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
                 })
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
@@ -697,6 +707,11 @@ class ActionController extends Controller
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
+                })
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
                         $dokter = User::where('role', 'dokter')->get();
@@ -861,6 +876,11 @@ class ActionController extends Controller
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
+                })
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
                     $dokter = User::where('role', 'dokter')->get();
@@ -947,7 +967,7 @@ class ActionController extends Controller
 
             $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab', 'actionObats.obat'])
                 ->where('tipe', 'poli-kia') // Filter by type for KIA
-                ->whereNotNull('diagnosa'); // Ensure diagnosa exists
+                ->whereNotNull('diagnosa_primer'); // Ensure diagnosa exists
 
             $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
@@ -1026,6 +1046,11 @@ class ActionController extends Controller
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
                 })
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
@@ -1111,7 +1136,7 @@ class ActionController extends Controller
 
             $actionsQuery = Action::with(['patient', 'hospitalReferral', 'hasilLab', 'actionObats.obat'])
                 ->where('tipe', 'poli-kb') // Filter by type for KB
-                ->whereNotNull('diagnosa'); // Filter for actions that have 'layanan_kb'
+                ->whereNotNull('diagnosa_primer'); // Filter for actions that have 'layanan_kb'
 
             $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
@@ -1191,6 +1216,11 @@ class ActionController extends Controller
                     $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+                })
+                ->addColumn('status_satu_sehat', function ($row) {
+                    $status = $row->status_satu_sehat;
+
+                    return $status == 1 ? 'Berhasil' : 'Belum';
                 })
                 ->addColumn('hasil_lab', function ($row) {
                     if ($row->hasilLab) {
@@ -3191,6 +3221,9 @@ class ActionController extends Controller
                 ]);
 
                 $successActions[] = $action->patient->nik;
+                $action->update([
+                    'status_satu_sehat' => 1,
+                ]);
             } catch (\Exception $e) {
                 \Log::error("Gagal kirim Action ID {$action->patient->nik}: " . $e->getMessage());
                 $failedActions[] = [

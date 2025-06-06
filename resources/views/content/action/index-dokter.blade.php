@@ -145,6 +145,7 @@
                                         <th>RUJUK RS</th>
                                         <th>KUNJ</th>
                                         <th>FASKES</th>
+                                        <th>KONEKSI SATU SEHAT</th>
                                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik' || Auth::user()->role == 'tindakan')
                                             <th>AKSI</th>
                                         @endif
@@ -191,6 +192,12 @@
                 </div>
                 <div class="modal-body">
                     Apakah Anda yakin ingin mengirim data yang dipilih ke Satu Sehat?
+                    <div id="loadingIndicator" style="display:none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Memproses pengiriman...</p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
@@ -212,7 +219,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('sendToSatuSehatButton').addEventListener('click', function() {
                 var selectedActions = [];
-                document.querySelectorAll('#actionTable tbody input[type="checkbox"]:checked').forEach(
+                document.querySelectorAll('#actionTable tbody input.actionCheckbox:checked').forEach(
                     function(checkbox) {
                         selectedActions.push(checkbox.value); // Menyimpan ID baris yang dipilih
                     });
@@ -229,42 +236,7 @@
                 }
             });
 
-            // document.getElementById('confirmSend').addEventListener('click', function() {
-            //     var selectedActions = [];
-            //     document.querySelectorAll('#actionTable tbody input[type="checkbox"]:checked').forEach(
-            //         function(checkbox) {
-            //             selectedActions.push(checkbox.value); // Menyimpan ID baris yang dipilih
-            //         });
 
-            //     if (selectedActions.length ) {
-            //         // Mengirim data melalui AJAX
-            //         fetch("{{ route('sendToSatuSehat') }}", {
-            //                 method: 'POST',
-            //                 headers: {
-            //                         'Content-Type': 'application/json',
-            //                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            //                     },
-            //                 body: JSON.stringify({
-            //                     actions: selectedActions
-            //                 })
-            //             })
-            //             .then(response => response.json())
-            //             .then(data => {
-            //                 if (data.success) {
-            //                     Swal.fire('Berhasil', 'Data berhasil dikirim ke Satu Sehat', 'success');
-            //                 } else {
-            //                     Swal.fire('Gagal', 'Data gagal dikirim ke Satu Sehat', 'error');
-            //                 }
-            //                 var sendModal = new bootstrap.Modal(document.getElementById('sendModal'));
-            //                 sendModal.hide();
-            //             })
-            //             .catch(error => {
-            //                 Swal.fire('Gagal', 'Terjadi kesalahan saat mengirim data', 'error');
-            //                 var sendModal = new bootstrap.Modal(document.getElementById('sendModal'));
-            //                 sendModal.hide(); // Menyembunyikan modal jika terjadi kesalahan
-            //             });
-            //     }
-            // });
         });
 
         $(document).ready(function() {
@@ -301,9 +273,10 @@
             // Send selected actions to Satu Sehat
             $('#sendToSatuSehatButton').on('click', function() {
                 const selectedActions = [];
-                $('#actionTable tbody input[type="checkbox"]:checked').each(function() {
+               $('#actionTable tbody input.actionCheckbox:checked').each(function() {
                     selectedActions.push($(this).val());
                 });
+
 
                 if (selectedActions.length > 0) {
                     $('#sendModal').modal('show');
@@ -314,11 +287,14 @@
 
             $('#confirmSend').on('click', function() {
                 const selectedActions = [];
-                $('#actionTable tbody input[type="checkbox"]:checked').each(function() {
+                $('#actionTable tbody input.actionCheckbox:checked').each(function() {
                     selectedActions.push($(this).val());
                 });
 
                 if (selectedActions.length > 0) {
+                    $('#loadingIndicator').show();
+                    $('#confirmSend').prop('disabled', true);
+                    $('#closeSendModalButton').prop('disabled', true);
                     $.ajax({
                         url: "{{ route('sendToSatuSehat') }}",
                         method: 'POST',
@@ -329,6 +305,11 @@
                         success: function(response) {
                             if (response.success) {
                                 if (response.failed.length > 0) {
+                                    $('#loadingIndicator').hide();
+
+                                    // Aktifkan tombol Kirim dan Tutup Modal kembali
+                                    $('#confirmSend').prop('disabled', false);
+                                    $('#closeSendModalButton').prop('disabled', false);
                                     // Jika ada yang gagal dikirim, tampilkan detailnya
                                     let failedList = response.failed.map(f =>
                                         `ID ${f.action_id}: ${f.reason}`).join('<br>');
@@ -352,6 +333,11 @@
                             $('#sendModal').modal('hide');
                         },
                         error: function(xhr, status, error) {
+                            $('#loadingIndicator').hide();
+
+                            // Aktifkan tombol Kirim dan Tutup Modal kembali
+                            $('#confirmSend').prop('disabled', false);
+                            $('#closeSendModalButton').prop('disabled', false);
                             console.error(xhr.responseText);
                             Swal.fire('Gagal', 'Kesalahan server atau jaringan.', 'error');
                             $('#sendModal').modal('hide');
@@ -466,6 +452,10 @@
                                     return faskes;
                                 }
                             }
+                        },
+                        {
+                            data: 'status_satu_sehat',
+                            name: 'status_satu_sehat'
                         },
                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
                             {
@@ -596,6 +586,10 @@
                             }
                         }
                     },
+                    {
+                        data: 'status_satu_sehat',
+                        name: 'status_satu_sehat'
+                    },
                     @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
                         {
                             data: 'action',
@@ -705,6 +699,10 @@
                         {
                             data: 'kunjungan',
                             name: 'kunjungan'
+                        },
+                        {
+                            data: 'status_satu_sehat',
+                            name: 'status_satu_sehat'
                         },
                         {
                             data: 'faskes',
@@ -837,6 +835,10 @@
                         {
                             data: 'kunjungan',
                             name: 'kunjungan'
+                        },
+                        {
+                            data: 'status_satu_sehat',
+                            name: 'status_satu_sehat'
                         },
                         {
                             data: 'faskes',
