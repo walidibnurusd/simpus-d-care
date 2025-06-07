@@ -33,8 +33,6 @@
         </div>
     </div>
 </div>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
@@ -669,7 +667,7 @@
                     const $select = $('#tindakan');
 
                     // Tambahkan opsi baru
-                    $.append('<option value="" disabled selected>pilih</option>');
+                    $select.append('<option value="" disabled selected>pilih</option>');
 
                     tindakanOptions.forEach(opt => {
                         $select.append(new Option(opt.text, opt.value));
@@ -731,25 +729,24 @@
                     tableBody.innerHTML = '';
                     rowNumber = 1; // Reset row number when table is cleared
 
-                    // Reload DataTable dan tunggu sampai selesai
-                    await new Promise((resolve) => {
-                        tablePasien.ajax.reload(resolve, false);
-                        const section1 = document.getElementById(
-                            'formSection1');
-                        const section2 = document.getElementById(
-                            'formSection2');
-                        const button = this;
+                    tablePasien.ajax.reload(null,
+                        false); // Reload DataTable without resetting page
 
-                        // Kembali ke Section 1
-                        section1.classList.remove('d-none');
-                        section2.classList.add('d-none');
-                        button.textContent = 'Lanjut Pemeriksaan';
+                    // Optionally, reset other form sections
+                    const section1 = document.getElementById('formSection1');
+                    const section2 = document.getElementById('formSection2');
+                    const button = this;
 
-                    });
+                    // Back to Section 1
+                    section1.classList.remove('d-none');
+                    section2.classList.add('d-none');
+                    button.textContent = 'Lanjut Pemeriksaan';
 
                     // Perbarui daftar diagnosa
                     await updateDiagnosaList();
+
                 },
+
                 error: function(xhr) {
                     console.error(xhr);
                     let errorMsg = xhr.responseJSON?.error || "Terjadi kesalahan!";
