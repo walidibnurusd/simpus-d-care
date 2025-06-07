@@ -29,7 +29,7 @@
                 </div>
                 <div class="mb-3">
                     <label>Password</label>
-                    <input type="text" id="edit-user-password" name="password" class="form-control" required>
+                    <input type="text" id="edit-user-password" name="password" class="form-control">
                     <small>* Kosongkan bila tidak ingin mengubah password</small>
                 </div>
                 <!-- <div class="mb-3">
