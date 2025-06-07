@@ -273,7 +273,7 @@
             // Send selected actions to Satu Sehat
             $('#sendToSatuSehatButton').on('click', function() {
                 const selectedActions = [];
-               $('#actionTable tbody input.actionCheckbox:checked').each(function() {
+                $('#actionTable tbody input.actionCheckbox:checked').each(function() {
                     selectedActions.push($(this).val());
                 });
 
@@ -836,10 +836,7 @@
                             data: 'kunjungan',
                             name: 'kunjungan'
                         },
-                        {
-                            data: 'status_satu_sehat',
-                            name: 'status_satu_sehat'
-                        },
+
                         {
                             data: 'faskes',
                             render: function(data, type, row) {
@@ -854,7 +851,12 @@
                                 } else {
                                     return faskes;
                                 }
-                            }
+                            },
+
+                        },
+                        {
+                            data: 'status_satu_sehat',
+                            name: 'status_satu_sehat'
                         },
                         @if (Auth::user()->role == 'tindakan')
                             {
