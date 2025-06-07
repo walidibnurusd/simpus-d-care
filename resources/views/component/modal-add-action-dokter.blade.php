@@ -712,32 +712,56 @@ selected
                                         @endforeach
                                     </select>
                                 </div>
-
-                            @endif
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
-                                    <select class="form-control" id="rujuk_rs" name="rujuk_rs"
-                                        data-placeholder="Pilih Rumah Sakit">
-                                        <option></option> <!-- Empty option to show placeholder -->
-                                        @foreach ($rs as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                                        <select class="form-control" id="rujuk_rs_edit" name="rujuk_rs"
+                                            data-placeholder="Pilih Rumah Sakit">
+                                            <option>pilih</option> <!-- Empty option to show placeholder -->
+                                            @foreach ($rs as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                    <select class="form-control" id="poli_edit" name="id_rujuk_poli">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($poli as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
-                                <select class="form-control" id="poli" name="id_rujuk_poli">
-                                    <option value="" disabled selected>pilih</option>
-                                    @foreach ($poli as $item)
-                                        <option value="{{ $item->id }}"
-                                            @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
-                                            {{ $item->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            @else
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
+                                        <select class="form-control" id="rujuk_rs" name="rujuk_rs"
+                                            data-placeholder="Pilih Rumah Sakit">
+                                            <option></option> <!-- Empty option to show placeholder -->
+                                            @foreach ($rs as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
+                                    <select class="form-control" id="poli" name="id_rujuk_poli">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($poli as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
                             @if ($routeName === 'action.dokter.index')
                                 <div class="col-md-4">
                                     <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang
@@ -945,7 +969,7 @@ selected
     $(document).ready(function() {
         // Initialize select2 for all relevant elements
 
-        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli, #diagnosa_primer,#diagnosaEditPrimer')
+        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli, #diagnosa_primer')
             .select2({
                 placeholder: "Pilih",
                 allowClear: true,

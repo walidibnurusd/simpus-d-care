@@ -45,7 +45,7 @@
     $(document).ready(function() {
         // Initialize select2 for all relevant elements
 
-        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli, #diagnosa_primer,#diagnosaEditPrimer')
+        $('#diagnosa, #tindakan, #rujuk_rs, #tindakan_ruang_tindakan, #poli, #diagnosa_primer')
             .select2({
                 placeholder: "Pilih",
                 allowClear: true,
@@ -272,6 +272,7 @@
                         data-keluhan="${row.keluhan}"
                         data-diagnosa='${JSON.stringify(row.diagnosa)}'
                         data-tindakan="${row.tindakan}"
+                        data-diagnosaprimer="${row.diagnosa_primer}"
                         data-rujukrs="${row.rujuk_rs}"
                         data-keterangan="${row.keterangan}"
                         data-nadi="${row.nadi}"
@@ -306,6 +307,7 @@
                         data-tipe="${row.tipe}"
                         data-icd10="${row.icd10}"
                         data-oralit="${row.oralit}"
+                        data-rujukpoli="${row.id_rujuk_poli}"
                         data-zinc="${row.zinc}" data-bs-dismiss="modal" >
                         Pilih
                     </button>
@@ -502,7 +504,44 @@
                 placeholder: 'Pilih Diagnosa',
                 width: '100%'
             });
-            console.log('diagnosa selected', $('#diagnosaEdit').val());
+
+            if (data.diagnosaprimer) {
+                $('#diagnosaEditPrimer').val(data.diagnosaprimer).trigger('change');
+            } else {
+                $('#diagnosaEditPrimer').val([]).trigger('change');
+            }
+
+            $('#diagnosaEditPrimer').trigger('change');
+
+            $('#diagnosaEditPrimer').select2({
+                placeholder: 'Pilih',
+                width: '100%'
+            });
+            if (data.rujukrs) {
+                $('#rujuk_rs_edit').val(data.rujukrs).trigger('change');
+            } else {
+                $('#rujuk_rs_edit').val([]).trigger('change');
+            }
+
+            $('#rujuk_rs_edit').trigger('change');
+
+            $('#rujuk_rs_edit').select2({
+                placeholder: 'Pilih',
+                width: '100%'
+            });
+            if (data.rujukpoli) {
+                $('#poli_edit').val(data.rujukpoli).trigger('change');
+            } else {
+                $('#poli_edit').val([]).trigger('change');
+            }
+
+            $('#poli_edit').trigger('change');
+
+            $('#poli_edit').select2({
+                placeholder: 'Pilih',
+                width: '100%'
+            });
+
             $('#icd10').val(data.icd10);
             $('#tindakan').val(data.tindakan).trigger('change');
             $('#rujuk_rs').val(data.rujukrs);
@@ -523,9 +562,9 @@
 
         initializeTable();
 
-      $(document).on('shown.bs.modal', '#modalPasienDokter', function () {
-          console.log('Modal ditampilkan!');
-          initializeTable();
+        $(document).on('shown.bs.modal', '#modalPasienDokter', function() {
+            console.log('Modal ditampilkan!');
+            initializeTable();
         });
         $('#refreshTable').on('click', function() {
 
@@ -630,6 +669,8 @@
                     const $select = $('#tindakan');
 
                     // Tambahkan opsi baru
+                    $.append('<option value="" disabled selected>pilih</option>');
+
                     tindakanOptions.forEach(opt => {
                         $select.append(new Option(opt.text, opt.value));
                     });
@@ -645,7 +686,7 @@
                     });
 
                     const $selectTindakan = $('#tindakan_ruang_tindakan');
-                   
+
                     tindakanRuangOptions.forEach(item => {
                         $selectTindakan.append(new Option(item, item));
                     });
@@ -692,7 +733,7 @@
 
                     // Reload DataTable dan tunggu sampai selesai
                     await new Promise((resolve) => {
-                        table.ajax.reload(resolve, false);
+                        tablePasien.ajax.reload(resolve, false);
                         const section1 = document.getElementById(
                             'formSection1');
                         const section2 = document.getElementById(

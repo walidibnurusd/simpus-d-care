@@ -1480,8 +1480,16 @@ class ActionController extends Controller
             $endDate = Action::max('tanggal');
         }
         if ($poli && $poli !== 'all') {
-            $query->where('tipe', $poli);
+            if ($poli === 'tindakan') {
+                $query->where(function ($query) {
+                    $query->where('beri_tindakan', 1)
+                          ->orWhere('tipe', 'tindakan');
+                });
+            } else {
+                $query->where('tipe', $poli);
+            }
         }
+        
         $query->orderBy('tanggal', 'asc');
         $query->with('diagnosaPrimer');
         $actions = $query->get();
