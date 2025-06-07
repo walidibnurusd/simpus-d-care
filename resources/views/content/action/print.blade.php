@@ -184,7 +184,16 @@
                         <td>
                             {{ implode(', ', array_merge($diagnosa->pluck('icd10')->toArray(), [$actions->diagnosaPrimer->icd10 ?? ''])) }}
                         </td>
-                        <td>{{ $actions->tindakan . ' ' . $actions->tindakan_ruang_tindakan }}</td>
+                        <td>
+                            @if ($actions->tindakan && $actions->tindakan_ruang_tindakan)
+                                {{ $actions->tindakan . ', ' . $actions->tindakan_ruang_tindakan }}
+                            @elseif($actions->tindakan)
+                                {{ $actions->tindakan }}
+                            @elseif($actions->tindakan_ruang_tindakan)
+                                {{ $actions->tindakan_ruang_tindakan }}
+                            @endif
+                        </td>
+
                         <td>{{ $actions->hospitalReferral->name ?? '' }}</td>
                         <td>{{ $actions->keterangan }}</td>
                         <td>{{ $actions->doctor }}</td>
