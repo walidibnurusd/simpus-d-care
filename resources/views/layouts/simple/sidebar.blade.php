@@ -95,6 +95,22 @@
                             <span>Profile</span>
                         </a>
                     </li>
+                    @if(Auth::user()->role == 'admin-referensi')
+                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+                                class="sidebar-link sidebar-title" href="#">
+                                <svg class="stroke-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                                </svg>
+                                <svg class="fill-icon">
+                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-file') }}"></use>
+
+                                </svg><span>Referensi</span></a>
+
+                            <ul class="sidebar-submenu">
+                                <li><a href="{{ route('reference.doctor') }}">Dokter</a></li>
+                            </ul>
+                        </li>
+                    @endif
                     @if (Auth::user()->role == 'apotik')
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('terima-obat') }}">
