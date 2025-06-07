@@ -11,6 +11,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SkriningController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\DiagnosaController;
+use App\Http\Controllers\ReferenceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -135,6 +136,21 @@ Route::prefix('lansia')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+
+    Route::prefix('reference')
+    ->group(function () {
+        Route::prefix('doctor')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexDoctor'])->name('reference.doctor');
+                Route::get('/data', [ReferenceController::class, 'indexDataDoctor'])->name('reference.doctor.data');
+
+                Route::post('/', [ReferenceController::class, 'storeDoctor'])->name('reference.doctor.store');
+                Route::get('/{user}', [ReferenceController::class, 'showDoctor']);
+                Route::put('/{id}', [ReferenceController::class, 'updateDoctor']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyDoctor']);
+            });
+    });
+
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::post('/import/patients', [PatientsController::class, 'import'])->name('patient.import');
     Route::get('/patients/data', [PatientsController::class, 'getPatientIndex'])->name('patient.data');
