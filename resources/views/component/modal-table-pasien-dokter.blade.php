@@ -33,9 +33,11 @@
         </div>
     </div>
 </div>
-
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
 
 
 <script>
@@ -156,7 +158,7 @@
             // Optionally, hide the current modal after saving data
             $('#addActionObatModal').modal('hide');
         });
-        let table; // Deklarasi variabel DataTable
+        let tablePasien; // Deklarasi variabel DataTable
 
         // Fungsi untuk menginisialisasi DataTable
         function initializeTable() {
@@ -167,7 +169,7 @@
             // console.log(tipe);
             const url = `/get-patients-dokter/${tipe}`;
             const filterDate = $('#filterDate').val();
-            table = $('#pasienDokter').DataTable({
+            tablePasien = $('#pasienDokter').DataTable({
                 ajax: {
                     url: url,
                     type: 'GET',
@@ -323,7 +325,7 @@
         }
 
         $('#filterDate').on('change', function() {
-            table.destroy();
+            tablePasien.destroy();
             $('#pasienDokter tbody').empty();
             initializeTable();
         });
@@ -448,62 +450,53 @@
             $('#turgor').val(data.turgor);
             $('#neurologis').val(data.neurologis);
             $('#hasil_lab').val(data.hasillab);
-            // Set nilai dari riwayat_penyakit_sekarang dan trigger 'change'
+
             $('#riwayat_penyakit_sekarang').val(data.riwayatpenyakitsekarang).trigger('change');
 
-            // Cek apakah nilai dari riwayat_penyakit_sekarang tidak kosong
             if (data.riwayatpenyakitlainnya) {
-                $('#penyakit_lainnya_container').css('display', 'block'); // Tampilkan div
+                $('#penyakit_lainnya_container').css('display', 'block');
             } else {
-                $('#penyakit_lainnya_container').css('display', 'none'); // Sembunyikan div
+                $('#penyakit_lainnya_container').css('display', 'none');
+
             }
 
             $('#riwayat_penyakit_dulu').val(data.riwayatpenyakitdulu).trigger('change');
             $('#riwayat_penyakit_lainnya').val(data.riwayatpenyakitlainnya);
             $('#riwayat_penyakit_keluarga').val(data.riwayatpenyakitkeluarga).trigger('change');
-            // Atur nilai untuk riwayat_penyakit_lainnya_keluarga
             $('#riwayat_penyakit_lainnya_keluarga').val(data.riwayatpenyakitlainnyakeluarga);
 
-            // Cek apakah nilai riwayat_penyakit_lainnya_keluarga tidak kosong
             if (data.riwayatpenyakitlainnyakeluarga) {
                 $('#penyakit_lainnya_keluarga_container').css('display',
-                    'block'); // Tampilkan container
+                    'block');
             } else {
                 $('#penyakit_lainnya_keluarga_container').css('display',
-                    'none'); // Sembunyikan container
+                    'none');
             }
 
             $('#pemeriksaan_penunjang').val(data.pemeriksaanpenunjang || '').trigger('change');
             $('#keluhan').val(data.keluhan);
-            var diagnosaArray = JSON.parse(data.diagnosa); // Parse the diagnosa data
+            var diagnosaArray = JSON.parse(data.diagnosa);
 
-            // Clear previous selections before setting new ones
-            // Ensure that there's data in diagnosaArray before proceeding
+
             if (diagnosaArray && diagnosaArray.length > 0) {
-                // Clear previous selections
+
                 $('#diagnosaEdit').val([]).trigger('change');
 
-                // Ensure the select element has the 'multiple' attribute for multi-selection
+
                 $('#diagnosaEdit').attr('multiple', 'multiple');
 
-                // Manually mark options as selected based on diagnosaArray
                 $('#diagnosaEdit option').each(function() {
                     if (diagnosaArray.includes(parseInt($(this).val()))) {
-                        $(this).prop('selected', true); // Mark the option as selected
+                        $(this).prop('selected', true);
                     }
                 });
 
-                // Trigger a change event to update the select input UI
                 $('#diagnosaEdit').trigger('change');
             } else {
-                // If diagnosaArray is empty or undefined, handle it accordingly
-                $('#diagnosaEdit').val([]).trigger('change'); // Clear any selections (optional)
+                $('#diagnosaEdit').val([]).trigger('change');
             }
 
-            // Trigger the change event to update Select2 after manually selecting options
-            $('#diagnosaEdit').trigger('change'); // This should update Select2 if it's used
-
-            // Reinitialize Select2 if necessary to ensure the selected options are displayed
+            $('#diagnosaEdit').trigger('change');
 
             $('#diagnosaEdit').attr('multiple', 'multiple').select2({
                 placeholder: 'Pilih Diagnosa',
@@ -525,22 +518,18 @@
             $('#btnCariRiwayatBerobat').data('id', patientId);
 
 
-            // Tutup modal
-            // $('#modalPasienDokter').modal('hide');
-
         });
-        // table.ajax.reload(null, false);
+
 
         initializeTable();
 
-        $('#modalPasienDokter').on('shown.bs.modal', function() {
-
-
-            initializeTable();
+      $(document).on('shown.bs.modal', '#modalPasienDokter', function () {
+          console.log('Modal ditampilkan!');
+          initializeTable();
         });
         $('#refreshTable').on('click', function() {
 
-            table.ajax.reload(null, false);
+            tablePasien.ajax.reload(null, false);
         });
         $('#addPatientForm').submit(async function(e) {
             e.preventDefault();
@@ -640,16 +629,15 @@
 
                     const $select = $('#tindakan');
 
-
                     // Tambahkan opsi baru
                     tindakanOptions.forEach(opt => {
                         $select.append(new Option(opt.text, opt.value));
                     });
 
                     $select.append(
-                        '<option></option>'); // untuk placeholder "Pilih Rumah Sakit"
+                        '<option></option>');
                     const $selectRujukRS = $('#rujuk_rs');
-                    // Tambahkan opsi dari rumahSakitList
+
                     $selectRujukRS.append(
                         '<option value="" disabled selected>pilih</option>');
                     rumahSakitList.forEach(item => {
@@ -657,6 +645,7 @@
                     });
 
                     const $selectTindakan = $('#tindakan_ruang_tindakan');
+                   
                     tindakanRuangOptions.forEach(item => {
                         $selectTindakan.append(new Option(item, item));
                     });
@@ -719,19 +708,6 @@
 
                     // Perbarui daftar diagnosa
                     await updateDiagnosaList();
-
-                    // Tunggu hingga data pasien benar-benar diperbarui sebelum menampilkan modal
-                    // await refreshPatientData();
-
-                    // // Cek apakah ada data dalam tabel sebelum menampilkan modal
-                    // setTimeout(() => {
-                    //     if ($('#patientTableBody tr').length > 0) {
-                    //         // Tampilkan modal hanya setelah data pasien berhasil diperbarui
-                    //         $('#modalPasienDokter').modal('show');
-                    //     } else {
-                    //         // console.warn("Data pasien belum ter-refresh.");
-                    //     }
-                    // }, 500); // Delay 500ms untuk memastikan data sudah ter-load
                 },
                 error: function(xhr) {
                     console.error(xhr);
@@ -772,7 +748,7 @@
                             });
 
                             // Refresh the DataTable to reflect the deletion
-                            table.ajax.reload(null, false);
+                            tablePasien.ajax.reload(null, false);
                         } else {
                             Swal.fire({
                                 title: 'Error!',
@@ -796,8 +772,6 @@
 
 
     });
-
-
 
     // Ubah function refreshPatientData agar mengembalikan Promise
     function refreshPatientData() {

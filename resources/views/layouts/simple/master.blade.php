@@ -14,44 +14,35 @@
     <link rel="icon" href="{{ asset('assets/assets/img/logo-mks.png') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('assets/assets/img/logo-mks.png') }}" type="image/x-icon">
 
-    <link href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" />
-
+    <!-- CSS Libraries -->
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
         rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <!-- Select2 CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/select2.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css"
         rel="stylesheet">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Aplikasi Pelaporan Puskesmas</title>
-    <!-- Google font-->
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i&amp;display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900&amp;display=swap"
         rel="stylesheet">
 
+    <!-- Additional Styles -->
     @include('layouts.simple.css')
     @yield('style')
-    {{-- <style>
-      .modal-fullscreen {
-        max-width: 100%;
-        margin: 0;
-      }
-      .modal-content {
-        height: 100vh; /* Fullscreen height */
-      }
-    </style> --}}
+
     <style>
         .select2-selection__choice__remove {
             text-align: right;
         }
-
 
         .badge {
             display: inline-block;
@@ -71,46 +62,39 @@
             margin-right: 10px;
         }
 
-        .navbar-logo-img {
-            height: 120px;
-            width: auto;
-            object-fit: contain;
-            margin: 0 auto;
-        }
-
         .badge-underweight {
             background-color: #32cd32;
-            /* Hijau muda */
+            /* Light Green */
             color: #ffffff;
         }
 
         .badge-normal {
             background-color: #228b22;
-            /* Hijau tua */
+            /* Dark Green */
             color: #ffffff;
         }
 
         .badge-overweight {
             background-color: #ffd700;
-            /* Kuning */
+            /* Yellow */
             color: #000000;
         }
 
         .badge-obesity1 {
             background-color: #ff8c00;
-            /* Oranye */
+            /* Orange */
             color: #ffffff;
         }
 
         .badge-obesity2 {
             background-color: #ff4500;
-            /* Merah oranye */
+            /* Orange-Red */
             color: #ffffff;
         }
 
         .badge-obesity3 {
             background-color: #8b0000;
-            /* Merah tua */
+            /* Dark Red */
             color: #ffffff;
         }
 
@@ -118,11 +102,11 @@
         textarea,
         select {
             color: #000;
-            /* Hitam */
+            /* Black */
             background-color: #fff;
-            /* Putih */
+            /* White */
             border: 1px solid #ccc;
-            /* Border abu-abu */
+            /* Gray Border */
         }
 
         input[type="text"]:focus,
@@ -130,25 +114,25 @@
         select:focus {
             outline: none;
             border-color: #007bff;
-            /* Border biru saat fokus */
+            /* Blue Border */
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-            /* Efek fokus */
+            /* Focus Effect */
         }
 
         ::placeholder {
             color: #999;
-            /* Placeholder abu-abu */
+            /* Placeholder Gray */
             opacity: 1;
-            /* Tidak transparan */
+            /* Non-transparent */
         }
 
         .form-control {
             color: #212529;
-            /* Warna teks lebih gelap */
+            /* Darker text */
             background-color: #f8f9fa;
-            /* Latar belakang abu muda */
+            /* Light gray background */
             border: 1px solid #ced4da;
-            /* Border abu-abu */
+            /* Gray border */
         }
 
         .form-control:focus {
@@ -159,20 +143,10 @@
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
 
-        ::placeholder {
-            color: #6c757d;
-            /* Warna placeholder abu-abu gelap */
-            opacity: 1;
-            /* Placeholder tidak transparan */
-        }
-
         .form-control {
             background-color: #ffffff !important;
-            /* Putih */
             color: #212529 !important;
-            /* Hitam */
             border: 1px solid #ced4da !important;
-            /* Border abu-abu */
         }
     </style>
 </head>
@@ -184,9 +158,9 @@
         <svg>
             <defs></defs>
             <filter id="goo">
-                <fegaussianblur in="SourceGraphic" stddeviation="11" result="blur"></fegaussianblur>
-                <fecolormatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo">
-                </fecolormatrix>
+                <feGaussianBlur in="SourceGraphic" stdDeviation="11" result="blur"></feGaussianBlur>
+                <feColorMatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo">
+                </feColorMatrix>
             </filter>
         </svg>
     </div>
@@ -216,7 +190,6 @@
                                             <svg class="stroke-icon">
                                                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-home') }}"></use>
                                             </svg></a></li>
-                                    </li>
                                     @yield('breadcrumb-items')
                                 </ol>
                             </div>
@@ -229,13 +202,10 @@
             </div>
             <!-- footer start-->
             @include('layouts.simple.footer')
-
         </div>
     </div>
     <!-- latest jquery-->
     @include('layouts.simple.script')
-    <!-- Plugin used-->
-
 </body>
 
 </html>

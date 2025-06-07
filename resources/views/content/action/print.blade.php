@@ -97,6 +97,9 @@
                     <th>DIAGNOSA PRIMER</th>
                     <th>ICD10</th>
                     <th>TINDAKAN</th>
+                    {{-- @if ($routeName == 'action.ruang.tindakan.index')
+                        <th>TINDAKAN RUANG TINDAKAN</th>
+                    @endif --}}
                     <th>RUJUKAN</th>
                     <th>KETERANGAN</th>
                     <th>DOKTER</th>
@@ -181,10 +184,8 @@
                         <td>
                             {{ implode(', ', array_merge($diagnosa->pluck('icd10')->toArray(), [$actions->diagnosaPrimer->icd10 ?? ''])) }}
                         </td>
-
-                        <td>{{ $actions->tindakan }}</td>
+                        <td>{{ $actions->tindakan . ' ' . $actions->tindakan_ruang_tindakan }}</td>
                         <td>{{ $actions->hospitalReferral->name ?? '' }}</td>
-
                         <td>{{ $actions->keterangan }}</td>
                         <td>{{ $actions->doctor }}</td>
                     </tr>

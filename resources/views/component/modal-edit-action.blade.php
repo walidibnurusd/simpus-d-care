@@ -22,17 +22,31 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-
-                @if ($routeName === 'action.index' || $routeName === 'action.dokter.index')
+                @if ($routeName === 'action.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI UMUM</h5>
-                @elseif ($routeName === 'action.index.gigi' || $routeName === 'action.dokter.gigi.index')
+                @elseif ($routeName === 'action.dokter.gigi.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI GIGI</h5>
-                @elseif ($routeName === 'action.kia.index' || $routeName === 'kia.dokter.index')
+                @elseif ($routeName === 'kia.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KIA</h5>
-                @elseif ($routeName === 'action.kb.index' || $routeName === 'kb.dokter.index')
+                @elseif ($routeName === 'kb.dokter.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN POLI KB</h5>
                 @elseif ($routeName === 'action.dokter.ruang.tindakan.index')
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN RUANG TINDAKAN</h5>
+                @elseif ($routeName === 'action.index.data')
+                    <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI UMUM</h5>
+                    <input type="hidden" name="tipe" value="poli-umum">
+                @elseif($routeName === 'action.index.gigi')
+                    <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI GIGI</h5>
+                    <input type="hidden" name="tipe" value="poli-gigi">
+                @elseif($routeName === 'action.kia.index')
+                    <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI KIA</h5>
+                    <input type="hidden" name="tipe" value="poli-kia">
+                @elseif($routeName === 'action.kb.index')
+                    <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI KB</h5>
+                    <input type="hidden" name="tipe" value="poli-kia">
+                @elseif($routeName === 'action.ugd.index')
+                    <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL UGD</h5>
+                    <input type="hidden" name="tipe" value="ruang-tindakan">
                 @else
                     <h5 class="modal-title" id="exampleModalLabel">TINDAKAN UGD</h5>
                 @endif
@@ -113,8 +127,9 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="tanggal">Tanggal</label>
-                                                <input type="date" class="form-control" id="tanggal" name="tanggal"
-                                                    value="{{ $action->tanggal }}" placeholder="Pilih Tanggal">
+                                                <input type="date" class="form-control" id="tanggal"
+                                                    name="tanggal" value="{{ $action->tanggal }}"
+                                                    placeholder="Pilih Tanggal">
                                             </div>
                                         </div>
 
@@ -132,22 +147,24 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="kasus">Kasus</label>
-                                                <select class="form-control" id="kasus" name="kasus">
-                                                    <option value="" disabled
-                                                        {{ empty($action->kasus) ? 'selected' : '' }}>Pilih Jenis
-                                                        Kasus</option>
-                                                    <option value="1"
-                                                        {{ $action->kasus == '1' ? 'selected' : '' }}>Baru
-                                                    </option>
-                                                    <option value="0"
-                                                        {{ $action->kasus == '0' ? 'selected' : '' }}>Lama
-                                                    </option>
-                                                </select>
+                                        @if (Auth::user()->role != 'admin-kajian-awal')
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="kasus">Kasus</label>
+                                                    <select class="form-control" id="kasus" name="kasus">
+                                                        <option value="" disabled
+                                                            {{ empty($action->kasus) ? 'selected' : '' }}>Pilih Jenis
+                                                            Kasus</option>
+                                                        <option value="1"
+                                                            {{ $action->kasus == '1' ? 'selected' : '' }}>Baru
+                                                        </option>
+                                                        <option value="0"
+                                                            {{ $action->kasus == '0' ? 'selected' : '' }}>Lama
+                                                        </option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -333,7 +350,7 @@
 
                                     </div>
                                 </div>
-                                @if ($routeName != 'action.kia.index')
+                                @if ($routeName != 'action.kia.index' && $routeName != 'action.kb.index')
                                     <div style="display: flex; align-items: center; text-align: center;">
                                         <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                                         <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan</span>
@@ -901,26 +918,6 @@
                                     </div>
                                 @else
                                     @if ($routeName === 'action.dokter.ruang.tindakan.index')
-                                        {{-- <div class="col-md-4">
-                                            <label for="diagnosaEditAction"
-                                                style="color: rgb(19, 11, 241);">DIAGNOSA</label>
-                                            <select class="form-control" id="diagnosaEditAction{{ $action->id }}"
-                                                name="diagnosa[]" multiple>
-                                                @php
-                                                    // Decode JSON if it exists
-                                                    $selectedDiagnosa = is_string($action->diagnosa)
-                                                        ? json_decode($action->diagnosa, true)
-                                                        : $action->diagnosa;
-                                                @endphp
-                                                @foreach ($diagnosa as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
-                                                        {{ $item->name }}-{{ $item->icd10 }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div> --}}
-
                                         <div class="col-md-4">
                                             <label for="tindakanEdit"
                                                 style="color: rgb(19, 11, 241);">TINDAKAN</label>
@@ -1056,31 +1053,12 @@
                                         </div>
                                     @endif
                                 @endif
-                                @if (Auth::user()->role != 'dokter')
-                                    <!--<div class="col-md-4">-->
-                                    <!--    <div class="form-group">-->
-                                    <!--        <label for="skrining" class="form-label">Riwayat Berobat</label>-->
-                                    <!--        <button class="btn btn-success w-100 mt-2" type="button"-->
-                                    <!--            id="btnCariRiwayatBerobatEdit" data-bs-toggle="modal"-->
-                                    <!--            data-bs-target="#modalBerobatEdit"-->
-                                    <!--            data-patient-id="{{ $action->id_patient }}">-->
-                                    <!--            Riwayat Berobat-->
-                                    <!--        </button>-->
-
-                                    <!--    </div>-->
-                                    <!--</div>-->
-                                @endif
-                                {{-- @if (Auth::user()->role == 'tindakan')
-                                    <div class="col-md-4">
-                                        <label for="obat" style="color: rgb(19, 11, 241);">Obat</label>
-                                        <textarea class="form-control" id="obat" name="obat" placeholder="Obat">{{ old('obat', $action->obat ?? '') }}</textarea>
-                                    </div>
-                                @endif --}}
                             </div>
                         @endif
 
-                        @if (Auth::user()->role != 'admin-kajian-awal')
-                            <div class="row mt-3">
+
+                        <div class="row mt-3">
+                            @if (Auth::user()->role != 'admin-kajian-awal')
                                 <div class="col-md-6">
                                     <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
                                     <select class="form-control" id="rujuk_rs{{ $action->id }}" name="rujuk_rs">
@@ -1093,214 +1071,224 @@
                                         @endforeach
                                     </select>
                                 </div>
+                            @endif
+
+                            @if ($routeName === 'action.dokter.index')
+                                <div class="col-md-4">
+                                    <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang
+                                        Tindakan</label>
+                                    <select class="form-control" id="beri_tindakan" name="beri_tindakan">
+                                        <option value="" disabled selected>pilih</option>
+                                        <option value="1"
+                                            {{ old('beri_tindakan', $action->beri_tindakan ?? '') == 1 ? 'selected' : '' }}>
+                                            Iya</option>
+                                        <option value="0"
+                                            {{ old('beri_tindakan', $action->beri_tindakan ?? '') == 0 ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+                            @endif
+                            <div class="col-md-6">
+                                <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
+                                <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                    value="{{ old('keterangan', $action->keterangan ?? '') }}"
+                                    placeholder="Keterangan">
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Auth::user()->role == 'dokter' || $routeName === 'action.dokter.ugd.index')
+                        <div id="formSection2{{ $action->id }}" class="form-section d-none">
+                            <h6>Jenis Pemeriksaan Darah</h6>
+                            @php
+
+                                $jenis_pemeriksaan =
+                                    json_decode($action->hasilLab?->jenis_pemeriksaan ?? '[]', true) ?? [];
+
+                            @endphp
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="gds"
+                                            name="jenis_pemeriksaan[]" value="GDS"
+                                            {{ in_array('GDS', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="gds">GDS
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="gdp"
+                                            name="jenis_pemeriksaan[]" value="GDP"
+                                            {{ in_array('GDP', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="gdp">GDP</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="gdp_2_jam_pp"
+                                            name="jenis_pemeriksaan[]" value="GDP 2 Jam pp"
+                                            {{ in_array('GDP 2 Jam pp', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="gdp_2_jam_pp">GDP 2 Jam pp</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="cholesterol"
+                                            name="jenis_pemeriksaan[]" value="Cholesterol"
+                                            {{ in_array('Cholesterol', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="cholesterol">Cholesterol</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="asam_urat"
+                                            name="jenis_pemeriksaan[]" value="Asam Urat"
+                                            {{ in_array('Asam Urat', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="asam_urat">Asam Urat</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="leukosit"
+                                            name="jenis_pemeriksaan[]" value="Leukosit"
+                                            {{ in_array('Leukosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="leukosit">Leukosit</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="eritrosit"
+                                            name="jenis_pemeriksaan[]" value="Eritrosit"
+                                            {{ in_array('Eritrosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="eritrosit">Eritrosit</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="trombosit"
+                                            name="jenis_pemeriksaan[]" value="Trombosit"
+                                            {{ in_array('Trombosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="trombosit">Trombosit</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="hemoglobin"
+                                            name="jenis_pemeriksaan[]" value="Hemoglobin"
+                                            {{ in_array('Hemoglobin', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="hemoglobin">Hemoglobin</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="sifilis"
+                                            name="jenis_pemeriksaan[]" value="Sifilis"
+                                            {{ in_array('Sifilis', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="sifilis">Sifilis</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="hiv"
+                                            name="jenis_pemeriksaan[]" value="HIV"
+                                            {{ in_array('HIV', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="hiv">HIV</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="golongan_darah"
+                                            name="jenis_pemeriksaan[]" value="Golongan Darah"
+                                            {{ in_array('Golongan Darah', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="golongan_darah">Golongan Darah</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="widal"
+                                            name="jenis_pemeriksaan[]" value="Widal"
+                                            {{ in_array('Widal', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="widal">Widal</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input-edit" type="checkbox" id="malaria"
+                                            name="jenis_pemeriksaan[]" value="Malaria"
+                                            {{ in_array('Malaria', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="malaria">Malaria</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tambahan Pemeriksaan URINE -->
+                            <h6>Jenis Pemeriksaan URINE</h6>
+                            <div class="form-check">
+                                <input class="form-check-input-edit" type="checkbox" id="albumin"
+                                    name="jenis_pemeriksaan[]" value="Albumin"
+                                    {{ in_array('Albumin', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="albumin">Albumin</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input-edit" type="checkbox" id="reduksi"
+                                    name="jenis_pemeriksaan[]" value="Reduksi"
+                                    {{ in_array('Reduksi', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="reduksi">Reduksi</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input-edit" type="checkbox" id="urinalisa"
+                                    name="jenis_pemeriksaan[]" value="Urinalisa"
+                                    {{ in_array('Urinalisa', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="urinalisa">Urinalisa</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input-edit" type="checkbox" id="tes_kehamilan"
+                                    name="jenis_pemeriksaan[]" value="Tes Kehamilan"
+                                    {{ in_array('Tes Kehamilan', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="tes_kehamilan">Tes Kehamilan</label>
+                            </div>
+
+                            <!-- Tambahan Pemeriksaan FESES -->
+                            <h6>Jenis Pemeriksaan FESES</h6>
+                            <div class="form-check">
+                                <input class="form-check-input-edit" type="checkbox" id="telur_cacing"
+                                    name="jenis_pemeriksaan[]" value="Telur Cacing"
+                                    {{ in_array('Telur Cacing', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="telur_cacing">Telur Cacing</label>
+                            </div>
+
+
+                            <!-- Tambahan Pemeriksaan IgM -->
+                            <h6>Pemeriksaan IgM</h6>
+                            <div class="form-check">
+                                <input class="form-check-input-edit" type="checkbox" id="igm_dbd"
+                                    name="jenis_pemeriksaan[]" value="IgM DBD"
+                                    {{ in_array('IgM DBD', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="igm_dbd">IgM DBD</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input-edit" type="checkbox" id="igm_typhoid"
+                                    name="jenis_pemeriksaan[]" value="IgM Typhoid"
+                                    {{ in_array('IgM Typhoid', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
+                            </div>
+                            <h6>Jenis Pemeriksaan Dahak</h6>
+                            <div class="form-check">
+                                <input class="form-check-input-edit" type="checkbox" id="bta"
+                                    name="jenis_pemeriksaan[]" value="BTA"
+                                    {{ in_array('BTA', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="bta">BTA</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input-edit" type="checkbox" id="tcm"
+                                    name="jenis_pemeriksaan[]" value="TCM"
+                                    {{ in_array('TCM', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="tcm">TCM</label>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        @if (Auth::user()->role == 'dokter' || $routeName === 'action.dokter.ugd.index')
+                            <button type="button" class="btn btn-success"
+                                id="nextSectionButton{{ $action->id }}">Lanjut
+                                Pemeriksaan</button>
                         @endif
-
-                        @if ($routeName === 'action.dokter.index')
-                            <div class="col-md-4">
-                                <label for="beri_tindakan" style="color: rgb(19, 11, 241);">Dirujuk Ke Ruang
-                                    Tindakan</label>
-                                <select class="form-control" id="beri_tindakan" name="beri_tindakan">
-                                    <option value="" disabled selected>pilih</option>
-                                    <option value="1"
-                                        {{ old('beri_tindakan', $action->beri_tindakan ?? '') == 1 ? 'selected' : '' }}>
-                                        Iya</option>
-                                    <option value="0"
-                                        {{ old('beri_tindakan', $action->beri_tindakan ?? '') == 0 ? 'selected' : '' }}>
-                                        Tidak</option>
-                                </select>
-                            </div>
-                        @endif
-                        <div class="col-md-6">
-                            <label for="keterangan" style="color: rgb(19, 11, 241);">KETERANGAN</label>
-                            <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                value="{{ old('keterangan', $action->keterangan ?? '') }}" placeholder="Keterangan">
-                        </div>
+                        <button type="submit" class="btn btn-primary">Simpan Data</button>
                     </div>
+
+                </form>
             </div>
-
-            @if (Auth::user()->role == 'dokter' || $routeName === 'action.dokter.ugd.index')
-                <div id="formSection2{{ $action->id }}" class="form-section d-none">
-                    <h6>Jenis Pemeriksaan Darah</h6>
-                    @php
-
-                        $jenis_pemeriksaan = json_decode($action->hasilLab?->jenis_pemeriksaan ?? '[]', true) ?? [];
-
-                    @endphp
-                    <div class="row">
-
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="gds"
-                                    name="jenis_pemeriksaan[]" value="GDS"
-                                    {{ in_array('GDS', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="gds">GDS
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="gdp"
-                                    name="jenis_pemeriksaan[]" value="GDP"
-                                    {{ in_array('GDP', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="gdp">GDP</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="gdp_2_jam_pp"
-                                    name="jenis_pemeriksaan[]" value="GDP 2 Jam pp"
-                                    {{ in_array('GDP 2 Jam pp', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="gdp_2_jam_pp">GDP 2 Jam pp</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="cholesterol"
-                                    name="jenis_pemeriksaan[]" value="Cholesterol"
-                                    {{ in_array('Cholesterol', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="cholesterol">Cholesterol</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="asam_urat"
-                                    name="jenis_pemeriksaan[]" value="Asam Urat"
-                                    {{ in_array('Asam Urat', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="asam_urat">Asam Urat</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="leukosit"
-                                    name="jenis_pemeriksaan[]" value="Leukosit"
-                                    {{ in_array('Leukosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="leukosit">Leukosit</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="eritrosit"
-                                    name="jenis_pemeriksaan[]" value="Eritrosit"
-                                    {{ in_array('Eritrosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="eritrosit">Eritrosit</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="trombosit"
-                                    name="jenis_pemeriksaan[]" value="Trombosit"
-                                    {{ in_array('Trombosit', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="trombosit">Trombosit</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="hemoglobin"
-                                    name="jenis_pemeriksaan[]" value="Hemoglobin"
-                                    {{ in_array('Hemoglobin', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="hemoglobin">Hemoglobin</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="sifilis"
-                                    name="jenis_pemeriksaan[]" value="Sifilis"
-                                    {{ in_array('Sifilis', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="sifilis">Sifilis</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="hiv"
-                                    name="jenis_pemeriksaan[]" value="HIV"
-                                    {{ in_array('HIV', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="hiv">HIV</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="golongan_darah"
-                                    name="jenis_pemeriksaan[]" value="Golongan Darah"
-                                    {{ in_array('Golongan Darah', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="golongan_darah">Golongan Darah</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="widal"
-                                    name="jenis_pemeriksaan[]" value="Widal"
-                                    {{ in_array('Widal', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="widal">Widal</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input-edit" type="checkbox" id="malaria"
-                                    name="jenis_pemeriksaan[]" value="Malaria"
-                                    {{ in_array('Malaria', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="malaria">Malaria</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tambahan Pemeriksaan URINE -->
-                    <h6>Jenis Pemeriksaan URINE</h6>
-                    <div class="form-check">
-                        <input class="form-check-input-edit" type="checkbox" id="albumin"
-                            name="jenis_pemeriksaan[]" value="Albumin"
-                            {{ in_array('Albumin', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="albumin">Albumin</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input-edit" type="checkbox" id="reduksi"
-                            name="jenis_pemeriksaan[]" value="Reduksi"
-                            {{ in_array('Reduksi', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="reduksi">Reduksi</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input-edit" type="checkbox" id="urinalisa"
-                            name="jenis_pemeriksaan[]" value="Urinalisa"
-                            {{ in_array('Urinalisa', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="urinalisa">Urinalisa</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input-edit" type="checkbox" id="tes_kehamilan"
-                            name="jenis_pemeriksaan[]" value="Tes Kehamilan"
-                            {{ in_array('Tes Kehamilan', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="tes_kehamilan">Tes Kehamilan</label>
-                    </div>
-
-                    <!-- Tambahan Pemeriksaan FESES -->
-                    <h6>Jenis Pemeriksaan FESES</h6>
-                    <div class="form-check">
-                        <input class="form-check-input-edit" type="checkbox" id="telur_cacing"
-                            name="jenis_pemeriksaan[]" value="Telur Cacing"
-                            {{ in_array('Telur Cacing', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="telur_cacing">Telur Cacing</label>
-                    </div>
-
-
-                    <!-- Tambahan Pemeriksaan IgM -->
-                    <h6>Pemeriksaan IgM</h6>
-                    <div class="form-check">
-                        <input class="form-check-input-edit" type="checkbox" id="igm_dbd"
-                            name="jenis_pemeriksaan[]" value="IgM DBD"
-                            {{ in_array('IgM DBD', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="igm_dbd">IgM DBD</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input-edit" type="checkbox" id="igm_typhoid"
-                            name="jenis_pemeriksaan[]" value="IgM Typhoid"
-                            {{ in_array('IgM Typhoid', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="igm_typhoid">IgM Typhoid</label>
-                    </div>
-                    <h6>Jenis Pemeriksaan Dahak</h6>
-                    <div class="form-check">
-                        <input class="form-check-input-edit" type="checkbox" id="bta"
-                            name="jenis_pemeriksaan[]" value="BTA"
-                            {{ in_array('BTA', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="bta">BTA</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input-edit" type="checkbox" id="tcm"
-                            name="jenis_pemeriksaan[]" value="TCM"
-                            {{ in_array('TCM', $jenis_pemeriksaan ?? []) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="tcm">TCM</label>
-                    </div>
-                </div>
-            @endif
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                @if (Auth::user()->role == 'dokter' || $routeName === 'action.dokter.ugd.index')
-                    <button type="button" class="btn btn-success" id="nextSectionButton{{ $action->id }}">Lanjut
-                        Pemeriksaan</button>
-                @endif
-                <button type="submit" class="btn btn-primary">Simpan Data</button>
-            </div>
-
-            </form>
         </div>
     </div>
 </div>
-</div>
+
+
+
+<!-- JS - taruh di akhir halaman -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
 
 @include('component.modal-table-edit-pasien')
 @include('component.modal-skrining-edit')
@@ -1308,11 +1296,11 @@
 @include('component.modal-edit-action-obat')
 
 <!-- jQuery harus PERTAMA -->
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
 <script>
     var nikValue = "{{ $action->patient->nik ?? '' }}";
     document.getElementById('nikEdit{{ $action->id }}').value = nikValue;
-    console.log(nikValue);
 </script>
 <script>
     $(document).ready(function() {
@@ -1367,7 +1355,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Attach event listeners dynamically for all modal edit elements
-        const allModals = document.querySelectorAll('.modal'); // Semua modal yang memiliki form edit
+        const allModals = document.querySelectorAll('.modal');
         allModals.forEach((modal) => {
             const selectPenyakitDulu = modal.querySelector('[id^="riwayat_penyakit_dulu_edit"]');
             const selectPenyakitKeluarga = modal.querySelector(
