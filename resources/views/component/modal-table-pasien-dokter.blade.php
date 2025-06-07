@@ -523,9 +523,9 @@
 
         initializeTable();
 
-      $(document).on('shown.bs.modal', '#modalPasienDokter', function () {
-          console.log('Modal ditampilkan!');
-          initializeTable();
+        $(document).on('shown.bs.modal', '#modalPasienDokter', function() {
+            console.log('Modal ditampilkan!');
+            initializeTable();
         });
         $('#refreshTable').on('click', function() {
 
@@ -645,7 +645,7 @@
                     });
 
                     const $selectTindakan = $('#tindakan_ruang_tindakan');
-                   
+
                     tindakanRuangOptions.forEach(item => {
                         $selectTindakan.append(new Option(item, item));
                     });
@@ -692,7 +692,7 @@
 
                     // Reload DataTable dan tunggu sampai selesai
                     await new Promise((resolve) => {
-                        table.ajax.reload(resolve, false);
+                        tablePasien.ajax.reload(resolve, false);
                         const section1 = document.getElementById(
                             'formSection1');
                         const section2 = document.getElementById(

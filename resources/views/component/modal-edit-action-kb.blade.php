@@ -693,7 +693,7 @@
                                         <label for="kesimpulan">Kesimpulan</label>
                                         <textarea class="form-control" id="kesimpulan" name="kesimpulan" placeholder="Kesimpulan">{{ isset($action->kesimpulan) ? $action->kesimpulan : '' }}</textarea>
                                     </div>
-                                    <div class="col-md-6 mt-3">
+                                    <div class="col-md-4 mt-3">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Hasil Skrining</label>
                                             <button class="btn btn-primary w-100 mt-2" type="button"
@@ -705,7 +705,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-3">
+                                    <div class="col-md-4 mt-3">
                                         <div class="form-group">
                                             <label for="skrining" class="form-label">Riwayat Berobat</label>
                                             <button class="btn btn-success w-100 mt-2 btnCariRiwayatBerobatEdit"
@@ -717,19 +717,6 @@
 
 
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 mt-3">
-                                        <label for="poli" style="color: rgb(19, 11, 241);">Rujuk Poli</label>
-                                        <select class="form-control" id="poliEdit{{ $action->id }}"
-                                            name="id_rujuk_poli">
-                                            <option value="" disabled selected>pilih</option>
-                                            @foreach ($poli as $item)
-                                                <option value="{{ $item->id }}"
-                                                    @if (old('id_rujuk_poli', $action->id_rujuk_poli ?? '') == $item->id) selected @endif>
-                                                    {{ $item->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                     <div class="col-md-6 mt-3">
                                         <label for="rujuk_rs" style="color: rgb(19, 11, 241);">RUJUK RS</label>
