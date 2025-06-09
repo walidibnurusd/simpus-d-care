@@ -1,5 +1,4 @@
 @extends('layouts.simple.master')
-@section('title', 'Kajian Awal')
 
 @section('css')
 @endsection
