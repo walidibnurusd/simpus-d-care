@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Poli;
+use App\Models\Diagnosis;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
 
@@ -88,6 +89,8 @@ class ReferenceController extends Controller
         return response()->json(['message' => 'Data user succesfully added!']);
     }
 
+    // ======================================================================================= POLI
+
     public function indexPoli() {
         return view('content.reference.poli');
     }
@@ -137,4 +140,62 @@ class ReferenceController extends Controller
         Poli::destroy($id);
         return response()->json(['message' => 'Deleted']);
     }
+
+    // ======================================================================================= DIAGNOSIS
+
+    public function indexDiagnosis() {
+        return view('content.reference.diagnosis');
+    }
+
+    public function indexDataDiagnosis(Request $request) {
+        $query = Diagnosis::orderBy('updated_at', 'desc');
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('actions', function ($diagnosis) {
+                return '
+                    <button class="btn btn-sm btn-primary edit-diagnosis" 
+                        data-id="' . $diagnosis->id . '" 
+                        data-name="' . htmlspecialchars($diagnosis->name) . '"
+                        data-icd10="' . htmlspecialchars($diagnosis->icd10) . '">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-diagnosis" data-id="' . $diagnosis->id . '">Delete</button>
+                ';
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    public function updateDiagnosis(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+            'icd10' => 'required'
+        ]);
+
+        $diagnosis = Diagnosis::find($id);
+        $diagnosis->name = $validated['name'];
+        $diagnosis->icd10 = $validated['icd10'];
+        $diagnosis->save();
+        return response()->json(['message' => 'Updated']);
+    }
+
+    public function storeDiagnosis(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required',
+            'icd10' => 'required'
+        ]);
+
+        $diagnosis = new Diagnosis();
+        $diagnosis->name = $validated['name'];
+        $diagnosis->icd10 = $validated['icd10'];
+        $diagnosis->save();
+
+        return response()->json(['message' => 'Data diagnosis succesfully added!']);
+    }
+
+    public function destroyDiagnosis($id)
+    {
+        Diagnosis::destroy($id);
+        return response()->json(['message' => 'Deleted']);
+    }
+
 }
