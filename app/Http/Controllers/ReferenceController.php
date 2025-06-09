@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Poli;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
 
@@ -33,11 +34,6 @@ class ReferenceController extends Controller
             })
             ->rawColumns(['actions'])
             ->make(true);
-    }
-
-    public function showDoctor(User $user)
-    {
-        return response()->json($user);
     }
 
     public function updateDoctor(Request $request, $id)
@@ -90,5 +86,55 @@ class ReferenceController extends Controller
         $user->save();
 
         return response()->json(['message' => 'Data user succesfully added!']);
+    }
+
+    public function indexPoli() {
+        return view('content.reference.poli');
+    }
+
+    public function indexDataPoli(Request $request) {
+        $query = Poli::orderBy('updated_at', 'desc');
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('actions', function ($poli) {
+                return '
+                    <button class="btn btn-sm btn-primary edit-poli" 
+                        data-id="' . $poli->id . '" 
+                        data-name="' . htmlspecialchars($poli->name) . '">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-poli" data-id="' . $poli->id . '">Delete</button>
+                ';
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    public function updatePoli(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required'
+        ]);
+
+        $poli = Poli::find($id);
+        $poli->name = $validated['name'];
+        $poli->save();
+        return response()->json(['message' => 'Updated']);
+    }
+
+    public function storePoli(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required'
+        ]);
+
+        $poli = new Poli();
+        $poli->name = $validated['name'];
+        $poli->save();
+
+        return response()->json(['message' => 'Data poli succesfully added!']);
+    }
+
+    public function destroyPoli($id)
+    {
+        Poli::destroy($id);
+        return response()->json(['message' => 'Deleted']);
     }
 }
