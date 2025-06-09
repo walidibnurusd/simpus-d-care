@@ -145,10 +145,18 @@ Route::middleware('auth')->group(function () {
                 Route::get('/data', [ReferenceController::class, 'indexDataDoctor'])->name('reference.doctor.data');
 
                 Route::post('/', [ReferenceController::class, 'storeDoctor'])->name('reference.doctor.store');
-                Route::get('/{user}', [ReferenceController::class, 'showDoctor']);
                 Route::put('/{id}', [ReferenceController::class, 'updateDoctor']);
                 Route::delete('/{id}', [ReferenceController::class, 'destroyDoctor']);
             });
+        Route::prefix('poli')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexPoli'])->name('reference.poli');
+                Route::get('/data', [ReferenceController::class, 'indexDataPoli'])->name('reference.poli.data');
+
+                Route::post('/', [ReferenceController::class, 'storePoli'])->name('reference.poli.store');
+                Route::put('/{id}', [ReferenceController::class, 'updatePoli']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyPoli']);
+            }); 
     });
 
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
