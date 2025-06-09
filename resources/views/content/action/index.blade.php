@@ -266,9 +266,12 @@
                             d.end_date = $('#end_date').val();
                         }
                     },
+					order: [[1, 'desc']],
                     columns: [{
                             data: 'DT_RowIndex',
-                            name: 'DT_RowIndex'
+                            name: 'DT_RowIndex',
+							searchable: false,
+							sortable: false
                         },
                         {
                             data: 'tanggal',
