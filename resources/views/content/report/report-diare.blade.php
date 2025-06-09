@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Poli Umum Diare</title>
+    <title>Laporan Penyakit Diare</title>
     <style>
         body {
             font-family: "Times New Roman", Times, serif;
@@ -44,7 +44,7 @@
         }
 
         table th {
-            background-color: #f0f0f0;
+            background-color: #8fed8f;
         }
 
         @media print {
@@ -58,6 +58,27 @@
 </head>
 
 <body>
+    @php
+        $month = request()->query('bulan', now()->month);
+        $year = request()->query('tahun', now()->year);
+
+        $months = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+
+        $monthName = $months[$month] ?? 'Tidak Diketahui';
+    @endphp
     <div class="header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <img src="{{ asset('assets/assets/img/logo.png') }}" alt="Logo Left">
@@ -73,7 +94,7 @@
         </div>
         <hr>
         <h3 style="margin-top: 20px;">LAPORAN DATA REGISTER KASUS PENYAKIT DIARE</h3>
-        <p>TANGGAL S/D</p>
+        <p><b>BULAN {{ strtoupper($monthName) }} TAHUN {{ $year }}</b></p>
     </div>
 
     <div class="table-container">
@@ -81,115 +102,81 @@
             <thead>
                 <tr>
                     <th rowspan="2">NO</th>
+                    <th rowspan="2">TANGGAL</th>
                     <th rowspan="2">NO.RM</th>
                     <th rowspan="2">NIK</th>
                     <th rowspan="2">NAMA PASIEN</th>
                     <th rowspan="2">TGL.LAHIR</th>
                     <th rowspan="2">KEPESERTAAN</th>
-                    <th colspan="2">ALAMAT</th>
+                    <th rowspan="2">ALAMAT</th>
                     <th rowspan="2">JENIS KELAMIN</th>
                     <th rowspan="2">TD</th>
                     <th rowspan="2">TB</th>
                     <th rowspan="2">BB</th>
                     <th rowspan="2">LP</th>
-                    <th rowspan="2">TANGGAL KUNJUNGAN</th>
-                    <th rowspan="2">TANGGAL MULAI SAKIT</th>
+                    <th rowspan="2">KUNJ</th>
                     <th rowspan="2">KELUHAN</th>
-                    <th rowspan="2">DIAGNOSIS DIARE</th>
-                    <th rowspan="2">DERAJAT DEHIDRASI</th>
-                    <th colspan="3">JUMLAH PEMBERIAN</th>
-                    <th rowspan="2">Penggunaan Antibiotik Terapi Diare (Ya/ Tidak)</th>
-                    <th rowspan="2">Status Kematian Pasien (Meninggal/ Hidup)</th>
-                    <th rowspan="2">KONSELING</th>
+                    <th rowspan="2">DIAGNOSA</th>
                     <th rowspan="2">TINDAKAN</th>
                     <th rowspan="2">RUJUKAN</th>
                     <th rowspan="2">KETERANGAN</th>
                     <th rowspan="2">DOKTER</th>
                 </tr>
-                <tr>
-                    <th>Desa/Kelurahan</th>
-                    <th>Alamat Lengkap</th>
-                    <th>Oralit (bungkus)</th>
-                    <th>Zinc (tablet)</th>
-                    <th>RL (botol)</th>
-                </tr>
+
             </thead>
             @foreach ($diare as $index => $data)
                 @php
-                    $bulanIndo = [
-                        '01' => 'Jan',
-                        '02' => 'Feb',
-                        '03' => 'Mar',
-                        '04' => 'Apr',
-                        '05' => 'Mei',
-                        '06' => 'Jun',
-                        '07' => 'Jul',
-                        '08' => 'Agu',
-                        '09' => 'Sep',
-                        '10' => 'Okt',
-                        '11' => 'Nov',
-                        '12' => 'Des',
-                    ];
-                    $dob = \Carbon\Carbon::parse($data->patient->dob);
-                    $ageInYears = $dob->age;
-                    $ageInMonths = $dob->diffInMonths(\Carbon\Carbon::now());
-                    if ($ageInYears < 1) {
-                        $age = $ageInMonts;
-                        $ageUnit = 'Bulan';
-                    } else {
-                        $age = $ageInYears;
-                        $ageUnit = 'Tahun';
-                    }
-
+                    $kunjunganCount = App\Models\Kunjungan::where('pasien', $data->patient->id)->count();
                 @endphp
-
                 <tr>
                     <td>{{ $index + 1 }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
                     <td>{{ $data->patient->no_rm }}</td>
                     <td>{{ $data->patient->nik }}</td>
                     <td>{{ ucwords(strtolower($data->patient->name)) }}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->patient->dob)->format('d-m-Y') }}</td>
-                    <td>{{ ucwords(strtolower($data->kartu)) }}<br>{{ $data->nomor }}</td>
-                    <td>{{ $data->patient->villages ? ucwords(strtolower($data->patient->villages->name)) : 'Tidak Diketahui' }}
+                    <td>
+                        {{ \Carbon\Carbon::parse($data->patient->dob)->format('d-m-Y') }} <br>
+                        {{ \Carbon\Carbon::parse($data->patient->dob)->age }} thn
                     </td>
-                    <td>{{ ucwords(strtolower($data->patient->address)) }}</td>
+                    <td>
+                        @if ($data->patient->jenis_kartu == 'pbi')
+                            PBI (KIS)
+                        @elseif($data->patient->jenis_kartu == 'askes')
+                            AKSES
+                        @elseif($data->patient->jenis_kartu == 'jkn_mandiri')
+                            JKN Mandiri
+                        @elseif($data->patient->jenis_kartu == 'umum')
+                            Umum
+                        @elseif($data->patient->jenis_kartu == 'jkd')
+                            JKD
+                        @else
+                            Tidak Diketahui
+                        @endif
+                        <br>{{ $data->patient->nomor_kartu ?? '' }}
+                    </td>
+                    <td>
+                        {{ ucwords(strtolower($data->patient->address)) }} - RW
+                        {{ $data->patient->rw === 'luar-wilayah' ? 'Luar Wilayah' : $data->patient->rw }}
+                    </td>
                     <td>{{ $data->patient->genderName->name }}</td>
                     <td>{{ $data->sistol }}<br>{{ $data->diastol }}</td>
                     <td>{{ $data->tinggiBadan }}</td>
                     <td>{{ $data->beratBadan }}</td>
                     <td>{{ $data->lingkarPinggang }}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
+                    <td>
+                        {{ $kunjunganCount == 1 ? 'Baru' : 'Lama' }}
+                    </td>
                     <td>{{ ucwords(strtolower($data->keluhan)) }}</td>
                     <td>
-                        @if (!empty($data->diagnosa_names))
+                        @if (!empty($data->diagnosa_names) && count($data->diagnosa_names) > 0)
                             {{ implode(', ', $data->diagnosa_names) }}
                         @else
                             Tidak Ada Diagnosa Diare
                         @endif
                     </td>
-                    <td>{{ $data->dehidrasi }}</td>
-                    <td>
-                        @if ($data->oralit == 'ya')
-                            6
-                        @else
-                            0
-                        @endif
-                    </td>
-                    <td>
-                        @if ($data->zinc == 'tidak')
-                            10
-                        @else
-                            0
-                        @endif
-                    </td>
-                    <td>0</td>
-                    <td>Ya</td>
-                    <td>Hidup</td>
-                    <td>Ya</td>
-                    <td>{{ ucwords(strtolower($data->keterangan)) }}</td>
-                    <td>{{ $data->hospitalReferral->name }}</td>
                     <td>{{ $data->tindakan }}</td>
+                    <td>{{ $data->hospitalReferral->name ?? 'Tidak' }}</td>
+                    <td>{{ $data->keterangan }}</td>
                     <td>{{ $data->doctor }}</td>
 
                 </tr>

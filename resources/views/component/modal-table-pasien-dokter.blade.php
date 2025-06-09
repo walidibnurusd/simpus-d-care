@@ -557,6 +557,23 @@
 
         });
 
+        function setSelect2Value(selector, value, placeholder, isMultiple = false) {
+            if (value) {
+                $(selector).val(value).trigger('change');
+            } else {
+                $(selector).val([]).trigger('change');
+            }
+
+            // Set 'multiple' if required
+            if (isMultiple) {
+                $(selector).attr('multiple', 'multiple');
+            }
+
+            $(selector).select2({
+                placeholder: placeholder,
+                width: '100%'
+            });
+        }
 
         initializeTable();
 

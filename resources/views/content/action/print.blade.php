@@ -44,7 +44,7 @@
         }
 
         table th {
-            background-color: #f0f0f0;
+            background-color: #8fed8f;
         }
     </style>
 
