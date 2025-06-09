@@ -4,7 +4,7 @@
       <div class="modal-content">
         <form id="editUserForm">
         @csrf
-        <div class="modal-header"><h5>Edit User</h5></div>
+        <div class="modal-header"><h5>Edit Dokter</h5></div>
             <div class="modal-body">
                 <input type="hidden" id="edit-user-id">
                 <div class="mb-3">
@@ -38,8 +38,8 @@
                 </div> -->
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
             </div>
         </div>
     </form>
@@ -53,14 +53,14 @@
         <form id="deleteUserForm">
         @csrf
         @method('DELETE')
-            <div class="modal-header"><h5>Confirm Delete</h5></div>
+            <div class="modal-header"><h5>Konfirmasi hapus?</h5></div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this user?</p>
+                <p>Apakah Anda yakin ingin menghapus data dokter ini?</p>
                 <input type="hidden" id="delete-user-id">
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger">Hapus</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
             </div>
         </div>
     </form>
