@@ -157,6 +157,15 @@ Route::middleware('auth')->group(function () {
                 Route::put('/{id}', [ReferenceController::class, 'updatePoli']);
                 Route::delete('/{id}', [ReferenceController::class, 'destroyPoli']);
             }); 
+        Route::prefix('diagnosis')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexDiagnosis'])->name('reference.diagnosis');
+                Route::get('/data', [ReferenceController::class, 'indexDataDiagnosis'])->name('reference.diagnosis.data');
+
+                Route::post('/', [ReferenceController::class, 'storeDiagnosis'])->name('reference.diagnosis.store');
+                Route::put('/{id}', [ReferenceController::class, 'updateDiagnosis']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyDiagnosis']);
+            }); 
     });
 
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
