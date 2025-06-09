@@ -108,6 +108,7 @@
 
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('reference.doctor') }}">Dokter</a></li>
+                                <li><a href="{{ route('reference.poli') }}">Poli</a></li>
                             </ul>
                         </li>
                     @endif
