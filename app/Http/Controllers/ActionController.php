@@ -125,9 +125,9 @@ class ActionController extends Controller
 
 	        $actionsQuery = Action::with([
 	                'patient:id,nik,no_rm,name,dob,jenis_kartu,wilayah_faskes',
-	                'hospitalReferral:id,name'
+	                'hospitalReferral'
 	            ])
-	            ->select('actions.id', 'tanggal', 'diagnosa', 'keluhan', 'tindakan', 'id_patient')
+	            ->select('actions.id', 'tanggal', 'diagnosa', 'keluhan', 'tindakan', 'id_patient', 'rujuk_rs')
 	            ->where('tipe', 'poli-gigi')
 	            ->whereDate('tanggal', '>=', $startDate)
 	            ->whereDate('tanggal', '<=', $endDate);
@@ -141,6 +141,10 @@ class ActionController extends Controller
 									->orWhere('name', 'like', "%{$search}%")
 									->orWhere('jenis_kartu', 'like', "%{$search}%")
 									->orWhere('no_rm', 'like', "%{$search}%");
+							});
+
+							$q->orWhereHas('hospitalReferral', function ($patientQuery) use ($search) {
+								$patientQuery->where('name', 'like', "%{$search}%");
 							});
 
 							$q->orWhere('keluhan', 'like', "%{$search}%")
@@ -167,6 +171,10 @@ class ActionController extends Controller
 				->orderColumn('patient_age', function ($query, $order) {
 					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
 						  ->orderBy('patients.dob', $order);
+				})
+				->orderColumn('kartu', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.jenis_kartu', $order);
 				})
 				->orderColumn('tanggal', function ($query, $order) {
 					$query->orderBy('tanggal', $order);
@@ -243,9 +251,9 @@ class ActionController extends Controller
 
             $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
 
-            $actions = $actionsQuery->get();
+            // $actions = $actionsQuery->get();
 
-            return DataTables::of($actions)
+            return DataTables::of($actionsQuery)
                 ->addIndexColumn()
                 ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
                 ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
