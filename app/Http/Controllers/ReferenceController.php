@@ -10,6 +10,7 @@ use App\Models\Diagnosis;
 use App\Models\Obat;
 use App\Models\TerimaObat;
 use App\Models\Tindakan;
+use App\Models\Hospital;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -335,6 +336,59 @@ class ReferenceController extends Controller
     public function destroyTindakan($id)
     {
         Tindakan::destroy($id);
+        return response()->json(['message' => 'Deleted']);
+    }
+
+    // ======================================================================================= HOSPITAL
+
+    public function indexRumahSakit() {
+        return view('content.reference.rumahsakit');
+    }
+
+    public function indexDataRumahSakit(Request $request) {
+        $query = Hospital::orderBy('updated_at', 'desc');
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('actions', function ($rumahsakit) {
+                return '
+                    <button class="btn btn-sm btn-primary edit-rumahsakit" 
+                        data-id="' . $rumahsakit->id . '" 
+                        data-name="' . htmlspecialchars($rumahsakit->name) . '">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-rumahsakit" data-id="' . $rumahsakit->id . '">Delete</button>
+                ';
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    public function updateRumahSakit(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required'
+        ]);
+
+        $obat = Hospital::find($id);
+        $obat->name = $validated['name'];
+        $obat->save();
+
+        return response()->json(['message' => 'Updated']);
+    }
+
+    public function storeRumahSakit(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required'
+        ]);
+
+        $poli = new Hospital();
+        $poli->name = $validated['name'];
+        $poli->save();
+
+        return response()->json(['message' => 'Data rumah sakit succesfully added!']);
+    }
+
+    public function destroyRumahSakit($id)
+    {
+        Hospital::destroy($id);
         return response()->json(['message' => 'Deleted']);
     }
 
