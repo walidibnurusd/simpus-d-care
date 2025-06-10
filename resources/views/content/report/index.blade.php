@@ -9,15 +9,10 @@
     <style>
         .profile-picture {
             width: 100px;
-            /* Adjust width as needed */
             height: 100px;
-            /* Adjust height as needed */
             object-fit: cover;
-            /* Ensure the image covers the area without distortion */
             border-radius: 50%;
-            /* Make the image circular */
             border: 2px solid #ddd;
-            /* Optional: Add a border around the image */
         }
     </style>
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/datatables.css') }}">
@@ -43,99 +38,99 @@
             <h4 class="mb-3">UGD</h4>
         @endif
         {{-- @if ($routeName === 'report.index') --}}
-            <div class="row">
-                <!-- Kolom 1 -->
-                <div class="col-md-4 mb-3">
-                    <!-- Button triggers modals -->
-                    <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalRekapKunjungan">Rekap Kunjungan</button>
-                    <button class="btn btn-dark btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalLaporanKasus">Laporan Berdasarkan Kasus</button>
-                    <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalPasienProduktif">Pasien Produktif Baru (15-59THN)</button>
-                    <button class="btn btn-info btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalISPA">ISPA Tahunan</button>
-                    <button class="btn btn-warning btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalRujukanTerbanyak">Rekap Rujukan Terbanyak</button>
-                    <button class="btn btn-warning btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalRujukanTerbanyakRS">Rekap Rujukan Terbanyak RS</button>
-                </div>
-
-
-
-                <!-- Kolom 2 -->
-                <div class="col-md-4 mb-3">
-                    <a href="javascript:void(0)" class="btn btn-primary btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalTifoid">Laporan Penyakit Tifoid</a>
-                    <a href="javascript:void(0)" class="btn btn-primary btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalSTP">Laporan Surveilans Terpadu Penyakit Berbasis Puskesmas</a>
-                    <a href="javascript:void(0)" class="btn btn-success btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalPTM">Rekap Penyakit Tidak Menular</a>
-                    <a href="javascript:void(0)" class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalAFP">Laporan Penderita AFP</a>
-                    <a href="javascript:void(0)" class="btn btn-dark btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalDifteri">Laporan Surveilans Integrasi Difteri</a>
-                    <a href="javascript:void(0)" class="btn btn-info btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalC1">Laporan Kasus Campak</a>
-                    <a href="javascript:void(0)" class="btn btn-warning btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalSKDR">Laporan SKDR</a>
-
-
-                </div>
-
-                <!-- Kolom 3 -->
-                <div class="col-md-4 mb-3">
-                    <a class="btn btn-success btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalFormulir11">Rekap Pesakitan Formulir 11</a>
-                    <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalKunjunganUmur">Rekap Kunjungan Umur</button>
-                    <button class="btn btn-info btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalKunjunganRawatJalan">Kunjungan Rawat Jalan</button>
-                    <a class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal" data-bs-target="#modalLKT">Rekap
-                        Tahunan Penyakit Terbanyak 10</a>
-                    <a class="btn btn-dark btn-block w-100 mb-2" data-bs-toggle="modal" data-bs-target="#modalLBKT">Rekap
-                        Bulanan Kasus Terbanyak Formulir 14</a>
-                    <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalKunjunganSehat">Kunjungan Sehat</button>
-                    <button class="btn btn-info btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalTELINGA">TELINGA Tahunan</button>
-                    <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalDiare">Laporan Penyakit/DIARE</button>
-                </div>
+        <div class="row">
+            <!-- Kolom 1 -->
+            <div class="col-md-4 mb-3">
+                <!-- Button triggers modals -->
+                <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalRekapKunjungan">Rekap Kunjungan</button>
+                <button class="btn btn-dark btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalLaporanKasus">Laporan Berdasarkan Kasus</button>
+                <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalPasienProduktif">Pasien Produktif Baru (15-59THN)</button>
+                <button class="btn btn-info btn-block w-100 mb-2" data-bs-toggle="modal" data-bs-target="#modalISPA">ISPA
+                    Tahunan</button>
+                <button class="btn btn-warning btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalRujukanTerbanyak">Rekap Rujukan Terbanyak</button>
+                <button class="btn btn-warning btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalRujukanTerbanyakRS">Rekap Rujukan Terbanyak RS</button>
             </div>
+
+
+
+            <!-- Kolom 2 -->
+            <div class="col-md-4 mb-3">
+                <a href="javascript:void(0)" class="btn btn-primary btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalTifoid">Laporan Penyakit Tifoid</a>
+                <a href="javascript:void(0)" class="btn btn-primary btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalSTP">Laporan Surveilans Terpadu Penyakit Berbasis Puskesmas</a>
+                <a href="javascript:void(0)" class="btn btn-success btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalPTM">Rekap Penyakit Tidak Menular</a>
+                <a href="javascript:void(0)" class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalAFP">Laporan Penderita AFP</a>
+                <a href="javascript:void(0)" class="btn btn-dark btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalDifteri">Laporan Surveilans Integrasi Difteri</a>
+                <a href="javascript:void(0)" class="btn btn-info btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalC1">Laporan Kasus Campak</a>
+                <a href="javascript:void(0)" class="btn btn-warning btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalSKDR">Laporan SKDR</a>
+
+
+            </div>
+
+            <!-- Kolom 3 -->
+            <div class="col-md-4 mb-3">
+                <a class="btn btn-success btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalFormulir11">Rekap Pesakitan Formulir 11</a>
+                <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalKunjunganUmur">Rekap Kunjungan Umur</button>
+                <button class="btn btn-info btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalKunjunganRawatJalan">Kunjungan Rawat Jalan</button>
+                <a class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal" data-bs-target="#modalLKT">Rekap
+                    Tahunan Penyakit Terbanyak 10</a>
+                <a class="btn btn-dark btn-block w-100 mb-2" data-bs-toggle="modal" data-bs-target="#modalLBKT">Rekap
+                    Bulanan Kasus Terbanyak Formulir 14</a>
+                <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalKunjunganSehat">Kunjungan Sehat</button>
+                <button class="btn btn-info btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalTELINGA">TELINGA Tahunan</button>
+                <button class="btn btn-danger btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalDiare">Laporan Penyakit/DIARE</button>
+            </div>
+        </div>
         {{-- @elseif($routeName === 'report.index.gigi') --}}
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <button type="button" class="btn btn-primary btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalLKG">
-                        Laporan Kegiatan Pelayanan Kesehatan Gigi dan Mulut
-                    </button>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <button type="button" class="btn btn-success btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalLRKG">
-                        Laporan Bulanan Kesakitan Gigi dan Mulut
-                    </button>
-                </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <button type="button" class="btn btn-primary btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalLKG">
+                    Laporan Kegiatan Pelayanan Kesehatan Gigi dan Mulut
+                </button>
             </div>
+
+            <div class="col-md-6 mb-3">
+                <button type="button" class="btn btn-success btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalLRKG">
+                    Laporan Bulanan Kesakitan Gigi dan Mulut
+                </button>
+            </div>
+        </div>
         {{-- @else --}}
-            <div class="row">
-                <!-- Kolom 1 -->
-                <div class="col-md-6 mb-3">
-                    <button type="button" class="btn btn-primary btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalURT">
-                        Rekap Layanan UGD
-                    </button>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <button type="button" class="btn btn-success btn-block w-100 mb-2" data-bs-toggle="modal"
-                        data-bs-target="#modalRJP">
-                        Rekap Tindakan UGD
-                    </button>
-                </div>
+        <div class="row">
+            <!-- Kolom 1 -->
+            <div class="col-md-6 mb-3">
+                <button type="button" class="btn btn-primary btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalURT">
+                    Rekap Layanan UGD
+                </button>
             </div>
+
+            <div class="col-md-6 mb-3">
+                <button type="button" class="btn btn-success btn-block w-100 mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalRJP">
+                    Rekap Tindakan UGD
+                </button>
+            </div>
+        </div>
         {{-- @endif --}}
         <div class="modal fade" id="modalURT" tabindex="-1" aria-labelledby="modalURTLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -220,7 +215,7 @@
             </div>
         </div>
         <!-- Modal untuk Laporan Kegiatan Pelayanan Kesehatan Gigi dan Mulut -->
-          <div class="modal fade" id="modalLKG" tabindex="-1" aria-labelledby="modalLKGLabel" aria-hidden="true">
+        <div class="modal fade" id="modalLKG" tabindex="-1" aria-labelledby="modalLKGLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -380,14 +375,23 @@
                             <label for="bulanLBKT">Bulan</label>
                             <select id="bulanRujukanTerbanyak" name="bulan" class="form-select mb-3">
                                 @foreach ([
-                                    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-                                    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-                                    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-                                ] as $key => $month)
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ] as $key => $month)
                                     <option value="{{ $key }}">{{ $month }}</option>
                                 @endforeach
                             </select>
-        
+
                             <label for="tahunLKT">Tahun</label>
                             <select id="tahunTELINGA" name="tahun" class="form-control mb-3">
                                 @for ($year = 2020; $year <= now()->year; $year++)
@@ -403,7 +407,7 @@
                 </div>
             </div>
         </div>
-        
+
 
         <!-- Rekap Bulanan Kasus Terbanyak Formulir 14 -->
         <div class="modal fade" id="modalLBKT" tabindex="-1" aria-labelledby="modalLBKTLabel" aria-hidden="true">
@@ -653,7 +657,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         {{-- <form action="{{ route('report.rekapKunjungan') }}" method="GET"> --}}
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Filter</button>
                         {{-- </form> --}}
                     </div>
                 </div>
@@ -695,7 +699,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         {{-- <form action="{{ route('report.laporanKasus') }}" method="GET"> --}}
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Filter</button>
                         {{-- </form> --}}
                     </div>
                 </div>
@@ -738,7 +742,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -779,7 +783,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         {{-- <form action="{{ route('report.ispa') }}" method="GET"> --}}
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Filter</button>
                         {{-- </form> --}}
                     </div>
                 </div>
@@ -822,7 +826,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -864,7 +868,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -900,14 +904,14 @@
 
                             <label for="tahunTifoid">Tahun</label>
                             <select id="tahunTifoid" name="tahun" class="form-control mb-3" required>
-                                @for ($i = 2020; $i <= date('Y'); $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @for ($year = 2020; $year <= now()->year; $year++)
+                                    <option value="{{ $year }}">{{ $year }}</option>
                                 @endfor
                             </select>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -950,7 +954,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -992,7 +996,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -1005,7 +1009,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalAFPLabel">Laporan Penderita AFP</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <form action="{{ route('report.afp') }}" method="GET">
                         <div class="modal-body">
@@ -1034,7 +1039,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -1048,7 +1053,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalDifteriLabel">Laporan Surveilans Integrasi Difteri</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <form action="{{ route('report.difteri') }}" method="GET">
                         <div class="modal-body">
@@ -1077,7 +1083,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -1120,7 +1126,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -1163,7 +1169,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
