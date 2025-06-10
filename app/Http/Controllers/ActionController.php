@@ -3112,12 +3112,32 @@ class ActionController extends Controller
                 $currentTime = Carbon::now()->subHours(8); // UTC offset
                 $formattedTime = $currentTime->format('Y-m-d\TH:i:s\+00:00');
 
-                $locationReference = 'Location/b13081cb-d36f-4008-91df-2d2824b90207';
+                $locationReference = 'Location/26f39285-649e-4d6e-b8e5-ed54013082a0';
                 $locationDisplay = 'Ruang Poli Gigi';
 
                 if ($action->tipe == 'poli-gigi') {
-                    $locationReference = 'Location/b13081cb-d36f-4008-91df-2d2824b90207';
+                    $locationReference = 'Location/26f39285-649e-4d6e-b8e5-ed54013082a0';
                     $locationDisplay = 'Ruang Poli Gigi';
+                }
+                else if ($action->tipe == 'poli-umum') {
+                    $locationReference = 'Location/0d2f9518-a37f-43e2-bfa6-0e6999f69bc4';
+                    $locationDisplay = 'Ruang Poli Umum';
+                }
+                else if ($action->tipe == 'poli-kia') {
+                    $locationReference = 'Location/a7c53d57-e940-4601-84f2-1e0be61e4638';
+                    $locationDisplay = 'Ruang Poli Kia';
+                }
+                else if ($action->tipe == 'poli-kb') {
+                    $locationReference = 'Location/3933c54e-14f7-4233-bcd9-2f71a8cdf651';
+                    $locationDisplay = 'Ruang Poli Kb';
+                }
+                else if ($action->tipe == 'ruang-tindakan') {
+                    $locationReference = 'Location/4185d73b-62e2-4bbb-80c9-578e65c2b567';
+                    $locationDisplay = 'Ruang UGD';
+                }
+                else if ($action->tipe == 'tindakan') {
+                    $locationReference = 'Location/a711d42b-b946-48a7-97c1-e6c22c1d558d';
+                    $locationDisplay = 'Ruang Tindakan';
                 }
 
                 $encounterBody = [
