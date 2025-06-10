@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Poli;
 use App\Models\Diagnosis;
+use App\Models\Obat;
+use App\Models\TerimaObat;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class ReferenceController extends Controller
 {
@@ -195,6 +198,89 @@ class ReferenceController extends Controller
     public function destroyDiagnosis($id)
     {
         Diagnosis::destroy($id);
+        return response()->json(['message' => 'Deleted']);
+    }
+
+    // ======================================================================================= OBAT
+
+    public function indexObat() {
+        return view('content.reference.obat');
+    }
+
+    public function indexDataObat(Request $request) {
+        $query = Obat::with('terimaObat')->orderBy('updated_at', 'desc');
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->editColumn('shape', function ($obat) {
+                return $obat->shape_label;
+            })
+            ->addColumn('amount', function ($obat) {
+                return $obat->terimaObat->sum('amount');
+            })
+            ->addColumn('actions', function ($obat) {
+                return '
+                    <button class="btn btn-sm btn-primary edit-obat"
+                        data-id="' . $obat->id . '"
+                        data-name="' . htmlspecialchars($obat->name) . '"
+                        data-code="' . htmlspecialchars($obat->code) . '"
+                        data-shape="' . htmlspecialchars($obat->shape) . '"
+                        data-amount="' . htmlspecialchars($obat->terimaObat->sum('amount')) . '">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-obat" data-id="' . $obat->id . '">Delete</button>
+                ';
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    public function updateObat(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+            'shape' => 'required',
+            'amount' => 'required'
+        ]);
+
+        $obat = Obat::find($id);
+        $obat->name = $validated['name'];
+        $obat->code = $validated['code'];
+        $obat->shape = $validated['shape'];
+        $obat->amount = $validated['amount'];
+        $obat->save();
+        
+        $terimaObat = TerimaObat::where('id_obat', $id)->first();
+        $terimaObat->amount = $validated['amount'];
+        $terimaObat->save();
+
+        return response()->json(['message' => 'Updated']);
+    }
+
+    public function storeObat(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+            'shape' => 'required',
+            'amount' => 'required'
+        ]);
+
+        $obat = new Obat();
+        $obat->name = $validated['name'];
+        $obat->code = $validated['code'];
+        $obat->shape = $validated['shape'];
+        $obat->amount = $validated['amount'];
+        $obat->save();
+
+        $terimaObat = TerimaObat::updateOrCreate(
+            ['id_obat' => $obat->id],
+            ['amount' => $validated['amount'], 'date' => Carbon::now()]
+        );
+
+        return response()->json(['message' => 'Data obat succesfully added!']);
+    }
+
+    public function destroyObat($id)
+    {
+        Obat::destroy($id);
         return response()->json(['message' => 'Deleted']);
     }
 
