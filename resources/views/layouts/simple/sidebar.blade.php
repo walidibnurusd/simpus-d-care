@@ -112,6 +112,7 @@
                                 <li><a href="{{ route('reference.diagnosis') }}">Diagnosis</a></li>
                                 <li><a href="{{ route('reference.obat') }}">Obat</a></li>
                                 <li><a href="{{ route('reference.tindakan') }}">Tindakan</a></li>
+                                <li><a href="{{ route('reference.rumahsakit') }}">Rumah Sakit</a></li>
                             </ul>
                         </li>
                     @endif
