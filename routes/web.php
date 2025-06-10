@@ -175,6 +175,16 @@ Route::middleware('auth')->group(function () {
                 Route::post('/', [ReferenceController::class, 'storeObat'])->name('reference.obat.store');
                 Route::put('/{id}', [ReferenceController::class, 'updateObat']);
                 Route::delete('/{id}', [ReferenceController::class, 'destroyObat']);
+            });
+
+        Route::prefix('tindakan')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexTindakan'])->name('reference.tindakan');
+                Route::get('/data', [ReferenceController::class, 'indexDataTindakan'])->name('reference.tindakan.data');
+
+                Route::post('/', [ReferenceController::class, 'storeTindakan'])->name('reference.tindakan.store');
+                Route::put('/{id}', [ReferenceController::class, 'updateTindakan']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyTindakan']);
             }); 
     });
 
