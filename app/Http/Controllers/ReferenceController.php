@@ -9,6 +9,7 @@ use App\Models\Poli;
 use App\Models\Diagnosis;
 use App\Models\Obat;
 use App\Models\TerimaObat;
+use App\Models\Tindakan;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -281,6 +282,59 @@ class ReferenceController extends Controller
     public function destroyObat($id)
     {
         Obat::destroy($id);
+        return response()->json(['message' => 'Deleted']);
+    }
+
+    // ======================================================================================= TINDAKAN
+
+    public function indexTindakan() {
+        return view('content.reference.tindakan');
+    }
+
+    public function indexDataTindakan(Request $request) {
+        $query = Tindakan::orderBy('updated_at', 'desc');
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('actions', function ($tindakan) {
+                return '
+                    <button class="btn btn-sm btn-primary edit-tindakan" 
+                        data-id="' . $tindakan->id . '" 
+                        data-name="' . htmlspecialchars($tindakan->name) . '">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-tindakan" data-id="' . $tindakan->id . '">Delete</button>
+                ';
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    public function updateTindakan(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required'
+        ]);
+
+        $obat = Tindakan::find($id);
+        $obat->name = $validated['name'];
+        $obat->save();
+
+        return response()->json(['message' => 'Updated']);
+    }
+
+    public function storeTindakan(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required'
+        ]);
+
+        $poli = new Tindakan();
+        $poli->name = $validated['name'];
+        $poli->save();
+
+        return response()->json(['message' => 'Data tindakan succesfully added!']);
+    }
+
+    public function destroyTindakan($id)
+    {
+        Tindakan::destroy($id);
         return response()->json(['message' => 'Deleted']);
     }
 
