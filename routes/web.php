@@ -185,6 +185,16 @@ Route::middleware('auth')->group(function () {
                 Route::post('/', [ReferenceController::class, 'storeTindakan'])->name('reference.tindakan.store');
                 Route::put('/{id}', [ReferenceController::class, 'updateTindakan']);
                 Route::delete('/{id}', [ReferenceController::class, 'destroyTindakan']);
+            });
+
+        Route::prefix('rumah-sakit')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexRumahSakit'])->name('reference.rumahsakit');
+                Route::get('/data', [ReferenceController::class, 'indexDataRumahSakit'])->name('reference.rumahsakit.data');
+
+                Route::post('/', [ReferenceController::class, 'storeRumahSakit'])->name('reference.rumahsakit.store');
+                Route::put('/{id}', [ReferenceController::class, 'updateRumahSakit']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyRumahSakit']);
             }); 
     });
 
