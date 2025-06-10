@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ReportController extends Controller
 {
@@ -82,9 +83,8 @@ class ReportController extends Controller
         $diare = $diare->map(function ($data) use ($diagnosaMap, $dehidrasiMap) {
             if (is_array($data->diagnosa) && in_array(602, $data->diagnosa)) {
                 $data->diagnosa_names = [$diagnosaMap[602]];
-                $data->dehidrasi = $dehidrasiMap[602]; 
+                $data->dehidrasi = $dehidrasiMap[602];
             } else {
-                // If 602 is not found, set default values
                 $data->diagnosa_names = ['Tidak Diketahui'];
                 $data->dehidrasi = 'Tidak Diketahui';
             }
@@ -235,9 +235,48 @@ class ReportController extends Controller
         return view('content.report.laporan-stp', compact('report', 'ageGroups', 'month', 'year'));
     }
 
-    public function reportAFP()
+    public function reportAFP(Request $request)
     {
-        return view('content.report.laporan-afp');
+        $bulanMap = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+
+        // misalnya request input-nya seperti ini:
+        $angkaBulan = (int) $request->input('bulan');
+        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+        $tahun = $request->tahun;
+
+        $templatePath = public_path('assets/report/report-afp.xlsx');
+
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        // Buka template
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('M3', 'Bulan : ' . $bulan);
+        $sheet->setCellValue('Q3', 'Tahun : ' . $tahun);
+        $tanggal = Carbon::now()->translatedFormat('j F Y');
+        $sheet->setCellValue('O20', 'Makassar, ' . $tanggal);
+        // Stream ke user (tanpa menyimpan di server)
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-afp.xlsx');
     }
     public function reportDifteri()
     {

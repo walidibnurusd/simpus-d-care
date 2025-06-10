@@ -1,212 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIST PENDERITA AFP</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles -->
+    <meta charset="utf-8">
     <style>
+        @page {
+            size: legal landscape;
+            margin: 1cm;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            font-size: 12px;
+            font-family: Arial, sans-serif;
+            font-size: 9px;
         }
 
-        .header {
-            text-align: center;
-
-        }
-
-        .header h1 {
-            font-size: 20px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .header .subtitle {
-            font-size: 14px;
-        }
-
-        .table {
+        table {
             width: 100%;
             border-collapse: collapse;
-
+            table-layout: fixed;
         }
 
-        .table th,
-        .table td {
+        th,
+        td {
             border: 1px solid #000;
-            padding: 5px;
+            padding: 3px;
             text-align: center;
+            word-wrap: break-word;
+            font-size: 9px;
         }
 
-        .table th {
-            background-color: #e0e0e0;
-        }
-
-        .note {
-            font-size: 10px;
-            margin-top: 10px;
-            color: red;
-        }
-
-        .custom-badge {
-            font-size: 1.5rem;
-            padding: 10px 20px;
-            border-radius: 10px;
-            background-color: #007bff;
-            color: #fff;
-            display: inline-block;
-            text-transform: uppercase;
+        tr {
+            page-break-inside: avoid;
         }
     </style>
-
 </head>
 
 <body>
-    <h1 style="text-align: center">
-        <span class="badge bg-primary">LIST PENDERITA AFP</span>
+    <table>
+        <tr>
+            <td colspan="18" align="center"><strong>LIST PENDERITA AFP</strong></td>
+        </tr>
+        <tr>
+            <td colspan="7" align="left">KOTA : MAKASSAR</td>
+            <td colspan="6" align="center">Bulan : {{ $bulan }}</td>
+            <td colspan="5" align="right">Tahun : {{ $tahun }}</td>
+        </tr>
 
-    </h1>
+        <tr>
+            <th rowspan="2">Nomor EPID</th>
+            <th rowspan="2">Nama</th>
+            <th rowspan="2">Kota</th>
+            <th rowspan="2">Umur (Tahun)</th>
+            <th rowspan="2">Lumpuh</th>
+            <th rowspan="2">Laporan diterima</th>
+            <th rowspan="2">Pelacakan</th>
+            <th colspan="2">Ambil Spesimen</th>
+            <th rowspan="2">Kirim Spesimen</th>
+            <th rowspan="2">Diterima Lab.</th>
+            <th rowspan="2">Kondisi Spesimen</th>
+            <th colspan="2">Kunjungan Ulang</th>
+            <th rowspan="2">Tanggal terima hasil Lab.</th>
+            <th colspan="2">Hasil Laboratorium</th>
+            <th rowspan="2">Spesimen Adekuat</th>
+        </tr>
+        <tr>
+            <th>I</th>
+            <th>II</th>
+            <th>Tanggal Kunjungan</th>
+            <th>Paralisis residual</th>
+            <th>Virus Polio</th>
+            <th>Entero Virus</th>
+        </tr>
 
-    <div class="header" style="align-content: left">
-        <table style="width: 100%; margin-left: 0; border: none; border-radius: 10px; overflow: hidden;">
-            <tbody style="border: none;">
-                <tr style="border: none;">
-                    <th style="text-align: left; border: none;width: 100%;">Dinas Kesehatan Kota Makassar</th>
-
-
-                </tr>
-                <tr style="border: none;">
-                    <th style="text-align: left; border: none;width: 100%;">Bulan/Tahun : MARET/2024</th>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <table class="table table-bordered">
-        <thead>
+        @for ($i = 1; $i <= 10; $i++)
             <tr>
-                <th rowspan="3">Nomor EPID</th>
-                <th rowspan="3">Nama</th>
-                <th rowspan="3">Kota</th>
-                <th rowspan="3">Umur (Tahun)</th>
-                <th colspan="7">Tanggal</th>
-                <th rowspan="3">Kondisi Spesimen</th>
-                <th colspan="2">Kunjungan Ulang</th>
-                <th rowspan="3">Tanggal terima hasil Lab.</th>
-                <th colspan="2">Hasil Laboratorium</th>
-                <th rowspan="3">Spesimen Adekuat</th>
+                <td>{{ $i }}</td>
+                @for ($j = 1; $j <= 17; $j++)
+                    <td></td>
+                @endfor
             </tr>
-            <tr>
-                <th rowspan="2">Lumpuh</th>
-                <th rowspan="2">Laporan diterima</th>
-                <th rowspan="2">Pelacakan</th>
-                <th colspan="2">Ambil Spesimen</th>
-                <th rowspan="2">Kirim Spesimen</th>
-                <th rowspan="2">Diterima Lab.</th>
-                <th rowspan="2">Tanggal Kunjungan</th>
-                <th rowspan="2">Paralisis residual</th>
-                <th rowspan="2">Virus Polio</th>
-                <th rowspan="2">Entero Virus</th>
-            </tr>
-            <tr>
-                <th>I</th>
-                <th>II</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>EPID-001</td>
-                <td>Ahmad</td>
-                <td>Jakarta</td>
-                <td>10</td>
-                <td>2024-12-10</td>
-                <td>2024-12-11</td>
-                <td>2024-12-12</td>
-                <td>2024-12-13</td>
-                <td>2024-12-14</td>
-                <td>2024-12-15</td>
-                <td>2024-12-16</td>
-                <td>Baik</td>
-                <td>2024-12-18</td>
-                <td>No</td>
-                <td>2024-12-19</td>
-                <td>Negative</td>
-                <td>Negative</td>
-                <td>Ya</td>
-            </tr>
-            <tr>
-                <td>EPID-002</td>
-                <td>Siti</td>
-                <td>Bandung</td>
-                <td>8</td>
-                <td>2024-12-09</td>
-                <td>2024-12-10</td>
-                <td>2024-12-11</td>
-                <td>2024-12-12</td>
-                <td>2024-12-13</td>
-                <td>2024-12-14</td>
-                <td>2024-12-15</td>
-                <td>Buruk</td>
-                <td>2024-12-17</td>
-                <td>Yes</td>
-                <td>2024-12-18</td>
-                <td>Positive</td>
-                <td>Negative</td>
-                <td>Tidak</td>
-            </tr>
-            <tr>
-                <td>EPID-003</td>
-                <td>Budi</td>
-                <td>Surabaya</td>
-                <td>12</td>
-                <td>2024-12-08</td>
-                <td>2024-12-09</td>
-                <td>2024-12-10</td>
-                <td>2024-12-11</td>
-                <td>2024-12-12</td>
-                <td>2024-12-13</td>
-                <td>2024-12-14</td>
-                <td>Baik</td>
-                <td>2024-12-16</td>
-                <td>No</td>
-                <td>2024-12-17</td>
-                <td>Negative</td>
-                <td>Negative</td>
-                <td>Ya</td>
-            </tr>
-        </tbody>
+        @endfor
     </table>
-
-    <div style="margin-top: 30px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px;">
-            <!-- Bagian Kiri -->
-            <div style="text-align: left; width: 40%;">
-                <p>Mengetahui,</p>
-                <p>Kepala UPT Puskesmas Tamangapa</p>
-                <br><br><br>
-                <p><strong>(___________________)</strong></p>
-            </div>
-
-            <!-- Bagian Kanan -->
-            <div style="text-align: left; width: 40%; padding-left: 50%;">
-                <p>Makassar, <span id="currentDate">21 Desember 2024</span></p>
-                <p>Mengetahui,</p>
-                <p>Pengelola</p>
-                <br><br><br>
-                <p><strong>(___________________)</strong></p>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Bootstrap JS (including Popper.js) -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>
