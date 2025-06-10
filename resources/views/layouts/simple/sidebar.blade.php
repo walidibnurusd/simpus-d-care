@@ -111,6 +111,7 @@
                                 <li><a href="{{ route('reference.poli') }}">Poli</a></li>
                                 <li><a href="{{ route('reference.diagnosis') }}">Diagnosis</a></li>
                                 <li><a href="{{ route('reference.obat') }}">Obat</a></li>
+                                <li><a href="{{ route('reference.tindakan') }}">Tindakan</a></li>
                             </ul>
                         </li>
                     @endif
