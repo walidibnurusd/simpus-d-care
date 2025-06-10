@@ -30,6 +30,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+        <div class="row mb-3">
+            <div class="col-md-12 d-flex justify-content-start">
+                <button type="button" class="btn btn-primary" id="sendToSatuSehatButton">
+                    Kirim ke Satu Sehat
+                </button>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-12 mb-4">
@@ -139,8 +146,6 @@
                                 </thead>
                                 <tbody></tbody>
                             </table>
-
-
                         </div>
                     </div>
                 </div>
@@ -165,7 +170,8 @@
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="poli_report" id="printPoli" value="poli-kia">
+                        <input class="form-check-input" type="radio" name="poli_report" id="printPoli"
+                            value="poli-kia">
                         <label class="form-check-label" for="printPoli">
                             Poli KIA
                         </label>
@@ -180,12 +186,57 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="sendModal" tabindex="-1" aria-labelledby="sendModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sendModalLabel">Konfirmasi Kirim ke Satu Sehat</h5>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin mengirim data yang dipilih ke Satu Sehat?
+                    <div id="loadingIndicator" style="display:none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Memproses pengiriman...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="closeSendModalButton">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="confirmSend">Kirim</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <script>
+        var sendModal = new bootstrap.Modal(document.getElementById('sendModal'));
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('sendToSatuSehatButton').addEventListener('click', function() {
+                var selectedActions = [];
+                document.querySelectorAll('#actionTable tbody input.actionCheckbox:checked').forEach(
+                    function(checkbox) {
+                        selectedActions.push(checkbox.value); // Menyimpan ID baris yang dipilih
+                    });
+
+                if (selectedActions.length > 0) {
+                    // Menampilkan modal kirim
+
+                    sendModal.show();
+                    document.getElementById('closeSendModalButton').addEventListener('click', function() {
+                        sendModal.hide(); // Menyembunyikan modal setelah tombol diklik
+                    });
+                } else {
+                    alert('Pilih setidaknya satu tindakan');
+                }
+            });
+        });
+
         $(document).ready(function() {
 
             var printModal = new bootstrap.Modal(document.getElementById('printModal'));
@@ -209,6 +260,95 @@
                 $('#printForm').submit();
                 var myModal = new bootstrap.Modal(document.getElementById('printModal'));
                 myModal.hide();
+            });
+            $('#checkAll').on('change', function() {
+                var isChecked = $(this).prop('checked');
+                $('.actionCheckbox').prop('checked', isChecked);
+            });
+
+
+            // Send selected actions to Satu Sehat
+            $('#sendToSatuSehatButton').on('click', function() {
+                const selectedActions = [];
+                $('#actionTable tbody input.actionCheckbox:checked').each(function() {
+                    selectedActions.push($(this).val());
+                });
+
+
+                if (selectedActions.length > 0) {
+                    $('#sendModal').modal('show');
+                } else {
+                    Swal.fire('Peringatan', 'Pilih setidaknya satu tindakan.', 'warning');
+                }
+            });
+
+            $('#confirmSend').on('click', function() {
+                const selectedActions = [];
+                $('#actionTable tbody input.actionCheckbox:checked').each(function() {
+                    selectedActions.push($(this).val());
+                });
+
+                if (selectedActions.length > 0) {
+                    $('#loadingIndicator').show();
+                    $('#confirmSend').prop('disabled', true);
+                    $('#closeSendModalButton').prop('disabled', true);
+                    $.ajax({
+                        url: "{{ route('sendToSatuSehat') }}",
+                        method: 'POST',
+                        data: {
+                            actions: selectedActions,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                if (response.failed.length > 0) {
+                                    $('#loadingIndicator').hide();
+
+                                    // Aktifkan tombol Kirim dan Tutup Modal kembali
+                                    $('#confirmSend').prop('disabled', false);
+                                    $('#closeSendModalButton').prop('disabled', false);
+                                    // Jika ada yang gagal dikirim, tampilkan detailnya
+                                    let failedList = response.failed.map(f =>
+                                        `ID ${f.action_id}: ${f.reason}`).join('<br>');
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Sebagian Gagal Dikirim',
+                                        html: `<strong>${response.sent.length} berhasil</strong><br><strong>${response.failed.length} gagal</strong><br><br>${failedList}`
+                                    });
+                                } else {
+                                    $('#loadingIndicator').hide();
+                                    $('#confirmSend').prop('disabled', false);
+                                    $('#closeSendModalButton').prop('disabled', false);
+                                    // Semua sukses
+                                    Swal.fire('Berhasil',
+                                        `${response.sent.length} data berhasil dikirim ke Satu Sehat.`,
+                                        'success');
+                                }
+                            } else {
+                                $('#loadingIndicator').hide();
+                                $('#confirmSend').prop('disabled', false);
+                                $('#closeSendModalButton').prop('disabled', false);
+                                Swal.fire('Gagal',
+                                    'Server mengembalikan error saat memproses permintaan.',
+                                    'error');
+                            }
+                            $('#sendModal').modal('hide');
+                            $('#confirmSend').prop('disabled', false);
+                            $('#closeSendModalButton').prop('disabled', false);
+
+                        },
+                        error: function(xhr, status, error) {
+                            $('#loadingIndicator').hide();
+
+                            // Aktifkan tombol Kirim dan Tutup Modal kembali
+                            $('#confirmSend').prop('disabled', false);
+                            $('#closeSendModalButton').prop('disabled', false);
+                            console.error(xhr.responseText);
+                            Swal.fire('Gagal', 'Kesalahan server atau jaringan.', 'error');
+                            $('#sendModal').modal('hide');
+                        }
+                    });
+                }
             });
 
         });
