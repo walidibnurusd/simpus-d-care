@@ -110,6 +110,7 @@
                                 <li><a href="{{ route('reference.doctor') }}">Dokter</a></li>
                                 <li><a href="{{ route('reference.poli') }}">Poli</a></li>
                                 <li><a href="{{ route('reference.diagnosis') }}">Diagnosis</a></li>
+                                <li><a href="{{ route('reference.obat') }}">Obat</a></li>
                             </ul>
                         </li>
                     @endif
