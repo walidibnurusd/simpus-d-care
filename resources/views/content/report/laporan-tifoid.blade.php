@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Harian Tifoid</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom styles -->
     <style>
         body {
@@ -124,8 +121,8 @@
             <tr>
                 <th>Bulan</th>
                 <th>Tanggal</th>
+                <th></th>
                 <th>Bulan/Tahun</th>
-                <th>Usia</th>
                 <th>Desa/Kelurahan</th>
                 <th>Alamat Lengkap</th>
                 <th>Tanda/Gejala Klinis</th>
@@ -159,7 +156,7 @@
                         $age = $ageInYears;
                         $ageUnit = 'Tahun';
                     }
-                    $genderId = $data->gender;
+                    $genderId = $data->patient->gender;
                     if ($genderId == 1) {
                         $gender = 'P';
                     } else {
@@ -182,7 +179,7 @@
                     </td>
                     <td>{{ $gender }}
                     </td>
-                    <td>{{ $data->patient->villages ? ucwords(strtolower($data->patient->villages->name)) : 'Tidak Diketahui' }}
+                    <td>{{ $data->patient->indonesia_village ? ucwords(strtolower($data->patient->indonesia_village)) : 'Tidak Diketahui' }}
                     </td>
                     <td>{{ ucwords(strtolower($data->patient->address)) }}</td>
                     <td>Positif</td>
@@ -191,10 +188,6 @@
             @endforeach
         </tbody>
     </table>
-
-    <!-- Bootstrap JS (including Popper.js) -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>
