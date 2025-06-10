@@ -166,6 +166,16 @@ Route::middleware('auth')->group(function () {
                 Route::put('/{id}', [ReferenceController::class, 'updateDiagnosis']);
                 Route::delete('/{id}', [ReferenceController::class, 'destroyDiagnosis']);
             }); 
+
+        Route::prefix('obat')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexObat'])->name('reference.obat');
+                Route::get('/data', [ReferenceController::class, 'indexDataObat'])->name('reference.obat.data');
+
+                Route::post('/', [ReferenceController::class, 'storeObat'])->name('reference.obat.store');
+                Route::put('/{id}', [ReferenceController::class, 'updateObat']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyObat']);
+            }); 
     });
 
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
