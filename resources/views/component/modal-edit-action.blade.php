@@ -1,8 +1,12 @@
 <!-- Modal Add Action -->
 @php
-    $diagnosa = App\Models\Diagnosis::all();
-    $poli = App\Models\Poli::all();
-    // dd($diagnosa);
+	if (!isset($poli)) {
+		$poli = App\Models\Poli::all();
+	}
+
+	if (!isset($diagnosa)) {
+		$diagnosa = App\Models\Diagnosis::all();
+	}
 @endphp
 <style>
     .form-check-input-edit {

@@ -71,7 +71,7 @@
                 </div>
 
 
-                @include('component.modal-add-action')
+                @include('kajian-awal.inc.modal-add')
 
                 <div class="card mb-4">
                     <div class="card-header pb-0">
@@ -133,15 +133,21 @@
             </div>
         </div>
 
-
     </div>
+
+	<div class="modal fade" id="editKajianAwalModal" style="z-index: 1050;" tabindex="-10" aria-labelledby="editKajianAwalModalLabel">
+	  <div class="modal-dialog modal-fullscreen">
+		<div class="modal-content" id="editModalContent">
+		</div>
+	  </div>
+	</div>
 
 @endsection
 
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 
-    @if ($routeName == 'action.index')
+    @if ($routeName == 'kajian-awal.umum')
         <script>
             $(document).ready(function() {
                 // Initialize DataTable with pagination
@@ -149,7 +155,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('action.index.data') }}',
+						url: '{{ route('kajian-awal.umum') }}',
                         data: function(d) {
                             // Send filter data along with the request
                             d.start_date = $('#start_date').val();
@@ -254,7 +260,7 @@
                 });
             });
         </script>
-    @elseif ($routeName == 'action.index.gigi')
+    @elseif ($routeName == 'kajian-awal.gigi')
         <script>
             $(document).ready(function() {
                 // Initialize DataTable with pagination
@@ -262,9 +268,8 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('action.index.gigi') }}',
+						url: '{{ route('kajian-awal.gigi') }}',
                         data: function(d) {
-                            // Send filter data along with the request
                             d.start_date = $('#start_date').val();
                             d.end_date = $('#end_date').val();
                         }
@@ -367,7 +372,7 @@
 
             });
         </script>
-    @elseif ($routeName == 'action.index.ugd')
+    @elseif ($routeName == 'kajian-awal.kia')
         <script>
             $(document).ready(function() {
                 // Initialize DataTable with pagination
@@ -375,7 +380,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('action.index.ugd') }}',
+                        url: '{{ route('kajian-awal.kia') }}',
                         data: function(d) {
                             // Send filter data along with the request
                             d.start_date = $('#start_date').val();
@@ -410,122 +415,13 @@
                             data: 'keluhan',
                             name: 'keluhan'
                         },
-                        {
-                            data: 'diagnosa',
-                            name: 'diagnosa'
-                        },
-                        {
-                            data: 'tindakan',
-                            name: 'tindakan'
-                        },
+                        { data: 'diagnosa', name: 'diagnosa', visible:false },
+                        { data: 'tindakan', name: 'tindakan', visible:false },
                         {
                             data: 'hospital_referral.name',
-                            name: 'hospitalReferral.name'
+                            name: 'hospitalReferral.name',
+							visible:false
                         },
-                        {
-                            data: 'kunjungan',
-                            render: function(data, type, row) {
-
-                                let kunjungan = data || row.patient.kunjungan;
-
-
-                                if (kunjungan === 1 || kunjungan === 'baru') {
-                                    return 'Baru';
-                                } else if (kunjungan === 0 || kunjungan === 'lama') {
-                                    return 'Lama';
-                                } else {
-                                    return kunjungan;
-                                }
-                            }
-                        },
-                        {
-                            data: 'faskes',
-                            render: function(data, type, row) {
-
-                                let faskes = data || row.patient.wilayah_faskes;
-
-
-                                if (faskes == 1 || faskes == 'ya') {
-                                    return 'Ya';
-                                } else if (faskes == 0 || faskes == 'tidak') {
-                                    return 'Luar Wilayah';
-                                } else {
-                                    return faskes;
-                                }
-                            }
-                        },
-
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        }
-                    ],
-                    pageLength: 10, // Set default page size
-                    lengthMenu: [10, 25, 50, 100], // Set available page sizes
-                    drawCallback: function(settings) {
-                        // You can adjust the pagination here if needed, for example:
-                        var totalPages = settings.json.recordsTotal / settings._iDisplayLength;
-                        console.log('Total Pages:', totalPages);
-                    }
-                });
-                $('#filterButton').on('click', function() {
-                    // Redraw the DataTable with updated filter data
-                    table.ajax.reload();
-                });
-
-            });
-        </script>
-    @elseif ($routeName == 'action.kia.index')
-        <script>
-            $(document).ready(function() {
-                // Initialize DataTable with pagination
-                var table = $('#actions-table').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '{{ route('action.kia.index') }}',
-                        data: function(d) {
-                            // Send filter data along with the request
-                            d.start_date = $('#start_date').val();
-                            d.end_date = $('#end_date').val();
-                        }
-                    },
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex'
-                        },
-                        {
-                            data: 'tanggal',
-                            name: 'tanggal'
-                        },
-                        {
-                            data: 'patient_nik',
-                            name: 'patient_nik'
-                        },
-                        {
-                            data: 'patient_name',
-                            name: 'patient_name'
-                        },
-                        {
-                            data: 'patient_age',
-                            name: 'patient_age'
-                        },
-                        {
-                            data: 'kartu',
-                            name: 'kartu'
-                        },
-                        {
-                            data: 'keluhan',
-                            name: 'keluhan'
-                        },
-                        // { data: 'diagnosa', name: 'diagnosa' },
-                        // { data: 'tindakan', name: 'tindakan' },
-                        //     {
-                        //             data: 'hospital_referral.name',
-                        //             name: 'hospitalReferral.name'
-                        //         },
                         {
                             data: 'kunjungan',
                             name: 'kunjungan'
@@ -569,7 +465,7 @@
 
             });
         </script>
-    @elseif ($routeName == 'action.kb.index')
+    @elseif ($routeName == 'kajian-awal.kb')
         <script>
             $(document).ready(function() {
                 // Initialize DataTable with pagination
@@ -577,7 +473,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('action.kb.index') }}',
+						url: '{{ route('kajian-awal.kb') }}',
                         data: function(d) {
                             // Send filter data along with the request
                             d.start_date = $('#start_date').val();
@@ -612,12 +508,13 @@
                             data: 'keluhan',
                             name: 'keluhan'
                         },
-                        // { data: 'diagnosa', name: 'diagnosa' },
-                        // { data: 'tindakan', name: 'tindakan' },
-                        //     {
-                        //             data: 'hospital_referral.name',
-                        //             name: 'hospitalReferral.name'
-                        //         },
+                        { data: 'diagnosa', name: 'diagnosa', visible:false },
+                        { data: 'tindakan', name: 'tindakan', visible:false },
+                        {
+                            data: 'hospital_referral.name',
+                            name: 'hospitalReferral.name',
+							visible:false
+                        },
                         {
                             data: 'kunjungan',
                             render: function(data, type, row) {
@@ -735,4 +632,32 @@
             });
         });
     </script>
+
+	<script>
+	function loadEditModal(button) {
+	    const url = button.getAttribute('data-url');
+	    const routeName = button.getAttribute('data-route-name');
+	    const modalContent = $('#editModalContent');
+
+	    modalContent.html('<div class="p-4 text-center">Loading...</div>');
+
+	    modalContent.load(url + '?routeName=' + encodeURIComponent(routeName), function(response, status, xhr) {
+	        if (status === "error") {
+	            modalContent.html('<div class="text-danger p-4">Failed to load modal content.</div>');
+	            console.error('Error loading modal:', xhr.statusText);
+	        } else {
+	            $('#editKajianAwalModal').modal('show');
+	        }
+	    });
+	}
+
+	document.getElementById('editKajianAwalModal').addEventListener('hidden.bs.modal', function () {
+	    const backdrops = document.querySelectorAll('.modal-backdrop');
+
+	    if (document.querySelectorAll('.modal.show').length === 0) {
+	        document.body.classList.remove('modal-open');
+	        backdrops.forEach(b => b.remove());
+	    }
+	});
+	</script>
 @endsection
