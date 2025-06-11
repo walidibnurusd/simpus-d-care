@@ -1206,10 +1206,321 @@ class ReportController extends Controller
         return view('content.report.laporan-formulir10');
     }
 
-    public function reportFormulir11()
+    // public function reportFormulir11(Request $request)
+    // {
+    //     $bulan = $request->input('bulan', date('m'));
+    //     $tahun = $request->input('tahun', date('Y'));
+    //     $alergiValue = ['766', '778']; // Diagnosa alergi
+    //     $chikungunyaValue = ['619']; // Diagnosa chikungunya
+
+    //     // Ambil data alergi berdasarkan diagnosa
+    //     $alergi = Action::whereMonth('tanggal', $bulan)
+    //         ->whereYear('tanggal', $tahun)
+    //         ->get()
+    //         ->filter(function ($action) use ($alergiValue) {
+    //             return is_array($action->diagnosa) && !empty(array_intersect($alergiValue, $action->diagnosa));
+    //         });
+
+    //     // Pisahkan kasus baru dan lama untuk alergi
+    //     $kasusBaruAlergi = $alergi->where('kasus', 1); // Kasus baru untuk alergi
+    //     $kasusLamaAlergi = $alergi->where('kasus', 0); // Kasus lama untuk alergi
+
+    //     // Ambil data chikungunya berdasarkan diagnosa
+    //     $chikungunya = Action::whereMonth('tanggal', $bulan)
+    //         ->whereYear('tanggal', $tahun)
+    //         ->get()
+    //         ->filter(function ($action) use ($chikungunyaValue) {
+    //             return is_array($action->diagnosa) && !empty(array_intersect($chikungunyaValue, $action->diagnosa));
+    //         });
+
+    //     // Pisahkan kasus baru dan lama untuk chikungunya
+    //     $kasusBaruChikungunya = $chikungunya->where('kasus', 1); // Kasus baru untuk chikungunya
+    //     $kasusLamaChikungunya = $chikungunya->where('kasus', 0); // Kasus lama untuk chikungunya
+
+    //     // Fungsi untuk mengelompokkan data berdasarkan usia dan kasus (tanpa gender untuk kasus baru)
+    //     $groupByAgeKasus = function ($actions) {
+    //         return $actions
+    //             ->groupBy(function ($action) {
+    //                 // Hitung usia berdasarkan tanggal lahir pasien
+    //                 $dob = Carbon::parse($action->patient->dob);
+    //                 $age = Carbon::now()->diffInDays($dob); // Hitung usia dalam hari
+
+    //                 // Tentukan rentang usia berdasarkan jumlah hari
+    //                 if ($age <= 7) {
+    //                     return '0-7 hari';
+    //                 } elseif ($age <= 28) {
+    //                     return '8-28 hari';
+    //                 } elseif ($age <= 336) {
+    //                     return '1-11 bulan';
+    //                 } elseif ($age <= 1460) {
+    //                     return '1-4 thn';
+    //                 } elseif ($age <= 3285) {
+    //                     return '5-9 thn';
+    //                 } elseif ($age <= 5110) {
+    //                     return '10-14 thn';
+    //                 } elseif ($age <= 6935) {
+    //                     return '15-19 thn';
+    //                 } elseif ($age <= 16130) {
+    //                     return '20-44 thn';
+    //                 } elseif ($age <= 21590) {
+    //                     return '45-59 thn';
+    //                 } else {
+    //                     return '>59 thn';
+    //                 }
+    //             })
+    //             ->map(function ($actions) {
+    //                 return $actions->count(); // Menghitung total kasus dalam kelompok usia
+    //             });
+    //     };
+
+    //     // Mengelompokkan kasus baru berdasarkan usia
+    //     $kasusBaruGroupedAlergi = $groupByAgeKasus($kasusBaruAlergi);
+    //     $kasusBaruGroupedChikungunya = $groupByAgeKasus($kasusBaruChikungunya);
+
+    //     // Menghitung jumlah total seluruh kasus baru dan lama
+    //     $totalKasusBaruAlergi = $kasusBaruAlergi->count(); // Total kasus baru untuk alergi
+    //     $totalKasusLamaAlergi = $kasusLamaAlergi->count(); // Total kasus lama untuk alergi
+
+    //     $totalKasusBaruChikungunya = $kasusBaruChikungunya->count(); // Total kasus baru untuk chikungunya
+    //     $totalKasusLamaChikungunya = $kasusLamaChikungunya->count(); // Total kasus lama untuk chikungunya
+
+    //     // Menghitung jumlah total kasus baru per gender
+    //     $totalKasusBaruPerGenderAlergi = $kasusBaruAlergi->groupBy('patient.gender')->map->count();
+    //     $totalKasusBaruPerGenderChikungunya = $kasusBaruChikungunya->groupBy('patient.gender')->map->count();
+
+    //     // Menghitung jumlah total kasus lama per gender
+    //     $totalKasusLamaPerGenderAlergi = $kasusLamaAlergi->groupBy('patient.gender')->map->count();
+    //     $totalKasusLamaPerGenderChikungunya = $kasusLamaChikungunya->groupBy('patient.gender')->map->count();
+
+    //     // Load template Excel yang sudah ada
+    //     $templatePath = public_path('assets/report/report-11.xlsx');
+
+    //     if (!file_exists($templatePath)) {
+    //         abort(404, 'Template Excel tidak ditemukan.');
+    //     }
+
+    //     // Buka template Excel
+    //     $spreadsheet = IOFactory::load($templatePath);
+    //     $sheet = $spreadsheet->getActiveSheet();
+
+    //     // Tentukan kolom untuk rentang usia
+    //     $columns = [
+    //         '0-7 hari' => 'D', // Mulai dari D untuk 0-7 hari
+    //         '8-28 hari' => 'E',
+    //         '1-11 bulan' => 'F',
+    //         '1-4 thn' => 'G',
+    //         '5-9 thn' => 'H',
+    //         '10-14 thn' => 'I',
+    //         '15-19 thn' => 'J',
+    //         '20-44 thn' => 'K',
+    //         '45-59 thn' => 'L',
+    //         '>59 thn' => 'M',
+    //     ];
+
+    //     // Menuliskan data kasus baru per usia untuk alergi (mulai dari baris 13)
+    //     $rowAlergi = 13; // Baris dimulai dari 13 untuk data usia alergi
+    //     foreach ($kasusBaruGroupedAlergi as $ageRange => $totalKasusBaru) {
+    //         if (isset($columns[$ageRange])) {
+    //             $sheet->setCellValue($columns[$ageRange] . $rowAlergi, $totalKasusBaru); // Menulis jumlah kasus baru per usia untuk alergi
+    //         }
+    //     }
+
+    //     // Menuliskan data kasus baru per usia untuk chikungunya (mulai dari baris 14)
+    //     $rowChikungunya = 14; // Baris dimulai dari 14 untuk kasus chikungunya
+    //     foreach ($kasusBaruGroupedChikungunya as $ageRange => $totalKasusBaru) {
+    //         if (isset($columns[$ageRange])) {
+    //             $sheet->setCellValue($columns[$ageRange] . $rowChikungunya, $totalKasusBaru); // Menulis jumlah kasus baru per usia untuk chikungunya
+    //         }
+    //     }
+
+    //     // Menulis jumlah total kasus baru per gender di kolom N13 (laki-laki) dan O13 (perempuan) untuk alergi
+    //     $sheet->setCellValue('N13', $totalKasusBaruPerGenderAlergi['0'] ?? 0); // Laki-laki total kasus baru (Alergi)
+    //     $sheet->setCellValue('O13', $totalKasusBaruPerGenderAlergi['1'] ?? 0); // Perempuan total kasus baru (Alergi)
+
+    //     // Menulis jumlah total kasus baru per gender di kolom N14 (laki-laki) dan O14 (perempuan) untuk chikungunya
+    //     $sheet->setCellValue('N14', $totalKasusBaruPerGenderChikungunya['0'] ?? 0); // Laki-laki total kasus baru (Chikungunya)
+    //     $sheet->setCellValue('O14', $totalKasusBaruPerGenderChikungunya['1'] ?? 0); // Perempuan total kasus baru (Chikungunya)
+
+    //     // Menambahkan total keseluruhan kasus lama untuk alergi dan chikungunya
+    //     $sheet->setCellValue('P13', $totalKasusLamaAlergi); // Total kasus lama (Alergi)
+    //     $sheet->setCellValue('P14', $totalKasusLamaChikungunya); // Total kasus lama (Chikungunya)
+
+    //     $sheet->setCellValue('Q13', $totalKasusLamaPerGenderAlergi['0'] ?? 0); // Laki-laki total kasus lama (Alergi)
+    //     $sheet->setCellValue('R13', $totalKasusLamaPerGenderAlergi['1'] ?? 0); // Perempuan total kasus lama (Alergi)
+    //     $sheet->setCellValue('S13', $totalKasusLamaAlergi); // Total kasus lama (Alergi)
+    //     $sheet->setCellValue('Q14', $totalKasusLamaPerGenderChikungunya['0'] ?? 0); // Laki-laki total kasus lama (Chikungunya)
+    //     $sheet->setCellValue('R14', $totalKasusLamaPerGenderChikungunya['1'] ?? 0); // Perempuan total kasus lama (Chikungunya)
+    //     $sheet->setCellValue('S14', $totalKasusLamaChikungunya); // Total kasus lama (Chikungunya)
+
+    //     // Stream ke user (tanpa menyimpan di server)
+    //     $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+    //     return response()->streamDownload(function () use ($writer) {
+    //         $writer->save('php://output');
+    //     }, 'laporan-formulir11.xlsx');
+    // }
+
+    public function reportFormulir11(Request $request)
     {
-        return view('content.report.laporan-formulir11');
+        // Input bulan dan tahun
+        $bulan = $request->input('bulan', date('m'));
+        $tahun = $request->input('tahun', date('Y'));
+        $alergiValue = ['766', '778']; // Diagnosa alergi
+        $chikungunyaValue = ['619']; // Diagnosa chikungunya
+
+        // Ambil data berdasarkan diagnosa untuk alergi dan chikungunya
+        $alergi = $this->getGroupedData($alergiValue, $bulan, $tahun);
+        $chikungunya = $this->getGroupedData($chikungunyaValue, $bulan, $tahun);
+
+        // Kelompokkan berdasarkan usia
+        $kasusBaruGroupedAlergi = $this->groupByAge($alergi['kasusBaru']);
+        $kasusBaruGroupedChikungunya = $this->groupByAge($chikungunya['kasusBaru']);
+
+        // Menghitung total kasus baru dan lama
+        $totalKasusBaruAlergi = $alergi['kasusBaru']->count();
+        $totalKasusLamaAlergi = $alergi['kasusLama']->count();
+        $totalKasusBaruChikungunya = $chikungunya['kasusBaru']->count();
+        $totalKasusLamaChikungunya = $chikungunya['kasusLama']->count();
+
+        // Menghitung jumlah kasus baru per gender
+        $totalKasusBaruPerGenderAlergi = $this->getTotalByGender($alergi['kasusBaru']);
+        $totalKasusBaruPerGenderChikungunya = $this->getTotalByGender($chikungunya['kasusBaru']);
+
+        // Menghitung jumlah kasus lama per gender
+        $totalKasusLamaPerGenderAlergi = $this->getTotalByGender($alergi['kasusLama']);
+        $totalKasusLamaPerGenderChikungunya = $this->getTotalByGender($chikungunya['kasusLama']);
+
+        // Load template Excel yang sudah ada
+        $templatePath = public_path('assets/report/report-11.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        // Buka template Excel
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Tentukan kolom untuk rentang usia
+        $columns = [
+            '0-7 hari' => 'D',
+            '8-28 hari' => 'E',
+            '1-11 bulan' => 'F',
+            '1-4 thn' => 'G',
+            '5-9 thn' => 'H',
+            '10-14 thn' => 'I',
+            '15-19 thn' => 'J',
+            '20-44 thn' => 'K',
+            '45-59 thn' => 'L',
+            '>59 thn' => 'M',
+        ];
+
+        // Menulis data kasus baru per usia untuk alergi
+        $this->writeAgeDataToExcel($sheet, 13, $kasusBaruGroupedAlergi, $columns);
+
+        // Menulis data kasus baru per usia untuk chikungunya
+        $this->writeAgeDataToExcel($sheet, 14, $kasusBaruGroupedChikungunya, $columns);
+
+        // Menulis data total kasus baru dan lama per gender
+        $this->writeGenderDataToExcel($sheet, 13, $totalKasusBaruPerGenderAlergi, $totalKasusLamaPerGenderAlergi, $totalKasusBaruAlergi, $totalKasusLamaAlergi);
+        $this->writeGenderDataToExcel($sheet, 14, $totalKasusBaruPerGenderChikungunya, $totalKasusLamaPerGenderChikungunya, $totalKasusBaruChikungunya, $totalKasusLamaChikungunya);
+
+        // Stream ke user (tanpa menyimpan di server)
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-formulir11.xlsx');
     }
+
+    // Fungsi untuk mengambil data berdasarkan diagnosa
+    private function getGroupedData($diagnosaValue, $bulan, $tahun)
+    {
+        $data = Action::whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->get()
+            ->filter(function ($action) use ($diagnosaValue) {
+                return is_array($action->diagnosa) && !empty(array_intersect($diagnosaValue, $action->diagnosa));
+            });
+
+        return [
+            'kasusBaru' => $data->where('kasus', 1),
+            'kasusLama' => $data->where('kasus', 0),
+        ];
+    }
+
+    // Fungsi untuk mengelompokkan data berdasarkan usia
+    private function groupByAge($actions)
+    {
+        return $actions
+            ->groupBy(function ($action) {
+                $dob = Carbon::parse($action->patient->dob);
+                $age = Carbon::now()->diffInDays($dob); // Hitung usia dalam hari
+
+                if ($age <= 7) {
+                    return '0-7 hari';
+                }
+                if ($age <= 28) {
+                    return '8-28 hari';
+                }
+                if ($age <= 336) {
+                    return '1-11 bulan';
+                }
+                if ($age <= 1460) {
+                    return '1-4 thn';
+                }
+                if ($age <= 3285) {
+                    return '5-9 thn';
+                }
+                if ($age <= 5110) {
+                    return '10-14 thn';
+                }
+                if ($age <= 6935) {
+                    return '15-19 thn';
+                }
+                if ($age <= 16130) {
+                    return '20-44 thn';
+                }
+                if ($age <= 21590) {
+                    return '45-59 thn';
+                }
+                return '>59 thn';
+            })
+            ->map->count();
+    }
+
+    // Fungsi untuk menghitung jumlah kasus berdasarkan gender
+    private function getTotalByGender($actions)
+    {
+        // Pastikan pengelompokan gender bekerja dengan benar
+        return $actions
+            ->groupBy(function ($action) {
+                return $action->patient->gender; // Kelompokkan berdasarkan gender (0: laki-laki, 1: perempuan)
+            })
+            ->map(function ($group) {
+                return $group->count(); // Menghitung jumlah pasien berdasarkan gender
+            });
+    }
+
+    // Fungsi untuk menulis data kasus per usia ke Excel
+    private function writeAgeDataToExcel($sheet, $row, $groupedData, $columns)
+    {
+        foreach ($groupedData as $ageRange => $totalCases) {
+            if (isset($columns[$ageRange])) {
+                $sheet->setCellValue($columns[$ageRange] . $row, $totalCases);
+            }
+        }
+    }
+
+    // Fungsi untuk menulis data kasus per gender ke Excel
+    private function writeGenderDataToExcel($sheet, $row, $totalKasusBaruPerGender, $totalKasusLamaPerGender, $totalKasusBaru, $totalKasusLama)
+    {
+        $sheet->setCellValue('N' . $row, $totalKasusBaruPerGender['2'] ?? 0); // Laki-laki total kasus baru
+        $sheet->setCellValue('O' . $row, $totalKasusBaruPerGender['1'] ?? 0); // Perempuan total kasus baru
+        $sheet->setCellValue('Q' . $row, $totalKasusLamaPerGender['2'] ?? 0); // Laki-laki total kasus lama
+        $sheet->setCellValue('R' . $row, $totalKasusLamaPerGender['1'] ?? 0); // Perempuan total kasus lama
+        $sheet->setCellValue('P' . $row, $totalKasusBaru); // Total kasus baru
+        $sheet->setCellValue('S' . $row, $totalKasusLama); // Total kasus lama
+    }
+
     public function reportFormulir12()
     {
         return view('content.report.laporan-formulir12');
