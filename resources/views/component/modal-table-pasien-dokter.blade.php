@@ -614,6 +614,8 @@
                     $('#addPatientForm').find('select').each(function() {
                         $(this).val(null).trigger('change');
                     });
+                    $('#code_obat').val(null).trigger('change');
+                    document.getElementById("medicationsData").value = JSON.stringify([]);
                     $('#diagnosa').empty().trigger('change');
 
                     const select2Fields = [
