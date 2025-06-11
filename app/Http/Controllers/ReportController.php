@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ReportController extends Controller
 {
@@ -27,84 +28,69 @@ class ReportController extends Controller
     }
     public function printTifoid(Request $request)
     {
-        // Get the selected month and year from the request
-        $month = $request->input('bulan');
-        $year = $request->input('tahun');
-    
-        // Build the query
-        $query = Action::with('patient.villages')
-            ->whereIn('diagnosa', [265, 39])
-            ->orWhere(function ($query) {
-                $query->whereJsonContains('diagnosa', '265')->orWhereJsonContains('diagnosa', '39');
+        $bulan = $request->input('bulan', date('m'));
+        $tahun = $request->input('tahun', date('Y'));
+        $diagnosaValue = '600';
+
+        $tifoid = Action::whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->get()
+            ->filter(function ($action) use ($diagnosaValue) {
+                return is_array($action->diagnosa) && in_array($diagnosaValue, $action->diagnosa);
             });
-    
-        // Add filters for month and year if provided
-        if ($month && $year) {
-            $query->whereYear('created_at', $year)
-                  ->whereMonth('created_at', $month);
-        }
-    
-        // Execute the query
-        $tifoid = $query->get();
-        $tifoid->load('patient.villages');
-    
-        return view('content.report.print-tifoid', compact('tifoid'));
+
+        return view('content.report.laporan-tifoid', compact('tifoid'));
     }
-    
+
     public function printDiare()
     {
         return view('content.report.print-diare');
     }
-    public function reportDiare()
+    public function reportDiare(Request $request)
     {
-        $diare = Action::with(['patient.villages', 'hospitalReferral'])
-            ->whereIn('diagnosa', [38, 77, 578, 596, 597])
-            ->orWhere(function ($query) {
-                $query->whereJsonContains('diagnosa', '578')->orWhereJsonContains('diagnosa', '596')->orWhereJsonContains('diagnosa', '597')->orWhereJsonContains('diagnosa', '38')->orWhereJsonContains('diagnosa', '77');
+        // Get the month and year from the request
+        $bulan = $request->input('bulan', date('m'));
+        $tahun = $request->input('tahun', date('Y'));
+
+        $diagnosaValue = '602';
+
+        $diare = Action::with(['patient', 'hospitalReferral'])
+            ->where(function ($query) use ($diagnosaValue) {
+                $query->whereIn('diagnosa', [$diagnosaValue])->orWhereJsonContains('diagnosa', $diagnosaValue);
             })
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
             ->get();
 
+        // Diagnosis and dehydration mappings
         $diagnosaMap = [
-            38 => 'Diare & gastroenteritis oleh penyebab infeksi tertentu (coalitis infeksi)',
-            77 => 'Diare disentri (Diamhoea dysentarie)',
-            578 => 'Diare dengan dehidrasi berat',
-            596 => 'Diare Tanpa Dehidrasi',
-            597 => 'Diare dengan dehidrasi ringan-sedang',
+            602 => 'Diare & gastroenteritis oleh penyebab infeksi tertentu (coalitis infeksi)',
         ];
 
         $dehidrasiMap = [
-            38 => 'Tanpa Dehidrasi',
-            77 => 'Tanpa Dehidrasi',
-            578 => 'Berat',
-            596 => 'Tanpa Dehidrasi',
-            597 => 'Ringan-Sedang',
+            602 => 'Tanpa Dehidrasi',
         ];
 
-        foreach ($diare as $data) {
-            if (is_array($data->diagnosa)) {
-                $data->diagnosa_names = array_map(function ($id) use ($diagnosaMap) {
-                    return $diagnosaMap[$id] ?? 'Tidak Diketahui';
-                }, $data->diagnosa);
-
-                $dehidrasiList = array_map(function ($id) use ($dehidrasiMap) {
-                    return $dehidrasiMap[$id] ?? 'Tidak Diketahui';
-                }, $data->diagnosa);
-                $data->dehidrasi = implode(', ', array_unique($dehidrasiList));
+        $diare = $diare->map(function ($data) use ($diagnosaMap, $dehidrasiMap) {
+            if (is_array($data->diagnosa) && in_array(602, $data->diagnosa)) {
+                $data->diagnosa_names = [$diagnosaMap[602]];
+                $data->dehidrasi = $dehidrasiMap[602];
             } else {
-                $data->diagnosa_names = [$diagnosaMap[$data->diagnosa] ?? 'Tidak Diketahui'];
-                $data->dehidrasi = $dehidrasiMap[$data->diagnosa] ?? 'Tidak Diketahui';
+                $data->diagnosa_names = ['Tidak Diketahui'];
+                $data->dehidrasi = 'Tidak Diketahui';
             }
-        }
 
-        return view('content.report.report-diare', compact('diare'));
+            return $data;
+        });
+        return view('content.report.report-diare', compact('diare', 'bulan', 'tahun'));
     }
 
     public function reportSTP(Request $request)
     {
         // Ambil bulan dan tahun dari parameter request (dengan default bulan dan tahun saat ini)
-        $month = $request->input('month', Carbon::now()->month);  // default ke bulan saat ini
-        $year = $request->input('year', Carbon::now()->year);    // default ke tahun saat ini
-    
+        $month = $request->input('month', Carbon::now()->month); // default ke bulan saat ini
+        $year = $request->input('year', Carbon::now()->year); // default ke tahun saat ini
+
         $diagnosaNames = [
             37 => 'Kolera',
             38 => 'Diare',
@@ -138,12 +124,12 @@ class ReportController extends Controller
             110 => 'Filariasis',
             142 => 'Influensa',
         ];
-    
+
         // Ambil data dengan diagnosa yang valid berdasarkan diagnosaNames dan filter berdasarkan bulan dan tahun
         $stp = Action::with(['patient'])
             ->whereIn('diagnosa', array_keys($diagnosaNames))
-            ->whereYear('created_at', $year)  // Filter berdasarkan tahun
-            ->whereMonth('created_at', $month)  // Filter berdasarkan bulan
+            ->whereYear('created_at', $year) // Filter berdasarkan tahun
+            ->whereMonth('created_at', $month) // Filter berdasarkan bulan
             ->orWhere(function ($query) use ($diagnosaNames, $year, $month) {
                 foreach (array_keys($diagnosaNames) as $id) {
                     $query->orWhereJsonContains('diagnosa', (string) $id);
@@ -164,12 +150,12 @@ class ReportController extends Controller
                 }
                 return $action;
             });
-    
+
         // Kelompokkan data berdasarkan rentang usia
         $groupedData = $stp->groupBy(function ($action) {
             $ageInDays = $action->ageInDays;
             $age = $action->age;
-    
+
             if ($ageInDays <= 7) {
                 return '0-7 hr';
             } elseif ($ageInDays <= 28) {
@@ -196,7 +182,7 @@ class ReportController extends Controller
                 return '70+ tahun';
             }
         });
-    
+
         // Siapkan laporan awal dengan semua nilai nol
         $ageGroups = ['0-7 hr', '8-28 hr', '0-1 tahun', '1-4 tahun', '5-9 tahun', '10-14 tahun', '15-19 tahun', '20-44 tahun', '45-54 tahun', '55-59 tahun', '60-69 tahun', '70+ tahun'];
         $report = [];
@@ -209,7 +195,7 @@ class ReportController extends Controller
                 ];
             }
         }
-    
+
         // Isi laporan berdasarkan data yang dikelompokkan
         foreach ($groupedData as $ageGroup => $actions) {
             foreach ($actions->groupBy('diagnosa') as $diagnosaId => $cases) {
@@ -223,34 +209,72 @@ class ReportController extends Controller
                         return $case->patient->gender === 1;
                     })
                     ->count();
-    
+
                 $femaleCount = $cases
                     ->filter(function ($case) {
                         return $case->patient->gender === 2;
                     })
                     ->count();
-    
+
                 $report[$diagnosaName][$ageGroup]['total'] += $cases->count();
                 $report[$diagnosaName][$ageGroup]['male'] += $maleCount;
                 $report[$diagnosaName][$ageGroup]['female'] += $femaleCount;
             }
         }
-    
+
         // Kirim data ke tampilan dengan parameter bulan dan tahun untuk digunakan di filter
         return view('content.report.laporan-stp', compact('report', 'ageGroups', 'month', 'year'));
     }
-    
 
-    public function reportAFP()
+    public function reportAFP(Request $request)
     {
-        return view('content.report.laporan-afp');
+        $bulanMap = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+
+        // misalnya request input-nya seperti ini:
+        $angkaBulan = (int) $request->input('bulan');
+        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+        $tahun = $request->tahun;
+
+        $templatePath = public_path('assets/report/report-afp.xlsx');
+
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        // Buka template
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('M3', 'Bulan : ' . $bulan);
+        $sheet->setCellValue('Q3', 'Tahun : ' . $tahun);
+        $tanggal = Carbon::now()->translatedFormat('j F Y');
+        $sheet->setCellValue('O20', 'Makassar, ' . $tanggal);
+        // Stream ke user (tanpa menyimpan di server)
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-afp.xlsx');
     }
     public function reportDifteri()
     {
         return view('content.report.laporan-difteri');
     }
 
-    public function reportC1()
+    public function reportC1(Request $request)
     {
         function calculateAge($dob)
         {
@@ -280,102 +304,6 @@ class ReportController extends Controller
             }
         }
 
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        $sheet->mergeCells('A1:U1');
-        $sheet->setCellValue('A1', 'FORMAT : C-1');
-        $sheet
-            ->getStyle('A1')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(12);
-
-        $sheet->mergeCells('A2:U2');
-        $sheet->setCellValue('A2', 'LAPORAN KASUS CAMPAK');
-        $sheet
-            ->getStyle('A2')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
-
-        $sheet->mergeCells('A3:U3');
-        $sheet->setCellValue('A3', 'Bulan/Tahun : September / 2024');
-        $sheet
-            ->getStyle('A3')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A3')->getFont()->setSize(10);
-
-        // Informasi puskesmas
-        $sheet->setCellValue('A5', 'Puskesmas : Tamangapa');
-        $sheet->setCellValue('A6', 'Kecamatan : Manggala');
-        $sheet->setCellValue('A7', 'Propinsi : Sulawesi Selatan');
-
-        // Header tabel
-        $headers = [['No Epid Kasus/ KLB', 'Nama Anak', 'Nama Org Tua', 'Alamat Lengkap (Desa/RT/RW)', 'Umur/Sex', '', 'Vaksin campak sebelum sakit', '', 'Tgl Timbul', '', 'Tgl Diambil Spesimen', '', 'Hasil Spesimen', '', 'Diberi Vit. A (Y/T)', 'Keadaan Akhir (H/M)', 'Klasifikasi Final*', '', '', '', ''], ['', '', '', '', 'L', 'P', 'Brp Kali', 'Tidak/Tdk Tahu', 'Demam', 'Rash', 'Darah', 'Urin', 'Darah', 'Urin', '', '', 'Lab (+)', 'Epid', 'Klinis', 'Rubella Lab (+)', 'Bukan Camp/Rub']];
-        $sheet->fromArray($headers, null, 'A9');
-
-        $sheet->mergeCells('A9:A10');
-        $sheet->mergeCells('B9:B10');
-        $sheet->mergeCells('C9:C10');
-        $sheet->mergeCells('D9:D10');
-        $sheet->mergeCells('E9:F9');
-        $sheet->mergeCells('G9:H9');
-        $sheet->mergeCells('I9:J9');
-        $sheet->mergeCells('K9:L9');
-        $sheet->mergeCells('M9:N9');
-        $sheet->mergeCells('O9:O10');
-        $sheet->mergeCells('P9:P10');
-        $sheet->mergeCells('Q9:U9');
-
-        // Style header
-        $sheet->getStyle('A9:U10')->getFont()->setBold(true)->setSize(10);
-        $sheet
-            ->getStyle('A9:U10')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet
-            ->getStyle('A9:U10')
-            ->getAlignment()
-            ->setVertical(Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A9:U10')->getAlignment()->setWrapText(true);
-        $sheet
-            ->getStyle('A9:U10')
-            ->getFill()
-            ->setFillType(Fill::FILL_SOLID)
-            ->getStartColor()
-            ->setARGB('FFC0CB');
-        // Footer Penjelasan
-        $sheet->setCellValue('A16', 'Periode KLB : Tgl...........s/d..............');
-        $sheet->mergeCells('A17:G17');
-        $sheet->setCellValue('A17', 'Penjelasan : Kolom 16: Pemberian Vit.A saat sakit campak');
-        $sheet->mergeCells('A18:G18');
-        $sheet->setCellValue('A18', ': Kolom 17: H = Hidup, M = Mati');
-        $sheet->mergeCells('A19:G19');
-        $sheet->setCellValue('A19', ': *Klasifikasi final diisi oleh Kabupaten');
-
-        // Footer Tanda Tangan
-        $sheet->setCellValue('R16', 'Makassar, Tgl 04 Oktober 2024');
-        $sheet->mergeCells('R17:U17');
-        $sheet->setCellValue('R17', 'Plt.Kepala UPT Puskesmas Tamangapa');
-        $sheet->mergeCells('R20:U20');
-        $sheet->setCellValue('R20', 'dr.Fatimah, M.Kes');
-        $sheet->mergeCells('R21:U21');
-        $sheet->setCellValue('R21', 'NIP. 19851125 201101 2 009');
-
-        // Style Footer
-        $sheet->getStyle('A16:A19')->getFont()->setSize(9); // Font ukuran 9
-        $sheet->getStyle('R16:R21')->getFont()->setSize(9); // Font ukuran 9
-        $sheet
-            ->getStyle('A16:A19')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_LEFT);
-        $sheet
-            ->getStyle('R16:R21')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
         $actions = Action::select('*') // Pilih semua kolom
             ->where(function ($query) {
                 $query
@@ -383,79 +311,45 @@ class ReportController extends Controller
                     ->orWhere('diagnosa', '97'); // Jika `diagnosa` disimpan sebagai string
             })
             ->get();
-
-        $diagnosisData = [];
-        $data = []; // Inisialisasi array data untuk tabel
-
-        foreach ($actions as $action) {
-            $diagnosisIds = [];
-            if (is_array($action->diagnosa)) {
-                $diagnosisIds = $action->diagnosa;
-            } elseif (is_string($action->diagnosa)) {
-                $decoded = json_decode($action->diagnosa, true);
-                if (is_array($decoded)) {
-                    $diagnosisIds = $decoded;
-                }
-            }
-
-            if (empty($diagnosisIds)) {
-                continue;
-            }
-
-            foreach ($diagnosisIds as $diagnosisId) {
-                if ($diagnosisId != 97) {
-                    // Pastikan hanya mengambil data dengan diagnosa ID 97
-                    continue;
-                }
-
-                $key = $diagnosisId . '-' . ($action->icd10 ?? 'Unknown');
-
-                if (!isset($diagnosisData[$key])) {
-                    $diagnosisData[$key] = [
-                        'name' => Diagnosis::find($diagnosisId)?->name ?? 'Unknown',
-                    ];
-                }
-
-                // Data tabel
-                $data[] = ['', $action->patient->name ? ucwords(strtolower($action->patient->name)) : 'Unknown', '', $action->patient->address ?? 'Unknown', $action->patient->dob && calculateAgeUnit($action->patient->dob) == 'months' ? calculateAge($action->patient->dob) . ' bln' : null, $action->patient->dob && calculateAgeUnit($action->patient->dob) == 'years' ? calculateAge($action->patient->dob) . 'thn' : null, $action->visits ?? '0x', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
-            }
-        }
-        $sheet->fromArray($data, null, 'A11');
-
-        // Penyesuaian lebar kolom secara spesifik
-        $columnWidths = [15, 20, 20, 30, 5, 5, 10, 15, 10, 10, 10, 10, 10, 10, 5, 10, 10, 10, 10, 10, 15];
-        foreach (range('A', 'U') as $index => $columnID) {
-            $sheet->getColumnDimension($columnID)->setWidth($columnWidths[$index]);
-        }
-        $styleArray = [
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => '000000'], // Warna hitam
-                ],
-            ],
+        $bulanMap = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
         ];
 
-        // Terapkan border ke seluruh tabel, dari header hingga data terakhir
-        $sheet->getStyle('A9:U13')->applyFromArray($styleArray);
+        // misalnya request input-nya seperti ini:
+        $angkaBulan = (int) $request->input('bulan');
+        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+        $tahun = $request->tahun;
 
-        // Pengaturan kertas dan skala untuk A4
-        $sheet
-            ->getPageSetup()
-            ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE)
-            ->setPaperSize(PageSetup::PAPERSIZE_A4)
-            ->setFitToWidth(1) // Skala agar tabel muat di lebar halaman
-            ->setFitToHeight(0);
+        $templatePath = public_path('assets/report/report-campak.xlsx');
 
-        // Menyimpan file
-        $writer = new Xlsx($spreadsheet);
-        $fileName = 'Laporan_Kasus_Campak.xlsx';
-        $filePath = storage_path('app/public/' . $fileName);
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
 
-        $writer->save($filePath);
-        //
+        // Buka template
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
 
-        return response()->download($filePath)->deleteFileAfterSend(true);
+        $sheet->setCellValue('A3', 'Bulan/Tahun : ' . $bulan . '/' . $tahun);
+        $tanggal = Carbon::now()->translatedFormat('j F Y');
+        $sheet->setCellValue('O18', 'Makassar, ' . $tanggal);
+        // Stream ke user (tanpa menyimpan di server)
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-kasus-campak.xlsx');
     }
     public function reportPTM()
     {
@@ -492,10 +386,7 @@ class ReportController extends Controller
 
         $sheet->mergeCells('A1:U1');
         $sheet->setCellValue('A1', 'JUMLAH KASUS DAN KEMATIAN PENYAKIT TIDAK MENULAR MENURUT JENIS KELAMIN DAN UMUR');
-        $sheet
-            ->getStyle('A1')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(12);
 
         // $sheet->mergeCells('A2:U2');
@@ -564,17 +455,8 @@ class ReportController extends Controller
 
         // Style header
         $sheet->getStyle('A1:S7')->getFont()->setBold(true);
-        $sheet
-            ->getStyle('A1:S7')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER)
-            ->setVertical(Alignment::VERTICAL_CENTER);
-        $sheet
-            ->getStyle('A5:S7')
-            ->getFill()
-            ->setFillType(Fill::FILL_SOLID)
-            ->getStartColor()
-            ->setARGB('90EE90'); // Hijau muda
+        $sheet->getStyle('A1:S7')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER)->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A5:S7')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('90EE90'); // Hijau muda
         // Footer Penjelasan
         $sheet->setCellValue('B30', 'Mengetahui :');
         $sheet->mergeCells('B31:G31');
@@ -596,14 +478,8 @@ class ReportController extends Controller
         // Style Footer
         $sheet->getStyle('A30:A33')->getFont()->setSize(9); // Font ukuran 9
         $sheet->getStyle('R30:R35')->getFont()->setSize(9); // Font ukuran 9
-        $sheet
-            ->getStyle('A30:A33')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_LEFT);
-        $sheet
-            ->getStyle('R30:R35')
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A30:A33')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+        $sheet->getStyle('R30:R35')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $dataPenyakit = [
             'Hipertensi' => ['134', '186', '291'],
             'Diabetes Melitus' => ['362', '363', '364'],
@@ -842,49 +718,28 @@ class ReportController extends Controller
         return response()->download($filePath)->deleteFileAfterSend(true);
     }
 
-     public function reportRJP(Request $request)
+    public function reportRJP(Request $request)
     {
         $bulan = $request->bulan;
         $tahun = $request->tahun;
-    
+
         // Konversi bulan ke format nama bulan
         $namaBulan = Carbon::createFromFormat('m', $bulan)->translatedFormat('F');
-    
+
         // Daftar tindakan yang ingin dihitung (tanpa "Tidak Ada")
-        $tindakan = [
-            "Observasi Tanpa Tindakan Invasif",
-            "Observasi Dengan Tindakan Invasif",
-            "Corpus Alineum",
-            "Ekstraksi Kuku",
-            "Sircumsisi (Bedah Ringan)",
-            "Incisi Abses",
-            "Rawat Luka",
-            "Ganti Verban",
-            "Spooling",
-            "Toilet Telinga",
-            "Tetes Telinga",
-            "Aff Hecting",
-            "Hecting (Jahit Luka)",
-            "Tampon/Off Tampon"
-        ];
-    
+        $tindakan = ['Observasi Tanpa Tindakan Invasif', 'Observasi Dengan Tindakan Invasif', 'Corpus Alineum', 'Ekstraksi Kuku', 'Sircumsisi (Bedah Ringan)', 'Incisi Abses', 'Rawat Luka', 'Ganti Verban', 'Spooling', 'Toilet Telinga', 'Tetes Telinga', 'Aff Hecting', 'Hecting (Jahit Luka)', 'Tampon/Off Tampon'];
+
         // Ambil data dari database
-        $data = Action::whereIn('tindakan_ruang_tindakan', $tindakan)
-            ->whereMonth('created_at', $bulan)
-            ->whereYear('created_at', $tahun)
-            ->selectRaw('tindakan_ruang_tindakan, COUNT(*) as jumlah')
-            ->groupBy('tindakan_ruang_tindakan')
-            ->get()
-            ->keyBy('tindakan_ruang_tindakan'); // Index array dengan nama tindakan
-    
+        $data = Action::whereIn('tindakan_ruang_tindakan', $tindakan)->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun)->selectRaw('tindakan_ruang_tindakan, COUNT(*) as jumlah')->groupBy('tindakan_ruang_tindakan')->get()->keyBy('tindakan_ruang_tindakan'); // Index array dengan nama tindakan
+
         // Gabungkan dengan nilai default 0 jika tidak ditemukan
         $result = collect($tindakan)->map(function ($t) use ($data) {
             return [
                 'tindakan_ruang_tindakan' => $t,
-                'jumlah' => $data->has($t) ? $data[$t]->jumlah : 0
+                'jumlah' => $data->has($t) ? $data[$t]->jumlah : 0,
             ];
         });
-    
+
         return view('content.report.laporan-rjp', compact('result', 'namaBulan', 'tahun'));
     }
     public function reportSKDR()
@@ -895,44 +750,41 @@ class ReportController extends Controller
     {
         $bulan = $request->input('bulan');
         $tahun = $request->input('tahun');
-    
+
         // Validasi input bulan dan tahun
         if (!$bulan || !$tahun) {
             return response()->json(['error' => 'Bulan dan tahun diperlukan'], 400);
         }
-    
+
         // Daftar diagnosis
         $diagnosisList = [
-            "K00.6" => "Persistensi Gigi Sulung",
-            "K01.1" => "Impaksi M3 Klasifikasi IA",
-            "K02" => "Karies Gigi",
-            "K03" => "Penyakit jaringan keras gigi lainnya",
-            "K04" => "Penyakit pulpa dan jaringan periapikal",
-            "K05" => "Gingivitis dan penyakit periodontal",
-            "K07" => "Anomali Dentofasial / termasuk maloklusi Kelainan",
-            "K08" => "Gangguan gigi dan jaringan penyangga lainnya",
-            "K12" => "Stomatitis dan Lesi-lesi yang berhubungan",
-            "K13.0" => "Angular Cheilitis / penyakit bibir dan mukosa",
-            "L51" => "Eritema Multiformis",
-            "R51" => "Nyeri Orofasial",
-            "S02.6" => "Fraktur mahkota yang tidak merusak pulpa",
-            "K07.3" => "Crowded",
-            "K14.3" => "Hipertrofi of Tongue Papiloma",
-            "D21.9" => "Tumor di langit-langit",
-            "M27.0" => "Torus palatinal"
+            'K00.6' => 'Persistensi Gigi Sulung',
+            'K01.1' => 'Impaksi M3 Klasifikasi IA',
+            'K02' => 'Karies Gigi',
+            'K03' => 'Penyakit jaringan keras gigi lainnya',
+            'K04' => 'Penyakit pulpa dan jaringan periapikal',
+            'K05' => 'Gingivitis dan penyakit periodontal',
+            'K07' => 'Anomali Dentofasial / termasuk maloklusi Kelainan',
+            'K08' => 'Gangguan gigi dan jaringan penyangga lainnya',
+            'K12' => 'Stomatitis dan Lesi-lesi yang berhubungan',
+            'K13.0' => 'Angular Cheilitis / penyakit bibir dan mukosa',
+            'L51' => 'Eritema Multiformis',
+            'R51' => 'Nyeri Orofasial',
+            'S02.6' => 'Fraktur mahkota yang tidak merusak pulpa',
+            'K07.3' => 'Crowded',
+            'K14.3' => 'Hipertrofi of Tongue Papiloma',
+            'D21.9' => 'Tumor di langit-langit',
+            'M27.0' => 'Torus palatinal',
         ];
-    
+
         // Ambil ID diagnosis berdasarkan kode ICD10
-        $diagnosis = Diagnosis::whereIn('icd10', array_keys($diagnosisList))
-            ->pluck('id', 'icd10')
-            ->map(fn($id) => (string) $id)
-            ->toArray();
-    
+        $diagnosis = Diagnosis::whereIn('icd10', array_keys($diagnosisList))->pluck('id', 'icd10')->map(fn($id) => (string) $id)->toArray();
+
         // Jika diagnosis kosong, langsung return hasil kosong
         if (empty($diagnosis)) {
             return response()->json([]);
         }
-    
+
         // Ambil data tindakan berdasarkan ID diagnosis dan filter bulan & tahun
         $actions = Action::where('tipe', 'poli-gigi')
             ->whereMonth('tanggal', $bulan)
@@ -943,73 +795,53 @@ class ReportController extends Controller
                 }
             })
             ->get();
-    
+
         // Inisialisasi array data diagnosis
         $diagnosisData = [];
         $totalLaki = 0;
         $totalPerempuan = 0;
-    
+
         foreach ($diagnosisList as $code => $name) {
             $diagnosisId = $diagnosis[$code] ?? null;
-    
+
             if (!$diagnosisId) {
                 continue;
             }
-    
+
             $filteredActions = $actions->filter(function ($action) use ($diagnosisId) {
                 $diagnosa = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
                 return in_array($diagnosisId, (array) $diagnosa);
             });
-    
+
             // Hitung jumlah laki-laki dan perempuan
             $lakiLakiCount = $filteredActions->where('patient.gender', 2)->count();
             $perempuanCount = $filteredActions->where('patient.gender', 1)->count();
-    
+
             $diagnosisData[$code] = [
                 'code' => $code,
                 'name' => $name,
                 'laki_laki' => $lakiLakiCount,
                 'perempuan' => $perempuanCount,
-                'total' => $lakiLakiCount + $perempuanCount
+                'total' => $lakiLakiCount + $perempuanCount,
             ];
-    
+
             // Hitung total keseluruhan
             $totalLaki += $lakiLakiCount;
             $totalPerempuan += $perempuanCount;
         }
-    
+
         // Tindakan gigi
-        $tindakanGigi = [
-            "Gigi Sulung Tumpatan Sementara",
-            "Gigi Tetap Tumpatan Sementara",
-            "Gigi Tetap Tumpatan Tetap",
-            "Gigi Sulung Tumpatan Tetap",
-            "Perawatan Saluran Akar",
-            "Gigi Sulung Pencabutan",
-            "Gigi Tetap Pencabutan",
-            "Pembersihan Karang Gigi",
-            "Odontectomy",
-            "Sebagian Prothesa",
-            "Penuh Prothesa",
-            "Reparasi Prothesa",
-            "Premedikasi/Pengobatan",
-            "Tindakan Lain",
-            "Incisi Abses Gigi"
-        ];
-    
-        $tindakan = Action::where('tipe', 'poli-gigi')
-            ->whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
-            ->whereIn('tindakan', $tindakanGigi)
-            ->get();
-            $rujukanL = Action::join('patients', 'actions.id_patient', '=', 'patients.id')
+        $tindakanGigi = ['Gigi Sulung Tumpatan Sementara', 'Gigi Tetap Tumpatan Sementara', 'Gigi Tetap Tumpatan Tetap', 'Gigi Sulung Tumpatan Tetap', 'Perawatan Saluran Akar', 'Gigi Sulung Pencabutan', 'Gigi Tetap Pencabutan', 'Pembersihan Karang Gigi', 'Odontectomy', 'Sebagian Prothesa', 'Penuh Prothesa', 'Reparasi Prothesa', 'Premedikasi/Pengobatan', 'Tindakan Lain', 'Incisi Abses Gigi'];
+
+        $tindakan = Action::where('tipe', 'poli-gigi')->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->whereIn('tindakan', $tindakanGigi)->get();
+        $rujukanL = Action::join('patients', 'actions.id_patient', '=', 'patients.id')
             ->where('actions.tipe', 'poli-gigi')
             ->whereMonth('actions.tanggal', $bulan)
             ->whereYear('actions.tanggal', $tahun)
             ->where('patients.gender', 2) // Laki-laki
             ->where('actions.rujuk_rs', '!=', 1)
             ->count();
-        
+
         $rujukanP = Action::join('patients', 'actions.id_patient', '=', 'patients.id')
             ->where('actions.tipe', 'poli-gigi')
             ->whereMonth('actions.tanggal', $bulan)
@@ -1017,65 +849,55 @@ class ReportController extends Controller
             ->where('patients.gender', 1) // Perempuan
             ->where('actions.rujuk_rs', '!=', 1)
             ->count();
-        
-    
+
         // Mengirim data ke satu view
-        return view('content.report.laporan-lkg', compact('bulan', 'tahun', 'diagnosisData', 'totalLaki', 'totalPerempuan', 'tindakanGigi', 'tindakan','rujukanL','rujukanP'));
+        return view('content.report.laporan-lkg', compact('bulan', 'tahun', 'diagnosisData', 'totalLaki', 'totalPerempuan', 'tindakanGigi', 'tindakan', 'rujukanL', 'rujukanP'));
     }
-   public function reportLRKG(Request $request)
+    public function reportLRKG(Request $request)
     {
         // Ambil input bulan dan tahun
         $bulan = $request->input('bulan');
         $tahun = $request->input('tahun');
-    
+
         // Validasi input bulan dan tahun
         if (!$bulan || !$tahun) {
             return response()->json(['error' => 'Bulan dan tahun diperlukan'], 400);
         }
-    
+
         // Daftar diagnosis ICD-10
         $diagnosisList = [
-            "K00.6" => "Persistensi Gigi Sulung",
-            "K01.1" => "Impaksi M3 Klasifikasi IA",
-            "K02" => "Karies Gigi",
-            "K03" => "Penyakit jaringan keras gigi lainnya",
-            "K04" => "Penyakit pulpa dan jaringan periapikal",
-            "K05" => "Gingivitis dan penyakit periodontal",
-            "K07" => "Anomali Dentofasial / termasuk maloklusi Kelainan",
-            "K08" => "Gangguan gigi dan jaringan penyangga lainnya",
-            "K12" => "Stomatitis dan Lesi-lesi yang berhubungan",
-            "K13.0" => "Angular Cheilitis / penyakit bibir dan mukosa",
-            "L51" => "Eritema Multiformis",
-            "R51" => "Nyeri Orofasial",
-            "S02.6" => "Fraktur mahkota yang tidak merusak pulpa",
-            "K07.3" => "Crowded",
-            "K14.3" => "Hipertrofi of Tongue Papiloma",
-            "D21.9" => "Tumor di langit-langit",
-            "M27.0" => "Torus palatinal"
+            'K00.6' => 'Persistensi Gigi Sulung',
+            'K01.1' => 'Impaksi M3 Klasifikasi IA',
+            'K02' => 'Karies Gigi',
+            'K03' => 'Penyakit jaringan keras gigi lainnya',
+            'K04' => 'Penyakit pulpa dan jaringan periapikal',
+            'K05' => 'Gingivitis dan penyakit periodontal',
+            'K07' => 'Anomali Dentofasial / termasuk maloklusi Kelainan',
+            'K08' => 'Gangguan gigi dan jaringan penyangga lainnya',
+            'K12' => 'Stomatitis dan Lesi-lesi yang berhubungan',
+            'K13.0' => 'Angular Cheilitis / penyakit bibir dan mukosa',
+            'L51' => 'Eritema Multiformis',
+            'R51' => 'Nyeri Orofasial',
+            'S02.6' => 'Fraktur mahkota yang tidak merusak pulpa',
+            'K07.3' => 'Crowded',
+            'K14.3' => 'Hipertrofi of Tongue Papiloma',
+            'D21.9' => 'Tumor di langit-langit',
+            'M27.0' => 'Torus palatinal',
         ];
-    
+
         // Ambil ID diagnosis berdasarkan kode ICD-10
-        $diagnosis = Diagnosis::whereIn('icd10', array_keys($diagnosisList))
-            ->pluck('id', 'icd10')
-            ->map(fn($id) => (string) $id)
-            ->toArray();
-    
+        $diagnosis = Diagnosis::whereIn('icd10', array_keys($diagnosisList))->pluck('id', 'icd10')->map(fn($id) => (string) $id)->toArray();
+
         // Jika diagnosis kosong, langsung return hasil kosong
         if (empty($diagnosis)) {
             return response()->json([]);
         }
-    
+
         // Ambil data tindakan berdasarkan ID diagnosis dan filter bulan & tahun
-        $actionsBaru = Action::where('tipe', 'poli-gigi')->where('kasus', 1)
-            ->whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
-            ->get();
-    
-        $actionsLama = Action::where('tipe', 'poli-gigi')->where('kasus', 0)
-            ->whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
-            ->get();
-    
+        $actionsBaru = Action::where('tipe', 'poli-gigi')->where('kasus', 1)->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
+
+        $actionsLama = Action::where('tipe', 'poli-gigi')->where('kasus', 0)->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
+
         // Definisi rentang usia
         $ageGroups = [
             '0-4' => [0, 4],
@@ -1087,51 +909,51 @@ class ReportController extends Controller
             '19-34' => [19, 34],
             '35-44' => [35, 44],
             '45-64' => [45, 64],
-            '65+' => [65, 150] // Asumsi batas usia tertinggi 150 tahun
+            '65+' => [65, 150], // Asumsi batas usia tertinggi 150 tahun
         ];
-    
+
         // Inisialisasi array data diagnosis
         $diagnosisData = [];
-    
+
         foreach ($diagnosisList as $code => $name) {
             $diagnosisId = $diagnosis[$code] ?? null;
-    
+
             if (!$diagnosisId) {
                 continue;
             }
-    
+
             // Filter tindakan yang memiliki diagnosis terkait untuk kasus baru
             $filteredActionsBaru = $actionsBaru->filter(function ($action) use ($diagnosisId) {
                 $diagnosa = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
                 return in_array($diagnosisId, (array) $diagnosa);
             });
-    
+
             // Filter tindakan yang memiliki diagnosis terkait untuk kasus lama
             $filteredActionsLama = $actionsLama->filter(function ($action) use ($diagnosisId) {
                 $diagnosa = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
                 return in_array($diagnosisId, (array) $diagnosa);
             });
-    
+
             // Inisialisasi data penyakit
             $data = [
                 'code' => $code,
                 'name' => $name,
                 'ageGroups' => [],
                 'total' => ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0],
-                'kasus_lama' => ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0] // Placeholder kasus lama
+                'kasus_lama' => ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0], // Placeholder kasus lama
             ];
-    
+
             // Inisialisasi data per rentang usia
             foreach ($ageGroups as $group => $range) {
                 $data['ageGroups'][$group] = ['laki_laki' => 0, 'perempuan' => 0, 'jumlah' => 0];
             }
-    
+
             // Hitung jumlah pasien berdasarkan gender dan rentang usia untuk kasus baru
             foreach ($filteredActionsBaru as $action) {
                 $patient = $action->patient;
                 $age = \Carbon\Carbon::parse($patient->dob)->age;
                 $gender = $patient->gender; // 2 = Laki-laki, 1 = Perempuan
-    
+
                 foreach ($ageGroups as $group => [$minAge, $maxAge]) {
                     if ($age >= $minAge && $age <= $maxAge) {
                         if ($gender == 2) {
@@ -1142,7 +964,7 @@ class ReportController extends Controller
                         $data['ageGroups'][$group]['jumlah']++;
                     }
                 }
-    
+
                 // Tambahkan ke total keseluruhan kasus baru
                 if ($gender == 2) {
                     $data['total']['laki_laki']++;
@@ -1151,35 +973,35 @@ class ReportController extends Controller
                 }
                 $data['total']['jumlah']++;
             }
-    
+
             // Hitung jumlah pasien untuk kasus lama
             $data['kasus_lama']['laki_laki'] = $filteredActionsLama->where('patient.gender', 2)->count();
             $data['kasus_lama']['perempuan'] = $filteredActionsLama->where('patient.gender', 1)->count();
             $data['kasus_lama']['jumlah'] = $filteredActionsLama->count();
-    
+
             $diagnosisData[] = $data;
         }
-    
+
         // Kirim data ke tampilan laporan
         return view('content.report.laporan-lrkg', compact('diagnosisData', 'bulan', 'tahun'));
     }
- public function reportLKT(Request $request)
+    public function reportLKT(Request $request)
     {
         $request->validate([
             'bulan' => 'nullable|integer|min:1|max:12',
             'tahun' => 'required|integer|min:2020|max:' . now()->year,
         ]);
-    
+
         $bulan = $request->input('bulan');
         $tahun = $request->input('tahun');
-    
+
         // Ambil semua diagnosa dari Action berdasarkan tahun (dan bulan jika dipilih)
         $query = Action::whereYear('tanggal', $tahun);
         if ($bulan) {
             $query->whereMonth('tanggal', $bulan);
         }
         $allDiagnosa = $query->pluck('diagnosa')->toArray();
-    
+
         // Ubah array multidimensi menjadi satu dimensi
         $flatDiagnosa = [];
         foreach ($allDiagnosa as $item) {
@@ -1192,15 +1014,15 @@ class ReportController extends Controller
                 $flatDiagnosa = array_merge($flatDiagnosa, $item);
             }
         }
-    
+
         // Hitung jumlah kemunculan setiap diagnosa dan ambil 10 terbanyak
         $topDiagnosa = array_count_values($flatDiagnosa);
         arsort($topDiagnosa);
         $topDiagnosa = array_slice($topDiagnosa, 0, 10, true); // Tetap simpan jumlah kasus
-    
+
         // Ambil informasi diagnosa dari tabel `Diagnosis`
         $diagnosa = Diagnosis::whereIn('id', array_keys($topDiagnosa))->get();
-    
+
         // Ambil jumlah pasien baru dan lama berdasarkan diagnosa
         $data = [];
         foreach ($diagnosa as $item) {
@@ -1212,7 +1034,7 @@ class ReportController extends Controller
                 ->where('kasus', 1)
                 ->whereNotIn('tipe', ['poli-kia', 'poli-kb'])
                 ->count();
-    
+
             $lama = Action::whereJsonContains('diagnosa', (string) $item->id)
                 ->whereYear('tanggal', $tahun)
                 ->when($bulan, function ($query) use ($bulan) {
@@ -1221,48 +1043,39 @@ class ReportController extends Controller
                 ->where('kasus', 0)
                 ->whereNotIn('tipe', ['poli-kia', 'poli-kb'])
                 ->count();
-    
+
             $data[] = [
                 'tahun' => $tahun,
                 'bulan' => $bulan,
                 'diagnosa' => $item->name, // Pastikan kolom benar
-                'icd10' => $item->icd10,   // Pastikan kolom benar
+                'icd10' => $item->icd10, // Pastikan kolom benar
                 'baru' => $baru,
                 'lama' => $lama,
                 'total' => $baru + $lama, // Tambahkan total kasus
             ];
         }
-    
+
         // Urutkan berdasarkan total kasus terbanyak
         usort($data, function ($a, $b) {
             return $b['total'] <=> $a['total'];
         });
-    
+
         return view('content.report.laporan-lkt', compact('data', 'tahun', 'bulan'));
     }
     public function reportLBKT()
     {
         return view('content.report.laporan-lbkt');
     }
-   public function reportURT(Request $request)
+    public function reportURT(Request $request)
     {
         // Ambil bulan & tahun dari request, atau gunakan default bulan & tahun sekarang
         $bulan = $request->input('bulan', date('m'));
         $tahun = $request->input('tahun', date('Y'));
-    
-        $services = [
-            "Hecting (Jahit Luka)",
-            "Aff Hecting",
-            "Ganti Verban",
-            "Incisi Abses",
-            "Sircumsisi (Bedah Ringan)",
-            "Ekstraksi Kuku",
-            "Observasi Dengan Tindakan Invasif",
-            "Observasi Tanpa Tindakan Invasif",
-        ];
-    
+
+        $services = ['Hecting (Jahit Luka)', 'Aff Hecting', 'Ganti Verban', 'Incisi Abses', 'Sircumsisi (Bedah Ringan)', 'Ekstraksi Kuku', 'Observasi Dengan Tindakan Invasif', 'Observasi Tanpa Tindakan Invasif'];
+
         $data = [];
-    
+
         foreach ($services as $service) {
             // Inisialisasi array default untuk mencegah "Undefined array key"
             $data[$service] = [
@@ -1272,66 +1085,62 @@ class ReportController extends Controller
                 'umum' => 0,
                 'jkd' => 0,
             ];
-    
+
             // Hitung jumlah berdasarkan kartu dengan filter bulan & tahun
             foreach (['pbi', 'askes', 'jkn_mandiri', 'umum', 'jkd'] as $kartu) {
-                $data[$service][$kartu] = Action::where('tindakan_ruang_tindakan', $service)
-                    ->whereHas('patient', function ($query) use ($kartu) {
-                        $query->where('jenis_kartu', $kartu);
-                    })
-                    ->whereYear('tanggal', $tahun) // Filter berdasarkan tahun
-                    ->whereMonth('tanggal', $bulan) // Filter berdasarkan bulan
-                    ->count() ?: 0;
+                $data[$service][$kartu] =
+                    Action::where('tindakan_ruang_tindakan', $service)
+                        ->whereHas('patient', function ($query) use ($kartu) {
+                            $query->where('jenis_kartu', $kartu);
+                        })
+                        ->whereYear('tanggal', $tahun) // Filter berdasarkan tahun
+                        ->whereMonth('tanggal', $bulan) // Filter berdasarkan bulan
+                        ->count() ?:
+                    0;
             }
         }
-    
+
         return view('content.report.laporan-urt', compact('data', 'bulan', 'tahun'));
     }
     public function reportLKRJ()
     {
         return view('content.report.laporan-lkrj');
     }
-   public function reportRRT(Request $request)
+    public function reportRRT(Request $request)
     {
         // Get the selected month and year from the request
         $bulan = $request->input('bulan');
         $tahun = $request->input('tahun');
-    
+
         // Get top 10 rujukan RS (excluding '1')
-        $rujukanQuery = Action::select('rujuk_rs', DB::raw('COUNT(*) as count'))
-            ->where('rujuk_rs', '!=', '1');
-    
+        $rujukanQuery = Action::select('rujuk_rs', DB::raw('COUNT(*) as count'))->where('rujuk_rs', '!=', '1');
+
         // Apply month and year filter if provided
         if ($bulan && $tahun) {
-            $rujukanQuery->whereMonth('tanggal', $bulan)
-                         ->whereYear('tanggal', $tahun);
+            $rujukanQuery->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
         }
-    
-        $rujukan = $rujukanQuery->groupBy('rujuk_rs')
-                                ->orderByDesc('count')
-                                ->take(10)
-                                ->get();
-    
+
+        $rujukan = $rujukanQuery->groupBy('rujuk_rs')->orderByDesc('count')->take(10)->get();
+
         // Get the actions with diagnosis data
-          $actionsQuery = Action::select('diagnosa')
-        ->where('rujuk_rs', '!=', '1')
-        ->whereNotIn('tipe', ['poli-kia', 'poli-kb']);
-    
+        $actionsQuery = Action::select('diagnosa')
+            ->where('rujuk_rs', '!=', '1')
+            ->whereNotIn('tipe', ['poli-kia', 'poli-kb']);
+
         // Apply month and year filter for actions if provided
         if ($bulan && $tahun) {
-            $actionsQuery->whereMonth('tanggal', $bulan)
-                         ->whereYear('tanggal', $tahun);
+            $actionsQuery->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
         }
-    
+
         $actions = $actionsQuery->get();
-    
+
         // Process the diagnosis data
         $diagnosisData = [];
         $allDiagnosisIds = [];
-    
+
         foreach ($actions as $action) {
             $diagnosisIds = [];
-    
+
             if (is_array($action->diagnosa)) {
                 $diagnosisIds = $action->diagnosa;
             } elseif (is_string($action->diagnosa)) {
@@ -1340,18 +1149,18 @@ class ReportController extends Controller
                     $diagnosisIds = $decoded;
                 }
             }
-    
+
             if (!empty($diagnosisIds)) {
                 $allDiagnosisIds = array_merge($allDiagnosisIds, $diagnosisIds);
             }
         }
-    
+
         // Fetch all relevant diagnoses in one query
         $diagnoses = Diagnosis::whereIn('id', array_unique($allDiagnosisIds))->get()->keyBy('id');
-    
+
         foreach ($actions as $action) {
             $diagnosisIds = [];
-    
+
             if (is_array($action->diagnosa)) {
                 $diagnosisIds = $action->diagnosa;
             } elseif (is_string($action->diagnosa)) {
@@ -1360,15 +1169,15 @@ class ReportController extends Controller
                     $diagnosisIds = $decoded;
                 }
             }
-    
+
             if (empty($diagnosisIds)) {
                 continue;
             }
-    
+
             foreach ($diagnosisIds as $diagnosisId) {
                 $diagnosis = $diagnoses[$diagnosisId] ?? null;
                 $key = $diagnosisId . '-' . ($diagnosis->icd10 ?? 'Unknown');
-    
+
                 if (!isset($diagnosisData[$key])) {
                     $diagnosisData[$key] = [
                         'name' => $diagnosis->name ?? 'Unknown',
@@ -1376,19 +1185,18 @@ class ReportController extends Controller
                         'count' => 0,
                     ];
                 }
-    
+
                 $diagnosisData[$key]['count']++;
             }
         }
-    
+
         // Sort and get top 10 diagnoses
         usort($diagnosisData, fn($a, $b) => $b['count'] - $a['count']);
         $topDiagnoses = array_slice($diagnosisData, 0, 10);
-    
-        return view('content.report.laporan-rrt', compact('rujukan', 'topDiagnoses', 'bulan', 'tahun'));
 
+        return view('content.report.laporan-rrt', compact('rujukan', 'topDiagnoses', 'bulan', 'tahun'));
     }
-    
+
     public function reportLL()
     {
         return view('content.report.laporan-ll');
@@ -1410,63 +1218,60 @@ class ReportController extends Controller
     {
         $bulan = $request->input('bulan');
         $tahun = $request->input('tahun');
-    
-        $rujukanQuery = Action::select('rujuk_rs', DB::raw('COUNT(*) as count'))
-            ->where('rujuk_rs', '!=', '1');
-    
+
+        $rujukanQuery = Action::select('rujuk_rs', DB::raw('COUNT(*) as count'))->where('rujuk_rs', '!=', '1');
+
         if ($bulan && $tahun) {
-            $rujukanQuery->whereMonth('tanggal', $bulan)
-                         ->whereYear('tanggal', $tahun);
+            $rujukanQuery->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
         }
-    
-        $rujukan = $rujukanQuery->groupBy('rujuk_rs')
-                                ->orderByDesc('count')
-                                ->get();
-    
+
+        $rujukan = $rujukanQuery->groupBy('rujuk_rs')->orderByDesc('count')->get();
+
         $hospitalIds = $rujukan->pluck('rujuk_rs')->unique();
         $hospitals = Hospital::whereIn('id', $hospitalIds)->get()->keyBy('id');
         $hospitalColumns = $hospitals->pluck('name')->toArray();
-    
+
         foreach ($rujukan as $r) {
             $r->hospital_name = $hospitals[$r->rujuk_rs]->name ?? 'Unknown';
         }
-    
+
         $actionsQuery = Action::select(
-                'actions.diagnosa',
-                'actions.rujuk_rs',
-                'patients.gender',
-                'patients.jenis_kartu as payment_method' // Menggunakan alias agar lebih jelas
-            )
+            'actions.diagnosa',
+            'actions.rujuk_rs',
+            'patients.gender',
+            'patients.jenis_kartu as payment_method', // Menggunakan alias agar lebih jelas
+        )
             ->join('patients', 'patients.id', '=', 'actions.id_patient')
             ->where('actions.rujuk_rs', '!=', '1');
-    
+
         if ($bulan && $tahun) {
-            $actionsQuery->whereMonth('tanggal', $bulan)
-                         ->whereYear('tanggal', $tahun);
+            $actionsQuery->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
         }
-    
+
         $actions = $actionsQuery->get();
         $diagnosisData = [];
         $allDiagnosisIds = [];
-    
+
         foreach ($actions as $action) {
             $diagnosisIds = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
             if (is_array($diagnosisIds)) {
                 $allDiagnosisIds = array_merge($allDiagnosisIds, $diagnosisIds);
             }
         }
-    
+
         $diagnoses = Diagnosis::whereIn('id', array_unique($allDiagnosisIds))->get()->keyBy('id');
-    
+
         foreach ($actions as $action) {
             $diagnosisIds = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
-            if (!is_array($diagnosisIds)) continue;
-    
+            if (!is_array($diagnosisIds)) {
+                continue;
+            }
+
             foreach ($diagnosisIds as $diagnosisId) {
                 $diagnosis = $diagnoses[$diagnosisId] ?? null;
                 $key = $diagnosisId . '-' . ($diagnosis->icd10 ?? 'Unknown');
                 $hospitalName = $hospitals[$action->rujuk_rs]->name ?? 'Unknown';
-    
+
                 if (!isset($diagnosisData[$key])) {
                     $diagnosisData[$key] = [
                         'name' => $diagnosis->name ?? 'Unknown',
@@ -1476,32 +1281,36 @@ class ReportController extends Controller
                         'male' => 0,
                         'female' => 0,
                         'payments' => [
-                            'pbi' => 0, 'askes' => 0, 'jkn_mandiri' => 0, 'umum' => 0, 'jkd' => 0
-                        ]
+                            'pbi' => 0,
+                            'askes' => 0,
+                            'jkn_mandiri' => 0,
+                            'umum' => 0,
+                            'jkd' => 0,
+                        ],
                     ];
                 }
-    
+
                 $diagnosisData[$key]['count']++;
                 if ($action->gender === 2) {
                     $diagnosisData[$key]['male']++;
                 } elseif ($action->gender === 1) {
                     $diagnosisData[$key]['female']++;
                 }
-    
+
                 // Pastikan payment_method tidak null dan cocok dengan daftar
                 $paymentMethod = $action->payment_method ?? 'umum';
                 if (isset($diagnosisData[$key]['payments'][$paymentMethod])) {
                     $diagnosisData[$key]['payments'][$paymentMethod]++;
                 }
-    
+
                 $diagnosisData[$key]['hospitals'][$hospitalName]++;
             }
         }
-    
+
         // Urutkan berdasarkan jumlah kasus terbanyak
         usort($diagnosisData, fn($a, $b) => $b['count'] - $a['count']);
         $topDiagnoses = array_slice($diagnosisData, 0);
-    
+
         // Hitung total keseluruhan
         $totalRow = [
             'name' => 'Total',
@@ -1514,18 +1323,18 @@ class ReportController extends Controller
                 'askes' => array_sum(array_column(array_column($topDiagnoses, 'payments'), 'askes')),
                 'jkn_mandiri' => array_sum(array_column(array_column($topDiagnoses, 'payments'), 'jkn_mandiri')),
                 'umum' => array_sum(array_column(array_column($topDiagnoses, 'payments'), 'umum')),
-                'jkd' => array_sum(array_column(array_column($topDiagnoses, 'payments'), 'jkd'))
+                'jkd' => array_sum(array_column(array_column($topDiagnoses, 'payments'), 'jkd')),
             ],
-            'hospitals' => array_fill_keys($hospitalColumns, 0)
+            'hospitals' => array_fill_keys($hospitalColumns, 0),
         ];
-    
+
         foreach ($hospitalColumns as $hospital) {
             $totalRow['hospitals'][$hospital] = array_sum(array_column(array_column($topDiagnoses, 'hospitals'), $hospital));
         }
-    
+
         // Tambahkan total ke hasil akhir
         $topDiagnoses[] = $totalRow;
-    
+
         return view('content.report.laporan-lr', compact('rujukan', 'topDiagnoses', 'bulan', 'tahun', 'hospitalColumns'));
     }
     public function reportUP(Request $request)
@@ -1533,19 +1342,17 @@ class ReportController extends Controller
         // Get the selected month and year from the request
         $bulan = $request->input('bulan');
         $tahun = $request->input('tahun');
-    
+
         // Build the query
         $patients = Action::whereHas('patient', function ($query) use ($bulan, $tahun) {
             $query->whereBetween(DB::raw('TIMESTAMPDIFF(YEAR, dob, CURDATE())'), [15, 59]);
-    
+
             // Filter by month and year if provided
             if ($bulan && $tahun) {
-                $query->whereMonth('created_at', $bulan)
-                      ->whereYear('created_at', $tahun);
+                $query->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun);
             }
         })->get();
-    
+
         return view('content.report.laporan-up', compact('patients'));
     }
-    
 }

@@ -415,7 +415,7 @@
                             data: 'keluhan',
                             name: 'keluhan'
                         },
-                        { data: 'diagnosa', name: 'diagnosa' },
+                        { data: 'diagnosa', name: 'diagnosa', visible:false },
                         { data: 'tindakan', name: 'tindakan', visible:false },
                         {
                             data: 'hospital_referral.name',
@@ -465,7 +465,7 @@
 
             });
         </script>
-    @elseif ($routeName == 'action.kb.index')
+    @elseif ($routeName == 'kajian-awal.kb')
         <script>
             $(document).ready(function() {
                 // Initialize DataTable with pagination
@@ -473,8 +473,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        // url: '{{ route('action.kb.index') }}',
-						url: '{{ route('kajian-awal.dt.kb') }}',
+						url: '{{ route('kajian-awal.kb') }}',
                         data: function(d) {
                             // Send filter data along with the request
                             d.start_date = $('#start_date').val();
@@ -509,12 +508,13 @@
                             data: 'keluhan',
                             name: 'keluhan'
                         },
-                        // { data: 'diagnosa', name: 'diagnosa' },
-                        // { data: 'tindakan', name: 'tindakan' },
-                        //     {
-                        //             data: 'hospital_referral.name',
-                        //             name: 'hospitalReferral.name'
-                        //         },
+                        { data: 'diagnosa', name: 'diagnosa', visible:false },
+                        { data: 'tindakan', name: 'tindakan', visible:false },
+                        {
+                            data: 'hospital_referral.name',
+                            name: 'hospitalReferral.name',
+							visible:false
+                        },
                         {
                             data: 'kunjungan',
                             render: function(data, type, row) {

@@ -319,18 +319,26 @@
                                         html: `<strong>${response.sent.length} berhasil</strong><br><strong>${response.failed.length} gagal</strong><br><br>${failedList}`
                                     });
                                 } else {
+                                    $('#loadingIndicator').hide();
+                                    $('#confirmSend').prop('disabled', false);
+                                    $('#closeSendModalButton').prop('disabled', false);
                                     // Semua sukses
                                     Swal.fire('Berhasil',
                                         `${response.sent.length} data berhasil dikirim ke Satu Sehat.`,
                                         'success');
                                 }
                             } else {
-                                // Jika respons success: false
+                                $('#loadingIndicator').hide();
+                                $('#confirmSend').prop('disabled', false);
+                                $('#closeSendModalButton').prop('disabled', false);
                                 Swal.fire('Gagal',
                                     'Server mengembalikan error saat memproses permintaan.',
                                     'error');
                             }
                             $('#sendModal').modal('hide');
+                            $('#confirmSend').prop('disabled', false);
+                            $('#closeSendModalButton').prop('disabled', false);
+
                         },
                         error: function(xhr, status, error) {
                             $('#loadingIndicator').hide();

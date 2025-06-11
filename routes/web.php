@@ -11,6 +11,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SkriningController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\DiagnosaController;
+use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\LoadModalController;
 use App\Http\Controllers\KajianAwalController;
 use Illuminate\Support\Facades\Route;
@@ -137,6 +138,68 @@ Route::prefix('lansia')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+
+    Route::prefix('reference')
+    ->group(function () {
+        Route::prefix('doctor')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexDoctor'])->name('reference.doctor');
+                Route::get('/data', [ReferenceController::class, 'indexDataDoctor'])->name('reference.doctor.data');
+
+                Route::post('/', [ReferenceController::class, 'storeDoctor'])->name('reference.doctor.store');
+                Route::put('/{id}', [ReferenceController::class, 'updateDoctor']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyDoctor']);
+            });
+        Route::prefix('poli')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexPoli'])->name('reference.poli');
+                Route::get('/data', [ReferenceController::class, 'indexDataPoli'])->name('reference.poli.data');
+
+                Route::post('/', [ReferenceController::class, 'storePoli'])->name('reference.poli.store');
+                Route::put('/{id}', [ReferenceController::class, 'updatePoli']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyPoli']);
+            });
+        Route::prefix('diagnosis')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexDiagnosis'])->name('reference.diagnosis');
+                Route::get('/data', [ReferenceController::class, 'indexDataDiagnosis'])->name('reference.diagnosis.data');
+
+                Route::post('/', [ReferenceController::class, 'storeDiagnosis'])->name('reference.diagnosis.store');
+                Route::put('/{id}', [ReferenceController::class, 'updateDiagnosis']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyDiagnosis']);
+            });
+
+        Route::prefix('obat')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexObat'])->name('reference.obat');
+                Route::get('/data', [ReferenceController::class, 'indexDataObat'])->name('reference.obat.data');
+
+                Route::post('/', [ReferenceController::class, 'storeObat'])->name('reference.obat.store');
+                Route::put('/{id}', [ReferenceController::class, 'updateObat']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyObat']);
+            });
+
+        Route::prefix('tindakan')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexTindakan'])->name('reference.tindakan');
+                Route::get('/data', [ReferenceController::class, 'indexDataTindakan'])->name('reference.tindakan.data');
+
+                Route::post('/', [ReferenceController::class, 'storeTindakan'])->name('reference.tindakan.store');
+                Route::put('/{id}', [ReferenceController::class, 'updateTindakan']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyTindakan']);
+            });
+
+        Route::prefix('rumah-sakit')
+            ->group(function () {
+                Route::get('/', [ReferenceController::class, 'indexRumahSakit'])->name('reference.rumahsakit');
+                Route::get('/data', [ReferenceController::class, 'indexDataRumahSakit'])->name('reference.rumahsakit.data');
+
+                Route::post('/', [ReferenceController::class, 'storeRumahSakit'])->name('reference.rumahsakit.store');
+                Route::put('/{id}', [ReferenceController::class, 'updateRumahSakit']);
+                Route::delete('/{id}', [ReferenceController::class, 'destroyRumahSakit']);
+            });
+    });
+
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::post('/import/patients', [PatientsController::class, 'import'])->name('patient.import');
     Route::get('/patients/data', [PatientsController::class, 'getPatientIndex'])->name('patient.data');

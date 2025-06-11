@@ -340,4 +340,77 @@ class KajianAwalController extends Controller
 		return view('kajian-awal.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
 	}
 
+	public function kb(Request $request)
+	{
+		$dokter = User::where('role', 'dokter')->get();
+		$diagnosa = Diagnosis::all();
+		$penyakit = Disease::all();
+		$rs = Hospital::all();
+		$routeName = $request->route()->getName();
+		$poli = Poli::all();
+		$obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
+
+		if ($request->ajax()) {
+			$startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
+			$endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
+			$actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-kb'); // Ensure 'diagnosa' is not null
+
+			$actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
+
+			$actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+
+			$actions = $actionsQuery->get();
+
+			return DataTables::of($actions)
+				->addIndexColumn()
+				->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
+				->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
+				->addColumn('patient_name', fn($row) => optional($row->patient)->name)
+				->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
+				->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
+				->addColumn('diagnosa', function ($row) {
+					$diagnosa = $row->diagnosa;
+
+					if (is_string($diagnosa)) {
+						$diagnosaIds = json_decode($diagnosa, true);
+					} elseif (is_array($diagnosa)) {
+						$diagnosaIds = $diagnosa;
+					} else {
+						return '-';
+					}
+
+					$diagnosaIds = array_map('intval', $diagnosaIds);
+					$diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+
+					return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+				})
+				->addColumn('kunjungan', function ($row) {
+					$kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
+
+					return $kunjunganCount == 1 ? 'Baru' : 'Lama';
+				})
+
+				->addColumn('action', function ($row) use ($routeName) {
+					return '<div class="action-buttons">
+								<button type="button" class="btn btn-primary btn-sm text-white"
+									data-id="' . $row->id . '"
+									data-route-name="' . $routeName . '"
+									data-url="' . route('loadModal.editKajianAwal', $row->id) . '"
+									onclick="loadEditModal(this)">
+									<i class="fas fa-edit"></i>
+								</button>
+								<form action="' . route('action.destroy', $row->id) . '" method="POST" class="d-inline">
+									' . csrf_field() . method_field('DELETE') . '
+									<button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+										<i class="fas fa-trash-alt"></i>
+									</button>
+								</form>
+							</div>';
+				})
+				->rawColumns(['action'])
+				->make(true);
+		}
+		return view('kajian-awal.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
+	}
+
 }

@@ -1149,78 +1149,6 @@ class ActionController extends Controller
         return view('content.action.index-kb', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
 
-    public function indexKb(Request $request)
-    {
-		$dokter = User::where('role', 'dokter')->get();
-        $diagnosa = Diagnosis::all();
-        $penyakit = Disease::all();
-        $rs = Hospital::all();
-        $routeName = $request->route()->getName();
-        $poli = Poli::all();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
-
-        if ($request->ajax()) {
-            $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
-            $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
-            $actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-kb'); // Ensure 'diagnosa' is not null
-
-            $actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
-
-            $actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
-
-            $actions = $actionsQuery->get();
-
-            return DataTables::of($actions)
-                ->addIndexColumn()
-                ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
-                ->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
-                ->addColumn('patient_name', fn($row) => optional($row->patient)->name)
-                ->addColumn('kartu', fn($row) => optional($row->patient)->jenis_kartu)
-                ->addColumn('patient_age', fn($row) => optional($row->patient->dob) ? Carbon::parse($row->patient->dob)->age . ' Tahun' : '-')
-                ->addColumn('diagnosa', function ($row) {
-                    $diagnosa = $row->diagnosa;
-
-                    if (is_string($diagnosa)) {
-                        $diagnosaIds = json_decode($diagnosa, true);
-                    } elseif (is_array($diagnosa)) {
-                        $diagnosaIds = $diagnosa;
-                    } else {
-                        return '-';
-                    }
-
-                    $diagnosaIds = array_map('intval', $diagnosaIds);
-                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-
-                    return !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
-                })
-                ->addColumn('kunjungan', function ($row) {
-                    $kunjunganCount = Kunjungan::where('pasien', $row->id_patient)->count();
-
-                    return $kunjunganCount == 1 ? 'Baru' : 'Lama';
-                })
-
-				->addColumn('action', function ($row) use ($routeName) {
-				    return '<div class="action-buttons">
-				                <button type="button" class="btn btn-primary btn-sm text-white"
-				                    data-id="' . $row->id . '"
-									data-route-name="' . $routeName . '"
-				                    data-url="' . route('loadModal.editKajianAwal', $row->id) . '"
-				                    onclick="loadEditModal(this)">
-				                    <i class="fas fa-edit"></i>
-				                </button>
-				                <form action="' . route('action.destroy', $row->id) . '" method="POST" class="d-inline">
-				                    ' . csrf_field() . method_field('DELETE') . '
-				                    <button type="submit" class="btn btn-danger btn-sm text-white" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
-				                        <i class="fas fa-trash-alt"></i>
-				                    </button>
-				                </form>
-				            </div>';
-				})
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-        return view('content.action.index', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
-    }
     public function actionReport(Request $request)
     {
         $startDate = $request->query('start_date');
@@ -2868,12 +2796,32 @@ class ActionController extends Controller
                 $currentTime = Carbon::now()->subHours(8); // UTC offset
                 $formattedTime = $currentTime->format('Y-m-d\TH:i:s\+00:00');
 
-                $locationReference = 'Location/b13081cb-d36f-4008-91df-2d2824b90207';
+                $locationReference = 'Location/26f39285-649e-4d6e-b8e5-ed54013082a0';
                 $locationDisplay = 'Ruang Poli Gigi';
 
                 if ($action->tipe == 'poli-gigi') {
-                    $locationReference = 'Location/b13081cb-d36f-4008-91df-2d2824b90207';
+                    $locationReference = 'Location/26f39285-649e-4d6e-b8e5-ed54013082a0';
                     $locationDisplay = 'Ruang Poli Gigi';
+                }
+                else if ($action->tipe == 'poli-umum') {
+                    $locationReference = 'Location/0d2f9518-a37f-43e2-bfa6-0e6999f69bc4';
+                    $locationDisplay = 'Ruang Poli Umum';
+                }
+                else if ($action->tipe == 'poli-kia') {
+                    $locationReference = 'Location/a7c53d57-e940-4601-84f2-1e0be61e4638';
+                    $locationDisplay = 'Ruang Poli Kia';
+                }
+                else if ($action->tipe == 'poli-kb') {
+                    $locationReference = 'Location/3933c54e-14f7-4233-bcd9-2f71a8cdf651';
+                    $locationDisplay = 'Ruang Poli Kb';
+                }
+                else if ($action->tipe == 'ruang-tindakan') {
+                    $locationReference = 'Location/4185d73b-62e2-4bbb-80c9-578e65c2b567';
+                    $locationDisplay = 'Ruang UGD';
+                }
+                else if ($action->tipe == 'tindakan') {
+                    $locationReference = 'Location/a711d42b-b946-48a7-97c1-e6c22c1d558d';
+                    $locationDisplay = 'Ruang Tindakan';
                 }
 
                 $encounterBody = [
