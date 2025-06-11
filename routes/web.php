@@ -12,6 +12,8 @@ use App\Http\Controllers\SkriningController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\DiagnosaController;
 use App\Http\Controllers\ReferenceController;
+use App\Http\Controllers\LoadModalController;
+use App\Http\Controllers\KajianAwalController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -156,7 +158,7 @@ Route::middleware('auth')->group(function () {
                 Route::post('/', [ReferenceController::class, 'storePoli'])->name('reference.poli.store');
                 Route::put('/{id}', [ReferenceController::class, 'updatePoli']);
                 Route::delete('/{id}', [ReferenceController::class, 'destroyPoli']);
-            }); 
+            });
         Route::prefix('diagnosis')
             ->group(function () {
                 Route::get('/', [ReferenceController::class, 'indexDiagnosis'])->name('reference.diagnosis');
@@ -165,7 +167,7 @@ Route::middleware('auth')->group(function () {
                 Route::post('/', [ReferenceController::class, 'storeDiagnosis'])->name('reference.diagnosis.store');
                 Route::put('/{id}', [ReferenceController::class, 'updateDiagnosis']);
                 Route::delete('/{id}', [ReferenceController::class, 'destroyDiagnosis']);
-            }); 
+            });
 
         Route::prefix('obat')
             ->group(function () {
@@ -195,7 +197,7 @@ Route::middleware('auth')->group(function () {
                 Route::post('/', [ReferenceController::class, 'storeRumahSakit'])->name('reference.rumahsakit.store');
                 Route::put('/{id}', [ReferenceController::class, 'updateRumahSakit']);
                 Route::delete('/{id}', [ReferenceController::class, 'destroyRumahSakit']);
-            }); 
+            });
     });
 
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
@@ -209,15 +211,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/patients/{id}', [PatientsController::class, 'destroy'])->name('patient.destroy');
     Route::get('/laporan/patients', [PatientsController::class, 'patientReport'])->name('patient.report');
 
-    Route::prefix('kajian-awal')
-        ->name('action.')
+	Route::prefix('kajian-awal')
+        ->name('kajian-awal.')
         ->group(function () {
-            Route::get('/poli-umum', [ActionController::class, 'index'])->name('index');
-            Route::get('/poli-umum/data', [ActionController::class, 'indexData'])->name('index.data');
-            Route::get('/poli-gigi', [ActionController::class, 'indexPoliGigi'])->name('index.gigi');
-            Route::get('/ugd', [ActionController::class, 'indexUgd'])->name('index.ugd');
-            Route::get('/kia', [ActionController::class, 'indexKia'])->name('kia.index');
-            Route::get('/kb', [ActionController::class, 'indexKb'])->name('kb.index');
+            Route::get('/poli-umum', [KajianAwalController::class, 'umum'])->name('umum');
+            Route::get('/poli-gigi', [KajianAwalController::class, 'gigi'])->name('gigi');
+            Route::get('/ugd', [KajianAwalController::class, 'ugd'])->name('ugd');
+            Route::get('/kia', [KajianAwalController::class, 'kia'])->name('kia');
+            Route::get('/kb', [KajianAwalController::class, 'kb'])->name('kb');
         });
     Route::prefix('tindakan')
         ->name('action.')
@@ -539,7 +540,7 @@ Route::prefix('obat')->group(function () {
 Route::post('patient/action', [ActionController::class, 'destroyPatientAction'])->name('patient.action.destroy');
 Route::post('sendToSatuSehat', [ActionController::class, 'sendToSatuSehat'])->name('sendToSatuSehat');
 
-
+Route::get('/loadModal/editKajianAwal/{action}', [LoadModalController::class, 'editKajianAwal'])->name('loadModal.editKajianAwal');
 
 //diagnosa
 Route::get('/get-diagnosa', [DiagnosaController::class, 'getDiagnosa']);
