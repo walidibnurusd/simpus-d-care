@@ -1,5 +1,5 @@
 <!-- Modal Add Action -->
-<div class="modal fade" style="z-index: 1050;" id="addActionObatModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade" style="z-index: 1050;" id="addActionObatModal" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -128,12 +128,11 @@
         let obatData = @json($obats); // Ambil data obat dari Laravel
         let originalStock = 0;
 
-        $('#code_obat').select2({
-            placeholder: "Pilih Obat",
+        $('#coba_obat').select2({
+            placeholder: "Pilih",
             allowClear: true,
-            minimumResultsForSearch: 0
+            dropdownParent: $('#addActionObatModal')
         });
-
 
 
         $('#code_obat').change(function() {

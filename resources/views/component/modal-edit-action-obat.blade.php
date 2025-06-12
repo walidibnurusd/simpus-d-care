@@ -169,7 +169,8 @@
         $('#code_obat{{ $action->id }}').select2({
             placeholder: "Pilih Obat",
             allowClear: true,
-            minimumResultsForSearch: 0
+            minimumResultsForSearch: 0,
+            dropdownParent: $('#editActionObatModal{{ $action->id }}')
         });
 
         $('#code_obat{{ $action->id }}').change(function() {
