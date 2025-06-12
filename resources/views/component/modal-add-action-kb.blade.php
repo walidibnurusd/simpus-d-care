@@ -458,17 +458,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4 mt-3">
-                                <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA SEKUNDER</label>
-                                <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
-                                    @foreach ($diagnosa as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4 mt-3">
                                 <label for="diagnosa_primer" style="color: rgb(19, 11, 241);">DIAGNOSA
-                                    PRIMER</label>
+                                    UTAMA</label>
                                 <select class="form-control" id="diagnosa_primer" name="diagnosa_primer"
                                     data-placeholder="pilih">
                                     <option></option>
@@ -476,6 +467,15 @@
                                         <option value="{{ $item->id }}"
                                             @if (in_array($item->id, old('diagnosa_primer', []))) selected @endif>
                                             {{ $item->name }} - {{ $item->icd10 }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mt-3">
+                                <label for="alkohol" style="color: rgb(19, 11, 241);">DIAGNOSA SEKUNDER</label>
+                                <select class="form-control" id="diagnosa" name="diagnosa[]" multiple>
+                                    @foreach ($diagnosa as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}-{{ $item->icd10 }}
                                         </option>
                                     @endforeach
                                 </select>

@@ -278,8 +278,8 @@ class ReportController extends Controller
     {
         function calculateAge($dob)
         {
-            $dob = \Carbon\Carbon::parse($dob);
-            $now = \Carbon\Carbon::now();
+            $dob = Carbon::parse($dob);
+            $now = Carbon::now();
 
             if ($dob->diffInYears($now) > 0) {
                 return $dob->diffInYears($now); // Hitung dalam tahun
@@ -292,8 +292,8 @@ class ReportController extends Controller
 
         function calculateAgeUnit($dob)
         {
-            $dob = \Carbon\Carbon::parse($dob);
-            $now = \Carbon\Carbon::now();
+            $dob = Carbon::parse($dob);
+            $now = Carbon::now();
 
             if ($dob->diffInYears($now) > 0) {
                 return 'years'; // Jika umur dalam tahun
@@ -355,8 +355,8 @@ class ReportController extends Controller
     {
         function calculateAgePTM($dob)
         {
-            $dob = \Carbon\Carbon::parse($dob);
-            $now = \Carbon\Carbon::now();
+            $dob = Carbon::parse($dob);
+            $now = Carbon::now();
 
             if ($dob->diffInYears($now) > 0) {
                 return $dob->diffInYears($now); // Hitung dalam tahun
@@ -369,8 +369,8 @@ class ReportController extends Controller
 
         function calculateAgeUnitPTM($dob)
         {
-            $dob = \Carbon\Carbon::parse($dob);
-            $now = \Carbon\Carbon::now();
+            $dob = Carbon::parse($dob);
+            $now = Carbon::now();
 
             if ($dob->diffInYears($now) > 0) {
                 return 'years'; // Jika umur dalam tahun
@@ -951,7 +951,7 @@ class ReportController extends Controller
             // Hitung jumlah pasien berdasarkan gender dan rentang usia untuk kasus baru
             foreach ($filteredActionsBaru as $action) {
                 $patient = $action->patient;
-                $age = \Carbon\Carbon::parse($patient->dob)->age;
+                $age = Carbon::parse($patient->dob)->age;
                 $gender = $patient->gender; // 2 = Laki-laki, 1 = Perempuan
 
                 foreach ($ageGroups as $group => [$minAge, $maxAge]) {
@@ -1205,96 +1205,262 @@ class ReportController extends Controller
     {
         return view('content.report.laporan-formulir10');
     }
-
     // public function reportFormulir11(Request $request)
     // {
+    //     // Input bulan dan tahun
     //     $bulan = $request->input('bulan', date('m'));
     //     $tahun = $request->input('tahun', date('Y'));
+
     //     $alergiValue = ['766', '778']; // Diagnosa alergi
     //     $chikungunyaValue = ['619']; // Diagnosa chikungunya
+    //     $dbdValue = ['618']; // Diagnosa dbd
+    //     $ddValue = ['617']; // Diagnosa demam dengeu
+    //     $filariasisValue = ['643']; // Diagnosa filariasis
+    //     $infeksiUmbilikusValue = ['838']; // Diagnosa infeksi umbilikus
+    //     $kandidiasisMulutValue = ['638']; // Diagnosa kandidiasis mulut
+    //     $keracunanMakananValue = ['874']; // Diagnosa keracunan makanan
+    //     $lepraValue = ['607']; // Diagnosa lepra
+    //     $leptospirosisValue = ['606']; // Diagnosa leptospirosis
+    //     $malariaValue = ['639']; // Diagnosa malaria
+    //     $morbiliValue = ['623']; // Diagnosa morbili
+    //     $reaksiAnafilaktikValue = ['876']; // Diagnosa reaksi anafilaktik
+    //     $syokValue = ['858']; // Diagnosa syok
+    //     $tbValue = ['604']; // Diagnosa tb
+    //     $tbcValue = ['603']; // Diagnosa tbc
+    //     $hivValue = ['629']; // Diagnosa hiv
+    //     $variselaValue = ['621']; // Diagnosa varisela
+    //     $anemiaValue = ['662']; // Diagnosa anemia
+    //     $hivNonKomplikasiValue = ['877']; // Diagnosa hiv non komplikasi
+    //     $leukemiaValue = ['663']; // Diagnosa leukemia
+    //     $limfadenitisValue = ['642']; // Diagnosa limfadenitis
+    //     $limfomaMalignaValue = ['660']; // Diagnosa limfoma maligna
+    //     $lupusValue = ['791']; // Diagnosa lupus
+    //     $thalasemiaValue = ['664']; // Diagnosa thalasemia
+    //     $ankilostomiosisValue = ['644']; // Diagnosa ankilostomiosis
+    //     $apendisitisAkutValue = ['760']; // Diagnosa Apendisitis Akut
+    //     $askariasisValue = ['646']; // Diagnosa askariasis
+    //     $atresiaValue = ['845']; // Diagnosa atresia
+    //     $bibirLangitSumbingValue = ['844']; // Diagnosa bibir langit sumbing
+    //     $bibirSumbingValue = ['843']; // Diagnosa bibir  sumbing
+    //     $demamTifoidValue = ['600']; // Diagnosa demam tifoid
+    //     $disentriValue = ['601']; // Diagnosa disentri
+    //     $gastritisValue = ['758']; // Diagnosa gastritis
+    //     $diareValue = ['602']; // Diagnosa diare
+    //     $gastroschisisValue = ['851']; // Diagnosa gastroschisis
 
-    //     // Ambil data alergi berdasarkan diagnosa
-    //     $alergi = Action::whereMonth('tanggal', $bulan)
-    //         ->whereYear('tanggal', $tahun)
-    //         ->get()
-    //         ->filter(function ($action) use ($alergiValue) {
-    //             return is_array($action->diagnosa) && !empty(array_intersect($alergiValue, $action->diagnosa));
-    //         });
+    //     // Ambil data berdasarkan diagnosa untuk alergi dan chikungunya
+    //     $alergi = $this->getGroupedData($alergiValue, $bulan, $tahun);
+    //     $chikungunya = $this->getGroupedData($chikungunyaValue, $bulan, $tahun);
+    //     $dbd = $this->getGroupedData($dbdValue, $bulan, $tahun);
+    //     $dd = $this->getGroupedData($ddValue, $bulan, $tahun);
+    //     $filariasis = $this->getGroupedData($filariasisValue, $bulan, $tahun);
+    //     $infeksiUmbilikus = $this->getGroupedData($infeksiUmbilikusValue, $bulan, $tahun);
+    //     $infeksiUmbilikus = $this->getGroupedData($infeksiUmbilikusValue, $bulan, $tahun);
+    //     $kandidiasisMulut = $this->getGroupedData($kandidiasisMulutValue, $bulan, $tahun);
+    //     $keracunanMakanan = $this->getGroupedData($keracunanMakananValue, $bulan, $tahun);
+    //     $lepra = $this->getGroupedData($lepraValue, $bulan, $tahun);
+    //     $leptospirosis = $this->getGroupedData($leptospirosisValue, $bulan, $tahun);
+    //     $malaria = $this->getGroupedData($malariaValue, $bulan, $tahun);
+    //     $morbili = $this->getGroupedData($morbiliValue, $bulan, $tahun);
+    //     $reaksiAnafilaktik = $this->getGroupedData($reaksiAnafilaktikValue, $bulan, $tahun);
+    //     $syok = $this->getGroupedData($syokValue, $bulan, $tahun);
+    //     $tb = $this->getGroupedData($tbValue, $bulan, $tahun);
+    //     $tbc = $this->getGroupedData($tbcValue, $bulan, $tahun);
+    //     $hiv = $this->getGroupedData($hivValue, $bulan, $tahun);
+    //     $varisela = $this->getGroupedData($variselaValue, $bulan, $tahun);
+    //     $anemia = $this->getGroupedData($anemiaValue, $bulan, $tahun);
+    //     $hivNonKomplikasi = $this->getGroupedData($hivNonKomplikasiValue, $bulan, $tahun);
+    //     $hivNonKomplikasi = $this->getGroupedData($hivNonKomplikasiValue, $bulan, $tahun);
+    //     $leukemia = $this->getGroupedData($leukemiaValue, $bulan, $tahun);
+    //     $limfadenitis = $this->getGroupedData($limfadenitisValue, $bulan, $tahun);
+    //     $limfomaMaligna = $this->getGroupedData($limfomaMalignaValue, $bulan, $tahun);
+    //     $lupus = $this->getGroupedData($lupusValue, $bulan, $tahun);
+    //     $lupus = $this->getGroupedData($lupusValue, $bulan, $tahun);
+    //     $thalasemia = $this->getGroupedData($thalasemiaValue, $bulan, $tahun);
+    //     $ankilostomiosis = $this->getGroupedData($ankilostomiosisValue, $bulan, $tahun);
+    //     $apendisitisAkut = $this->getGroupedData($apendisitisAkutValue, $bulan, $tahun);
+    //     $askariasis = $this->getGroupedData($askariasisValue, $bulan, $tahun);
+    //     $atresia = $this->getGroupedData($atresiaValue, $bulan, $tahun);
+    //     $bibirLangitSumbing = $this->getGroupedData($bibirLangitSumbingValue, $bulan, $tahun);
+    //     $bibirSumbing = $this->getGroupedData($bibirSumbingValue, $bulan, $tahun);
+    //     $demamTifoid = $this->getGroupedData($demamTifoidValue, $bulan, $tahun);
+    //     $disentri = $this->getGroupedData($disentriValue, $bulan, $tahun);
+    //     $gastritis = $this->getGroupedData($gastritisValue, $bulan, $tahun);
+    //     $diare = $this->getGroupedData($diareValue, $bulan, $tahun);
+    //     $gastroschisis = $this->getGroupedData($gastroschisisValue, $bulan, $tahun);
 
-    //     // Pisahkan kasus baru dan lama untuk alergi
-    //     $kasusBaruAlergi = $alergi->where('kasus', 1); // Kasus baru untuk alergi
-    //     $kasusLamaAlergi = $alergi->where('kasus', 0); // Kasus lama untuk alergi
+    //     // Kelompokkan berdasarkan usia
+    //     $kasusBaruGroupedAlergi = $this->groupByAge($alergi['kasusBaru']);
+    //     $kasusBaruGroupedChikungunya = $this->groupByAge($chikungunya['kasusBaru']);
+    //     $kasusBaruGroupedDbd = $this->groupByAge($dbd['kasusBaru']);
+    //     $kasusBaruGroupedDd = $this->groupByAge($dbd['kasusBaru']);
+    //     $kasusBaruGroupedFilariasis = $this->groupByAge($filariasis['kasusBaru']);
+    //     $kasusBaruGroupedInfeksiUmbilikus = $this->groupByAge($infeksiUmbilikus['kasusBaru']);
+    //     $kasusBaruGroupedKandidiasisMulut = $this->groupByAge($kandidiasisMulut['kasusBaru']);
+    //     $kasusBaruGroupedKeracunanMakanan = $this->groupByAge($keracunanMakanan['kasusBaru']);
+    //     $kasusBaruGroupedLepra = $this->groupByAge($lepra['kasusBaru']);
+    //     $kasusBaruGroupedLeptospirosis = $this->groupByAge($leptospirosis['kasusBaru']);
+    //     $kasusBaruGroupedMalaria = $this->groupByAge($malaria['kasusBaru']);
+    //     $kasusBaruGroupedMorbili = $this->groupByAge($morbili['kasusBaru']);
+    //     $kasusBaruGroupedReaksiAnafilaktik = $this->groupByAge($reaksiAnafilaktik['kasusBaru']);
+    //     $kasusBaruGroupedSyok = $this->groupByAge($syok['kasusBaru']);
+    //     $kasusBaruGroupedTb = $this->groupByAge($tb['kasusBaru']);
+    //     $kasusBaruGroupedTbc = $this->groupByAge($tbc['kasusBaru']);
+    //     $kasusBaruGroupedHiv = $this->groupByAge($hiv['kasusBaru']);
+    //     $kasusBaruGroupedVarisela = $this->groupByAge($varisela['kasusBaru']);
+    //     $kasusBaruGroupedAnemia = $this->groupByAge($anemia['kasusBaru']);
+    //     $kasusBaruGroupedHivNonKomplikasi = $this->groupByAge($hivNonKomplikasi['kasusBaru']);
+    //     $kasusBaruGroupedLeukemia = $this->groupByAge($leukemia['kasusBaru']);
+    //     $kasusBaruGroupedLimfadenitis = $this->groupByAge($limfadenitis['kasusBaru']);
+    //     $kasusBaruGroupedLimfomaMaligna = $this->groupByAge($limfomaMaligna['kasusBaru']);
+    //     $kasusBaruGroupedLupus = $this->groupByAge($lupus['kasusBaru']);
+    //     $kasusBaruGroupedThalasemia = $this->groupByAge($thalasemia['kasusBaru']);
+    //     $kasusBaruGroupedAnkilostomiosis = $this->groupByAge($ankilostomiosis['kasusBaru']);
+    //     $kasusBaruGroupedApendisitisAkut = $this->groupByAge($apendisitisAkut['kasusBaru']);
+    //     $kasusBaruGroupedAskariasis = $this->groupByAge($askariasis['kasusBaru']);
+    //     $kasusBaruGroupedAtresia = $this->groupByAge($atresia['kasusBaru']);
+    //     $kasusBaruGroupedBibirLangitSumbing = $this->groupByAge($bibirLangitSumbing['kasusBaru']);
+    //     $kasusBaruGroupedBibirSumbing = $this->groupByAge($bibirSumbing['kasusBaru']);
+    //     $kasusBaruGroupedDemamTifoid = $this->groupByAge($demamTifoid['kasusBaru']);
+    //     $kasusBaruGroupedDisentri = $this->groupByAge($disentri['kasusBaru']);
+    //     $kasusBaruGroupedGastritis = $this->groupByAge($gastritis['kasusBaru']);
+    //     $kasusBaruGroupedDiare = $this->groupByAge($diare['kasusBaru']);
+    //     $kasusBaruGroupedGastroschisis = $this->groupByAge($gastroschisis['kasusBaru']);
 
-    //     // Ambil data chikungunya berdasarkan diagnosa
-    //     $chikungunya = Action::whereMonth('tanggal', $bulan)
-    //         ->whereYear('tanggal', $tahun)
-    //         ->get()
-    //         ->filter(function ($action) use ($chikungunyaValue) {
-    //             return is_array($action->diagnosa) && !empty(array_intersect($chikungunyaValue, $action->diagnosa));
-    //         });
+    //     // Menghitung total kasus baru dan lama
+    //     $totalKasusBaruAlergi = $alergi['kasusBaru']->count();
+    //     $totalKasusLamaAlergi = $alergi['kasusLama']->count();
+    //     $totalKasusBaruChikungunya = $chikungunya['kasusBaru']->count();
+    //     $totalKasusLamaChikungunya = $chikungunya['kasusLama']->count();
+    //     $totalKasusBaruDbd = $dbd['kasusBaru']->count();
+    //     $totalKasusLamaDbd = $dbd['kasusLama']->count();
+    //     $totalKasusBaruDd = $dd['kasusBaru']->count();
+    //     $totalKasusLamaDd = $dd['kasusLama']->count();
+    //     $totalKasusBaruFilariasis = $filariasis['kasusBaru']->count();
+    //     $totalKasusLamaFilariasis = $filariasis['kasusLama']->count();
+    //     $totalKasusBaruInfeksiUmbilikus = $infeksiUmbilikus['kasusBaru']->count();
+    //     $totalKasusLamaInfeksiUmbilikus = $infeksiUmbilikus['kasusLama']->count();
+    //     $totalKasusBaruKandidiasisMulut = $kandidiasisMulut['kasusBaru']->count();
+    //     $totalKasusLamaKandidiasisMulut = $kandidiasisMulut['kasusLama']->count();
+    //     $totalKasusBaruKeracunanMakanan = $keracunanMakanan['kasusBaru']->count();
+    //     $totalKasusLamaKeracunanMakanan = $keracunanMakanan['kasusLama']->count();
+    //     $totalKasusBaruLepra = $lepra['kasusBaru']->count();
+    //     $totalKasusLamaLepra = $lepra['kasusLama']->count();
+    //     $totalKasusBaruLeptospirosis = $leptospirosis['kasusBaru']->count();
+    //     $totalKasusLamaLeptospirosis = $leptospirosis['kasusLama']->count();
+    //     $totalKasusBaruMalaria = $malaria['kasusBaru']->count();
+    //     $totalKasusLamaMalaria = $malaria['kasusLama']->count();
+    //     $totalKasusBaruMorbili = $morbili['kasusBaru']->count();
+    //     $totalKasusLamaMorbili = $morbili['kasusLama']->count();
+    //     $totalKasusBaruReaksiAnafilaktik = $reaksiAnafilaktik['kasusBaru']->count();
+    //     $totalKasusLamaReaksiAnafilaktik = $reaksiAnafilaktik['kasusLama']->count();
+    //     $totalKasusBaruSyok = $syok['kasusBaru']->count();
+    //     $totalKasusLamaSyok = $syok['kasusLama']->count();
+    //     $totalKasusBaruTb = $tb['kasusBaru']->count();
+    //     $totalKasusLamaTb = $tb['kasusLama']->count();
+    //     $totalKasusBaruTbc = $tbc['kasusBaru']->count();
+    //     $totalKasusLamaTbc = $tbc['kasusLama']->count();
+    //     $totalKasusBaruHiv = $hiv['kasusBaru']->count();
+    //     $totalKasusLamaHiv = $hiv['kasusLama']->count();
+    //     $totalKasusBaruVarisela = $varisela['kasusBaru']->count();
+    //     $totalKasusLamaVarisela = $varisela['kasusLama']->count();
+    //     $totalKasusBaruAnemia = $anemia['kasusBaru']->count();
+    //     $totalKasusLamaAnemia = $anemia['kasusLama']->count();
+    //     $totalKasusBaruHivNonKomplikasi = $hivNonKomplikasi['kasusBaru']->count();
+    //     $totalKasusLamaHivNonKomplikasi = $hivNonKomplikasi['kasusLama']->count();
+    //     $totalKasusBaruLeukemia = $leukemia['kasusBaru']->count();
+    //     $totalKasusLamaLeukemia = $leukemia['kasusLama']->count();
+    //     $totalKasusBaruLimfadenitis = $limfadenitis['kasusBaru']->count();
+    //     $totalKasusLamaLimfadenitis = $limfadenitis['kasusLama']->count();
+    //     $totalKasusBaruLimfomaMaligna = $limfomaMaligna['kasusBaru']->count();
+    //     $totalKasusLamaLimfomaMaligna = $limfomaMaligna['kasusLama']->count();
+    //     $totalKasusBaruLupus = $lupus['kasusBaru']->count();
+    //     $totalKasusLamaLupus = $lupus['kasusLama']->count();
+    //     $totalKasusBaruThalasemia = $thalasemia['kasusBaru']->count();
+    //     $totalKasusLamaThalasemia = $thalasemia['kasusLama']->count();
+    //     $totalKasusBaruAnkilostomiosis = $ankilostomiosis['kasusBaru']->count();
+    //     $totalKasusLamaAnkilostomiosis = $ankilostomiosis['kasusLama']->count();
+    //     $totalKasusBaruApendisitisAkut = $apendisitisAkut['kasusBaru']->count();
+    //     $totalKasusLamaApendisitisAkut = $apendisitisAkut['kasusLama']->count();
+    //     $totalKasusBaruAskariasis = $askariasis['kasusBaru']->count();
+    //     $totalKasusLamaAskariasis = $askariasis['kasusLama']->count();
+    //     $totalKasusBaruAtresia = $atresia['kasusBaru']->count();
+    //     $totalKasusLamaAtresia = $atresia['kasusLama']->count();
+    //     $totalKasusBaruBibirLangitSumbing = $bibirLangitSumbing['kasusBaru']->count();
+    //     $totalKasusLamaBibirLangitSumbing = $bibirLangitSumbing['kasusLama']->count();
+    //     $totalKasusBaruBibirSumbing = $bibirSumbing['kasusBaru']->count();
+    //     $totalKasusLamaBibirSumbing = $bibirSumbing['kasusLama']->count();
+    //     $totalKasusBaruDemamTifoid = $demamTifoid['kasusBaru']->count();
+    //     $totalKasusLamaDemamTifoid = $demamTifoid['kasusLama']->count();
+    //     $totalKasusBaruDisentri = $disentri['kasusBaru']->count();
+    //     $totalKasusLamaDisentri = $disentri['kasusLama']->count();
+    //     $totalKasusBaruGastritis = $gastritis['kasusBaru']->count();
+    //     $totalKasusBaruGastritis = $gastritis['kasusBaru']->count();
+    //     $totalKasusBaruDiare = $diare['kasusBaru']->count();
+    //     $totalKasusLamaDiare = $diare['kasusLama']->count();
+    //     $totalKasusLamaGastroschisis = $gastroschisis['kasusLama']->count();
+    //     $totalKasusLamaGastroschisis = $gastroschisis['kasusLama']->count();
 
-    //     // Pisahkan kasus baru dan lama untuk chikungunya
-    //     $kasusBaruChikungunya = $chikungunya->where('kasus', 1); // Kasus baru untuk chikungunya
-    //     $kasusLamaChikungunya = $chikungunya->where('kasus', 0); // Kasus lama untuk chikungunya
+    //     // Menghitung jumlah kasus baru per gender
+    //     $totalKasusBaruPerGenderAlergi = $this->getTotalByGender($alergi['kasusBaru']);
+    //     $totalKasusBaruPerGenderChikungunya = $this->getTotalByGender($chikungunya['kasusBaru']);
+    //     $totalKasusBaruPerGenderDbd = $this->getTotalByGender($dbd['kasusBaru']);
+    //     $totalKasusBaruPerGenderDd = $this->getTotalByGender($dd['kasusBaru']);
+    //     $totalKasusBaruPerGenderFilariasis = $this->getTotalByGender($filariasis['kasusBaru']);
+    //     $totalKasusBaruPerGenderInfeksiUmbilikus = $this->getTotalByGender($infeksiUmbilikus['kasusBaru']);
+    //     $totalKasusBaruPerGenderKandidiasisMulut = $this->getTotalByGender($kandidiasisMulut['kasusBaru']);
+    //     $totalKasusBaruPerGenderKeracunanMakanan = $this->getTotalByGender($keracunanMakanan['kasusBaru']);
+    //     $totalKasusBaruPerGenderLepra = $this->getTotalByGender($lepra['kasusBaru']);
+    //     $totalKasusBaruPerGenderLeptospirosis = $this->getTotalByGender($leptospirosis['kasusBaru']);
+    //     $totalKasusBaruPerGenderMalaria = $this->getTotalByGender($malaria['kasusBaru']);
+    //     $totalKasusBaruPerGenderMorbili = $this->getTotalByGender($morbili['kasusBaru']);
+    //     $totalKasusBaruPerGenderReaksiAnafilaktik = $this->getTotalByGender($reaksiAnafilaktik['kasusBaru']);
+    //     $totalKasusBaruPerGenderSyok = $this->getTotalByGender($syok['kasusBaru']);
+    //     $totalKasusBaruPerGenderTb = $this->getTotalByGender($tb['kasusBaru']);
+    //     $totalKasusBaruPerGenderTbc = $this->getTotalByGender($tbc['kasusBaru']);
+    //     $totalKasusBaruPerGenderHiv = $this->getTotalByGender($hiv['kasusBaru']);
+    //     $totalKasusBaruPerGenderVarisela = $this->getTotalByGender($varisela['kasusBaru']);
+    //     $totalKasusBaruPerGenderAnemia = $this->getTotalByGender($anemia['kasusBaru']);
+    //     $totalKasusBaruPerGenderHivNonKomplikasi = $this->getTotalByGender($hivNonKomplikasi['kasusBaru']);
+    //     $totalKasusBaruPerGenderLeukemia = $this->getTotalByGender($leukemia['kasusBaru']);
+    //     $totalKasusBaruPerGenderLimfadenitis = $this->getTotalByGender($limfadenitis['kasusBaru']);
+    //     $totalKasusBaruPerGenderLimfomaMaligna = $this->getTotalByGender($limfomaMaligna['kasusBaru']);
+    //     $totalKasusBaruPerGenderLupus = $this->getTotalByGender($lupus['kasusBaru']);
+    //     $totalKasusBaruPerGenderThalasemia = $this->getTotalByGender($thalasemia['kasusBaru']);
+    //     $totalKasusBaruPerGenderAnkilostomiosis = $this->getTotalByGender($ankilostomiosis['kasusBaru']);
+    //     $totalKasusBaruPerGenderApendisitisAkut = $this->getTotalByGender($apendisitisAkut['kasusBaru']);
 
-    //     // Fungsi untuk mengelompokkan data berdasarkan usia dan kasus (tanpa gender untuk kasus baru)
-    //     $groupByAgeKasus = function ($actions) {
-    //         return $actions
-    //             ->groupBy(function ($action) {
-    //                 // Hitung usia berdasarkan tanggal lahir pasien
-    //                 $dob = Carbon::parse($action->patient->dob);
-    //                 $age = Carbon::now()->diffInDays($dob); // Hitung usia dalam hari
-
-    //                 // Tentukan rentang usia berdasarkan jumlah hari
-    //                 if ($age <= 7) {
-    //                     return '0-7 hari';
-    //                 } elseif ($age <= 28) {
-    //                     return '8-28 hari';
-    //                 } elseif ($age <= 336) {
-    //                     return '1-11 bulan';
-    //                 } elseif ($age <= 1460) {
-    //                     return '1-4 thn';
-    //                 } elseif ($age <= 3285) {
-    //                     return '5-9 thn';
-    //                 } elseif ($age <= 5110) {
-    //                     return '10-14 thn';
-    //                 } elseif ($age <= 6935) {
-    //                     return '15-19 thn';
-    //                 } elseif ($age <= 16130) {
-    //                     return '20-44 thn';
-    //                 } elseif ($age <= 21590) {
-    //                     return '45-59 thn';
-    //                 } else {
-    //                     return '>59 thn';
-    //                 }
-    //             })
-    //             ->map(function ($actions) {
-    //                 return $actions->count(); // Menghitung total kasus dalam kelompok usia
-    //             });
-    //     };
-
-    //     // Mengelompokkan kasus baru berdasarkan usia
-    //     $kasusBaruGroupedAlergi = $groupByAgeKasus($kasusBaruAlergi);
-    //     $kasusBaruGroupedChikungunya = $groupByAgeKasus($kasusBaruChikungunya);
-
-    //     // Menghitung jumlah total seluruh kasus baru dan lama
-    //     $totalKasusBaruAlergi = $kasusBaruAlergi->count(); // Total kasus baru untuk alergi
-    //     $totalKasusLamaAlergi = $kasusLamaAlergi->count(); // Total kasus lama untuk alergi
-
-    //     $totalKasusBaruChikungunya = $kasusBaruChikungunya->count(); // Total kasus baru untuk chikungunya
-    //     $totalKasusLamaChikungunya = $kasusLamaChikungunya->count(); // Total kasus lama untuk chikungunya
-
-    //     // Menghitung jumlah total kasus baru per gender
-    //     $totalKasusBaruPerGenderAlergi = $kasusBaruAlergi->groupBy('patient.gender')->map->count();
-    //     $totalKasusBaruPerGenderChikungunya = $kasusBaruChikungunya->groupBy('patient.gender')->map->count();
-
-    //     // Menghitung jumlah total kasus lama per gender
-    //     $totalKasusLamaPerGenderAlergi = $kasusLamaAlergi->groupBy('patient.gender')->map->count();
-    //     $totalKasusLamaPerGenderChikungunya = $kasusLamaChikungunya->groupBy('patient.gender')->map->count();
+    //     // Menghitung jumlah kasus lama per gender
+    //     $totalKasusLamaPerGenderAlergi = $this->getTotalByGender($alergi['kasusLama']);
+    //     $totalKasusLamaPerGenderChikungunya = $this->getTotalByGender($chikungunya['kasusLama']);
+    //     $totalKasusLamaPerGenderDbd = $this->getTotalByGender($dbd['kasusLama']);
+    //     $totalKasusLamaPerGenderDd = $this->getTotalByGender($dd['kasusLama']);
+    //     $totalKasusLamaPerGenderFilariasis = $this->getTotalByGender($filariasis['kasusLama']);
+    //     $totalKasusLamaPerGenderInfeksiUmbilikus = $this->getTotalByGender($infeksiUmbilikus['kasusLama']);
+    //     $totalKasusLamaPerGenderKandidiasisMulut = $this->getTotalByGender($kandidiasisMulut['kasusLama']);
+    //     $totalKasusLamaPerGenderKeracunanMakanan = $this->getTotalByGender($keracunanMakanan['kasusLama']);
+    //     $totalKasusLamaPerGenderLepra = $this->getTotalByGender($lepra['kasusLama']);
+    //     $totalKasusLamaPerGenderLeptospirosis = $this->getTotalByGender($leptospirosis['kasusLama']);
+    //     $totalKasusLamaPerGenderMalaria = $this->getTotalByGender($malaria['kasusLama']);
+    //     $totalKasusLamaPerGenderMorbili = $this->getTotalByGender($morbili['kasusLama']);
+    //     $totalKasusLamaPerGenderReaksiAnafilaktik = $this->getTotalByGender($reaksiAnafilaktik['kasusLama']);
+    //     $totalKasusLamaPerGenderSyok = $this->getTotalByGender($syok['kasusLama']);
+    //     $totalKasusLamaPerGenderTb = $this->getTotalByGender($tb['kasusLama']);
+    //     $totalKasusLamaPerGenderTbc = $this->getTotalByGender($tbc['kasusLama']);
+    //     $totalKasusLamaPerGenderHiv = $this->getTotalByGender($hiv['kasusLama']);
+    //     $totalKasusLamaPerGenderVarisela = $this->getTotalByGender($varisela['kasusLama']);
+    //     $totalKasusLamaPerGenderAnemia = $this->getTotalByGender($anemia['kasusLama']);
+    //     $totalKasusLamaPerGenderHivNonKomplikasi = $this->getTotalByGender($hivNonKomplikasi['kasusLama']);
+    //     $totalKasusLamaPerGenderLeukemia = $this->getTotalByGender($leukemia['kasusLama']);
+    //     $totalKasusLamaPerGenderLimfadenitis = $this->getTotalByGender($limfadenitis['kasusLama']);
+    //     $totalKasusLamaPerGenderLimfomaMaligna = $this->getTotalByGender($limfomaMaligna['kasusLama']);
+    //     $totalKasusLamaPerGenderLupus = $this->getTotalByGender($lupus['kasusLama']);
+    //     $totalKasusLamaPerGenderThalasemia = $this->getTotalByGender($thalasemia['kasusLama']);
+    //     $totalKasusLamaPerGenderAnkilostomiosis = $this->getTotalByGender($ankilostomiosis['kasusLama']);
+    //     $totalKasusLamaPerGenderApendisitisAkut = $this->getTotalByGender($apendisitisAkut['kasusLama']);
 
     //     // Load template Excel yang sudah ada
     //     $templatePath = public_path('assets/report/report-11.xlsx');
-
     //     if (!file_exists($templatePath)) {
     //         abort(404, 'Template Excel tidak ditemukan.');
     //     }
@@ -1305,7 +1471,7 @@ class ReportController extends Controller
 
     //     // Tentukan kolom untuk rentang usia
     //     $columns = [
-    //         '0-7 hari' => 'D', // Mulai dari D untuk 0-7 hari
+    //         '0-7 hari' => 'D',
     //         '8-28 hari' => 'E',
     //         '1-11 bulan' => 'F',
     //         '1-4 thn' => 'G',
@@ -1317,90 +1483,239 @@ class ReportController extends Controller
     //         '>59 thn' => 'M',
     //     ];
 
-    //     // Menuliskan data kasus baru per usia untuk alergi (mulai dari baris 13)
-    //     $rowAlergi = 13; // Baris dimulai dari 13 untuk data usia alergi
-    //     foreach ($kasusBaruGroupedAlergi as $ageRange => $totalKasusBaru) {
-    //         if (isset($columns[$ageRange])) {
-    //             $sheet->setCellValue($columns[$ageRange] . $rowAlergi, $totalKasusBaru); // Menulis jumlah kasus baru per usia untuk alergi
-    //         }
-    //     }
+    //     $this->writeAgeDataToExcel($sheet, 13, $kasusBaruGroupedAlergi, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 14, $kasusBaruGroupedChikungunya, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 16, $kasusBaruGroupedDbd, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 17, $kasusBaruGroupedDd, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 21, $kasusBaruGroupedFilariasis, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 22, $kasusBaruGroupedInfeksiUmbilikus, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 23, $kasusBaruGroupedKandidiasisMulut, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 24, $kasusBaruGroupedKeracunanMakanan, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 25, $kasusBaruGroupedLepra, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 26, $kasusBaruGroupedLeptospirosis, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 27, $kasusBaruGroupedMalaria, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 28, $kasusBaruGroupedMorbili, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 32, $kasusBaruGroupedReaksiAnafilaktik, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 33, $kasusBaruGroupedSyok, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 34, $kasusBaruGroupedTb, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 35, $kasusBaruGroupedTbc, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 36, $kasusBaruGroupedHiv, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 37, $kasusBaruGroupedVarisela, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 39, $kasusBaruGroupedAnemia, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 40, $kasusBaruGroupedHivNonKomplikasi, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 44, $kasusBaruGroupedLeukemia, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 45, $kasusBaruGroupedLimfadenitis, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 46, $kasusBaruGroupedLimfomaMaligna, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 47, $kasusBaruGroupedLupus, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 48, $kasusBaruGroupedThalasemia, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 50, $kasusBaruGroupedAnkilostomiosis, $columns);
+    //     $this->writeAgeDataToExcel($sheet, 51, $kasusBaruGroupedApendisitisAkut, $columns);
 
-    //     // Menuliskan data kasus baru per usia untuk chikungunya (mulai dari baris 14)
-    //     $rowChikungunya = 14; // Baris dimulai dari 14 untuk kasus chikungunya
-    //     foreach ($kasusBaruGroupedChikungunya as $ageRange => $totalKasusBaru) {
-    //         if (isset($columns[$ageRange])) {
-    //             $sheet->setCellValue($columns[$ageRange] . $rowChikungunya, $totalKasusBaru); // Menulis jumlah kasus baru per usia untuk chikungunya
-    //         }
-    //     }
-
-    //     // Menulis jumlah total kasus baru per gender di kolom N13 (laki-laki) dan O13 (perempuan) untuk alergi
-    //     $sheet->setCellValue('N13', $totalKasusBaruPerGenderAlergi['0'] ?? 0); // Laki-laki total kasus baru (Alergi)
-    //     $sheet->setCellValue('O13', $totalKasusBaruPerGenderAlergi['1'] ?? 0); // Perempuan total kasus baru (Alergi)
-
-    //     // Menulis jumlah total kasus baru per gender di kolom N14 (laki-laki) dan O14 (perempuan) untuk chikungunya
-    //     $sheet->setCellValue('N14', $totalKasusBaruPerGenderChikungunya['0'] ?? 0); // Laki-laki total kasus baru (Chikungunya)
-    //     $sheet->setCellValue('O14', $totalKasusBaruPerGenderChikungunya['1'] ?? 0); // Perempuan total kasus baru (Chikungunya)
-
-    //     // Menambahkan total keseluruhan kasus lama untuk alergi dan chikungunya
-    //     $sheet->setCellValue('P13', $totalKasusLamaAlergi); // Total kasus lama (Alergi)
-    //     $sheet->setCellValue('P14', $totalKasusLamaChikungunya); // Total kasus lama (Chikungunya)
-
-    //     $sheet->setCellValue('Q13', $totalKasusLamaPerGenderAlergi['0'] ?? 0); // Laki-laki total kasus lama (Alergi)
-    //     $sheet->setCellValue('R13', $totalKasusLamaPerGenderAlergi['1'] ?? 0); // Perempuan total kasus lama (Alergi)
-    //     $sheet->setCellValue('S13', $totalKasusLamaAlergi); // Total kasus lama (Alergi)
-    //     $sheet->setCellValue('Q14', $totalKasusLamaPerGenderChikungunya['0'] ?? 0); // Laki-laki total kasus lama (Chikungunya)
-    //     $sheet->setCellValue('R14', $totalKasusLamaPerGenderChikungunya['1'] ?? 0); // Perempuan total kasus lama (Chikungunya)
-    //     $sheet->setCellValue('S14', $totalKasusLamaChikungunya); // Total kasus lama (Chikungunya)
+    //     // Menulis data total kasus baru dan lama per gender
+    //     $this->writeGenderDataToExcel($sheet, 13, $totalKasusBaruPerGenderAlergi, $totalKasusLamaPerGenderAlergi, $totalKasusBaruAlergi, $totalKasusLamaAlergi);
+    //     $this->writeGenderDataToExcel($sheet, 14, $totalKasusBaruPerGenderChikungunya, $totalKasusLamaPerGenderChikungunya, $totalKasusBaruChikungunya, $totalKasusLamaChikungunya);
+    //     $this->writeGenderDataToExcel($sheet, 16, $totalKasusBaruPerGenderDbd, $totalKasusLamaPerGenderDbd, $totalKasusBaruDbd, $totalKasusLamaDbd);
+    //     $this->writeGenderDataToExcel($sheet, 17, $totalKasusBaruPerGenderDd, $totalKasusLamaPerGenderDd, $totalKasusBaruDd, $totalKasusLamaDd);
+    //     $this->writeGenderDataToExcel($sheet, 21, $totalKasusBaruPerGenderFilariasis, $totalKasusLamaPerGenderFilariasis, $totalKasusBaruFilariasis, $totalKasusLamaFilariasis);
+    //     $this->writeGenderDataToExcel($sheet, 22, $totalKasusBaruPerGenderInfeksiUmbilikus, $totalKasusLamaPerGenderInfeksiUmbilikus, $totalKasusBaruInfeksiUmbilikus, $totalKasusLamaInfeksiUmbilikus);
+    //     $this->writeGenderDataToExcel($sheet, 23, $totalKasusBaruPerGenderKandidiasisMulut, $totalKasusLamaPerGenderKandidiasisMulut, $totalKasusBaruKandidiasisMulut, $totalKasusLamaKandidiasisMulut);
+    //     $this->writeGenderDataToExcel($sheet, 24, $totalKasusBaruPerGenderKeracunanMakanan, $totalKasusLamaPerGenderKeracunanMakanan, $totalKasusBaruKeracunanMakanan, $totalKasusLamaKeracunanMakanan);
+    //     $this->writeGenderDataToExcel($sheet, 25, $totalKasusBaruPerGenderLepra, $totalKasusLamaPerGenderLepra, $totalKasusBaruLepra, $totalKasusLamaLepra);
+    //     $this->writeGenderDataToExcel($sheet, 26, $totalKasusBaruPerGenderLeptospirosis, $totalKasusLamaPerGenderLeptospirosis, $totalKasusBaruLeptospirosis, $totalKasusLamaLeptospirosis);
+    //     $this->writeGenderDataToExcel($sheet, 27, $totalKasusBaruPerGenderMalaria, $totalKasusLamaPerGenderMalaria, $totalKasusBaruMalaria, $totalKasusLamaMalaria);
+    //     $this->writeGenderDataToExcel($sheet, 28, $totalKasusBaruPerGenderMorbili, $totalKasusLamaPerGenderMorbili, $totalKasusBaruMorbili, $totalKasusLamaMorbili);
+    //     $this->writeGenderDataToExcel($sheet, 32, $totalKasusBaruPerGenderReaksiAnafilaktik, $totalKasusLamaPerGenderReaksiAnafilaktik, $totalKasusBaruReaksiAnafilaktik, $totalKasusLamaReaksiAnafilaktik);
+    //     $this->writeGenderDataToExcel($sheet, 33, $totalKasusBaruPerGenderSyok, $totalKasusLamaPerGenderSyok, $totalKasusBaruSyok, $totalKasusLamaSyok);
+    //     $this->writeGenderDataToExcel($sheet, 34, $totalKasusBaruPerGenderTb, $totalKasusLamaPerGenderTb, $totalKasusBaruTb, $totalKasusLamaTb);
+    //     $this->writeGenderDataToExcel($sheet, 35, $totalKasusBaruPerGenderTbc, $totalKasusLamaPerGenderTbc, $totalKasusBaruTbc, $totalKasusLamaTbc);
+    //     $this->writeGenderDataToExcel($sheet, 36, $totalKasusBaruPerGenderHiv, $totalKasusLamaPerGenderHiv, $totalKasusBaruHiv, $totalKasusLamaHiv);
+    //     $this->writeGenderDataToExcel($sheet, 37, $totalKasusBaruPerGenderVarisela, $totalKasusLamaPerGenderVarisela, $totalKasusBaruVarisela, $totalKasusLamaVarisela);
+    //     $this->writeGenderDataToExcel($sheet, 39, $totalKasusBaruPerGenderAnemia, $totalKasusLamaPerGenderAnemia, $totalKasusBaruAnemia, $totalKasusLamaAnemia);
+    //     $this->writeGenderDataToExcel($sheet, 40, $totalKasusBaruPerGenderHivNonKomplikasi, $totalKasusLamaPerGenderHivNonKomplikasi, $totalKasusBaruHivNonKomplikasi, $totalKasusLamaHivNonKomplikasi);
+    //     $this->writeGenderDataToExcel($sheet, 44, $totalKasusBaruPerGenderLeukemia, $totalKasusLamaPerGenderLeukemia, $totalKasusBaruLeukemia, $totalKasusLamaLeukemia);
+    //     $this->writeGenderDataToExcel($sheet, 45, $totalKasusBaruPerGenderLimfadenitis, $totalKasusLamaPerGenderLimfadenitis, $totalKasusBaruLimfadenitis, $totalKasusLamaLimfadenitis);
+    //     $this->writeGenderDataToExcel($sheet, 46, $totalKasusBaruPerGenderLimfomaMaligna, $totalKasusLamaPerGenderLimfomaMaligna, $totalKasusBaruLimfomaMaligna, $totalKasusLamaLimfomaMaligna);
+    //     $this->writeGenderDataToExcel($sheet, 47, $totalKasusBaruPerGenderLupus, $totalKasusLamaPerGenderLupus, $totalKasusBaruLupus, $totalKasusLamaLupus);
+    //     $this->writeGenderDataToExcel($sheet, 48, $totalKasusBaruPerGenderThalasemia, $totalKasusLamaPerGenderThalasemia, $totalKasusBaruThalasemia, $totalKasusLamaThalasemia);
+    //     $this->writeGenderDataToExcel($sheet, 50, $totalKasusBaruPerGenderAnkilostomiosis, $totalKasusLamaPerGenderAnkilostomiosis, $totalKasusBaruAnkilostomiosis, $totalKasusLamaAnkilostomiosis);
+    //     $this->writeGenderDataToExcel($sheet, 51, $totalKasusBaruPerGenderApendisitisAkut, $totalKasusLamaPerGenderApendisitisAkut, $totalKasusBaruApendisitisAkut, $totalKasusLamaApendisitisAkut);
 
     //     // Stream ke user (tanpa menyimpan di server)
     //     $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-
     //     return response()->streamDownload(function () use ($writer) {
     //         $writer->save('php://output');
     //     }, 'laporan-formulir11.xlsx');
     // }
 
+    // // Fungsi untuk mengambil data berdasarkan diagnosa
+    // private function getGroupedData($diagnosaValue, $bulan, $tahun)
+    // {
+    //     $data = Action::whereMonth('tanggal', $bulan)
+    //         ->whereYear('tanggal', $tahun)
+    //         ->get()
+    //         ->filter(function ($action) use ($diagnosaValue) {
+    //             return is_array($action->diagnosa) && !empty(array_intersect($diagnosaValue, $action->diagnosa));
+    //         });
+
+    //     return [
+    //         'kasusBaru' => $data->where('kasus', 1),
+    //         'kasusLama' => $data->where('kasus', 0),
+    //     ];
+    // }
+
+    // // Fungsi untuk mengelompokkan data berdasarkan usia
+    // private function groupByAge($actions)
+    // {
+    //     return $actions
+    //         ->groupBy(function ($action) {
+    //             $dob = Carbon::parse($action->patient->dob);
+    //             $age = Carbon::now()->diffInDays($dob); // Hitung usia dalam hari
+
+    //             if ($age <= 7) {
+    //                 return '0-7 hari';
+    //             }
+    //             if ($age <= 28) {
+    //                 return '8-28 hari';
+    //             }
+    //             if ($age <= 336) {
+    //                 return '1-11 bulan';
+    //             }
+    //             if ($age <= 1460) {
+    //                 return '1-4 thn';
+    //             }
+    //             if ($age <= 3285) {
+    //                 return '5-9 thn';
+    //             }
+    //             if ($age <= 5110) {
+    //                 return '10-14 thn';
+    //             }
+    //             if ($age <= 6935) {
+    //                 return '15-19 thn';
+    //             }
+    //             if ($age <= 16130) {
+    //                 return '20-44 thn';
+    //             }
+    //             if ($age <= 21590) {
+    //                 return '45-59 thn';
+    //             }
+    //             return '>59 thn';
+    //         })
+    //         ->map->count();
+    // }
+
+    // // Fungsi untuk menghitung jumlah kasus berdasarkan gender
+    // private function getTotalByGender($actions)
+    // {
+    //     // Pastikan pengelompokan gender bekerja dengan benar
+    //     return $actions
+    //         ->groupBy(function ($action) {
+    //             return $action->patient->gender; // Kelompokkan berdasarkan gender (0: laki-laki, 1: perempuan)
+    //         })
+    //         ->map(function ($group) {
+    //             return $group->count(); // Menghitung jumlah pasien berdasarkan gender
+    //         });
+    // }
+
+    // // Fungsi untuk menulis data kasus per usia ke Excel
+    // private function writeAgeDataToExcel($sheet, $row, $groupedData, $columns)
+    // {
+    //     foreach ($groupedData as $ageRange => $totalCases) {
+    //         if (isset($columns[$ageRange])) {
+    //             $sheet->setCellValue($columns[$ageRange] . $row, $totalCases);
+    //         }
+    //     }
+    // }
+
+    // // Fungsi untuk menulis data kasus per gender ke Excel
+    // private function writeGenderDataToExcel($sheet, $row, $totalKasusBaruPerGender, $totalKasusLamaPerGender, $totalKasusBaru, $totalKasusLama)
+    // {
+    //     $sheet->setCellValue('N' . $row, $totalKasusBaruPerGender['2'] ?? 0); // Laki-laki total kasus baru
+    //     $sheet->setCellValue('O' . $row, $totalKasusBaruPerGender['1'] ?? 0); // Perempuan total kasus baru
+    //     $sheet->setCellValue('Q' . $row, $totalKasusLamaPerGender['2'] ?? 0); // Laki-laki total kasus lama
+    //     $sheet->setCellValue('R' . $row, $totalKasusLamaPerGender['1'] ?? 0); // Perempuan total kasus lama
+    //     $sheet->setCellValue('P' . $row, $totalKasusBaru); // Total kasus baru
+    //     $sheet->setCellValue('S' . $row, $totalKasusLama); // Total kasus lama
+    // }
     public function reportFormulir11(Request $request)
     {
         // Input bulan dan tahun
         $bulan = $request->input('bulan', date('m'));
         $tahun = $request->input('tahun', date('Y'));
-        $alergiValue = ['766', '778']; // Diagnosa alergi
-        $chikungunyaValue = ['619']; // Diagnosa chikungunya
 
-        // Ambil data berdasarkan diagnosa untuk alergi dan chikungunya
-        $alergi = $this->getGroupedData($alergiValue, $bulan, $tahun);
-        $chikungunya = $this->getGroupedData($chikungunyaValue, $bulan, $tahun);
+        // Diagnosis Values Mapping
+        $diagnoses = [
+            'alergi' => ['766', '778'],
+            'chikungunya' => ['619'],
+            'dbd' => ['618'],
+            'dd' => ['617'],
+            'filariasis' => ['643'],
+            'infeksiUmbilikus' => ['838'],
+            'kandidiasisMulut' => ['638'],
+            'keracunanMakanan' => ['874'],
+            'lepra' => ['607'],
+            'leptospirosis' => ['606'],
+            'malaria' => ['639'],
+            'morbili' => ['623'],
+            'reaksiAnafilaktik' => ['876'],
+            'syok' => ['858'],
+            'tb' => ['604'],
+            'tbc' => ['603'],
+            'hiv' => ['629'],
+            'varisela' => ['621'],
+            'anemia' => ['662'],
+            'hivNonKomplikasi' => ['877'],
+            'leukemia' => ['663'],
+            'limfadenitis' => ['642'],
+            'limfomaMaligna' => ['660'],
+            'lupus' => ['791'],
+            'thalasemia' => ['664'],
+            'ankilostomiosis' => ['644'],
+            'apendisitisAkut' => ['760'],
+            'askariasis' => ['646'],
+            'atresia' => ['845'],
+            'bibirLangitSumbing' => ['844'],
+            'bibirSumbing' => ['843'],
+            'demamTifoid' => ['600'],
+            'disentri' => ['601'],
+            'gastritis' => ['758'],
+            'diare' => ['602'],
+            'gastroschisis' => ['851'],
+        ];
 
-        // Kelompokkan berdasarkan usia
-        $kasusBaruGroupedAlergi = $this->groupByAge($alergi['kasusBaru']);
-        $kasusBaruGroupedChikungunya = $this->groupByAge($chikungunya['kasusBaru']);
+        // Retrieve and process data for each diagnosis
+        $diagnosisData = [];
+        foreach ($diagnoses as $key => $values) {
+            $diagnosisData[$key] = $this->getGroupedData($values, $bulan, $tahun);
+        }
 
-        // Menghitung total kasus baru dan lama
-        $totalKasusBaruAlergi = $alergi['kasusBaru']->count();
-        $totalKasusLamaAlergi = $alergi['kasusLama']->count();
-        $totalKasusBaruChikungunya = $chikungunya['kasusBaru']->count();
-        $totalKasusLamaChikungunya = $chikungunya['kasusLama']->count();
+        // Group cases by age
+        $groupedDataByAge = [];
+        foreach ($diagnosisData as $key => $data) {
+            $groupedDataByAge[$key] = $this->groupByAge($data['kasusBaru']);
+        }
 
-        // Menghitung jumlah kasus baru per gender
-        $totalKasusBaruPerGenderAlergi = $this->getTotalByGender($alergi['kasusBaru']);
-        $totalKasusBaruPerGenderChikungunya = $this->getTotalByGender($chikungunya['kasusBaru']);
+        // Count total cases by gender
+        $groupedDataByGender = [];
+        foreach ($diagnosisData as $key => $data) {
+            $groupedDataByGender[$key] = [
+                'barus' => $this->getTotalByGender($data['kasusBaru']),
+                'lamas' => $this->getTotalByGender($data['kasusLama']),
+                'totalBaru' => $data['kasusBaru']->count(),
+                'totalLama' => $data['kasusLama']->count(),
+            ];
+        }
 
-        // Menghitung jumlah kasus lama per gender
-        $totalKasusLamaPerGenderAlergi = $this->getTotalByGender($alergi['kasusLama']);
-        $totalKasusLamaPerGenderChikungunya = $this->getTotalByGender($chikungunya['kasusLama']);
-
-        // Load template Excel yang sudah ada
+        // Load Excel template
         $templatePath = public_path('assets/report/report-11.xlsx');
         if (!file_exists($templatePath)) {
             abort(404, 'Template Excel tidak ditemukan.');
         }
 
-        // Buka template Excel
+        // Open the template Excel file
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Tentukan kolom untuk rentang usia
+        // Age columns
         $columns = [
             '0-7 hari' => 'D',
             '8-28 hari' => 'E',
@@ -1414,24 +1729,44 @@ class ReportController extends Controller
             '>59 thn' => 'M',
         ];
 
-        // Menulis data kasus baru per usia untuk alergi
-        $this->writeAgeDataToExcel($sheet, 13, $kasusBaruGroupedAlergi, $columns);
+        $row = 13; // Starting row
+        $skipRow1 = [15];
+        $skipRow2 = [38];
+        $skipRow3 = [49];
+        $skipRangeStart = 18;
+        $skipRangeEnd = 20;
+        $skipRangeStart2 = 29;
+        $skipRangeEnd2 = 31;
+        $skipRangeStart3 = 41;
+        $skipRangeEnd3 = 43;
+        $skipRangeStart4 = 52;
+        $skipRangeEnd4 = 54;
 
-        // Menulis data kasus baru per usia untuk chikungunya
-        $this->writeAgeDataToExcel($sheet, 14, $kasusBaruGroupedChikungunya, $columns);
+        // Combine all rows to skip
+        $skipRowsCombined = array_merge($skipRow1, $skipRow2, $skipRow3, range($skipRangeStart, $skipRangeEnd), range($skipRangeStart2, $skipRangeEnd2), range($skipRangeStart3, $skipRangeEnd3), range($skipRangeStart4, $skipRangeEnd4));
 
-        // Menulis data total kasus baru dan lama per gender
-        $this->writeGenderDataToExcel($sheet, 13, $totalKasusBaruPerGenderAlergi, $totalKasusLamaPerGenderAlergi, $totalKasusBaruAlergi, $totalKasusLamaAlergi);
-        $this->writeGenderDataToExcel($sheet, 14, $totalKasusBaruPerGenderChikungunya, $totalKasusLamaPerGenderChikungunya, $totalKasusBaruChikungunya, $totalKasusLamaChikungunya);
+        foreach ($groupedDataByAge as $key => $groupedAgeData) {
+            // Skip rows for kasusu lama
+            while (in_array($row, $skipRowsCombined)) {
+                $row++; // Skip to the next row
+            }
 
-        // Stream ke user (tanpa menyimpan di server)
+            // Write data for age and gender
+            $this->writeAgeDataToExcel($sheet, $row, $groupedAgeData, $columns);
+            $this->writeGenderDataToExcel($sheet, $row, $groupedDataByGender[$key]['barus'], $groupedDataByGender[$key]['lamas'], $groupedDataByGender[$key]['totalBaru'], $groupedDataByGender[$key]['totalLama']);
+
+            // Increment row after writing data
+            $row++;
+        }
+
+        // Stream the Excel file to user
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
         }, 'laporan-formulir11.xlsx');
     }
 
-    // Fungsi untuk mengambil data berdasarkan diagnosa
+    // Helper functions for grouped data
     private function getGroupedData($diagnosaValue, $bulan, $tahun)
     {
         $data = Action::whereMonth('tanggal', $bulan)
@@ -1447,13 +1782,12 @@ class ReportController extends Controller
         ];
     }
 
-    // Fungsi untuk mengelompokkan data berdasarkan usia
     private function groupByAge($actions)
     {
         return $actions
             ->groupBy(function ($action) {
                 $dob = Carbon::parse($action->patient->dob);
-                $age = Carbon::now()->diffInDays($dob); // Hitung usia dalam hari
+                $age = Carbon::now()->diffInDays($dob); // Calculate age in days
 
                 if ($age <= 7) {
                     return '0-7 hari';
@@ -1487,20 +1821,18 @@ class ReportController extends Controller
             ->map->count();
     }
 
-    // Fungsi untuk menghitung jumlah kasus berdasarkan gender
     private function getTotalByGender($actions)
     {
-        // Pastikan pengelompokan gender bekerja dengan benar
         return $actions
             ->groupBy(function ($action) {
-                return $action->patient->gender; // Kelompokkan berdasarkan gender (0: laki-laki, 1: perempuan)
+                return $action->patient->gender; // Group by gender
             })
             ->map(function ($group) {
-                return $group->count(); // Menghitung jumlah pasien berdasarkan gender
+                return $group->count(); // Count the number of cases per gender
             });
     }
 
-    // Fungsi untuk menulis data kasus per usia ke Excel
+    // Excel Writing functions
     private function writeAgeDataToExcel($sheet, $row, $groupedData, $columns)
     {
         foreach ($groupedData as $ageRange => $totalCases) {
@@ -1510,15 +1842,14 @@ class ReportController extends Controller
         }
     }
 
-    // Fungsi untuk menulis data kasus per gender ke Excel
     private function writeGenderDataToExcel($sheet, $row, $totalKasusBaruPerGender, $totalKasusLamaPerGender, $totalKasusBaru, $totalKasusLama)
     {
-        $sheet->setCellValue('N' . $row, $totalKasusBaruPerGender['2'] ?? 0); // Laki-laki total kasus baru
-        $sheet->setCellValue('O' . $row, $totalKasusBaruPerGender['1'] ?? 0); // Perempuan total kasus baru
-        $sheet->setCellValue('Q' . $row, $totalKasusLamaPerGender['2'] ?? 0); // Laki-laki total kasus lama
-        $sheet->setCellValue('R' . $row, $totalKasusLamaPerGender['1'] ?? 0); // Perempuan total kasus lama
-        $sheet->setCellValue('P' . $row, $totalKasusBaru); // Total kasus baru
-        $sheet->setCellValue('S' . $row, $totalKasusLama); // Total kasus lama
+        $sheet->setCellValue('N' . $row, $totalKasusBaruPerGender['2'] ?? 0);
+        $sheet->setCellValue('O' . $row, $totalKasusBaruPerGender['1'] ?? 0);
+        $sheet->setCellValue('Q' . $row, $totalKasusLamaPerGender['2'] ?? 0);
+        $sheet->setCellValue('R' . $row, $totalKasusLamaPerGender['1'] ?? 0);
+        $sheet->setCellValue('P' . $row, $totalKasusBaru);
+        $sheet->setCellValue('S' . $row, $totalKasusLama);
     }
 
     public function reportFormulir12()

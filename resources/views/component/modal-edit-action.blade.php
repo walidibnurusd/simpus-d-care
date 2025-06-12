@@ -1,12 +1,12 @@
 <!-- Modal Add Action -->
 @php
-	if (!isset($poli)) {
-		$poli = App\Models\Poli::all();
-	}
+    if (!isset($poli)) {
+        $poli = App\Models\Poli::all();
+    }
 
-	if (!isset($diagnosa)) {
-		$diagnosa = App\Models\Diagnosis::all();
-	}
+    if (!isset($diagnosa)) {
+        $diagnosa = App\Models\Diagnosis::all();
+    }
 @endphp
 <style>
     .form-check-input-edit {
@@ -748,6 +748,19 @@
                                 </div>
                                 @if ($routeName !== 'action.dokter.ugd.index')
                                     <div class="col-md-4">
+                                        <label for="poli" style="color: rgb(19, 11, 241);">DIAGNOSA UTAMA</label>
+                                        <select class="form-control" id="diagnosaPrimerEdit{{ $action->id }}"
+                                            name="diagnosa_primer">
+                                            <option value="" disabled selected>pilih</option>
+                                            @foreach ($diagnosa as $item)
+                                                <option value="{{ $item->id }}"
+                                                    @if (old('diagnosa_primer', $action->diagnosa_primer ?? '') == $item->id) selected @endif>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
                                         <label for="diagnosaEditAction" style="color: rgb(19, 11, 241);">DIAGNOSA
                                             SEKUNDER</label>
                                         <select class="form-select select2"
@@ -762,19 +775,6 @@
                                                 <option value="{{ $item->id }}"
                                                     {{ in_array($item->id, old('diagnosa', $selectedDiagnosa ?: [])) ? 'selected' : '' }}>
                                                     {{ $item->name }}-{{ $item->icd10 }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="poli" style="color: rgb(19, 11, 241);">DIAGNOSA PRIMER</label>
-                                        <select class="form-control" id="diagnosaPrimerEdit{{ $action->id }}"
-                                            name="diagnosa_primer">
-                                            <option value="" disabled selected>pilih</option>
-                                            @foreach ($diagnosa as $item)
-                                                <option value="{{ $item->id }}"
-                                                    @if (old('diagnosa_primer', $action->diagnosa_primer ?? '') == $item->id) selected @endif>
-                                                    {{ $item->name }}
                                                 </option>
                                             @endforeach
                                         </select>

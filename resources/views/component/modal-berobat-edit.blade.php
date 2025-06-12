@@ -13,7 +13,7 @@
                             <th>Tgl Kunjungan</th>
                             <th>Poli Berobat</th>
                             <th>Diagnosa Sekunder</th>
-                            <th>Diagnosa Primer</th>
+                            <th>Diagnosa Utama</th>
                             <th>ICD10</th>
                             <th>Obat</th>
                             <th>Hasil Lab</th>
