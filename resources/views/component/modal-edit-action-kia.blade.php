@@ -643,6 +643,19 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
+                                    <label for="poli" style="color: rgb(19, 11, 241);">DIAGNOSA UTAMA</label>
+                                    <select class="form-control" id="diagnosaPrimerEdit{{ $action->id }}"
+                                        name="diagnosa_primer">
+                                        <option value="" disabled selected>pilih</option>
+                                        @foreach ($diagnosa as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (old('diagnosa_primer', $action->diagnosa_primer ?? '') == $item->id) selected @endif>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
                                     <label for="diagnosaEdit" style="color: rgb(19, 11, 241);">DIAGNOSA
                                         SEKUNDER</label>
                                     <select class="form-control" id="diagnosaEdit{{ $action->id }}"
@@ -661,19 +674,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="poli" style="color: rgb(19, 11, 241);">DIAGNOSA PRIMER</label>
-                                    <select class="form-control" id="diagnosaPrimerEdit{{ $action->id }}"
-                                        name="diagnosa_primer">
-                                        <option value="" disabled selected>pilih</option>
-                                        @foreach ($diagnosa as $item)
-                                            <option value="{{ $item->id }}"
-                                                @if (old('diagnosa_primer', $action->diagnosa_primer ?? '') == $item->id) selected @endif>
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+
                                 <div class="col-md-4 mt-3">
                                     <label for="hasil_usg">Hasil USG</label>
                                     <textarea class="form-control" id="hasil_usg" name="hasil_usg" placeholder="Hasil USG">{{ old('hasil_usg', $action->hasil_usg ?? '') }}</textarea>

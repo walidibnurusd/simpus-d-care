@@ -93,8 +93,7 @@
                     <th>KASUS</th>
                     <th>POLI</th>
                     <th>KELUHAN</th>
-                    <th>DIAGNOSA SEKUNDER</th>
-                    <th>DIAGNOSA PRIMER</th>
+                    <th>DIAGNOSA UTAMA</th>
                     <th>ICD10</th>
                     <th>TINDAKAN</th>
                     {{-- @if ($routeName == 'action.ruang.tindakan.index')
@@ -176,13 +175,9 @@
                         </td>
 
                         <td>{{ $actions->keluhan }}</td>
-
-                        <td>
-                            {{ implode(', ', $diagnosa->pluck('name')->toArray()) }}
-                        </td>
                         <td>{{ optional($actions->diagnosaPrimer)->name ?? '-' }}</td>
                         <td>
-                            {{ implode(', ', array_merge($diagnosa->pluck('icd10')->toArray(), [$actions->diagnosaPrimer->icd10 ?? ''])) }}
+                            {{ $actions->diagnosaPrimer->icd10 ?? '' }}
                         </td>
                         <td>
                             @if ($actions->tindakan && $actions->tindakan_ruang_tindakan)

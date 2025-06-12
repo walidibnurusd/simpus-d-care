@@ -133,7 +133,7 @@
                                         <th>KARTU</th>
                                         <th>KELUHAN</th>
                                         <th>DIAGNOSA SEKUNDER</th>
-                                        <th>DIAGNOSA PRIMER</th>
+                                        <th>DIAGNOSA UTAMA</th>
                                         <th>TINDAKAN POLI</th>
 
                                         @if ($routeName === 'action.dokter.ruang.tindakan.index')
