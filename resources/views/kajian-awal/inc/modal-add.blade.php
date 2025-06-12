@@ -4,16 +4,16 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                @if ($routeName === 'action.index')
+                @if ($routeName === 'kajian-awal.umum')
                     <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI UMUM</h5>
                     <input type="hidden" name="tipe" value="poli-umum">
-                @elseif($routeName === 'action.index.gigi')
+                @elseif($routeName === 'kajian-awal.gigi')
                     <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI GIGI</h5>
                     <input type="hidden" name="tipe" value="poli-gigi">
-                @elseif($routeName === 'action.kia.index')
+                @elseif($routeName === 'kajian-awal.kia')
                     <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI KIA</h5>
                     <input type="hidden" name="tipe" value="poli-kia">
-                @elseif($routeName === 'action.kb.index')
+                @elseif($routeName === 'kajian-awal.kb')
                     <h5 class="modal-title" id="exampleModalLabel">KAJIAN AWAL POLI KB</h5>
                     <input type="hidden" name="tipe" value="poli-kia">
                 @else
@@ -26,13 +26,13 @@
             <div class="modal-body">
                 <form id="addPatientForm" action="{{ route('action.store') }}" method="POST" class="px-3">
                     @csrf
-                    @if ($routeName === 'action.index')
+                    @if ($routeName === 'kajian-awal.umum')
                         <input type="hidden" name="tipe" id="tipe" value="poli-umum">
-                    @elseif($routeName === 'action.index.gigi')
+                    @elseif($routeName === 'kajian-awal.gigi')
                         <input type="hidden" name="tipe" id="tipe" value="poli-gigi">
-                    @elseif($routeName === 'action.kia.index')
+                    @elseif($routeName === 'kajian-awal.kia')
                         <input type="hidden" name="tipe" id="tipe" value="poli-kia">
-                    @elseif($routeName === 'action.kb.index')
+                    @elseif($routeName === 'kajian-awal.kb')
                         <input type="hidden" name="tipe" id="tipe" value="poli-kb">
                     @else
                         <input type="hidden" name="tipe" id="tipe" value="ruang-tindakan">
@@ -208,7 +208,7 @@
 
                                 </div>
                             </div>
-                            @if ($routeName !== 'action.kia.index' && $routeName !== 'action.kb.index')
+                            @if ($routeName !== 'kajian-awal.kia' && $routeName !== 'kajian-awal.kb')
                                 <div style="display: flex; align-items: center; text-align: center;">
                                     <hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
                                     <span style="margin: 0 10px; white-space: nowrap;">Pemeriksaan</span>
