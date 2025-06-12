@@ -103,7 +103,8 @@
         $('#id_obat_edit').select2({
             placeholder: "Pilih",
             allowClear: true,
-            minimumResultsForSearch: 0
+            minimumResultsForSearch: 0,
+            dropdownParent: $('#editTerimaObatModal{{ $obat->id }}')
         });
 
         // Function to update the shape field

@@ -18,9 +18,9 @@
                         </div>
 
                         <div class="col-md-6" style="margin-bottom: 15px;">
-                            <label for="id_obat" style="color: rgb(19, 11, 241);">Kode dan Nama Obat</label>
-                            <select class="form-control" id="id_obat" name="id_obat">
-                                <option value="" disabled selected>pilih</option>
+                            <label for="id_obat" style="color: rgb(19, 11, 241);">Kode dan Nama Obatt</label>
+                            <select class="form-control" id="id_obat" name="id_obat" data-placeholder="pilih">
+                                <option></option>
                                 @foreach ($obats as $item)
                                     <option value="{{ $item->id }}"data-shape="{{ $item->shape }}">
                                         {{ $item->name }} - {{ $item->code }}
@@ -68,7 +68,8 @@
         $('#id_obat').select2({
             placeholder: "Pilih",
             allowClear: true,
-            minimumResultsForSearch: 0
+            minimumResultsForSearch: 0,
+            dropdownParent: $('#terimaObatModal')
         });
 
         $('#id_obat').change(function() {
