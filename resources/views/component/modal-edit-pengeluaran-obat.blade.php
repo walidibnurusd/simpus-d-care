@@ -131,7 +131,8 @@
         $('#id_obat_edit{{ $obat->id }}').select2({
             placeholder: "Pilih Obat",
             allowClear: true,
-            minimumResultsForSearch: 0
+            minimumResultsForSearch: 0,
+            dropdownParent: $('#editPengeluaranObatModal{{ $obat->id }}')
         });
 
         function validateAmountAndUpdateStock() {

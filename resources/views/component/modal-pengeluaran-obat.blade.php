@@ -92,7 +92,8 @@
         $('#id_obat').select2({
             placeholder: "Pilih",
             allowClear: true,
-            minimumResultsForSearch: 0
+            minimumResultsForSearch: 0,
+            dropdownParent: $('#pengeluaranObatModal')
         });
 
         $('#id_obat').change(function() {
