@@ -43,6 +43,18 @@
                                 <option value="7">Tube</option>
                                 <option value="8">Pot</option>
                                 <option value="9">Injeksi</option>
+                                <option value="10">Kapsul</option>
+                                <option value="11">Ampul</option>
+                                <option value="12">Sachet</option>
+                                <option value="13">Paket</option>
+                                <option value="14">Vial</option>
+                                <option value="15">Bungkus</option>
+                                <option value="16">Strip</option>
+                                <option value="17">Test</option>
+                                <option value="18">Lbr</option>
+                                <option value="19">Tabung</option>
+                                <option value="20">Buah</option>
+                                <option value="21">Lembar</option>
                             </select>
                         </div>
                         <div class="col-md-6 " style="margin-bottom: 15px;">

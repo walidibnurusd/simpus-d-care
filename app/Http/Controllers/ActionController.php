@@ -1660,6 +1660,18 @@ class ActionController extends Controller
                         'Tube' => 7,
                         'Pot' => 8,
                         'Injeksi' => 9,
+                        'Kapsul' => 10,
+                        'Ampul' => 11,
+                        'Sachet' => 12,
+                        'Paket' => 13,
+                        'Vial' => 14,
+                        'Bungkus' => 15,
+                        'Strip' => 16,
+                        'Test' => 17,
+                        'Lbr' => 18,
+                        'Tabung' => 19,
+                        'Buah' => 20,
+                        'Lembar' => 21,
                     ];
 
                     ActionObat::create([
@@ -1889,6 +1901,18 @@ class ActionController extends Controller
                             'Tube' => 7,
                             'Pot' => 8,
                             'Injeksi' => 9,
+                            'Kapsul' => 10,
+                            'Ampul' => 11,
+                            'Sachet' => 12,
+                            'Paket' => 13,
+                            'Vial' => 14,
+                            'Bungkus' => 15,
+                            'Strip' => 16,
+                            'Test' => 17,
+                            'Lbr' => 18,
+                            'Tabung' => 19,
+                            'Buah' => 20,
+                            'Lembar' => 21,
                         ];
                         // dd($medication['shape'] );
                         ActionObat::create([
@@ -1963,6 +1987,18 @@ class ActionController extends Controller
                             'Tube' => 7,
                             'Pot' => 8,
                             'Injeksi' => 9,
+                            'Kapsul' => 10,
+                            'Ampul' => 11,
+                            'Sachet' => 12,
+                            'Paket' => 13,
+                            'Vial' => 14,
+                            'Bungkus' => 15,
+                            'Strip' => 16,
+                            'Test' => 17,
+                            'Lbr' => 18,
+                            'Tabung' => 19,
+                            'Buah' => 20,
+                            'Lembar' => 21,
                         ];
 
                         ActionObat::create([
@@ -2186,6 +2222,18 @@ class ActionController extends Controller
                             'Tube' => 7,
                             'Pot' => 8,
                             'Injeksi' => 9,
+                            'Kapsul' => 10,
+                            'Ampul' => 11,
+                            'Sachet' => 12,
+                            'Paket' => 13,
+                            'Vial' => 14,
+                            'Bungkus' => 15,
+                            'Strip' => 16,
+                            'Test' => 17,
+                            'Lbr' => 18,
+                            'Tabung' => 19,
+                            'Buah' => 20,
+                            'Lembar' => 21,
                         ];
 
                         ActionObat::create([
@@ -2260,6 +2308,18 @@ class ActionController extends Controller
                             'Tube' => 7,
                             'Pot' => 8,
                             'Injeksi' => 9,
+                            'Kapsul' => 10,
+                            'Ampul' => 11,
+                            'Sachet' => 12,
+                            'Paket' => 13,
+                            'Vial' => 14,
+                            'Bungkus' => 15,
+                            'Strip' => 16,
+                            'Test' => 17,
+                            'Lbr' => 18,
+                            'Tabung' => 19,
+                            'Buah' => 20,
+                            'Lembar' => 21,
                         ];
 
                         ActionObat::create([
@@ -2506,6 +2566,18 @@ class ActionController extends Controller
                             'Tube' => 7,
                             'Pot' => 8,
                             'Injeksi' => 9,
+                            'Kapsul' => 10,
+                            'Ampul' => 11,
+                            'Sachet' => 12,
+                            'Paket' => 13,
+                            'Vial' => 14,
+                            'Bungkus' => 15,
+                            'Strip' => 16,
+                            'Test' => 17,
+                            'Lbr' => 18,
+                            'Tabung' => 19,
+                            'Buah' => 20,
+                            'Lembar' => 21,
                         ];
 
                         ActionObat::create([
@@ -2579,6 +2651,18 @@ class ActionController extends Controller
                             'Tube' => 7,
                             'Pot' => 8,
                             'Injeksi' => 9,
+                            'Kapsul' => 10,
+                            'Ampul' => 11,
+                            'Sachet' => 12,
+                            'Paket' => 13,
+                            'Vial' => 14,
+                            'Bungkus' => 15,
+                            'Strip' => 16,
+                            'Test' => 17,
+                            'Lbr' => 18,
+                            'Tabung' => 19,
+                            'Buah' => 20,
+                            'Lembar' => 21,
                         ];
 
                         ActionObat::create([
@@ -2844,6 +2928,18 @@ class ActionController extends Controller
                         'Tube' => 7,
                         'Pot' => 8,
                         'Injeksi' => 9,
+                        'Kapsul' => 10,
+                        'Ampul' => 11,
+                        'Sachet' => 12,
+                        'Paket' => 13,
+                        'Vial' => 14,
+                        'Bungkus' => 15,
+                        'Strip' => 16,
+                        'Test' => 17,
+                        'Lbr' => 18,
+                        'Tabung' => 19,
+                        'Buah' => 20,
+                        'Lembar' => 21,
                     ];
                     $userRole = Auth::user()->role;
 
