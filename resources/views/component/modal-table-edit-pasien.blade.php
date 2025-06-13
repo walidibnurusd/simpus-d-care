@@ -131,7 +131,19 @@
                     6: "Drop",
                     7: "Tube",
                     8: "Pot",
-                    9: "Injeksi"
+                    9: "Injeksi",
+                    10: "Kapsul",
+                    11: "Ampul",
+                    12: "Sachet",
+                    13: "Paket",
+                    14: "Vial",
+                    15: "Bungkus",
+                    16: "Strip",
+                    17: "Test",
+                    18: "Lbr",
+                    19: "Tabung",
+                    20: "Buah",
+                    21: "Lembar"
                 };
 
                 let rowNumber = 1;
