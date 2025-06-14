@@ -304,13 +304,6 @@ class ReportController extends Controller
             }
         }
 
-        $actions = Action::select('*') // Pilih semua kolom
-            ->where(function ($query) {
-                $query
-                    ->where('diagnosa', 'like', '%"97"%') // Jika `diagnosa` disimpan dalam format JSON
-                    ->orWhere('diagnosa', '97'); // Jika `diagnosa` disimpan sebagai string
-            })
-            ->get();
         $bulanMap = [
             1 => 'Januari',
             2 => 'Februari',
@@ -326,7 +319,6 @@ class ReportController extends Controller
             12 => 'Desember',
         ];
 
-        // misalnya request input-nya seperti ini:
         $angkaBulan = (int) $request->input('bulan');
         $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
         $tahun = $request->tahun;
@@ -1207,9 +1199,25 @@ class ReportController extends Controller
     }
     public function reportFormulir11(Request $request)
     {
-        // Input bulan dan tahun
-        $bulan = $request->input('bulan', date('m'));
-        $tahun = $request->input('tahun', date('Y'));
+        $bulanMap = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+
+        $angkaBulan = (int) $request->input('bulan');
+        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+        $tahun = $request->tahun;
+        $tanggal = Carbon::now()->translatedFormat('j F Y');
 
         // Diagnosis Values Mapping
         $diagnoses = [
@@ -1352,6 +1360,7 @@ class ReportController extends Controller
             'faringitisAkut' => ['727'],
             'furunkelHidung' => ['737'],
             'influenza' => ['731'],
+            'kankerNasofaring' => ['651'],
             'kankerParu' => ['653'],
             'laringitisAkut' => ['729'],
             'penyakitParu' => ['740'],
@@ -1420,12 +1429,39 @@ class ReportController extends Controller
             'tirotoksikosis' => ['666'],
             'epispadia' => ['847'],
             'fimosis' => ['799'],
+            'hipertropiProstat' => ['798'],
+            'hypospadia' => ['846'],
+            'infeksiSaluranKemih' => ['797'],
+            'parafimosis' => ['800'],
+            'ginjalKronik' => ['795'],
+            'pielonefritis' => ['796'],
+            'abortusInkomplit' => ['809'],
+            'abortusKomplit' => ['808'],
+            'anemiaDefisiensi' => ['837'],
+            'crackedNipple' => ['835'],
+            'eklampsi' => ['813'],
+            'hiperemesisGravidarum' => ['817'],
+            'invertedNipple' => ['834'],
+            'kankerServiks' => ['657'],
+            'kehamilanNormal' => ['833'],
+            'ketubanPecahDini' => ['827'],
+            'mastitis' => ['801'],
+            'perdarahanPostPartum' => ['832'],
+            'persalinanLama' => ['830'],
+            'preEklampsia' => ['812'],
+            'rupturPerineum' => ['831'],
+            'tumorPayudara' => ['656'],
+            'fluorAlbus' => ['805'],
+            'sifilis' => ['613'],
+            'gonore' => ['614'],
+            'vaginitis' => ['802'],
+            'vulvitis' => ['803'],
         ];
 
         // Retrieve and process data for each diagnosis
         $diagnosisData = [];
         foreach ($diagnoses as $key => $values) {
-            $diagnosisData[$key] = $this->getGroupedData($values, $bulan, $tahun);
+            $diagnosisData[$key] = $this->getGroupedData($values, $angkaBulan, $tahun);
         }
 
         // Group cases by age
@@ -1455,6 +1491,10 @@ class ReportController extends Controller
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
+        $sheet->setCellValue('K5', $bulan);
+        $sheet->setCellValue('K7', $tahun);
+        $sheet->setCellValue('P357', 'Makassar, ' . $tanggal);
+
         // Age columns
         $columns = [
             '0-7 hari' => 'D',
@@ -1475,14 +1515,19 @@ class ReportController extends Controller
         $skipRow3 = [49];
         $skipRow4 = [106];
         $skipRow5 = [139];
-        $skipRow6 = [164];
-        $skipRow7 = [200];
-        $skipRow8 = [223];
-        $skipRow9 = [235];
-        $skipRow10 = [238];
-        $skipRow11 = [278];
-        $skipRow12 = [297];
-        $skipRow13 = [311];
+        $skipRow6 = [146];
+        $skipRow7 = [164];
+        $skipRow8 = [200];
+        $skipRow9 = [223];
+        $skipRow10 = [235];
+        $skipRow11 = [238];
+        $skipRow12 = [278];
+        $skipRow13 = [297];
+        $skipRow14 = [311];
+        $skipRow15 = [323];
+        $skipRow16 = [324];
+        $skipRow17 = [347];
+        $skipRow17 = [252];
 
         $skipRangeStart = 18;
         $skipRangeEnd = 20;
@@ -1506,7 +1551,7 @@ class ReportController extends Controller
         $skipRangeEnd10 = 126;
         $skipRangeStart11 = 135;
         $skipRangeEnd11 = 137;
-        $skipRangeStart12 = 146;
+        $skipRangeStart12 = 147;
         $skipRangeEnd12 = 149;
         $skipRangeStart13 = 160;
         $skipRangeEnd13 = 162;
@@ -1534,6 +1579,14 @@ class ReportController extends Controller
         $skipRangeEnd24 = 293;
         $skipRangeStart25 = 302;
         $skipRangeEnd25 = 304;
+        $skipRangeStart26 = 314;
+        $skipRangeEnd26 = 316;
+        $skipRangeStart27 = 326;
+        $skipRangeEnd27 = 328;
+        $skipRangeStart28 = 338;
+        $skipRangeEnd28 = 340;
+        $skipRangeStart29 = 350;
+        $skipRangeEnd29 = 352;
 
         // Combine all rows to skip
         $skipRowsCombined = array_merge(
@@ -1550,6 +1603,10 @@ class ReportController extends Controller
             $skipRow11,
             $skipRow12,
             $skipRow13,
+            $skipRow14,
+            $skipRow15,
+            $skipRow16,
+            $skipRow17,
 
             range($skipRangeStart, $skipRangeEnd),
             range($skipRangeStart2, $skipRangeEnd2),
@@ -1576,6 +1633,10 @@ class ReportController extends Controller
             range($skipRangeStart23, $skipRangeEnd23),
             range($skipRangeStart24, $skipRangeEnd24),
             range($skipRangeStart25, $skipRangeEnd25),
+            range($skipRangeStart26, $skipRangeEnd26),
+            range($skipRangeStart27, $skipRangeEnd27),
+            range($skipRangeStart28, $skipRangeEnd28),
+            range($skipRangeStart29, $skipRangeEnd29),
         );
 
         foreach ($groupedDataByAge as $key => $groupedAgeData) {
