@@ -157,6 +157,30 @@ class ObatController extends Controller
                         return 'Pot';
                     case 9:
                         return 'Injeksi';
+                    case 10:
+                        return 'Kapsul';
+                    case 11:
+                        return 'Ampul';
+                    case 12:
+                        return 'Sachet';
+                    case 13:
+                        return 'Paket';
+                    case 14:
+                        return 'Vial';
+                    case 15:
+                        return 'Bungkus';
+                    case 16:
+                        return 'Strip';
+                    case 17:
+                        return 'Test';
+                    case 18:
+                        return 'Lbr';
+                    case 19:
+                        return 'Tabung';
+                    case 20:
+                        return 'Buah';
+                    case 21:
+                        return 'Lembar';
                     default:
                         return '';
                 }
@@ -267,6 +291,30 @@ class ObatController extends Controller
                         return 'Pot';
                     case 9:
                         return 'Injeksi';
+                    case 10:
+                        return 'Kapsul';
+                    case 11:
+                        return 'Ampul';
+                    case 12:
+                        return 'Sachet';
+                    case 13:
+                        return 'Paket';
+                    case 14:
+                        return 'Vial';
+                    case 15:
+                        return 'Bungkus';
+                    case 16:
+                        return 'Strip';
+                    case 17:
+                        return 'Test';
+                    case 18:
+                        return 'Lbr';
+                    case 19:
+                        return 'Tabung';
+                    case 20:
+                        return 'Buah';
+                    case 21:
+                        return 'Lembar';
                     default:
                         return '';
                 }
@@ -335,6 +383,30 @@ class ObatController extends Controller
                         return 'Pot';
                     case 9:
                         return 'Injeksi';
+                    case 10:
+                        return 'Kapsul';
+                    case 11:
+                        return 'Ampul';
+                    case 12:
+                        return 'Sachet';
+                    case 13:
+                        return 'Paket';
+                    case 14:
+                        return 'Vial';
+                    case 15:
+                        return 'Bungkus';
+                    case 16:
+                        return 'Strip';
+                    case 17:
+                        return 'Test';
+                    case 18:
+                        return 'Lbr';
+                    case 19:
+                        return 'Tabung';
+                    case 20:
+                        return 'Buah';
+                    case 21:
+                        return 'Lembar';
                     default:
                         return '';
                 }
@@ -492,6 +564,30 @@ class ObatController extends Controller
                         return 'Pot';
                     case 9:
                         return 'Injeksi';
+                    case 10:
+                        return 'Kapsul';
+                    case 11:
+                        return 'Ampul';
+                    case 12:
+                        return 'Sachet';
+                    case 13:
+                        return 'Paket';
+                    case 14:
+                        return 'Vial';
+                    case 15:
+                        return 'Bungkus';
+                    case 16:
+                        return 'Strip';
+                    case 17:
+                        return 'Test';
+                    case 18:
+                        return 'Lbr';
+                    case 19:
+                        return 'Tabung';
+                    case 20:
+                        return 'Buah';
+                    case 21:
+                        return 'Lembar';
                     default:
                         return '';
                 }

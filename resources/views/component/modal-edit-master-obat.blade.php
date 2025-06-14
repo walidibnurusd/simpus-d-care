@@ -41,6 +41,18 @@
                                 <option value="7" {{ $obat->shape == '7' ? 'selected' : '' }}>Tube</option>
                                 <option value="8" {{ $obat->shape == '8' ? 'selected' : '' }}>Pot</option>
                                 <option value="9" {{ $obat->shape == '9' ? 'selected' : '' }}>Injeksi</option>
+                                <option value="10" {{ $obat->shape == '10' ? 'selected' : '' }}>Kapsul</option>
+                                <option value="11" {{ $obat->shape == '11' ? 'selected' : '' }}>Ampul</option>
+                                <option value="12" {{ $obat->shape == '12' ? 'selected' : '' }}>Sachet</option>
+                                <option value="13" {{ $obat->shape == '13' ? 'selected' : '' }}>Paket</option>
+                                <option value="14" {{ $obat->shape == '14' ? 'selected' : '' }}>Vial</option>
+                                <option value="15" {{ $obat->shape == '15' ? 'selected' : '' }}>Bungkus</option>
+                                <option value="16" {{ $obat->shape == '16' ? 'selected' : '' }}>Strip</option>
+                                <option value="17" {{ $obat->shape == '17' ? 'selected' : '' }}>Test</option>
+                                <option value="18" {{ $obat->shape == '18' ? 'selected' : '' }}>Lbr</option>
+                                <option value="19" {{ $obat->shape == '19' ? 'selected' : '' }}>Tabung</option>
+                                <option value="20" {{ $obat->shape == '20' ? 'selected' : '' }}>Buah</option>
+                                <option value="21" {{ $obat->shape == '21' ? 'selected' : '' }}>Lembar</option>
                             </select>
                         </div>
                     </div>
