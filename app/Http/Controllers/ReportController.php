@@ -87,143 +87,120 @@ class ReportController extends Controller
 
     public function reportSTP(Request $request)
     {
-        // Ambil bulan dan tahun dari parameter request (dengan default bulan dan tahun saat ini)
-        $month = $request->input('month', Carbon::now()->month); // default ke bulan saat ini
-        $year = $request->input('year', Carbon::now()->year); // default ke tahun saat ini
-
-        $diagnosaNames = [
-            37 => 'Kolera',
-            38 => 'Diare',
-            578 => 'Diare',
-            596 => 'Diare',
-            597 => 'Diare',
-            77 => 'Diare Berdarah',
-            256 => 'Tifus Perut Klinis',
-            39 => 'Tifus Perut Klinis',
-            396 => 'TBC Paru BTA (+)',
-            'unknown_1' => 'Tersangka TBC Paru',
-            'unknown_2' => 'Kusta PB',
-            'unknown_3' => 'Kusta MB',
-            97 => 'Campak',
-            89 => 'Difteria',
-            90 => 'Batuk Rejan',
-            91 => 'Tetanus',
-            92 => 'Tetanus',
-            204 => 'Tetanus',
-            581 => 'Hepatitis Klinis',
-            105 => 'Malaria Klinis',
-            329 => 'Malaria Vivax',
-            331 => 'Malaria Falciparum',
-            'unknown_4' => 'Malaria Mix',
-            101 => 'Demam Berdarah Dengue',
-            390 => 'Demam Dengue',
-            25 => 'Pneumonia',
-            26 => 'Pneumonia',
-            572 => 'Gonorhoe',
-            109 => 'Frambusia',
-            110 => 'Filariasis',
-            142 => 'Influensa',
+        $bulanMap = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
         ];
 
-        // Ambil data dengan diagnosa yang valid berdasarkan diagnosaNames dan filter berdasarkan bulan dan tahun
-        $stp = Action::with(['patient'])
-            ->whereIn('diagnosa', array_keys($diagnosaNames))
-            ->whereYear('created_at', $year) // Filter berdasarkan tahun
-            ->whereMonth('created_at', $month) // Filter berdasarkan bulan
-            ->orWhere(function ($query) use ($diagnosaNames, $year, $month) {
-                foreach (array_keys($diagnosaNames) as $id) {
-                    $query->orWhereJsonContains('diagnosa', (string) $id);
-                }
-            })
-            ->get()
-            ->map(function ($action) {
-                if (!empty($action->patient) && !empty($action->patient->dob)) {
-                    $dob = Carbon::parse($action->patient->dob);
-                    $now = Carbon::now();
-                    $action->ageInDays = $dob->diffInDays($now);
-                    $action->age = $dob->age;
-                    $action->gender = $action->patient->gender ?? 'unknown';
-                } else {
-                    $action->ageInDays = 0;
-                    $action->age = 0;
-                    $action->gender = 'unknown';
-                }
-                return $action;
-            });
+        $angkaBulan = (int) $request->input('bulan');
+        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+        $tahun = $request->tahun;
 
-        // Kelompokkan data berdasarkan rentang usia
-        $groupedData = $stp->groupBy(function ($action) {
-            $ageInDays = $action->ageInDays;
-            $age = $action->age;
+        // Diagnosis Values Mapping
+        $diagnoses = [
+            'diare' => ['602'],
+            'campak' => ['623'],
+            'difteri' => ['610'],
+            'batuk' => ['611'],
+            'tetanus' => ['609'],
+            'dbd' => ['618'],
+            'dd' => ['617'],
+            'pneumonia' => ['733'],
+            'gonore' => ['614'],
+            'frambusia' => ['615'],
+            'filariasis' => ['643'],
+            'influenza' => ['731'],
+        ];
 
-            if ($ageInDays <= 7) {
-                return '0-7 hr';
-            } elseif ($ageInDays <= 28) {
-                return '8-28 hr';
-            } elseif ($age < 1) {
-                return '0-1 tahun';
-            } elseif ($age <= 4) {
-                return '1-4 tahun';
-            } elseif ($age <= 9) {
-                return '5-9 tahun';
-            } elseif ($age <= 14) {
-                return '10-14 tahun';
-            } elseif ($age <= 19) {
-                return '15-19 tahun';
-            } elseif ($age <= 44) {
-                return '20-44 tahun';
-            } elseif ($age <= 54) {
-                return '45-54 tahun';
-            } elseif ($age <= 59) {
-                return '55-59 tahun';
-            } elseif ($age <= 69) {
-                return '60-69 tahun';
-            } else {
-                return '70+ tahun';
-            }
-        });
-
-        // Siapkan laporan awal dengan semua nilai nol
-        $ageGroups = ['0-7 hr', '8-28 hr', '0-1 tahun', '1-4 tahun', '5-9 tahun', '10-14 tahun', '15-19 tahun', '20-44 tahun', '45-54 tahun', '55-59 tahun', '60-69 tahun', '70+ tahun'];
-        $report = [];
-        foreach ($diagnosaNames as $diagnosaName) {
-            foreach ($ageGroups as $ageGroup) {
-                $report[$diagnosaName][$ageGroup] = [
-                    'total' => 0,
-                    'male' => 0,
-                    'female' => 0,
-                ];
-            }
+        // Retrieve and process data for each diagnosis
+        $diagnosisData = [];
+        foreach ($diagnoses as $key => $values) {
+            $diagnosisData[$key] = $this->getGroupedDataAll($values, $angkaBulan, $tahun);
         }
 
-        // Isi laporan berdasarkan data yang dikelompokkan
-        foreach ($groupedData as $ageGroup => $actions) {
-            foreach ($actions->groupBy('diagnosa') as $diagnosaId => $cases) {
-                if (!isset($diagnosaNames[$diagnosaId])) {
-                    \Log::warning("Unknown diagnosa ID: {$diagnosaId}");
-                    continue;
-                }
-                $diagnosaName = $diagnosaNames[$diagnosaId];
-                $maleCount = $cases
-                    ->filter(function ($case) {
-                        return $case->patient->gender === 1;
-                    })
-                    ->count();
-
-                $femaleCount = $cases
-                    ->filter(function ($case) {
-                        return $case->patient->gender === 2;
-                    })
-                    ->count();
-
-                $report[$diagnosaName][$ageGroup]['total'] += $cases->count();
-                $report[$diagnosaName][$ageGroup]['male'] += $maleCount;
-                $report[$diagnosaName][$ageGroup]['female'] += $femaleCount;
-            }
+        // Group cases by age
+        $groupedDataByAge = [];
+        foreach ($diagnosisData as $key => $data) {
+            $groupedDataByAge[$key] = $this->groupByAgeAll($data);
         }
 
-        // Kirim data ke tampilan dengan parameter bulan dan tahun untuk digunakan di filter
-        return view('content.report.laporan-stp', compact('report', 'ageGroups', 'month', 'year'));
+        // Count total cases by gender
+        $groupedDataByGender = [];
+        foreach ($diagnosisData as $key => $data) {
+            $groupedDataByGender[$key] = [
+                'datas' => $this->getTotalByGender($data),
+            ];
+        }
+
+        // Load Excel template
+        $templatePath = public_path('assets/report/report-surveilans.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        // Open the template Excel file
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('O4', $bulan);
+        $sheet->setCellValue('O3', $tahun);
+
+        // Age columns
+        $columns = [
+            '0-7 hari' => 'C',
+            '8-28 hari' => 'D',
+            '1-11 bulan' => 'E',
+            '1-4 thn' => 'F',
+            '5-9 thn' => 'G',
+            '10-14 thn' => 'H',
+            '15-19 thn' => 'I',
+            '20-44 thn' => 'J',
+            '45-54 thn' => 'K',
+            '55-59 thn' => 'L',
+            '60-69 thn' => 'M',
+            '>70 thn' => 'N',
+        ];
+
+        $row = 10;
+        $skipRow1 = [21];
+
+        $skipRangeStart = 11;
+        $skipRangeEnd = 16;
+        $skipRangeStart2 = 22;
+        $skipRangeEnd2 = 25;
+
+        // Combine all rows to skip
+        $skipRowsCombined = array_merge($skipRow1, range($skipRangeStart, $skipRangeEnd), range($skipRangeStart2, $skipRangeEnd2));
+
+        foreach ($groupedDataByAge as $key => $groupedAgeData) {
+            // Skip rows for kasusu lama
+            while (in_array($row, $skipRowsCombined)) {
+                $row++; // Skip to the next row
+            }
+
+            // Write data for age and gender
+            $this->writeAgeDataToExcel($sheet, $row, $groupedAgeData, $columns);
+            $this->writeGenderDataToExcelStp($sheet, $row, $groupedDataByGender[$key]['datas']);
+
+            // Increment row after writing data
+            $row++;
+        }
+
+        // Stream the Excel file to user
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-surveilans.xlsx');
     }
 
     public function reportAFP(Request $request)
@@ -1521,13 +1498,13 @@ class ReportController extends Controller
         $skipRow9 = [223];
         $skipRow10 = [235];
         $skipRow11 = [238];
-        $skipRow12 = [278];
-        $skipRow13 = [297];
-        $skipRow14 = [311];
-        $skipRow15 = [323];
-        $skipRow16 = [324];
-        $skipRow17 = [347];
-        $skipRow17 = [252];
+        $skipRow12 = [251];
+        $skipRow13 = [278];
+        $skipRow14 = [297];
+        $skipRow15 = [311];
+        $skipRow16 = [323];
+        $skipRow17 = [324];
+        $skipRow18 = [347];
 
         $skipRangeStart = 18;
         $skipRangeEnd = 20;
@@ -1607,6 +1584,7 @@ class ReportController extends Controller
             $skipRow15,
             $skipRow16,
             $skipRow17,
+            $skipRow18,
 
             range($skipRangeStart, $skipRangeEnd),
             range($skipRangeStart2, $skipRangeEnd2),
@@ -1659,7 +1637,469 @@ class ReportController extends Controller
             $writer->save('php://output');
         }, 'laporan-formulir11.xlsx');
     }
+    public function reportFormulir13(Request $request)
+    {
+        $bulanMap = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
 
+        $angkaBulan = (int) $request->input('bulan');
+        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+        $tahun = $request->tahun;
+        $tanggal = Carbon::now()->translatedFormat('j F Y');
+
+        // Diagnosis Values Mapping
+        $diagnoses = [
+            'alergi' => ['766', '778'],
+            'chikungunya' => ['619'],
+            'dbd' => ['618'],
+            'dd' => ['617'],
+            'filariasis' => ['643'],
+            'infeksiUmbilikus' => ['838'],
+            'kandidiasisMulut' => ['638'],
+            'keracunanMakanan' => ['874'],
+            'lepra' => ['607'],
+            'leptospirosis' => ['606'],
+            'malaria' => ['639'],
+            'morbili' => ['623'],
+            'reaksiAnafilaktik' => ['876'],
+            'syok' => ['858'],
+            'tb' => ['604'],
+            'tbc' => ['603'],
+            'hiv' => ['629'],
+            'varisela' => ['621'],
+            'anemia' => ['662'],
+            'hivNonKomplikasi' => ['877'],
+            'leukemia' => ['663'],
+            'limfadenitis' => ['642'],
+            'limfomaMaligna' => ['660'],
+            'lupus' => ['791'],
+            'thalasemia' => ['664'],
+            'ankilostomiosis' => ['644'],
+            'apendisitisAkut' => ['760'],
+            'askariasis' => ['646'],
+            'atresia' => ['845'],
+            'bibirLangitSumbing' => ['844'],
+            'bibirSumbing' => ['843'],
+            'demamTifoid' => ['600'],
+            'disentri' => ['601'],
+            'gastritis' => ['758'],
+            'diare' => ['602'],
+            'gastroschisis' => ['851'],
+            'hemeroid' => ['724'],
+            'hepatitisA' => ['626'],
+            'hepatitisB' => ['627'],
+            'hepatitisC' => ['628'],
+            'intoleransiMakanan' => ['763'],
+            'kolesistitis' => ['762'],
+            'langitSumbing' => ['842'],
+            'malabsorbsiMakanan' => ['764'],
+            'omphalocele' => ['850'],
+            'parotitis' => ['630'],
+            'pendarahan' => ['765', '940'],
+            'peritonitis' => ['761'],
+            'refluksGastroesofageal' => ['757'],
+            'skistosomiasis' => ['640'],
+            'strongiloidiasis' => ['647'],
+            'taeniasis' => ['641'],
+            'ulkusMulut' => ['754'],
+            'astigmatisme' => ['706'],
+            'bendaAsingKonjungtiva' => ['869'],
+            'blefaritis' => ['692'],
+            'butaSenja' => ['708'],
+            'episkleritis' => ['698'],
+            'glaukomaAkut' => ['702'],
+            'glaukomaKronis' => ['703'],
+            'hifema' => ['699'],
+            'hipermetropia' => ['704'],
+            'hordeolum' => ['691'],
+            'katarakKongenital' => ['841'],
+            'katarakDewasa' => ['700'],
+            'konjungtivitisAlergi' => ['695'],
+            'konjungtivitisInfeksi' => ['696'],
+            'laserasi' => ['860'],
+            'lowVision' => ['690'],
+            'mataKering' => ['694'],
+            'miopiaRingan' => ['705'],
+            'perdarahanSubkonjungtiva' => ['709'],
+            'presbiopia' => ['707'],
+            'pterygium' => ['697'],
+            'retinoblastoma' => ['658'],
+            'retinopatiDiabetik' => ['701'],
+            'traumaKimiaMata' => ['872'],
+            'trikiasis' => ['693'],
+            'bendaAsingTelinga' => ['870'],
+            'mastoiditis' => ['714'],
+            'otitisEksterna' => ['710'],
+            'otitisMediaAkut' => ['712'],
+            'otitisMediaKronik' => ['713'],
+            'prebiaskusis' => ['717'],
+            'serumenProp' => ['711'],
+            'tuliBising' => ['715'],
+            'tuliKongenital' => ['716'],
+            'angina' => ['719'],
+            'cardiorespiratory' => ['854'],
+            'gagalJantung' => ['722'],
+            'hipertensi' => ['718'],
+            'infarkMiokard' => ['720'],
+            'takikardia' => ['721'],
+            'artritisReumatoid' => ['792'],
+            'osteoartritis' => ['789'],
+            'frakturTerbuka' => ['862'],
+            'frakturTertutup' => ['863'],
+            'lipoma' => ['661'],
+            'osteoporosis' => ['794'],
+            'osteosarkoma' => ['654'],
+            'polimialgiaReumatik' => ['793'],
+            'reductionDeformity' => ['849'],
+            'talipes' => ['848'],
+            'vulnus' => ['864'],
+            'anencephaly' => ['839'],
+            'bellsPalsy' => ['689'],
+            'delirium' => ['675'],
+            'epilepsi' => ['684'],
+            'kejang' => ['857'],
+            'meningo' => ['840'],
+            'migren' => ['686'],
+            'neuroblastoma' => ['659'],
+            'rabies' => ['616'],
+            'statusEpileptikus' => ['685'],
+            'stroke' => ['723'],
+            'tensionHeadache' => ['687'],
+            'tetanus' => ['609'],
+            'tetanusNeonatorum' => ['608'],
+            'tia' => ['688'],
+            'vertigo' => ['855'],
+            'demensia' => ['674'],
+            'gangguanAnxietas' => ['679'],
+            'anxietasDepresi' => ['680'],
+            'depresi' => ['678'],
+            'gangguanNapza' => ['676'],
+            'gangguanAnak' => ['683'],
+            'gangguanPsikotik' => ['677'],
+            'gangguanSomatoform' => ['681'],
+            'insomnia' => ['682'],
+            'asmaBronkial' => ['741'],
+            'asfiksia' => ['852'],
+            'bendaAsingHidung' => ['871'],
+            'bronkitisAkut' => ['734'],
+            'bronkitisAkutDewasa' => ['739'],
+            'difteria' => ['610'],
+            'epistaksis' => ['853'],
+            'faringitisAkut' => ['727'],
+            'furunkelHidung' => ['737'],
+            'influenza' => ['731'],
+            'kankerNasofaring' => ['651'],
+            'kankerParu' => ['653'],
+            'laringitisAkut' => ['729'],
+            'penyakitParu' => ['740'],
+            'pertusis' => ['611'],
+            'pneumoniaAspirasi' => ['743'],
+            'bronkopneumonia' => ['732'],
+            'pneumonia' => ['733'],
+            'pneumotoraks' => ['744'],
+            'commonCold' => ['725'],
+            'rinitisAlergi' => ['736'],
+            'rinitisVasomotor' => ['735'],
+            'sinusitisAkut' => ['726'],
+            'statusAsmatikus' => ['742'],
+            'tonsilitisAkut' => ['728'],
+            'tonsilitisKronis' => ['738'],
+            'akneVulgarisRingan' => ['784'],
+            'cutaneusLarvaMigrans' => ['645'],
+            'dermatitisAtopik' => ['771'],
+            'dermatitisKontakAlergi' => ['775'],
+            'dermatitisKontakIritan' => ['776'],
+            'dermatitisNumularis' => ['772'],
+            'dermatitisPerioral' => ['785'],
+            'dermatitisPopok' => ['774'],
+            'dermatitisSeboroik' => ['773'],
+            'tineaCapitis' => ['631'],
+            'tineaCorporis' => ['635'],
+            'tineaCruris' => ['636'],
+            'tineaManuum' => ['633'],
+            'tineaPedis' => ['634'],
+            'tineaUnguium' => ['632'],
+            'erisipelas' => ['612'],
+            'eritrasma' => ['770'],
+            'fixedDrugEruption' => ['777'],
+            'exanthematousDrugEruption' => ['777'],
+            'frambusia' => ['615'],
+            'herpesSimplek' => ['620'],
+            'herpesZoster' => ['622'],
+            'hidradenitisSupuratif' => ['786'],
+            'likenSimpleks' => ['779'],
+            'lukaBakar' => ['873'],
+            'miliaria' => ['787'],
+            'moluskumKontagiosum' => ['625'],
+            'pedikulosisKapitis' => ['648'],
+            'pedikulosisPubis' => ['649'],
+            'abses' => ['768'],
+            'impetigo' => ['767'],
+            'pioderma' => ['769'],
+            'pitiriasisRosea' => ['780'],
+            'pitiriasisVersikolor' => ['637'],
+            'reaksiGigitanSerangga' => ['875'],
+            'sindromStevensJohnson' => ['783'],
+            'skabies' => ['650'],
+            'skrofuloderma' => ['605'],
+            'ulkusTungkai' => ['788'],
+            'urtikaria' => ['781'],
+            'verukaVulgaris' => ['624'],
+            'diabetesMellitus1' => ['667'],
+            'diabetesMellitus2' => ['668'],
+            'hiperglikemia' => ['859'],
+            'hiperurisemia' => ['673'],
+            'hipoglikemia' => ['669'],
+            'hipotiroidKongenital' => ['665'],
+            'lipidemia' => ['672'],
+            'malnutrisiEnergi' => ['670'],
+            'obesitas' => ['671'],
+            'tirotoksikosis' => ['666'],
+            'epispadia' => ['847'],
+            'fimosis' => ['799'],
+            'hipertropiProstat' => ['798'],
+            'hypospadia' => ['846'],
+            'infeksiSaluranKemih' => ['797'],
+            'parafimosis' => ['800'],
+            'ginjalKronik' => ['795'],
+            'pielonefritis' => ['796'],
+            'abortusInkomplit' => ['809'],
+            'abortusKomplit' => ['808'],
+            'anemiaDefisiensi' => ['837'],
+            'crackedNipple' => ['835'],
+            'eklampsi' => ['813'],
+            'hiperemesisGravidarum' => ['817'],
+            'invertedNipple' => ['834'],
+            'kankerServiks' => ['657'],
+            'kehamilanNormal' => ['833'],
+            'ketubanPecahDini' => ['827'],
+            'mastitis' => ['801'],
+            'perdarahanPostPartum' => ['832'],
+            'persalinanLama' => ['830'],
+            'preEklampsia' => ['812'],
+            'rupturPerineum' => ['831'],
+            'tumorPayudara' => ['656'],
+            'fluorAlbus' => ['805'],
+            'sifilis' => ['613'],
+            'gonore' => ['614'],
+            'vaginitis' => ['802'],
+            'vulvitis' => ['803'],
+        ];
+
+        // Retrieve and process data for each diagnosis
+        $diagnosisData = [];
+        foreach ($diagnoses as $key => $values) {
+            $diagnosisData[$key] = $this->getGroupedData($values, $angkaBulan, $tahun);
+        }
+
+        // Group cases by age
+        $groupedDataByAge = [];
+        foreach ($diagnosisData as $key => $data) {
+            $groupedDataByAge[$key] = $this->groupByAge($data['kasusBaru']);
+        }
+
+        // Count total cases by gender
+        $groupedDataByGender = [];
+        foreach ($diagnosisData as $key => $data) {
+            $groupedDataByGender[$key] = [
+                'barus' => $this->getTotalByGender($data['kasusBaru']),
+                'lamas' => $this->getTotalByGender($data['kasusLama']),
+                'totalBaru' => $data['kasusBaru']->count(),
+                'totalLama' => $data['kasusLama']->count(),
+            ];
+        }
+
+        // Load Excel template
+        $templatePath = public_path('assets/report/report-11.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        // Open the template Excel file
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('K5', $bulan);
+        $sheet->setCellValue('K7', $tahun);
+        $sheet->setCellValue('P357', 'Makassar, ' . $tanggal);
+
+        // Age columns
+        $columns = [
+            '0-7 hari' => 'D',
+            '8-28 hari' => 'E',
+            '1-11 bulan' => 'F',
+            '1-4 thn' => 'G',
+            '5-9 thn' => 'H',
+            '10-14 thn' => 'I',
+            '15-19 thn' => 'J',
+            '20-44 thn' => 'K',
+            '45-59 thn' => 'L',
+            '>59 thn' => 'M',
+        ];
+
+        $row = 13; // Starting row
+        $skipRow1 = [15];
+        $skipRow2 = [38];
+        $skipRow3 = [49];
+        $skipRow4 = [106];
+        $skipRow5 = [139];
+        $skipRow6 = [146];
+        $skipRow7 = [164];
+        $skipRow8 = [200];
+        $skipRow9 = [223];
+        $skipRow10 = [235];
+        $skipRow11 = [238];
+        $skipRow12 = [251];
+        $skipRow13 = [278];
+        $skipRow14 = [297];
+        $skipRow15 = [311];
+        $skipRow16 = [323];
+        $skipRow17 = [324];
+        $skipRow18 = [347];
+
+        $skipRangeStart = 18;
+        $skipRangeEnd = 20;
+        $skipRangeStart2 = 29;
+        $skipRangeEnd2 = 31;
+        $skipRangeStart3 = 41;
+        $skipRangeEnd3 = 43;
+        $skipRangeStart4 = 52;
+        $skipRangeEnd4 = 54;
+        $skipRangeStart5 = 64;
+        $skipRangeEnd5 = 66;
+        $skipRangeStart6 = 77;
+        $skipRangeEnd6 = 79;
+        $skipRangeStart7 = 87;
+        $skipRangeEnd7 = 90;
+        $skipRangeStart8 = 99;
+        $skipRangeEnd8 = 101;
+        $skipRangeStart9 = 111;
+        $skipRangeEnd9 = 113;
+        $skipRangeStart10 = 123;
+        $skipRangeEnd10 = 126;
+        $skipRangeStart11 = 135;
+        $skipRangeEnd11 = 137;
+        $skipRangeStart12 = 147;
+        $skipRangeEnd12 = 149;
+        $skipRangeStart13 = 160;
+        $skipRangeEnd13 = 162;
+        $skipRangeStart14 = 173;
+        $skipRangeEnd14 = 175;
+        $skipRangeStart15 = 184;
+        $skipRangeEnd15 = 187;
+        $skipRangeStart16 = 195;
+        $skipRangeEnd16 = 197;
+        $skipRangeStart17 = 207;
+        $skipRangeEnd17 = 209;
+        $skipRangeStart18 = 219;
+        $skipRangeEnd18 = 221;
+        $skipRangeStart19 = 231;
+        $skipRangeEnd19 = 233;
+        $skipRangeStart20 = 244;
+        $skipRangeEnd20 = 246;
+        $skipRangeStart21 = 256;
+        $skipRangeEnd21 = 258;
+        $skipRangeStart22 = 268;
+        $skipRangeEnd22 = 270;
+        $skipRangeStart23 = 280;
+        $skipRangeEnd23 = 282;
+        $skipRangeStart24 = 291;
+        $skipRangeEnd24 = 293;
+        $skipRangeStart25 = 302;
+        $skipRangeEnd25 = 304;
+        $skipRangeStart26 = 314;
+        $skipRangeEnd26 = 316;
+        $skipRangeStart27 = 326;
+        $skipRangeEnd27 = 328;
+        $skipRangeStart28 = 338;
+        $skipRangeEnd28 = 340;
+        $skipRangeStart29 = 350;
+        $skipRangeEnd29 = 352;
+
+        // Combine all rows to skip
+        $skipRowsCombined = array_merge(
+            $skipRow1,
+            $skipRow2,
+            $skipRow3,
+            $skipRow4,
+            $skipRow5,
+            $skipRow6,
+            $skipRow7,
+            $skipRow8,
+            $skipRow9,
+            $skipRow10,
+            $skipRow11,
+            $skipRow12,
+            $skipRow13,
+            $skipRow14,
+            $skipRow15,
+            $skipRow16,
+            $skipRow17,
+            $skipRow18,
+
+            range($skipRangeStart, $skipRangeEnd),
+            range($skipRangeStart2, $skipRangeEnd2),
+            range($skipRangeStart3, $skipRangeEnd3),
+            range($skipRangeStart4, $skipRangeEnd4),
+            range($skipRangeStart5, $skipRangeEnd5),
+            range($skipRangeStart6, $skipRangeEnd6),
+            range($skipRangeStart7, $skipRangeEnd7),
+            range($skipRangeStart8, $skipRangeEnd8),
+            range($skipRangeStart9, $skipRangeEnd9),
+            range($skipRangeStart10, $skipRangeEnd10),
+            range($skipRangeStart11, $skipRangeEnd11),
+            range($skipRangeStart12, $skipRangeEnd12),
+            range($skipRangeStart13, $skipRangeEnd13),
+            range($skipRangeStart14, $skipRangeEnd14),
+            range($skipRangeStart15, $skipRangeEnd15),
+            range($skipRangeStart16, $skipRangeEnd16),
+            range($skipRangeStart17, $skipRangeEnd17),
+            range($skipRangeStart18, $skipRangeEnd18),
+            range($skipRangeStart19, $skipRangeEnd19),
+            range($skipRangeStart20, $skipRangeEnd20),
+            range($skipRangeStart21, $skipRangeEnd21),
+            range($skipRangeStart22, $skipRangeEnd22),
+            range($skipRangeStart23, $skipRangeEnd23),
+            range($skipRangeStart24, $skipRangeEnd24),
+            range($skipRangeStart25, $skipRangeEnd25),
+            range($skipRangeStart26, $skipRangeEnd26),
+            range($skipRangeStart27, $skipRangeEnd27),
+            range($skipRangeStart28, $skipRangeEnd28),
+            range($skipRangeStart29, $skipRangeEnd29),
+        );
+
+        foreach ($groupedDataByAge as $key => $groupedAgeData) {
+            // Skip rows for kasusu lama
+            while (in_array($row, $skipRowsCombined)) {
+                $row++; // Skip to the next row
+            }
+
+            // Write data for age and gender
+            $this->writeAgeDataToExcel($sheet, $row, $groupedAgeData, $columns);
+            $this->writeGenderDataToExcel($sheet, $row, $groupedDataByGender[$key]['barus'], $groupedDataByGender[$key]['lamas'], $groupedDataByGender[$key]['totalBaru'], $groupedDataByGender[$key]['totalLama']);
+
+            // Increment row after writing data
+            $row++;
+        }
+
+        // Stream the Excel file to user
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-formulir11.xlsx');
+    }
     // Helper functions for grouped data
     private function getGroupedData($diagnosaValue, $bulan, $tahun)
     {
@@ -1675,42 +2115,80 @@ class ReportController extends Controller
             'kasusLama' => $data->where('kasus', 0),
         ];
     }
+    private function getGroupedDataAll($diagnosaValue, $bulan, $tahun)
+    {
+        $data = Action::whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->get()
+            ->filter(function ($action) use ($diagnosaValue) {
+                return is_array($action->diagnosa) && !empty(array_intersect($diagnosaValue, $action->diagnosa));
+            });
+
+        return $data;
+    }
 
     private function groupByAge($actions)
     {
         return $actions
             ->groupBy(function ($action) {
                 $dob = Carbon::parse($action->patient->dob);
-                $age = Carbon::now()->diffInDays($dob); // Calculate age in days
+                $age = Carbon::now()->diffInDays($dob);
 
                 if ($age <= 7) {
                     return '0-7 hari';
-                }
-                if ($age <= 28) {
+                } elseif ($age <= 28) {
                     return '8-28 hari';
-                }
-                if ($age <= 336) {
+                } elseif ($age <= 336) {
                     return '1-11 bulan';
-                }
-                if ($age <= 1460) {
+                } elseif ($age <= 1460) {
                     return '1-4 thn';
-                }
-                if ($age <= 3285) {
+                } elseif ($age <= 3285) {
                     return '5-9 thn';
-                }
-                if ($age <= 5110) {
+                } elseif ($age <= 5110) {
                     return '10-14 thn';
-                }
-                if ($age <= 6935) {
+                } elseif ($age <= 6935) {
                     return '15-19 thn';
-                }
-                if ($age <= 16130) {
+                } elseif ($age <= 16130) {
                     return '20-44 thn';
-                }
-                if ($age <= 21590) {
+                } elseif ($age <= 21590) {
                     return '45-59 thn';
                 }
                 return '>59 thn';
+            })
+            ->map->count();
+    }
+    private function groupByAgeAll($actions)
+    {
+        return $actions
+            ->groupBy(function ($action) {
+                $dob = Carbon::parse($action->patient->dob);
+                $age = Carbon::now()->diffInDays($dob);
+
+                if ($age <= 7) {
+                    return '0-7 hari';
+                } elseif ($age <= 28) {
+                    return '8-28 hari';
+                } elseif ($age <= 336) {
+                    return '1-11 bulan';
+                } elseif ($age <= 1460) {
+                    return '1-4 thn';
+                } elseif ($age <= 3285) {
+                    return '5-9 thn';
+                } elseif ($age <= 5110) {
+                    return '10-14 thn';
+                } elseif ($age <= 6935) {
+                    return '15-19 thn';
+                } elseif ($age <= 16130) {
+                    return '20-44 thn';
+                } elseif ($age <= 19710) {
+                    return '45-54 thn';
+                } elseif ($age <= 21590) {
+                    return '55-59 thn';
+                } elseif ($age <= 25220) {
+                    return '60-69 thn';
+                } else {
+                    return '>70 thn';
+                }
             })
             ->map->count();
     }
@@ -1719,10 +2197,10 @@ class ReportController extends Controller
     {
         return $actions
             ->groupBy(function ($action) {
-                return $action->patient->gender; // Group by gender
+                return $action->patient->gender;
             })
             ->map(function ($group) {
-                return $group->count(); // Count the number of cases per gender
+                return $group->count();
             });
     }
 
@@ -1744,6 +2222,11 @@ class ReportController extends Controller
         $sheet->setCellValue('R' . $row, $totalKasusLamaPerGender['1'] ?? 0);
         $sheet->setCellValue('P' . $row, $totalKasusBaru);
         $sheet->setCellValue('S' . $row, $totalKasusLama);
+    }
+    private function writeGenderDataToExcelStp($sheet, $row, $totalKasusPerGender)
+    {
+        $sheet->setCellValue('O' . $row, $totalKasusPerGender['2'] ?? 0);
+        $sheet->setCellValue('P' . $row, $totalKasusPerGender['1'] ?? 0);
     }
 
     public function reportFormulir12()
