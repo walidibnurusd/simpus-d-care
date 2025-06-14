@@ -280,15 +280,63 @@ class KajianAwalController extends Controller
 		if ($request->ajax()) {
 			$startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
 			$endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
-			$actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-kia'); // Ensure 'diagnosa' is not null
+			$actionsQuery = Action::with([
+					'patient:id,nik,no_rm,name,dob,jenis_kartu,wilayah_faskes',
+					'hospitalReferral'
+				])
+				->select('actions.id', 'tanggal', 'diagnosa', 'keluhan', 'tindakan', 'id_patient', 'rujuk_rs')
+				->where('tipe', 'poli-kia')
+				->whereDate('tanggal', '>=', $startDate)
+				->whereDate('tanggal', '<=', $endDate);
 
-			$actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
 
-			$actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+			return DataTables::of($actionsQuery)
+				->filter(function ($query) use ($request) {
+					if ($search = $request->input('search.value')) {
+						$query->where(function ($q) use ($search) {
+							$q->orWhereHas('patient', function ($patientQuery) use ($search) {
+								$patientQuery->where('nik', 'like', "%{$search}%")
+									->orWhere('name', 'like', "%{$search}%")
+									->orWhere('jenis_kartu', 'like', "%{$search}%")
+									->orWhere('no_rm', 'like', "%{$search}%");
+							});
 
-			$actions = $actionsQuery->get();
+							$q->orWhereHas('hospitalReferral', function ($patientQuery) use ($search) {
+								$patientQuery->where('name', 'like', "%{$search}%");
+							});
 
-			return DataTables::of($actions)
+							$q->orWhere('keluhan', 'like', "%{$search}%")
+							  ->orWhere('tindakan', 'like', "%{$search}%")
+							  ->orWhere('tanggal', 'like', "%{$search}%");
+
+							$q->orWhereRaw("(SELECT COUNT(*) FROM kunjungan WHERE kunjungan.pasien = actions.id_patient) = 1 AND 'Baru' LIKE ?", ["%{$search}%"]);
+							$q->orWhereRaw("(SELECT COUNT(*) FROM kunjungan WHERE kunjungan.pasien = actions.id_patient) > 1 AND 'Lama' LIKE ?", ["%{$search}%"]);
+						});
+					}
+				})
+				->orderColumn('patient_nik', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.nik', $order);
+				})
+				->orderColumn('patient_no_rm', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.no_rm', $order);
+				})
+				->orderColumn('patient_name', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.name', $order);
+				})
+				->orderColumn('patient_age', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.dob', $order);
+				})
+				->orderColumn('kartu', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.jenis_kartu', $order);
+				})
+				->orderColumn('tanggal', function ($query, $order) {
+					$query->orderBy('tanggal', $order);
+				})
 				->addIndexColumn()
 				->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
 				->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
@@ -353,15 +401,62 @@ class KajianAwalController extends Controller
 		if ($request->ajax()) {
 			$startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
 			$endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
-			$actionsQuery = Action::with(['patient', 'hospitalReferral'])->where('tipe', 'poli-kb'); // Ensure 'diagnosa' is not null
+			$actionsQuery = Action::with([
+					'patient:id,nik,no_rm,name,dob,jenis_kartu,wilayah_faskes',
+					'hospitalReferral'
+				])
+				->select('actions.id', 'tanggal', 'diagnosa', 'keluhan', 'tindakan', 'id_patient', 'rujuk_rs')
+				->where('tipe', 'poli-kb')
+				->whereDate('tanggal', '>=', $startDate)
+				->whereDate('tanggal', '<=', $endDate);
 
-			$actionsQuery->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate);
+			return DataTables::of($actionsQuery)
+				->filter(function ($query) use ($request) {
+					if ($search = $request->input('search.value')) {
+						$query->where(function ($q) use ($search) {
+							$q->orWhereHas('patient', function ($patientQuery) use ($search) {
+								$patientQuery->where('nik', 'like', "%{$search}%")
+									->orWhere('name', 'like', "%{$search}%")
+									->orWhere('jenis_kartu', 'like', "%{$search}%")
+									->orWhere('no_rm', 'like', "%{$search}%");
+							});
 
-			$actionsQuery->orderByDesc('tanggal')->orderByDesc('created_at');
+							$q->orWhereHas('hospitalReferral', function ($patientQuery) use ($search) {
+								$patientQuery->where('name', 'like', "%{$search}%");
+							});
 
-			$actions = $actionsQuery->get();
+							$q->orWhere('keluhan', 'like', "%{$search}%")
+							  ->orWhere('tindakan', 'like', "%{$search}%")
+							  ->orWhere('tanggal', 'like', "%{$search}%");
 
-			return DataTables::of($actions)
+							$q->orWhereRaw("(SELECT COUNT(*) FROM kunjungan WHERE kunjungan.pasien = actions.id_patient) = 1 AND 'Baru' LIKE ?", ["%{$search}%"]);
+							$q->orWhereRaw("(SELECT COUNT(*) FROM kunjungan WHERE kunjungan.pasien = actions.id_patient) > 1 AND 'Lama' LIKE ?", ["%{$search}%"]);
+						});
+					}
+				})
+				->orderColumn('patient_nik', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.nik', $order);
+				})
+				->orderColumn('patient_no_rm', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.no_rm', $order);
+				})
+				->orderColumn('patient_name', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.name', $order);
+				})
+				->orderColumn('patient_age', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.dob', $order);
+				})
+				->orderColumn('kartu', function ($query, $order) {
+					$query->join('patients', 'actions.id_patient', '=', 'patients.id')
+						  ->orderBy('patients.jenis_kartu', $order);
+				})
+				->orderColumn('tanggal', function ($query, $order) {
+					$query->orderBy('tanggal', $order);
+				})
 				->addIndexColumn()
 				->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('Y-m-d') : '-')
 				->addColumn('patient_nik', fn($row) => optional($row->patient)->nik . '/' . optional($row->patient)->no_rm)
