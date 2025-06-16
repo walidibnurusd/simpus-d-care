@@ -259,7 +259,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/rjp', [ReportController::class, 'reportRJP'])->name('report.rjp');
     Route::get('/laporan/skdr', [ReportController::class, 'reportSKDR'])->name('report.skdr');
     Route::get('/laporan/lkg', [ReportController::class, 'reportLKG'])->name('report.lkg');
-    Route::get('/laporan/lrkg', [ReportController::class, 'reportLRKG'])->name('report.lrkg');
     Route::get('/laporan/lkt', [ReportController::class, 'reportLKT'])->name('report.lkt');
     Route::get('/laporan/lbkt', [ReportController::class, 'reportLBKT'])->name('report.lbkt');
     Route::get('/laporan/urt', [ReportController::class, 'reportURT'])->name('report.urt');
@@ -269,8 +268,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/formulir10', [ReportController::class, 'reportFormulir10'])->name('report.formulir10');
     Route::get('/laporan/formulir11', [ReportController::class, 'reportFormulir11'])->name('report.formulir11');
     Route::get('/laporan/formulir12', [ReportController::class, 'reportFormulir12'])->name('report.formulir12');
+    Route::get('/laporan/formulir13', [ReportController::class, 'reportFormulir13'])->name('report.formulir13');
     Route::get('/laporan/lr', [ReportController::class, 'reportLR'])->name('report.lr');
     Route::post('/laporan/up', [ReportController::class, 'reportUP'])->name('report.up');
+    Route::get('/laporan/jamkesda', [ReportController::class, 'reportJamkesda'])->name('report.jamkesda');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
     Route::prefix('skrining')->group(function () {
