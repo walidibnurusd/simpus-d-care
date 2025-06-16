@@ -271,6 +271,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/formulir13', [ReportController::class, 'reportFormulir13'])->name('report.formulir13');
     Route::get('/laporan/lr', [ReportController::class, 'reportLR'])->name('report.lr');
     Route::post('/laporan/up', [ReportController::class, 'reportUP'])->name('report.up');
+    Route::get('/laporan/jamkesda', [ReportController::class, 'reportJamkesda'])->name('report.jamkesda');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
     Route::prefix('skrining')->group(function () {

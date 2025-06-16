@@ -7,6 +7,8 @@ use App\Models\Disease;
 use App\Models\Doctor;
 use App\Models\Hospital;
 use App\Models\Action;
+use App\Models\Patients;
+use App\Models\Kunjungan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -1769,6 +1771,111 @@ class ReportController extends Controller
             $writer->save('php://output');
         }, 'laporan-formulir12.xlsx');
     }
+
+    public function reportJamkesda(Request $request)
+    {
+        $bulanMap = [
+            1 => 'JANUARI',
+            2 => 'FEBRUARI',
+            3 => 'MARET',
+            4 => 'APRIL',
+            5 => 'MEI',
+            6 => 'JUNI',
+            7 => 'JULI',
+            8 => 'AGUSTUS',
+            9 => 'SEPTEMBER',
+            10 => 'OKTOBER',
+            11 => 'NOVEMBER',
+            12 => 'DESEMBER',
+        ];
+
+        $angkaBulan = (int) $request->input('bulan');
+        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+        $tahun = $request->tahun;
+        $tanggal = Carbon::now()->translatedFormat('j F Y');
+
+        $templatePath = public_path('assets/report/report-jamkesda.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A9', 'BULAN ' . $bulan . ' TAHUN ' . $tahun);
+
+        $kunjunganData = Kunjungan::whereMonth('tanggal', $angkaBulan)
+            ->whereYear('tanggal', $tahun)
+            ->whereHas('patient', function ($query) {
+                $query->where('jenis_kartu', 'jkd');
+            })
+            ->with(['patient:id,name,dob,gender,nik,address,jenis_kartu'])
+            ->get();
+
+        $row = 12;
+        $no = 1;
+
+        $borderStyle = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['argb' => '000000'],
+                ],
+            ],
+        ];
+
+        foreach ($kunjunganData as $data) {
+            $patient = $data->patient;
+
+            if (!$patient || empty($patient->name) || empty($patient->dob) || empty($patient->nik) || empty($patient->address) || !isset($patient->gender) || empty($data->tanggal) || empty($data->poli)) {
+                continue;
+            }
+
+            $sheet->setCellValue("A{$row}", $no);
+            $sheet->setCellValue("B{$row}", Carbon::parse($data->tanggal)->format('d-m-Y'));
+            $sheet->setCellValue("C{$row}", $patient->name);
+            $sheet->setCellValue("D{$row}", Carbon::parse($patient->dob)->age . ' thn');
+            $sheet->setCellValue("E{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
+
+            // Format NIK sebagai teks
+            $sheet
+                ->getStyle("F{$row}")
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
+            $sheet->setCellValueExplicit("F{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+
+            $sheet->setCellValue("G{$row}", $patient->address);
+
+            $poliLabel = match ($data->poli) {
+                'poli-umum' => 'Poli Umum',
+                'poli-kb' => 'Poli KB',
+                'poli-kia' => 'Poli KIA',
+                'ruang-tindakan' => 'UGD',
+                'tindakan' => 'Tindakan',
+                default => 'Poli Gigi',
+            };
+            $sheet->setCellValue("H{$row}", $poliLabel);
+            $sheet->setCellValue("I{$row}", ''); // Kolom KET
+
+            $sheet->getStyle("A{$row}:I{$row}")->applyFromArray($borderStyle);
+
+            $row++;
+            $no++;
+        }
+
+        // Tanda tangan dinamis
+        $tandaTanganRow = $row + 2;
+        $sheet->setCellValue('D' . ($tandaTanganRow + 1), "Makassar, {$tanggal}");
+        $sheet->setCellValue('D' . ($tandaTanganRow + 2), 'Mengetahui,');
+        $sheet->setCellValue('D' . ($tandaTanganRow + 3), 'Kepala UPT Puskesmas Tamangapa');
+        $sheet->setCellValue('D' . ($tandaTanganRow + 5), 'dr. Fatimah M.Kes');
+        $sheet->setCellValue('D' . ($tandaTanganRow + 6), 'NIP.198511252011012009');
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-rawat-jalan-jamkesda.xlsx');
+    }
+
     // Helper functions for grouped data
     private function getGroupedData($diagnosaValue, $bulan, $tahun)
     {

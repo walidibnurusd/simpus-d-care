@@ -111,6 +111,7 @@
                     ['id' => 'modalURT', 'label' => 'Rekap Layanan UGD', 'route' => 'report.urt'],
                     ['id' => 'modalRJP', 'label' => 'Rekap Tindakan UGD', 'route' => 'report.rjp'],
                     ['id' => 'modalDiare', 'label' => 'Laporan Penyakit/DIARE', 'route' => 'report.poli.diare'],
+                    ['id' => 'modalJamkesda', 'label' => 'Laporan Rawat Jalan Jamkesda', 'route' => 'report.jamkesda'],
                 ];
             @endphp
 
@@ -155,6 +156,8 @@
                         Laporan Bulanan Formulir 13</button>
                     <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalLBF12">Laporan
                         Bulanan Formulir 12</button>
+                    <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalJamkesda">Laporan
+                        Rawat Jalan Jamkesda</button>
                 </div>
 
                 <!-- Kolom 3 -->
@@ -189,7 +192,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="{{ $modal['id'] }}Label">{{ $modal['label'] }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <form action="{{ isset($modal['route']) ? route($modal['route']) : '#' }}"
                             method="{{ $modal['method'] ?? 'GET' }}" target="_blank">
