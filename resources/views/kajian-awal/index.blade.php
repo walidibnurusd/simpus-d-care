@@ -389,7 +389,9 @@
                     },
                     columns: [{
                             data: 'DT_RowIndex',
-                            name: 'DT_RowIndex'
+                            name: 'DT_RowIndex',
+							sortable: false,
+							searchable: false
                         },
                         {
                             data: 'tanggal',
@@ -482,7 +484,9 @@
                     },
                     columns: [{
                             data: 'DT_RowIndex',
-                            name: 'DT_RowIndex'
+                            name: 'DT_RowIndex',
+							searchable: false,
+							sortable: false
                         },
                         {
                             data: 'tanggal',
