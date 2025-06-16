@@ -100,8 +100,13 @@
                     ],
                     [
                         'id' => 'modalLRKG',
-                        'label' => 'Laporan Bulanan Kesakitan Gigi dan Mulut',
-                        'route' => 'report.lrkg',
+                        'label' => 'Laporan Bulanan Formulir 13',
+                        'route' => 'report.formulir13',
+                    ],
+                    [
+                        'id' => 'modalLBF12',
+                        'label' => 'Laporan Bulanan Formulir 12',
+                        'route' => 'report.formulir12',
                     ],
                     ['id' => 'modalURT', 'label' => 'Rekap Layanan UGD', 'route' => 'report.urt'],
                     ['id' => 'modalRJP', 'label' => 'Rekap Tindakan UGD', 'route' => 'report.rjp'],
@@ -146,8 +151,10 @@
                         Campak</button>
                     <button class="btn btn-warning w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalSKDR">Laporan
                         SKDR</button>
-                    <button class="btn btn-warning w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalLRKGLabel">
-                        Laporan Bulanan Kesakitan Gigi dan Mulut</button>
+                    <button class="btn btn-warning w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalLRKG">
+                        Laporan Bulanan Formulir 13</button>
+                    <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalLBF12">Laporan
+                        Bulanan Formulir 12</button>
                 </div>
 
                 <!-- Kolom 3 -->
@@ -168,6 +175,7 @@
                         Tahunan</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalDiare">Laporan
                         Penyakit/DIARE</button>
+
 
                 </div>
             </div>
