@@ -85,92 +85,92 @@
             </div>
             <img src="../assets/assets/img/logo-puskesmas.png" alt="Logo Right">
         </div>
-          <hr style="border:1px solid rgb(95, 94, 94);">
+        <hr style="border:1px solid rgb(95, 94, 94);">
 
-        <h4>FORMULIR 14</h4>
         <hr style="border: 1px solid  rgb(95, 94, 94);">
 
         <h3 style="margin-top: 20px;">LAPORAN BULANAN KESAKITAN TERBANYAK
 
         </h3>
-           <p>BULAN {{ strtoupper(\Carbon\Carbon::create()->month($bulan)->translatedFormat('F')) }}
-            TAHUN {{ $tahun }}</p
+        <p>BULAN {{ strtoupper(\Carbon\Carbon::create()->month($bulan)->translatedFormat('F')) }}
+            TAHUN {{ $tahun }}</p </div>
 
-    </div>
+        <div class="table-container">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th style="width: 10%">NO</th>
+                        <th>Jenis Penyakit Terbanyak</th>
+                        <th>ICD 10 </th>
+                        <th>Jumlah Kasus
+                            Baru
+                        </th>
+                        <th>Jumlah Kasus
+                            Lama</th>
+                        <th>TOTAL</th>
 
-    <div class="table-container">
-        <table border="1">
-            <thead>
-                <tr>
-                    <th style="width: 10%">NO</th>
-                    <th>Jenis Penyakit Terbanyak</th>
-                    <th>ICD 10 </th>
-                    <th>Jumlah Kasus
-                        Baru
-                    </th>
-                    <th>Jumlah Kasus
-                        Lama</th>
-                    <th>TOTAL</th>
+                    </tr>
 
-                </tr>
-
-            </thead>
-            <tbody>
-                @php
-                    $totalBaru = 0;
-                    $totalLama = 0;
-                @endphp
-            
-                @forelse ($data as $index => $item)
+                </thead>
+                <tbody>
                     @php
-                        $totalBaru += $item['baru'];
-                        $totalLama += $item['lama'];
+                        $totalBaru = 0;
+                        $totalLama = 0;
                     @endphp
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td class="left-align">{{ $item['diagnosa'] }}</td>
-                        <td>{{ $item['icd10'] }}</td>
-                        <td>{{ $item['baru'] }}</td>
-                        <td>{{ $item['lama'] }}</td>
-                        <td>{{ $item['baru'] + $item['lama'] }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="text-center">Tidak ada data diagnosa untuk tahun {{ $tahun }}</td>
-                    </tr>
-                @endforelse
-            
-                @if (count($data) > 0)
-                    <tr class="fw-bold table-success">
-                        <td colspan="3" class="text-center">Total Keseluruhan</td>
-                        <td>{{ $totalBaru }}</td>
-                        <td>{{ $totalLama }}</td>
-                        <td>{{ $totalBaru + $totalLama }}</td>
-                    </tr>
-                @endif
-            </tbody>
-            
-        
-        </table>
-        <div style="margin-top: 30px;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-center; margin-bottom: 50px;">
-                <!-- Bagian Kiri -->
-                <div style="text-align: center; width: 100%;">
-                    <p>Makassar, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
 
-                    <p>Mengetahui,</p>
-                    <p>Kepala UPT Puskesmas Tamangapa</p>
-                    <br><br><br>
-                          <p style="margin-bottom: 0px;padding-bottom:0px">dr. Fatimah .M.Kes</p>
-                    <p style="margin-top: 0px;padding-top:0px">NIP.198511252011012009</></p>
+                    @forelse ($data as $index => $item)
+                        @php
+                            $totalBaru += $item['baru'];
+                            $totalLama += $item['lama'];
+                        @endphp
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td class="left-align">{{ $item['diagnosa'] }}</td>
+                            <td>{{ $item['icd10'] }}</td>
+                            <td>{{ $item['baru'] }}</td>
+                            <td>{{ $item['lama'] }}</td>
+                            <td>{{ $item['baru'] + $item['lama'] }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center">Tidak ada data diagnosa untuk tahun
+                                {{ $tahun }}</td>
+                        </tr>
+                    @endforelse
+
+                    @if (count($data) > 0)
+                        <tr class="fw-bold table-success">
+                            <td colspan="3" class="text-center">Total Keseluruhan</td>
+                            <td>{{ $totalBaru }}</td>
+                            <td>{{ $totalLama }}</td>
+                            <td>{{ $totalBaru + $totalLama }}</td>
+                        </tr>
+                    @endif
+                </tbody>
+
+
+            </table>
+            <div style="margin-top: 30px;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-center; margin-bottom: 50px;">
+                    <!-- Bagian Kiri -->
+                    <div style="text-align: center; width: 100%;">
+                        <p>Makassar, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
+
+                        <p>Mengetahui,</p>
+                        <p>Kepala UPT Puskesmas Tamangapa</p>
+                        <br><br><br>
+                        <p style="margin-bottom: 0px;padding-bottom:0px">dr. Fatimah .M.Kes</p>
+                        <p style="margin-top: 0px;padding-top:0px">NIP.198511252011012009</>
+                        </p>
+                    </div>
+
+
                 </div>
-
-
             </div>
+
+
         </div>
-
-
-    </div>
 </body>
 
 </html>

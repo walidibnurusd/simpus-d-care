@@ -111,6 +111,16 @@
                     ['id' => 'modalRJP', 'label' => 'Rekap Tindakan UGD', 'route' => 'report.rjp'],
                     ['id' => 'modalDiare', 'label' => 'Laporan Penyakit/DIARE', 'route' => 'report.poli.diare'],
                     ['id' => 'modalJamkesda', 'label' => 'Laporan Rawat Jalan Jamkesda', 'route' => 'report.jamkesda'],
+                    [
+                        'id' => 'modalPanduHipertensi',
+                        'label' => 'Laporan Pandu PTM Hipertensi',
+                        'route' => 'report.pandu.hipertensi',
+                    ],
+                    [
+                        'id' => 'modalPanduDiabetes',
+                        'label' => 'Laporan Pandu PTM Diabetes',
+                        'route' => 'report.pandu.diabetes',
+                    ],
                 ];
             @endphp
 
@@ -135,6 +145,8 @@
                         Layanan UGD</button>
                     <button class="btn btn-dark w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalRJP">Rekap
                         Tindakan UGD</button>
+                    <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
+                        data-bs-target="#modalPanduHipertensi">Laporan Pandu PTM Hipertensi</button>
                 </div>
 
                 <!-- Kolom 2 -->
@@ -177,6 +189,8 @@
                         Tahunan</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalDiare">Laporan
                         Penyakit/DIARE</button>
+                    <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
+                        data-bs-target="#modalPanduDiabetes">Laporan Pandu PTM Diabetes</button>
 
 
                 </div>

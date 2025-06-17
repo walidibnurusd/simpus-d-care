@@ -272,6 +272,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/lr', [ReportController::class, 'reportLR'])->name('report.lr');
     Route::get('/laporan/jamkesda', [ReportController::class, 'reportJamkesda'])->name('report.jamkesda');
     Route::get('/laporan/usia-produktif', [ReportController::class, 'reportUspro'])->name('report.uspro');
+    Route::get('/laporan/pandu-hipertensi', [ReportController::class, 'reportPanduHipertensi'])->name('report.pandu.hipertensi');
+    Route::get('/laporan/pandu-diabetes', [ReportController::class, 'reportPanduDiabetes'])->name('report.pandu.diabetes');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');
     Route::put('/change-password/{id}', [AuthController::class, 'changePassword'])->name('change.password');
     Route::prefix('skrining')->group(function () {
