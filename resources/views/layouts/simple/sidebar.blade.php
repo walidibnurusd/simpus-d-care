@@ -119,45 +119,25 @@
                     @if (Auth::user()->role == 'apotik')
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('terima-obat') }}">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                                </svg>
+                                <i class="fa fa-sign-in" aria-hidden="true" style="margin-right: 10px;"></i>
                                 <span>Penerimaan Obat</span>
                             </a>
                         </li>
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('pengeluaran-obat') }}">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                                </svg>
-                                <span class="sidebar-text nowrap">Pengeluaran Obat</span>
+                                <i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 10px;"></i>
+                                <span>Pengeluaran Obat</span>
                             </a>
                         </li>
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('stok-obat') }}">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                                </svg>
+                                <i class="fa fa-list-ol" aria-hidden="true" style="margin-right: 10px;"></i>
                                 <span class="sidebar-text nowrap">Stok Obat</span>
                             </a>
                         </li>
                         <li class="sidebar-list">
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('obat-master-data') }}">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
-                                </svg>
+                                <i class="fa fa-medkit" aria-hidden="true" style="margin-right: 10px;"></i>
                                 <span>Master Data Obat</span>
                             </a>
                         </li>
