@@ -47,9 +47,8 @@
                     ],
                     [
                         'id' => 'modalPasienProduktif',
-                        'label' => 'Pasien Produktif Baru (15-59THN)',
-                        'route' => 'report.up',
-                        'method' => 'POST',
+                        'label' => 'Laporan Pasien Produktif (15-59THN)',
+                        'route' => 'report.uspro',
                     ],
                     ['id' => 'modalISPA', 'label' => 'ISPA Tahunan', 'route' => 'report.rrt'],
                     [
@@ -123,7 +122,7 @@
                     <button class="btn btn-dark w-100 mb-3" data-bs-toggle="modal"
                         data-bs-target="#modalLaporanKasus">Laporan Berdasarkan Kasus</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal"
-                        data-bs-target="#modalPasienProduktif">Pasien Produktif Baru (15-59THN)</button>
+                        data-bs-target="#modalPasienProduktif">Laporan Pasien Produktif (15-59THN)</button>
                     <button class="btn btn-info w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalISPA">ISPA
                         Tahunan</button>
                     <button class="btn btn-warning w-100 mb-3" data-bs-toggle="modal"

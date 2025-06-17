@@ -1875,6 +1875,121 @@ class ReportController extends Controller
             $writer->save('php://output');
         }, 'laporan-rawat-jalan-jamkesda.xlsx');
     }
+    public function reportUspro(Request $request)
+    {
+        $bulanMap = [
+            1 => 'JANUARI',
+            2 => 'FEBRUARI',
+            3 => 'MARET',
+            4 => 'APRIL',
+            5 => 'MEI',
+            6 => 'JUNI',
+            7 => 'JULI',
+            8 => 'AGUSTUS',
+            9 => 'SEPTEMBER',
+            10 => 'OKTOBER',
+            11 => 'NOVEMBER',
+            12 => 'DESEMBER',
+        ];
+
+        $angkaBulan = (int) $request->input('bulan');
+        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+        $tahun = $request->tahun;
+        $tanggal = Carbon::now()->translatedFormat('j F Y');
+
+        $templatePath = public_path('assets/report/report-uspro.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A9', 'BULAN ' . $bulan . ' TAHUN ' . $tahun);
+
+        $kunjunganData = Kunjungan::whereMonth('tanggal', $angkaBulan)
+            ->whereYear('tanggal', $tahun)
+            ->whereHas('patient', function ($query) {
+                $query->where('jenis_kartu', 'jkd')->whereRaw('TIMESTAMPDIFF(YEAR, dob, CURDATE()) BETWEEN 15 AND 59');
+            })
+            ->with(['patient:id,name,dob,gender,nik,address,jenis_kartu'])
+            ->get();
+        $patientIds = $kunjunganData->pluck('patient.id')->filter()->unique()->values();
+
+        // Hitung jumlah kunjungan untuk setiap pasien dalam satu query
+        $kunjunganCounts = Kunjungan::whereIn('pasien', $patientIds)->select('pasien', DB::raw('COUNT(*) as total'))->groupBy('pasien')->pluck('total', 'pasien');
+        $row = 12;
+        $no = 1;
+
+        $borderStyle = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['argb' => '000000'],
+                ],
+            ],
+        ];
+
+        foreach ($kunjunganData as $data) {
+            $patient = $data->patient;
+
+            if (!$patient || empty($patient->name) || empty($patient->dob) || empty($patient->nik) || empty($patient->address) || !isset($patient->gender) || empty($data->tanggal) || empty($data->poli)) {
+                continue;
+            }
+
+            $action = Action::where('id_patient', $patient->id)->whereDate('tanggal', $data->tanggal)->first();
+
+            $diagnosa = '-';
+            if ($action) {
+                $rawDiagnosa = $action->diagnosa;
+
+                if (is_string($rawDiagnosa)) {
+                    $diagnosaIds = json_decode($rawDiagnosa, true);
+                } elseif (is_array($rawDiagnosa)) {
+                    $diagnosaIds = $rawDiagnosa;
+                } else {
+                    $diagnosaIds = [];
+                }
+
+                $diagnosaIds = array_map('intval', $diagnosaIds);
+                $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+                $diagnosa = !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+            }
+
+            $kunjunganCount = $kunjunganCounts[$patient->id] ?? 0;
+            $sheet->setCellValue("A{$row}", $no);
+            $sheet->setCellValue("B{$row}", Carbon::parse($data->tanggal)->format('d-m-Y'));
+            $sheet->setCellValue("C{$row}", $patient->name);
+            $sheet
+                ->getStyle("D{$row}")
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
+            $sheet->setCellValueExplicit("D{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue("E{$row}", Carbon::parse($patient->dob)->format('d-m-Y'));
+            $sheet->setCellValue("F{$row}", Carbon::parse($patient->dob)->age . ' thn');
+            $sheet->setCellValue("G{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
+            $sheet->setCellValue("H{$row}", $patient->address);
+            $sheet->setCellValue("I{$row}", $diagnosa);
+            $sheet->setCellValue("J{$row}", $kunjunganCount == 1 ? 'Baru' : 'Lama');
+
+            $sheet->getStyle("A{$row}:J{$row}")->applyFromArray($borderStyle);
+
+            $row++;
+            $no++;
+        }
+
+        // Tanda tangan dinamis
+        $tandaTanganRow = $row + 2;
+        $sheet->setCellValue('D' . ($tandaTanganRow + 1), "Makassar, {$tanggal}");
+        $sheet->setCellValue('D' . ($tandaTanganRow + 2), 'Mengetahui,');
+        $sheet->setCellValue('D' . ($tandaTanganRow + 3), 'Kepala UPT Puskesmas Tamangapa');
+        $sheet->setCellValue('D' . ($tandaTanganRow + 5), 'dr. Fatimah M.Kes');
+        $sheet->setCellValue('D' . ($tandaTanganRow + 6), 'NIP.198511252011012009');
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-usia-produktif.xlsx');
+    }
 
     // Helper functions for grouped data
     private function getGroupedData($diagnosaValue, $bulan, $tahun)
@@ -2127,23 +2242,5 @@ class ReportController extends Controller
         $topDiagnoses[] = $totalRow;
 
         return view('content.report.laporan-lr', compact('rujukan', 'topDiagnoses', 'bulan', 'tahun', 'hospitalColumns'));
-    }
-    public function reportUP(Request $request)
-    {
-        // Get the selected month and year from the request
-        $bulan = $request->input('bulan');
-        $tahun = $request->input('tahun');
-
-        // Build the query
-        $patients = Action::whereHas('patient', function ($query) use ($bulan, $tahun) {
-            $query->whereBetween(DB::raw('TIMESTAMPDIFF(YEAR, dob, CURDATE())'), [15, 59]);
-
-            // Filter by month and year if provided
-            if ($bulan && $tahun) {
-                $query->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun);
-            }
-        })->get();
-
-        return view('content.report.laporan-up', compact('patients'));
     }
 }
