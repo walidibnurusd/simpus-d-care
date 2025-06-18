@@ -1836,7 +1836,6 @@ class ReportController extends Controller
             $sheet->setCellValue("D{$row}", Carbon::parse($patient->dob)->age . ' thn');
             $sheet->setCellValue("E{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
 
-            // Format NIK sebagai teks
             $sheet
                 ->getStyle("F{$row}")
                 ->getNumberFormat()
@@ -1875,6 +1874,131 @@ class ReportController extends Controller
             $writer->save('php://output');
         }, 'laporan-rawat-jalan-jamkesda.xlsx');
     }
+
+    public function reportBpjs(Request $request)
+    {
+        $month = (int) $request->input('bulan');
+        $year = $request->input('tahun');
+
+        $templatePath = public_path('assets/report/report-bpjs.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $visits = Kunjungan::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->with(['patient:id,name,dob,gender,nik,address,jenis_kartu,wilayah_faskes'])
+            ->get();
+
+        $actions = Action::whereNotNull('rujuk_rs')->select('id_patient', 'tanggal')->get()->groupBy(fn($a) => $a->pasien_id . '|' . Carbon::parse($a->tanggal)->toDateString());
+
+        $poliList = ['poli-umum', 'poli-gigi', ['poli-kia', 'poli-kb']];
+
+        $startRow = 5;
+
+        $grouped = $visits->groupBy([fn($item) => strtolower($item->poli ?? 'others'), fn($item) => $item->patient->id]);
+
+        foreach ($poliList as $index => $poliKey) {
+            $row = $startRow + $index;
+
+            $counts = [
+                1 => [
+                    'pbi' => ['first' => 0, 'repeat' => 0],
+                    'non_pbi' => ['first' => 0, 'repeat' => 0],
+                ],
+                0 => [
+                    'pbi' => ['first' => 0, 'repeat' => 0],
+                    'non_pbi' => ['first' => 0, 'repeat' => 0],
+                ],
+            ];
+
+            $rujuk = [
+                'pbi' => ['first' => 0, 'repeat' => 0],
+                'non_pbi' => ['first' => 0, 'repeat' => 0],
+            ];
+
+            $poliNames = is_array($poliKey) ? array_map('strtolower', $poliKey) : [strtolower($poliKey)];
+            $visitsPerPatient = collect();
+
+            foreach ($poliNames as $poliName) {
+                $visitsPerPatient = $visitsPerPatient->merge($grouped[$poliName] ?? collect());
+            }
+
+            foreach ($visitsPerPatient as $patientVisits) {
+                $firstVisit = $patientVisits->first();
+                $patient = $firstVisit->patient;
+
+                $jenisKartu = strtolower(str_replace(' ', '_', $patient->jenis_kartu ?? ''));
+                $wilayah = (int) ($patient->wilayah_faskes ?? 0);
+
+                $kategori = match (true) {
+                    $jenisKartu === 'pbi' => 'pbi',
+                    in_array($jenisKartu, ['jkn_mandiri', 'askes']) => 'non_pbi',
+                    default => null,
+                };
+
+                if (!$kategori || !isset($counts[$wilayah][$kategori])) {
+                    continue;
+                }
+
+                $visitCount = $patientVisits->count();
+
+                if ($visitCount === 1) {
+                    $counts[$wilayah][$kategori]['first']++;
+
+                    // Cek rujukan first wilayah 1
+                    if ($wilayah === 1) {
+                        foreach ($patientVisits as $visit) {
+                            $key = $patient->id . '|' . Carbon::parse($visit->tanggal)->toDateString();
+                            if (isset($actions[$key])) {
+                                $rujuk[$kategori]['first']++;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    $counts[$wilayah][$kategori]['repeat']++;
+
+                    // Cek rujukan repeat wilayah 1
+                    if ($wilayah === 1) {
+                        foreach ($patientVisits as $visit) {
+                            $key = $patient->id . '|' . $visit->tanggal->toDateString();
+                            if (isset($actions[$key])) {
+                                $rujuk[$kategori]['repeat']++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Tulis ke Excel
+            // Wilayah 1
+            $sheet->setCellValue("B{$row}", $counts[1]['pbi']['first']);
+            $sheet->setCellValue("C{$row}", $counts[1]['pbi']['repeat']);
+            $sheet->setCellValue("D{$row}", $counts[1]['non_pbi']['first']);
+            $sheet->setCellValue("E{$row}", $counts[1]['non_pbi']['repeat']);
+
+            $sheet->setCellValue("G{$row}", $counts[0]['pbi']['first']);
+            $sheet->setCellValue("H{$row}", $counts[0]['pbi']['repeat']);
+            $sheet->setCellValue("I{$row}", $counts[0]['non_pbi']['first']);
+            $sheet->setCellValue("J{$row}", $counts[0]['non_pbi']['repeat']);
+
+            $sheet->setCellValue("L{$row}", $rujuk['pbi']['first']);
+            $sheet->setCellValue("M{$row}", $rujuk['pbi']['repeat']);
+            $sheet->setCellValue("N{$row}", $rujuk['non_pbi']['first']);
+            $sheet->setCellValue("O{$row}", $rujuk['non_pbi']['repeat']);
+        }
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-bpjs.xlsx');
+    }
+
     public function reportUspro(Request $request)
     {
         $bulanMap = [
@@ -2161,7 +2285,7 @@ class ReportController extends Controller
                 ],
             ],
         ];
-        $targetDiagnosaId = [667,668];
+        $targetDiagnosaId = [667, 668, 907];
 
         foreach ($kunjunganData as $data) {
             $patient = $data->patient;

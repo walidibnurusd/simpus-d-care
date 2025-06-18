@@ -121,6 +121,11 @@
                         'label' => 'Laporan Pandu PTM Diabetes',
                         'route' => 'report.pandu.diabetes',
                     ],
+                    [
+                        'id' => 'modalBpjs',
+                        'label' => 'Laporan BPJS',
+                        'route' => 'report.bpjs',
+                    ],
                 ];
             @endphp
 
@@ -147,6 +152,8 @@
                         Tindakan UGD</button>
                     <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
                         data-bs-target="#modalPanduHipertensi">Laporan Pandu PTM Hipertensi</button>
+                    <button class="btn btn-info w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalBpjs">Laporan
+                        Laporan BPJS</button>
                 </div>
 
                 <!-- Kolom 2 -->
@@ -154,7 +161,7 @@
                     <button class="btn btn-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalTifoid">Laporan
                         Penyakit Tifoid</button>
                     <button class="btn btn-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalSTP">Laporan
-                        Surveilans Terpadu Penyakit Terpadu Surveilans</button>
+                        Surveilans Terpadu</button>
                     <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalPTM">Rekap
                         Penyakit Tidak Menular</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalAFP">Laporan
@@ -169,6 +176,7 @@
                         Bulanan Formulir 12</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalJamkesda">Laporan
                         Rawat Jalan Jamkesda</button>
+
                 </div>
 
                 <!-- Kolom 3 -->
