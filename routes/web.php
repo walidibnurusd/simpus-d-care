@@ -272,6 +272,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/lr', [ReportController::class, 'reportLR'])->name('report.lr');
     Route::get('/laporan/jamkesda', [ReportController::class, 'reportJamkesda'])->name('report.jamkesda');
     Route::get('/laporan/bpjs', [ReportController::class, 'reportBpjs'])->name('report.bpjs');
+    Route::get('/laporan/kunjungan', [ReportController::class, 'reportKunjungan'])->name('report.kunjungan');
     Route::get('/laporan/usia-produktif', [ReportController::class, 'reportUspro'])->name('report.uspro');
     Route::get('/laporan/pandu-hipertensi', [ReportController::class, 'reportPanduHipertensi'])->name('report.pandu.hipertensi');
     Route::get('/laporan/pandu-diabetes', [ReportController::class, 'reportPanduDiabetes'])->name('report.pandu.diabetes');

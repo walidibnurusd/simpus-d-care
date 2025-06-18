@@ -126,6 +126,11 @@
                         'label' => 'Laporan BPJS',
                         'route' => 'report.bpjs',
                     ],
+                    [
+                        'id' => 'modalKunjungan',
+                        'label' => 'Laporan Kunjungan',
+                        'route' => 'report.kunjungan',
+                    ],
                 ];
             @endphp
 
@@ -152,7 +157,7 @@
                         Tindakan UGD</button>
                     <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
                         data-bs-target="#modalPanduHipertensi">Laporan Pandu PTM Hipertensi</button>
-                    <button class="btn btn-info w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalBpjs">Laporan
+                    <button class="btn btn-info w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalBpjs">
                         Laporan BPJS</button>
                 </div>
 
@@ -176,6 +181,9 @@
                         Bulanan Formulir 12</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalJamkesda">Laporan
                         Rawat Jalan Jamkesda</button>
+                    <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
+                        data-bs-target="#modalKunjungan">Laporan
+                        Kunjungan Baru dan Kunjungan Lama</button>
 
                 </div>
 

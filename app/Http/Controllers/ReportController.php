@@ -1889,7 +1889,7 @@ class ReportController extends Controller
 
         $visits = Kunjungan::whereMonth('tanggal', $month)
             ->whereYear('tanggal', $year)
-            ->with(['patient:id,name,dob,gender,nik,address,jenis_kartu,wilayah_faskes'])
+            ->with(['patient:id,jenis_kartu,wilayah_faskes'])
             ->get();
 
         $actions = Action::whereNotNull('rujuk_rs')->whereMonth('tanggal', $month)->whereYear('tanggal', $year)->select('id_patient', 'tanggal')->get()->groupBy(fn($a) => $a->id_patient . '|' . Carbon::parse($a->tanggal)->toDateString());
@@ -1978,6 +1978,64 @@ class ReportController extends Controller
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
         }, 'laporan-bpjs.xlsx');
+    }
+    public function reportKunjungan(Request $request)
+    {
+        $month = (int) $request->input('bulan');
+        $year = (int) $request->input('tahun');
+
+        $templatePath = public_path('assets/report/report-kunjungan.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $visits = Kunjungan::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->with(['patient:id,gender'])
+            ->get();
+
+        $poliList = ['poli-umum', 'poli-gigi', 'poli-kia', 'poli-kb', 'ruang-tindakan'];
+        $startRow = 12;
+
+        $grouped = $visits->groupBy([fn($item) => strtolower($item->poli ?? 'others'), fn($item) => $item->patient->id]);
+
+        foreach ($poliList as $index => $poliKey) {
+            $row = $startRow + $index;
+            $genderCounts = [
+                '1' => ['first' => 0, 'repeat' => 0],
+                '2' => ['first' => 0, 'repeat' => 0],
+            ];
+
+            $poliName = strtolower($poliKey);
+            $visitsPerPatient = $grouped[$poliName] ?? collect();
+
+            foreach ($visitsPerPatient as $patientVisits) {
+                $firstVisit = $patientVisits->first();
+                $gender = strtoupper($firstVisit->patient->gender ?? '');
+
+                if (!in_array($gender, ['1', '2'])) {
+                    continue;
+                }
+
+                $visitCount = $patientVisits->count();
+                $status = $visitCount === 1 ? 'first' : 'repeat';
+
+                $genderCounts[$gender][$status]++;
+            }
+
+            $sheet->setCellValue("B{$row}", $genderCounts['2']['first']);
+            $sheet->setCellValue("C{$row}", $genderCounts['1']['first']);
+            $sheet->setCellValue("D{$row}", $genderCounts['2']['repeat']);
+            $sheet->setCellValue("E{$row}", $genderCounts['1']['repeat']);
+        }
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-kunjungan.xlsx');
     }
 
     public function reportUspro(Request $request)
