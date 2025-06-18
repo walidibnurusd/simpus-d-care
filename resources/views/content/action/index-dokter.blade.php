@@ -112,7 +112,6 @@
                             <table id="actionTable" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th><input type="checkbox" id="checkAll"></th> <!-- Checkbox for each row -->
                                         <th>No</th>
                                         <th>TANGGAL</th>
                                         <th>NIK/NO.RM</th>
@@ -358,16 +357,7 @@
                             d.end_date = $('#end_date').val();
                         }
                     },
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            orderable: false,
-                            searchable: false,
-                            render: function(data, type, row) {
-                                return `<input type="checkbox" class="actionCheckbox" value="${row.id}">`; // Checkbox for each row
-                            }
-                        },
-
+                    columns: [
                         {
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
@@ -491,15 +481,7 @@
                         // console.log("End Date: ", end_date);
                     }
                 },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, row) {
-                            return `<input type="checkbox" class="actionCheckbox" value="${row.id}">`; // Checkbox for each row
-                        }
-                    },
+                columns: [
                     {
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -617,15 +599,7 @@
 
                         }
                     },
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            orderable: false,
-                            searchable: false,
-                            render: function(data, type, row) {
-                                return `<input type="checkbox" class="actionCheckbox" value="${row.id}">`; // Checkbox for each row
-                            }
-                        },
+                    columns: [
                         {
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
@@ -745,15 +719,7 @@
 
                         }
                     },
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            orderable: false,
-                            searchable: false,
-                            render: function(data, type, row) {
-                                return `<input type="checkbox" class="actionCheckbox" value="${row.id}">`; // Checkbox for each row
-                            }
-                        },
+                    columns: [
                         {
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
