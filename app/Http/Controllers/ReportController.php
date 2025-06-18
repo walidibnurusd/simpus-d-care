@@ -1874,11 +1874,10 @@ class ReportController extends Controller
             $writer->save('php://output');
         }, 'laporan-rawat-jalan-jamkesda.xlsx');
     }
-
     public function reportBpjs(Request $request)
     {
         $month = (int) $request->input('bulan');
-        $year = $request->input('tahun');
+        $year = (int) $request->input('tahun');
 
         $templatePath = public_path('assets/report/report-bpjs.xlsx');
         if (!file_exists($templatePath)) {
@@ -1890,13 +1889,14 @@ class ReportController extends Controller
 
         $visits = Kunjungan::whereMonth('tanggal', $month)
             ->whereYear('tanggal', $year)
-            ->with(['patient:id,name,dob,gender,nik,address,jenis_kartu,wilayah_faskes'])
+            ->with(['patient:id,jenis_kartu,wilayah_faskes'])
             ->get();
 
-        $actions = Action::whereNotNull('rujuk_rs')->select('id_patient', 'tanggal')->get()->groupBy(fn($a) => $a->pasien_id . '|' . Carbon::parse($a->tanggal)->toDateString());
+        $actions = Action::whereNotNull('rujuk_rs')->whereMonth('tanggal', $month)->whereYear('tanggal', $year)->select('id_patient', 'tanggal')->get()->groupBy(fn($a) => $a->id_patient . '|' . Carbon::parse($a->tanggal)->toDateString());
+
+        $patients = Patients::pluck('wilayah_faskes', 'id');
 
         $poliList = ['poli-umum', 'poli-gigi', ['poli-kia', 'poli-kb']];
-
         $startRow = 5;
 
         $grouped = $visits->groupBy([fn($item) => strtolower($item->poli ?? 'others'), fn($item) => $item->patient->id]);
@@ -1905,19 +1905,13 @@ class ReportController extends Controller
             $row = $startRow + $index;
 
             $counts = [
-                1 => [
-                    'pbi' => ['first' => 0, 'repeat' => 0],
-                    'non_pbi' => ['first' => 0, 'repeat' => 0],
-                ],
-                0 => [
-                    'pbi' => ['first' => 0, 'repeat' => 0],
-                    'non_pbi' => ['first' => 0, 'repeat' => 0],
-                ],
+                1 => ['pbi' => ['first' => 0, 'repeat' => 0], 'non_pbi' => ['first' => 0, 'repeat' => 0]],
+                0 => ['pbi' => ['first' => 0, 'repeat' => 0], 'non_pbi' => ['first' => 0, 'repeat' => 0]],
             ];
 
             $rujuk = [
-                'pbi' => ['first' => 0, 'repeat' => 0],
-                'non_pbi' => ['first' => 0, 'repeat' => 0],
+                1 => ['pbi' => ['first' => 0, 'repeat' => 0], 'non_pbi' => ['first' => 0, 'repeat' => 0]],
+                0 => ['pbi' => ['first' => 0, 'repeat' => 0], 'non_pbi' => ['first' => 0, 'repeat' => 0]],
             ];
 
             $poliNames = is_array($poliKey) ? array_map('strtolower', $poliKey) : [strtolower($poliKey)];
@@ -1945,38 +1939,20 @@ class ReportController extends Controller
                 }
 
                 $visitCount = $patientVisits->count();
+                $status = $visitCount === 1 ? 'first' : 'repeat';
 
-                if ($visitCount === 1) {
-                    $counts[$wilayah][$kategori]['first']++;
+                $counts[$wilayah][$kategori][$status]++;
 
-                    // Cek rujukan first wilayah 1
-                    if ($wilayah === 1) {
-                        foreach ($patientVisits as $visit) {
-                            $key = $patient->id . '|' . Carbon::parse($visit->tanggal)->toDateString();
-                            if (isset($actions[$key])) {
-                                $rujuk[$kategori]['first']++;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    $counts[$wilayah][$kategori]['repeat']++;
-
-                    // Cek rujukan repeat wilayah 1
-                    if ($wilayah === 1) {
-                        foreach ($patientVisits as $visit) {
-                            $key = $patient->id . '|' . $visit->tanggal->toDateString();
-                            if (isset($actions[$key])) {
-                                $rujuk[$kategori]['repeat']++;
-                                break;
-                            }
-                        }
+                foreach ($patientVisits as $visit) {
+                    $key = $patient->id . '|' . Carbon::parse($visit->tanggal)->toDateString();
+                    if (isset($actions[$key])) {
+                        $actionWilayah = (int) ($patients[$patient->id] ?? 0);
+                        $rujuk[$actionWilayah][$kategori][$status]++;
+                        break;
                     }
                 }
             }
 
-            // Tulis ke Excel
-            // Wilayah 1
             $sheet->setCellValue("B{$row}", $counts[1]['pbi']['first']);
             $sheet->setCellValue("C{$row}", $counts[1]['pbi']['repeat']);
             $sheet->setCellValue("D{$row}", $counts[1]['non_pbi']['first']);
@@ -1987,16 +1963,79 @@ class ReportController extends Controller
             $sheet->setCellValue("I{$row}", $counts[0]['non_pbi']['first']);
             $sheet->setCellValue("J{$row}", $counts[0]['non_pbi']['repeat']);
 
-            $sheet->setCellValue("L{$row}", $rujuk['pbi']['first']);
-            $sheet->setCellValue("M{$row}", $rujuk['pbi']['repeat']);
-            $sheet->setCellValue("N{$row}", $rujuk['non_pbi']['first']);
-            $sheet->setCellValue("O{$row}", $rujuk['non_pbi']['repeat']);
+            $sheet->setCellValue("L{$row}", $rujuk[1]['pbi']['first']);
+            $sheet->setCellValue("M{$row}", $rujuk[1]['pbi']['repeat']);
+            $sheet->setCellValue("N{$row}", $rujuk[1]['non_pbi']['first']);
+            $sheet->setCellValue("O{$row}", $rujuk[1]['non_pbi']['repeat']);
+
+            $sheet->setCellValue("Q{$row}", $rujuk[0]['pbi']['first']);
+            $sheet->setCellValue("R{$row}", $rujuk[0]['pbi']['repeat']);
+            $sheet->setCellValue("S{$row}", $rujuk[0]['non_pbi']['first']);
+            $sheet->setCellValue("T{$row}", $rujuk[0]['non_pbi']['repeat']);
         }
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
         }, 'laporan-bpjs.xlsx');
+    }
+    public function reportKunjungan(Request $request)
+    {
+        $month = (int) $request->input('bulan');
+        $year = (int) $request->input('tahun');
+
+        $templatePath = public_path('assets/report/report-kunjungan.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $visits = Kunjungan::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->with(['patient:id,gender'])
+            ->get();
+
+        $poliList = ['poli-umum', 'poli-gigi', 'poli-kia', 'poli-kb', 'ruang-tindakan'];
+        $startRow = 12;
+
+        $grouped = $visits->groupBy([fn($item) => strtolower($item->poli ?? 'others'), fn($item) => $item->patient->id]);
+
+        foreach ($poliList as $index => $poliKey) {
+            $row = $startRow + $index;
+            $genderCounts = [
+                '1' => ['first' => 0, 'repeat' => 0],
+                '2' => ['first' => 0, 'repeat' => 0],
+            ];
+
+            $poliName = strtolower($poliKey);
+            $visitsPerPatient = $grouped[$poliName] ?? collect();
+
+            foreach ($visitsPerPatient as $patientVisits) {
+                $firstVisit = $patientVisits->first();
+                $gender = strtoupper($firstVisit->patient->gender ?? '');
+
+                if (!in_array($gender, ['1', '2'])) {
+                    continue;
+                }
+
+                $visitCount = $patientVisits->count();
+                $status = $visitCount === 1 ? 'first' : 'repeat';
+
+                $genderCounts[$gender][$status]++;
+            }
+
+            $sheet->setCellValue("B{$row}", $genderCounts['2']['first']);
+            $sheet->setCellValue("C{$row}", $genderCounts['1']['first']);
+            $sheet->setCellValue("D{$row}", $genderCounts['2']['repeat']);
+            $sheet->setCellValue("E{$row}", $genderCounts['1']['repeat']);
+        }
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'laporan-kunjungan.xlsx');
     }
 
     public function reportUspro(Request $request)
