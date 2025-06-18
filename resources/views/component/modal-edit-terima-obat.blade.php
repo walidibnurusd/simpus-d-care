@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-md-6" style="margin-bottom: 15px;">
                             <label for="id_obat" style="color: rgb(19, 11, 241);">Kode dan Nama Obat</label>
-                            <select class="form-control" id="id_obat_edit" name="id_obat">
+                            <select class="form-control" id="id_obat_edit{{ $obat->id }}" name="id_obat">
                                 <option value="" disabled selected>pilih</option>
                                 @foreach ($obats as $item)
                                     <option value="{{ $item->id }}" data-shape="{{ $item->shape }}"
@@ -40,7 +40,7 @@
                     <div class="row mt-3">
                         <div class="col-md-6" style="margin-bottom: 15px;">
                             <label for="shape" style="color: rgb(19, 11, 241);">Sediaan</label>
-                            <select class="form-control" id="shape_edit" name="shape" disabled>
+                            <select class="form-control" id="shape_edit{{ $obat->id }}" name="shape" disabled>
                                 <option value="1">Tablet</option>
                                 <option value="2">Botol</option>
                                 <option value="3">Pcs</option>
@@ -66,7 +66,7 @@
                         </div>
                         <div class="col-md-6" style="margin-bottom: 15px;">
                             <label for="amount" style="color: rgb(19, 11, 241);">Jumlah</label>
-                            <input type="text" class="form-control" id="amount" name="amount"
+                            <input type="text" class="form-control" id="amount{{ $obat->id }}" name="amount"
                                 placeholder="Jumlah diterima" value="{{ $obat->amount }}">
                         </div>
                     </div>
@@ -112,7 +112,7 @@
     });
     $(document).ready(function() {
         // Initialize Select2 for the obat dropdown
-        $('#id_obat_edit').select2({
+        $('#id_obat_edit{{ $obat->id }}').select2({
             placeholder: "Pilih",
             allowClear: true,
             minimumResultsForSearch: 0,
@@ -121,19 +121,19 @@
 
         // Function to update the shape field
         function updateShapeField() {
-            var selectedOption = $('#id_obat_edit option:selected');
+            var selectedOption = $('#id_obat_edit{{ $obat->id }} option:selected');
             var shapeValue = selectedOption.data('shape'); // Get the shape from the selected option
 
             if (shapeValue) {
-                $('#shape_edit').val(shapeValue).prop('disabled', false); // Enable and set value for shape
+                $('#shape_edit{{ $obat->id }}').val(shapeValue).prop('disabled', false); // Enable and set value for shape
             } else {
-                $('#shape_edit').val('').prop('disabled',
+                $('#shape_edit{{ $obat->id }}').val('').prop('disabled',
                     true); // Disable and clear shape dropdown if no shape found
             }
         }
 
         // Trigger change event on obat select
-        $('#id_obat_edit').change(function() {
+        $('#id_obat_edit{{ $obat->id }}').change(function() {
             updateShapeField();
         });
 
