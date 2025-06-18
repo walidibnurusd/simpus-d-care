@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+}
+
+small {
+    font-size: 8px;
+}
+
+.header {
+    text-align: center;
+}
+
+.section {
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    font-size: 8px;
+    border-collapse: collapse;
+}
+
+td {
+    vertical-align: top;
+    padding: 2px;
+}
+
+.prescription {
+    margin-top: 10px;
+    font-size: 8px;
+}
+
+.signature-table {
+    width: 100%;
+    margin-top: 30px;
+    font-size: 8px;
+}
+
+.signature-cell {
+    text-align: center;
+    width: 50%;
+}
+
+.line-container {
+    margin-top: 50px;
+}
+
+.line-text {
+    display: inline-block;
+    width: 90px;
+    margin-top: 10px;
+    border-bottom: 1px solid #000;
+    vertical-align: middle;
+}
+
+.parens {
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.name-label {
+    margin-top: 10px;
+}

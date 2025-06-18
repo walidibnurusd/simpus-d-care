@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Obat;
 use App\Models\PengeluaranObatLain;
 use App\Models\TerimaObat;
+use App\Models\Action;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ObatController extends Controller
 {
@@ -633,5 +635,13 @@ class ObatController extends Controller
                     $modal;
             })
             ->make(true);
+    }
+
+    public function generatePrescription($id)
+    {
+        $action = Action::with('patient', 'actionObats.obat', 'diagnosaPrimer')->find($id);
+        $pdf = Pdf::loadView('pdf.prescription', compact('action'));
+        $pdf->setPaper([0, 0, 297.64, 419.53]);
+        return $pdf->stream('invoice.pdf');
     }
 }

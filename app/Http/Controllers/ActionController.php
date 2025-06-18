@@ -2773,12 +2773,13 @@ class ActionController extends Controller
                     // Render modal edit with route name
                     $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
 
-                    return '<div class="action-buttons">
+                    return '<div class="d-grid gap-2 d-md-block">
                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
                         $row->id .
                         '">
                         <i class="fas fa-edit"></i>
                     </button>
+                    <a class="btn btn-warning" style="padding:6px; padding-right: 13px;" href="' . route('print-prescription', ['id' => $row->id]) . '" role="button" target="_blank"><i class="fas fa-print ms-2"></i></a>
             </div>' .
                         $editModal;
                 })
