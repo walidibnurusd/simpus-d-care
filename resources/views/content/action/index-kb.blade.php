@@ -30,17 +30,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <div class="row mb-3">
-            <div class="col-md-12 d-flex justify-content-start">
-                <button type="button" class="btn btn-primary" id="sendToSatuSehatButton">
-                    Kirim ke Satu Sehat
-                </button>
-            </div>
-        </div>
 
         <div class="row">
             <div class="col-12 mb-4">
-                <div class="button-container">
+                <div class="button-container mb-3">
                     <!-- Tombol Tambah -->
                     @if (Auth::user()->role == 'dokter')
                         <button type="button" class="btn btn-success" data-bs-toggle="modal"
@@ -66,11 +59,15 @@
                             </div>
 
                             <!-- Tombol Print -->
-                            <div class="col-md-2 d-flex align-items-end">
-                                <button type="button" class="btn btn-warning w-100" id="printButton">
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="button" class="btn btn-warning w-100 mr-2" id="printButton">
                                     Print
                                     <i class="fas fa-print ms-2"></i> <!-- Ikon Print -->
                                 </button>
+
+								<button type="button" id="filterButton" class="btn btn-primary w-100">
+	                                Cari <i class="fas fa-search ms-2"></i> <!-- Ikon Cari -->
+	                            </button>
                             </div>
                         </div>
                     </form>
@@ -78,9 +75,7 @@
                     <!-- Tombol Filter -->
                     <div class="row mt-3">
                         <div class="col-md-2 offset-md-8 d-flex align-items-end">
-                            <button type="button" id="filterButton" class="btn btn-primary w-100">
-                                Cari <i class="fas fa-search ms-2"></i> <!-- Ikon Cari -->
-                            </button>
+
                         </div>
                     </div>
                 </div>
@@ -123,7 +118,7 @@
                                             DIAGNOSA SEKUNDER</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            DIAGNOSA PRIMER</th>
+                                            DIAGNOSA UTAMA</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             OBAT</th>

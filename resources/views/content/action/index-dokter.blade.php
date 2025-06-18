@@ -58,16 +58,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <div class="row mb-3">
-            <div class="col-md-12 d-flex justify-content-start">
-                <button type="button" class="btn btn-primary" id="sendToSatuSehatButton">
-                    Kirim ke Satu Sehat
-                </button>
-            </div>
-        </div>
         <div class="row">
             <div class="col-12 mb-4">
-                <div class="button-container">
+                <div class="button-container mb-3">
                     <!-- Tombol Tambah -->
                     @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'tindakan')
                         <button type="button" class="btn btn-success" data-bs-toggle="modal"
@@ -93,23 +86,18 @@
                             </div>
 
                             <!-- Tombol Print -->
-                            <div class="col-md-2 d-flex align-items-end">
-                                <button type="button" class="btn btn-warning w-100" id="printButton">
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="button" class="btn btn-warning w-100 mr-2" id="printButton">
                                     Print
                                     <i class="fas fa-print ms-2"></i> <!-- Ikon Print -->
                                 </button>
+
+								<button type="button" id="filterButton" class="btn btn-primary w-100">
+	                                Cari <i class="fas fa-search ms-2"></i> <!-- Ikon Cari -->
+	                            </button>
                             </div>
                         </div>
                     </form>
-
-                    <!-- Tombol Filter -->
-                    <div class="row mt-3">
-                        <div class="col-md-2 offset-md-8 d-flex align-items-end">
-                            <button type="button" id="filterButton" class="btn btn-primary w-100">
-                                Cari <i class="fas fa-search ms-2"></i> <!-- Ikon Cari -->
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
 
@@ -145,7 +133,6 @@
                                         <th>RUJUK RS</th>
                                         <th>KUNJ</th>
                                         <th>FASKES</th>
-                                        <th>KONEKSI SATU SEHAT</th>
                                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik' || Auth::user()->role == 'tindakan')
                                             <th>AKSI</th>
                                         @endif
@@ -461,10 +448,6 @@
                                 }
                             }
                         },
-                        {
-                            data: 'status_satu_sehat',
-                            name: 'status_satu_sehat'
-                        },
                         @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
                             {
                                 data: 'action',
@@ -594,10 +577,6 @@
                             }
                         }
                     },
-                    {
-                        data: 'status_satu_sehat',
-                        name: 'status_satu_sehat'
-                    },
                     @if (Auth::user()->role == 'dokter' || Auth::user()->role == 'apotik')
                         {
                             data: 'action',
@@ -707,10 +686,6 @@
                         {
                             data: 'kunjungan',
                             name: 'kunjungan'
-                        },
-                        {
-                            data: 'status_satu_sehat',
-                            name: 'status_satu_sehat'
                         },
                         {
                             data: 'faskes',
@@ -861,10 +836,6 @@
                                 }
                             },
 
-                        },
-                        {
-                            data: 'status_satu_sehat',
-                            name: 'status_satu_sehat'
                         },
                         @if (Auth::user()->role == 'tindakan')
                             {
