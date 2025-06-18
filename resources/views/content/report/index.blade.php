@@ -47,9 +47,8 @@
                     ],
                     [
                         'id' => 'modalPasienProduktif',
-                        'label' => 'Pasien Produktif Baru (15-59THN)',
-                        'route' => 'report.up',
-                        'method' => 'POST',
+                        'label' => 'Laporan Pasien Produktif (15-59THN)',
+                        'route' => 'report.uspro',
                     ],
                     ['id' => 'modalISPA', 'label' => 'ISPA Tahunan', 'route' => 'report.rrt'],
                     [
@@ -112,6 +111,21 @@
                     ['id' => 'modalRJP', 'label' => 'Rekap Tindakan UGD', 'route' => 'report.rjp'],
                     ['id' => 'modalDiare', 'label' => 'Laporan Penyakit/DIARE', 'route' => 'report.poli.diare'],
                     ['id' => 'modalJamkesda', 'label' => 'Laporan Rawat Jalan Jamkesda', 'route' => 'report.jamkesda'],
+                    [
+                        'id' => 'modalPanduHipertensi',
+                        'label' => 'Laporan Pandu PTM Hipertensi',
+                        'route' => 'report.pandu.hipertensi',
+                    ],
+                    [
+                        'id' => 'modalPanduDiabetes',
+                        'label' => 'Laporan Pandu PTM Diabetes',
+                        'route' => 'report.pandu.diabetes',
+                    ],
+                    [
+                        'id' => 'modalBpjs',
+                        'label' => 'Laporan BPJS',
+                        'route' => 'report.bpjs',
+                    ],
                 ];
             @endphp
 
@@ -123,7 +137,7 @@
                     <button class="btn btn-dark w-100 mb-3" data-bs-toggle="modal"
                         data-bs-target="#modalLaporanKasus">Laporan Berdasarkan Kasus</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal"
-                        data-bs-target="#modalPasienProduktif">Pasien Produktif Baru (15-59THN)</button>
+                        data-bs-target="#modalPasienProduktif">Laporan Pasien Produktif (15-59THN)</button>
                     <button class="btn btn-info w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalISPA">ISPA
                         Tahunan</button>
                     <button class="btn btn-warning w-100 mb-3" data-bs-toggle="modal"
@@ -136,6 +150,10 @@
                         Layanan UGD</button>
                     <button class="btn btn-dark w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalRJP">Rekap
                         Tindakan UGD</button>
+                    <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
+                        data-bs-target="#modalPanduHipertensi">Laporan Pandu PTM Hipertensi</button>
+                    <button class="btn btn-info w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalBpjs">Laporan
+                        Laporan BPJS</button>
                 </div>
 
                 <!-- Kolom 2 -->
@@ -143,7 +161,7 @@
                     <button class="btn btn-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalTifoid">Laporan
                         Penyakit Tifoid</button>
                     <button class="btn btn-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalSTP">Laporan
-                        Surveilans Terpadu Penyakit Terpadu Surveilans</button>
+                        Surveilans Terpadu</button>
                     <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalPTM">Rekap
                         Penyakit Tidak Menular</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalAFP">Laporan
@@ -158,6 +176,7 @@
                         Bulanan Formulir 12</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalJamkesda">Laporan
                         Rawat Jalan Jamkesda</button>
+
                 </div>
 
                 <!-- Kolom 3 -->
@@ -178,6 +197,8 @@
                         Tahunan</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalDiare">Laporan
                         Penyakit/DIARE</button>
+                    <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
+                        data-bs-target="#modalPanduDiabetes">Laporan Pandu PTM Diabetes</button>
 
 
                 </div>
