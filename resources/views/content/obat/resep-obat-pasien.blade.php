@@ -29,17 +29,6 @@
 
         <div class="row">
             <div class="col-12 mb-4">
-                <div class="button-container">
-                    <!-- Tombol Tambah -->
-
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#pengeluaranObatModal">
-                        Tambah
-                        <i class="fas fa-plus ms-2"></i> <!-- Ikon Tambah -->
-                    </button>
-
-                </div>
-
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <h6>Daftar Pasien</h6>
