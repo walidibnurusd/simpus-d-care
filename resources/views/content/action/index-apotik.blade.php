@@ -39,7 +39,7 @@
 
                     <!-- Form untuk Print dan Filter -->
                     <form action="{{ route('action.report') }}" method="GET" target="_blank" class="mt-3">
-                        <div class="row">
+                        <div class="row mb-2">
                             <!-- Start Date -->
                             <div class="col-md-3">
                                 <label for="start_date" class="form-label">Start Date</label>
@@ -63,24 +63,18 @@
                                 </select>
                             </div>
 
-                            <!-- Tombol Print -->
-                            <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-warning w-100">
+                            <!-- Tombol Print & Filter-->
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-warning w-100 mr-2">
                                     Print
                                     <i class="fas fa-print ms-2"></i> <!-- Ikon Print -->
+                                </button>
+                                <button type="button" id="filterButton" class="btn btn-primary w-100">
+                                    Cari <i class="fas fa-search ms-2"></i> <!-- Ikon Cari -->
                                 </button>
                             </div>
                         </div>
                     </form>
-
-                    <!-- Tombol Filter -->
-                    <div class="row mt-3">
-                        <div class="col-md-2 offset-md-9 d-flex align-items-end">
-                            <button type="button" id="filterButton" class="btn btn-primary w-100">
-                                Cari <i class="fas fa-search ms-2"></i> <!-- Ikon Cari -->
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
 
