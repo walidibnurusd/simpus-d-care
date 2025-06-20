@@ -175,4 +175,8 @@ class Action extends Model
     {
         return $this->belongsTo(Diagnosis::class, 'diagnosa_primer');
     }
+
+	public function satuSehatEncounter() {
+		return $this->hasOne(SatuSehatEncounter::class);
+	}
 }
