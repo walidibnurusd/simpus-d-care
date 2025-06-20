@@ -667,7 +667,18 @@ class ObatController extends Controller
     }
 
     public function indexPrescriptionDetail($id) {
-        $patient = Patients::with('actions.actionObats')->find($id);
+        $patient = Patients::where('id', $id)
+        ->whereHas('actions', function ($query) {
+            $query->whereHas('actionObats')
+                ->orWhereNotNull('obat')
+                ->orWhere('obat', '!=', '');
+        })
+        ->with(['actions' => function ($query) {
+            $query->whereHas('actionObats')
+                ->orWhereNotNull('obat')
+                ->orWhere('obat', '!=', '');
+        }, 'actions.actionObats'])
+        ->first();
         return view('content.obat.detail-resep-obat-pasien', compact('patient'));
     }
 }

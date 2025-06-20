@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Resep Rawat Inap</title>
+    <title>Resep Obat Pasien</title>
     <link rel="stylesheet" href="{{ public_path('assets/css/prescription.css') }}">
 </head>
 <body style="margin: 0;">
@@ -67,10 +67,12 @@
         </div>
 
         <div class="prescription">
-            @foreach($action->actionObats as $obat)
+            @forelse($action->actionObats as $obat)
                 <strong>R/</strong> {{ $obat->obat->name }} [{{ $obat->amount }} {{ $obat->obat->shapeLabel }}]<br>
                 &nbsp;&nbsp;&nbsp;{{ $obat->dose }}<br><br>
-            @endforeach
+            @empty
+                <strong>R/</strong> {{ $action->obat }}
+            @endforelse
         </div>
         </div>
 
