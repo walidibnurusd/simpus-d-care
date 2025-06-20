@@ -1,3 +1,7 @@
+@page {
+    margin-top: 30px;
+}
+
 body {
     font-family: Arial, sans-serif;
     font-size: 10px;
@@ -33,8 +37,8 @@ td {
 
 .signature-table {
     width: 100%;
-    margin-top: 30px;
-    font-size: 8px;
+    margin-top: 20px;
+    font-size: 7px;
 }
 
 .signature-cell {
@@ -43,7 +47,7 @@ td {
 }
 
 .line-container {
-    margin-top: 50px;
+    margin-top: 40px;
 }
 
 .line-text {
