@@ -23,6 +23,49 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ReportController extends Controller
 {
+    private function extractBulanTahun(Request $request)
+    {
+        $bulan = (int) $request->input('bulan', date('m'));
+        $tahun = (int) $request->input('tahun', date('Y'));
+        return [$bulan, $tahun];
+    }
+
+    private function getBulanText($angkaBulan)
+    {
+        $bulanMap = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+        return $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+    }
+    private function getBulanTextUpper($angkaBulan)
+    {
+        $bulanMap = [
+            1 => 'JANUARI',
+            2 => 'FEBRUARI',
+            3 => 'MARET',
+            4 => 'APRIL',
+            5 => 'MEI',
+            6 => 'JUNI',
+            7 => 'JULI',
+            8 => 'AGUSTUS',
+            9 => 'SEPTEMBER',
+            10 => 'OKTOBER',
+            11 => 'NOVEMBER',
+            12 => 'DESEMBER',
+        ];
+        return $bulanMap[$angkaBulan] ?? 'BULAN TIDAK DIKENAL';
+    }
     public function index(Request $request)
     {
         $routeName = $request->route()->getName();
@@ -30,17 +73,10 @@ class ReportController extends Controller
     }
     public function printTifoid(Request $request)
     {
-        $bulan = $request->input('bulan', date('m'));
-        $tahun = $request->input('tahun', date('Y'));
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         $diagnosaValue = '600';
 
-        $tifoid = Action::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
-            ->get()
-            ->filter(function ($action) use ($diagnosaValue) {
-                return is_array($action->diagnosa) && in_array($diagnosaValue, $action->diagnosa);
-            });
-
+        $tifoid = Action::whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->whereJsonContains('diagnosa', $diagnosaValue)->get();
         return view('content.report.laporan-tifoid', compact('tifoid'));
     }
 
@@ -50,21 +86,22 @@ class ReportController extends Controller
     }
     public function reportDiare(Request $request)
     {
-        // Get the month and year from the request
-        $bulan = $request->input('bulan', date('m'));
-        $tahun = $request->input('tahun', date('Y'));
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
 
         $diagnosaValue = '602';
 
         $diare = Action::with(['patient', 'hospitalReferral'])
             ->where(function ($query) use ($diagnosaValue) {
-                $query->whereIn('diagnosa', [$diagnosaValue])->orWhereJsonContains('diagnosa', $diagnosaValue);
+                $query
+                    ->whereIn('diagnosa', [$diagnosaValue])
+                    ->orWhereJsonContains('diagnosa', $diagnosaValue)
+                    ->orWhere('diagnosa_primer', $diagnosaValue);
             })
+
             ->whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->get();
 
-        // Diagnosis and dehydration mappings
         $diagnosaMap = [
             602 => 'Diare & gastroenteritis oleh penyebab infeksi tertentu (coalitis infeksi)',
         ];
@@ -89,25 +126,7 @@ class ReportController extends Controller
 
     public function reportSTP(Request $request)
     {
-        $bulanMap = [
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember',
-        ];
-
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
-
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         // Diagnosis Values Mapping
         $diagnoses = [
             'kolera' => ['989'],
@@ -139,7 +158,7 @@ class ReportController extends Controller
         // Retrieve and process data for each diagnosis
         $diagnosisData = [];
         foreach ($diagnoses as $key => $values) {
-            $diagnosisData[$key] = $this->getGroupedDataAll($values, $angkaBulan, $tahun);
+            $diagnosisData[$key] = $this->getGroupedDataAll($values, $bulan, $tahun);
         }
 
         // Group cases by age
@@ -205,25 +224,7 @@ class ReportController extends Controller
 
     public function reportAFP(Request $request)
     {
-        $bulanMap = [
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember',
-        ];
-
-        // misalnya request input-nya seperti ini:
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
 
         $templatePath = public_path('assets/report/report-afp.xlsx');
 
@@ -253,53 +254,7 @@ class ReportController extends Controller
 
     public function reportC1(Request $request)
     {
-        function calculateAge($dob)
-        {
-            $dob = Carbon::parse($dob);
-            $now = Carbon::now();
-
-            if ($dob->diffInYears($now) > 0) {
-                return $dob->diffInYears($now); // Hitung dalam tahun
-            } elseif ($dob->diffInMonths($now) > 0) {
-                return $dob->diffInMonths($now); // Hitung dalam bulan
-            } else {
-                return $dob->diffInDays($now); // Hitung dalam hari
-            }
-        }
-
-        function calculateAgeUnit($dob)
-        {
-            $dob = Carbon::parse($dob);
-            $now = Carbon::now();
-
-            if ($dob->diffInYears($now) > 0) {
-                return 'years'; // Jika umur dalam tahun
-            } elseif ($dob->diffInMonths($now) > 0) {
-                return 'months'; // Jika umur dalam bulan
-            } else {
-                return 'days'; // Jika umur dalam hari
-            }
-        }
-
-        $bulanMap = [
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember',
-        ];
-
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
-
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         $templatePath = public_path('assets/report/report-campak.xlsx');
 
         if (!file_exists($templatePath)) {
@@ -310,7 +265,7 @@ class ReportController extends Controller
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
-        $sheet->setCellValue('A3', 'Bulan/Tahun : ' . $bulan . '/' . $tahun);
+        $sheet->setCellValue('A3', 'Bulan/Tahun : ' . $this->getBulanText($bulan) . '/' . $tahun);
         $tanggal = Carbon::now()->translatedFormat('j F Y');
         $sheet->setCellValue('O18', 'Makassar, ' . $tanggal);
         // Stream ke user (tanpa menyimpan di server)
@@ -319,372 +274,6 @@ class ReportController extends Controller
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
         }, 'laporan-kasus-campak.xlsx');
-    }
-    public function reportPTM()
-    {
-        function calculateAgePTM($dob)
-        {
-            $dob = Carbon::parse($dob);
-            $now = Carbon::now();
-
-            if ($dob->diffInYears($now) > 0) {
-                return $dob->diffInYears($now); // Hitung dalam tahun
-            } elseif ($dob->diffInMonths($now) > 0) {
-                return $dob->diffInMonths($now); // Hitung dalam bulan
-            } else {
-                return $dob->diffInDays($now); // Hitung dalam hari
-            }
-        }
-
-        function calculateAgeUnitPTM($dob)
-        {
-            $dob = Carbon::parse($dob);
-            $now = Carbon::now();
-
-            if ($dob->diffInYears($now) > 0) {
-                return 'years'; // Jika umur dalam tahun
-            } elseif ($dob->diffInMonths($now) > 0) {
-                return 'months'; // Jika umur dalam bulan
-            } else {
-                return 'days'; // Jika umur dalam hari
-            }
-        }
-
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        $sheet->mergeCells('A1:U1');
-        $sheet->setCellValue('A1', 'JUMLAH KASUS DAN KEMATIAN PENYAKIT TIDAK MENULAR MENURUT JENIS KELAMIN DAN UMUR');
-        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(12);
-
-        // $sheet->mergeCells('A2:U2');
-        // $sheet->setCellValue('A2', 'LAPORAN KASUS CAMPAK');
-        // $sheet
-        //     ->getStyle('A2')
-        //     ->getAlignment()
-        //     ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        // $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
-
-        // $sheet->mergeCells('A3:U3');
-        // $sheet->setCellValue('A3', 'Bulan/Tahun : September / 2024');
-        // $sheet
-        //     ->getStyle('A3')
-        //     ->getAlignment()
-        //     ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        // $sheet->getStyle('A3')->getFont()->setSize(10);
-
-        // Informasi puskesmas
-        $sheet->setCellValue('A2', 'PDinas Kesehatan Kota Makassar');
-        $sheet->setCellValue('A3', 'Bulan/Tahun : MARET/2024');
-        $sheet->setCellValue('A4', 'Jumlah kasus baru (Kunjungan pertama dan belum tercatat di RS/Fasilitas Kesehatan Lainnya)');
-
-        $headers = [['JUMLAH KASUS DAN KEMATIAN PENYAKIT TIDAK MENULAR MENURUT JENIS KELAMIN DAN UMUR'], ['Dinas Kesehatan Kota Makassar'], ['Bulan/Tahun : MARET/2024'], ['Jumlah kasus baru (Kunjungan pertama dan belum tercatat di RS/Fasilitas Kesehatan Lainnya)'], ['NO', 'PENYAKIT TIDAK MENULAR', 'Jenis Kelamin dan Umur (Th)', '', '', '', '', '', '', '', 'Jenis Kelamin dan Umur (Th)', '', '', '', '', '', '', '', 'Total'], ['', '', 'Laki-Laki (L)', '', '', '', '', '', '', '', 'Perempuan (P)', '', '', '', '', '', '', '', ''], ['', '', '18-24', '25-34', '35-44', '45-54', '55-64', '65-74', '≥ 75', 'Jumlah', '18-24', '25-34', '35-44', '45-54', '55-64', '65-74', '≥ 75', 'Jumlah', '']];
-
-        // Data penyakit berdasarkan gambar
-        // $data = [
-        //     ['1', 'Hipertensi', 1, 4, 3, 5, 6, 7, 21, 47, 13, 23, 25, 31, 27, 17, 113, 182],
-        //     ['2', 'Diabetes Melitus', 0, 1, 0, 2, 3, 4, 7, 17, 2, 5, 10, 11, 9, 5, 33, 50],
-        //     ['3', 'Obesitas', 9, 6, 5, 4, 3, 2, 16, 45, 19, 16, 21, 26, 25, 25, 102, 189],
-        //     ['4', 'Struma', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['5', 'Thyrotoksikosis', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['6', 'Stroke', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['7', 'Asma', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['8', 'PPOK', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['9', 'Osteoporosis', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['10', 'Penyakit Ginjal Kronik', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['11', 'Kecelakaan Lalu Lintas Jalan', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['12', 'Tumor Payudara', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['13', 'Tumor pada Retina Mata', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['14', 'Tumor pada Bibir, Rongga Mulut', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['15', 'Tumor Genitalia Eksterna Pria', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['16', 'Tumor Genitalia Eksterna Perempuan', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['17', 'Serviks', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['18', ' Tumor Genitalia Interna Perempuan (Kecuali Serviks)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //     ['', ' Jumlah', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        // ];
-
-        // Memasukkan header
-        foreach ($headers as $rowIndex => $headerRow) {
-            $sheet->fromArray($headerRow, null, 'A' . (1 + $rowIndex));
-        }
-
-        // Memasukkan data penyakit
-        $startRow = count($headers) + 1;
-        // $sheet->fromArray($data, null, 'A' . $startRow);
-
-        // Merge kolom header
-        $sheet->mergeCells('A5:A7'); // NO
-        $sheet->mergeCells('B5:B7'); // PENYAKIT TIDAK MENULAR
-        $sheet->mergeCells('C5:J5'); // Jenis Kelamin dan Umur (Laki-Laki)
-        $sheet->mergeCells('K5:R5'); // Jenis Kelamin dan Umur (Perempuan)
-        $sheet->mergeCells('S5:S7'); // Total
-        $sheet->mergeCells('C6:J6'); // Sub-header Laki-Laki
-        $sheet->mergeCells('K6:R6'); // Sub-header Perempuan
-
-        // Style header
-        $sheet->getStyle('A1:S7')->getFont()->setBold(true);
-        $sheet->getStyle('A1:S7')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER)->setVertical(Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A5:S7')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('90EE90'); // Hijau muda
-        // Footer Penjelasan
-        $sheet->setCellValue('B30', 'Mengetahui :');
-        $sheet->mergeCells('B31:G31');
-        $sheet->setCellValue('B31', 'Kepala Puskesmas Tamangapa Makassar,');
-        $sheet->mergeCells('B34:G34');
-        $sheet->setCellValue('B34', 'dr. Hj. Sri Zakiah Usman');
-        $sheet->mergeCells('B35:G35');
-        $sheet->setCellValue('B35', 'NIP: 19700521 20021 2 006');
-
-        // Footer Tanda Tangan
-        $sheet->setCellValue('R30', 'Makassar, Tgl 04 Oktober 2024');
-        $sheet->mergeCells('R31:U31');
-        $sheet->setCellValue('R31', 'Plt.Kepala UPT Puskesmas Tamangapa');
-        $sheet->mergeCells('R34:U34');
-        $sheet->setCellValue('R34', 'dr.Fatimah, M.Kes');
-        $sheet->mergeCells('R35:U35');
-        $sheet->setCellValue('R35', 'NIP. 19851125 201101 2 009');
-
-        // Style Footer
-        $sheet->getStyle('A30:A33')->getFont()->setSize(9); // Font ukuran 9
-        $sheet->getStyle('R30:R35')->getFont()->setSize(9); // Font ukuran 9
-        $sheet->getStyle('A30:A33')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-        $sheet->getStyle('R30:R35')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $dataPenyakit = [
-            'Hipertensi' => ['134', '186', '291'],
-            'Diabetes Melitus' => ['362', '363', '364'],
-            'Obesitas' => ['264', '269'],
-            'Struma' => [],
-            'Thyrotoksikosis' => [],
-            'Stroke' => [],
-            'Asma' => [],
-            'PPOK' => [],
-            'Osteoporosis' => [],
-            'Penyakit Ginjal Kronik' => [],
-            'Kecelakaan Lalu Lintas Jalan' => [],
-            'Tumor Payudara' => [],
-            'Tumor pada Retina Mata' => [],
-            'Tumor pada Bibir, Rongga Mulut' => [],
-            'Tumor Genitalia Eksterna Pria' => [],
-            'Tumor Genitalia Eksterna Perempuan' => [],
-            'Serviks' => [],
-            'Tumor Genitalia Interna Perempuan (Kecuali Serviks)' => [],
-        ];
-
-        $ageGroups = [
-            '18-24' => [18, 24],
-            '25-34' => [25, 34],
-            '35-44' => [35, 44],
-            '45-54' => [45, 54],
-            '55-64' => [55, 64],
-            '65-74' => [65, 74],
-            '>=75' => [75, PHP_INT_MAX],
-            'Unknown' => [0, 17], // Pastikan grup "Unknown" ada
-        ];
-
-        // Inisialisasi hasil
-        $result = array_fill_keys(array_keys($dataPenyakit), [
-            'L' => array_fill_keys(array_keys($ageGroups), 0),
-            'P' => array_fill_keys(array_keys($ageGroups), 0),
-        ]);
-
-        // Gabungkan semua diagnosis ID untuk query
-        $allDiagnosisIds = array_merge(...array_values($dataPenyakit));
-
-        // Ambil data tindakan
-        $actions = Action::with('patient.villages')
-            ->where(function ($query) use ($allDiagnosisIds) {
-                foreach ($allDiagnosisIds as $diagnosisId) {
-                    $query->orWhereJsonContains('diagnosa', $diagnosisId);
-                }
-            })
-            ->get();
-
-        // Proses setiap data tindakan
-        $processedPatients = []; // Simpan pasien yang sudah diproses
-
-        foreach ($actions as $action) {
-            $age = calculateAgePTM($action->patient->dob);
-            if ($age <= 17) {
-                continue;
-            }
-
-            $gender = $action->patient->gender == 2 ? 'L' : 'P';
-
-            foreach ($dataPenyakit as $penyakit => $diagnosisIds) {
-                if (!array_intersect($diagnosisIds, $action->diagnosa)) {
-                    continue;
-                }
-
-                // Pastikan pasien belum diproses untuk penyakit ini
-                if (isset($processedPatients[$action->patient->id][$penyakit])) {
-                    continue;
-                }
-                $processedPatients[$action->patient->id][$penyakit] = true;
-
-                $ageGroup = 'Unknown';
-                foreach ($ageGroups as $group => $range) {
-                    if ($age >= $range[0] && $age <= $range[1]) {
-                        Log::info("Age $age masuk ke grup: $group");
-                        $ageGroup = $group;
-                        break;
-                    }
-                }
-
-                $result[$penyakit][$gender][$ageGroup]++;
-            }
-        }
-
-        // Siapkan data untuk tabel
-        $data = [];
-        $no = 1;
-
-        // Inisialisasi total untuk setiap kolom
-        $totalRow = [
-            'no' => '', // Kolom ini kosong untuk baris total
-            'diagnosis' => 'Jumlah', // Nama diagnosis untuk total
-        ];
-
-        // Inisialisasi total untuk setiap kolom kelompok usia dan total gender
-        foreach (array_keys($ageGroups) as $group) {
-            if ($group !== 'Unknown') {
-                $totalRow["L_$group"] = 0;
-                $totalRow["P_$group"] = 0;
-            }
-        }
-        $totalRow['L_>=75'] = 0;
-        $totalRow['L_total'] = 0;
-        $totalRow['P_total'] = 0;
-        $totalRow['Total'] = 0;
-        foreach ($result as $diagnosis => $genderData) {
-            // Initialize the row with the diagnosis and the counter
-            $row = [
-                'no' => $no++, // Assuming $no is a counter for each row
-                'diagnosis' => $diagnosis,
-            ];
-
-            // Add the L values for each age group first
-            foreach (array_keys($ageGroups) as $group) {
-                // Add the L value for the group (do not include L_Unknown)
-                if ($group !== 'Unknown') {
-                    $row["L_$group"] = isset($genderData['L'][$group]) ? $genderData['L'][$group] : 0;
-                    $totalRow["L_$group"] += $row["L_$group"]; // Tambahkan ke total
-                }
-            }
-
-            // Add L_>=75 before L_total
-            $row['L_>=75'] = isset($genderData['L']['>=75']) ? $genderData['L']['>=75'] : 0;
-            $totalRow['L_>=75'] += $row['L_>=75']; // Tambahkan ke total
-
-            // Now add the L_total (after L_>=75)
-            $row['L_total'] = 0; // Initialize L_total
-            foreach (array_keys($ageGroups) as $group) {
-                if ($group !== 'Unknown') {
-                    $row['L_total'] += isset($row["L_$group"]) ? $row["L_$group"] : 0;
-                }
-            }
-            $totalRow['L_total'] += $row['L_total']; // Tambahkan ke total
-
-            // Add the P values for each age group after the L values
-            foreach (array_keys($ageGroups) as $group) {
-                // Add the P value for the group (do not include P_Unknown)
-                if ($group !== 'Unknown') {
-                    $row["P_$group"] = isset($genderData['P'][$group]) ? $genderData['P'][$group] : 0;
-                    $totalRow["P_$group"] += $row["P_$group"]; // Tambahkan ke total
-                }
-            }
-
-            // Initialize P_total before accumulation
-            $row['P_total'] = 0; // Initialize P_total
-            foreach (array_keys($ageGroups) as $group) {
-                if ($group !== 'Unknown') {
-                    $row['P_total'] += isset($row["P_$group"]) ? $row["P_$group"] : 0;
-                }
-            }
-            $totalRow['P_total'] += $row['P_total']; // Tambahkan ke total
-
-            // Calculate the overall total
-            $row['Total'] = $row['L_total'] + $row['P_total'];
-            $totalRow['Total'] += $row['Total']; // Tambahkan ke total keseluruhan
-
-            // Add this row to the data array
-            $data[] = $row; // The row is correctly added to the data array here
-        }
-
-        // Susun ulang urutan totalRow agar sama dengan urutan baris di atas
-        $totalRowOrdered = [
-            'no' => 'Total', // 'no' diisi dengan label "Total"
-            'diagnosis' => '', // Kosongkan diagnosis untuk total
-        ];
-
-        // Tambahkan total untuk setiap kolom L
-        foreach (array_keys($ageGroups) as $group) {
-            if ($group !== 'Unknown') {
-                $totalRowOrdered["L_$group"] = $totalRow["L_$group"];
-            }
-        }
-
-        // Tambahkan total untuk L_>=75
-        $totalRowOrdered['L_>=75'] = $totalRow['L_>=75'];
-
-        // Tambahkan total untuk L_total
-        $totalRowOrdered['L_total'] = $totalRow['L_total'];
-
-        // Tambahkan total untuk setiap kolom P
-        foreach (array_keys($ageGroups) as $group) {
-            if ($group !== 'Unknown') {
-                $totalRowOrdered["P_$group"] = $totalRow["P_$group"];
-            }
-        }
-
-        // Tambahkan total untuk P_total
-        $totalRowOrdered['P_total'] = $totalRow['P_total'];
-
-        // Tambahkan total keseluruhan
-        $totalRowOrdered['Total'] = $totalRow['Total'];
-        $totalRowOrdered['no'] = '';
-        $totalRowOrdered['diagnosis'] = 'Jumlah';
-        // Tambahkan baris total ke akhir data
-        $data[] = $totalRowOrdered;
-
-        // return $data;
-
-        // Tulis data ke sheet (mulai dari cell A8)
-        Log::info('Populating sheet with data starting at A8.', ['data' => $data]);
-        $sheet->fromArray($data, null, 'A8');
-        // Penyesuaian lebar kolom secara spesifik
-        $columnWidths = [5, 50, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 15];
-        foreach (range('A', 'S') as $index => $columnID) {
-            $sheet->getColumnDimension($columnID)->setWidth($columnWidths[$index]);
-        }
-        $styleArray = [
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => '000000'], // Warna hitam
-                ],
-            ],
-        ];
-
-        // Terapkan border ke seluruh tabel, dari header hingga data terakhir
-        $sheet->getStyle('A5:S26')->applyFromArray($styleArray);
-
-        // Pengaturan kertas dan skala untuk A4
-        $sheet
-            ->getPageSetup()
-            ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE)
-            ->setPaperSize(PageSetup::PAPERSIZE_A4)
-            ->setFitToWidth(1) // Skala agar tabel muat di lebar halaman
-            ->setFitToHeight(0);
-
-        // Menyimpan file
-        $writer = new Xlsx($spreadsheet);
-        $fileName = 'Laporan_PTM.xlsx';
-        $filePath = storage_path('app/public/' . $fileName);
-
-        $writer->save($filePath);
-        //
-
-        return response()->download($filePath)->deleteFileAfterSend(true);
     }
 
     public function reportRJP(Request $request)
@@ -1038,30 +627,9 @@ class ReportController extends Controller
     {
         return view('content.report.laporan-ll');
     }
-    public function reportFormulir10()
-    {
-        return view('content.report.laporan-formulir10');
-    }
     public function reportFormulir11(Request $request)
     {
-        $bulanMap = [
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember',
-        ];
-
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         $tanggal = Carbon::now()->translatedFormat('j F Y');
 
         // Diagnosis Values Mapping
@@ -1306,7 +874,7 @@ class ReportController extends Controller
         // Retrieve and process data for each diagnosis
         $diagnosisData = [];
         foreach ($diagnoses as $key => $values) {
-            $diagnosisData[$key] = $this->getGroupedData($values, $angkaBulan, $tahun);
+            $diagnosisData[$key] = $this->getGroupedData($values, $bulan, $tahun);
         }
 
         // Group cases by age
@@ -1336,7 +904,7 @@ class ReportController extends Controller
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
-        $sheet->setCellValue('K5', $bulan);
+        $sheet->setCellValue('K5', $this->getBulanText($bulan));
         $sheet->setCellValue('K7', $tahun);
         $sheet->setCellValue('P357', 'Makassar, ' . $tanggal);
 
@@ -1507,24 +1075,7 @@ class ReportController extends Controller
     }
     public function reportFormulir13(Request $request)
     {
-        $bulanMap = [
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember',
-        ];
-
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         $tanggal = Carbon::now()->translatedFormat('j F Y');
 
         // Diagnosis Values Mapping
@@ -1547,7 +1098,7 @@ class ReportController extends Controller
         // Retrieve and process data for each diagnosis
         $diagnosisData = [];
         foreach ($diagnoses as $key => $values) {
-            $diagnosisData[$key] = $this->getGroupedData($values, $angkaBulan, $tahun);
+            $diagnosisData[$key] = $this->getGroupedData($values, $bulan, $tahun);
         }
 
         // Group cases by age
@@ -1577,7 +1128,7 @@ class ReportController extends Controller
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
-        $sheet->setCellValue('M5', $bulan);
+        $sheet->setCellValue('M5', $this->getBulanText($bulan));
         $sheet->setCellValue('M7', $tahun);
         $sheet->setCellValue('O35', 'Makassar, ' . $tanggal);
 
@@ -1614,8 +1165,6 @@ class ReportController extends Controller
             // Write data for age and gender
             $this->writeAgeDataToExcel($sheet, $row, $groupedAgeData, $columns);
             $this->writeGenderDataToExcel($sheet, $row, $groupedDataByGender[$key]['barus'], $groupedDataByGender[$key]['lamas'], $groupedDataByGender[$key]['totalBaru'], $groupedDataByGender[$key]['totalLama']);
-
-            // Increment row after writing data
             $row++;
         }
 
@@ -1627,27 +1176,9 @@ class ReportController extends Controller
     }
     public function reportFormulir12(Request $request)
     {
-        $bulanMap = [
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember',
-        ];
-
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         $tanggal = Carbon::now()->translatedFormat('j F Y');
 
-        // Diagnosis Values Mapping
         $diagnoses = [
             'diareTanpaDehidrasi' => ['997'],
             'diare' => ['602'],
@@ -1678,7 +1209,7 @@ class ReportController extends Controller
         // Retrieve and process data for each diagnosis
         $diagnosisData = [];
         foreach ($diagnoses as $key => $values) {
-            $diagnosisData[$key] = $this->getGroupedData($values, $angkaBulan, $tahun);
+            $diagnosisData[$key] = $this->getGroupedData($values, $bulan, $tahun);
         }
 
         // Group cases by age
@@ -1708,11 +1239,9 @@ class ReportController extends Controller
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
-        $sheet->setCellValue('M5', $bulan);
+        $sheet->setCellValue('M5', $this->getBulanText($bulan));
         $sheet->setCellValue('M7', $tahun);
         $sheet->setCellValue('N68', 'Makassar, ' . $tanggal);
-
-        // Age columns
         $columns = [
             '0-7 hari' => 'D',
             '8-28 hari' => 'E',
@@ -1748,20 +1277,15 @@ class ReportController extends Controller
         $skipRangeStart7 = 62;
         $skipRangeEnd7 = 65;
 
-        // Combine all rows to skip
         $skipRowsCombined = array_merge($skipRow1, $skipRow2, $skipRow3, $skipRow4, $skipRow5, range($skipRangeStart, $skipRangeEnd), range($skipRangeStart2, $skipRangeEnd2), range($skipRangeStart3, $skipRangeEnd3), range($skipRangeStart4, $skipRangeEnd4), range($skipRangeStart5, $skipRangeEnd5), range($skipRangeStart6, $skipRangeEnd6), range($skipRangeStart7, $skipRangeEnd7));
 
         foreach ($groupedDataByAge as $key => $groupedAgeData) {
-            // Skip rows for kasusu lama
             while (in_array($row, $skipRowsCombined)) {
-                $row++; // Skip to the next row
+                $row++;
             }
-
-            // Write data for age and gender
             $this->writeAgeDataToExcel($sheet, $row, $groupedAgeData, $columns);
             $this->writeGenderDataToExcel($sheet, $row, $groupedDataByGender[$key]['barus'], $groupedDataByGender[$key]['lamas'], $groupedDataByGender[$key]['totalBaru'], $groupedDataByGender[$key]['totalLama']);
 
-            // Increment row after writing data
             $row++;
         }
 
@@ -1861,7 +1385,6 @@ class ReportController extends Controller
             $no++;
         }
 
-        // Tanda tangan dinamis
         $tandaTanganRow = $row + 2;
         $sheet->setCellValue('D' . ($tandaTanganRow + 1), "Makassar, {$tanggal}");
         $sheet->setCellValue('D' . ($tandaTanganRow + 2), 'Mengetahui,');
@@ -2040,24 +1563,7 @@ class ReportController extends Controller
 
     public function reportUspro(Request $request)
     {
-        $bulanMap = [
-            1 => 'JANUARI',
-            2 => 'FEBRUARI',
-            3 => 'MARET',
-            4 => 'APRIL',
-            5 => 'MEI',
-            6 => 'JUNI',
-            7 => 'JULI',
-            8 => 'AGUSTUS',
-            9 => 'SEPTEMBER',
-            10 => 'OKTOBER',
-            11 => 'NOVEMBER',
-            12 => 'DESEMBER',
-        ];
-
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         $tanggal = Carbon::now()->translatedFormat('j F Y');
 
         $templatePath = public_path('assets/report/report-uspro.xlsx');
@@ -2067,9 +1573,9 @@ class ReportController extends Controller
 
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A9', 'BULAN ' . $bulan . ' TAHUN ' . $tahun);
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanTextUpper($bulan) . ' TAHUN ' . $tahun);
 
-        $kunjunganData = Kunjungan::whereMonth('tanggal', $angkaBulan)
+        $kunjunganData = Kunjungan::whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->whereHas('patient', function ($query) {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, dob, CURDATE()) BETWEEN 15 AND 59');
@@ -2078,7 +1584,6 @@ class ReportController extends Controller
             ->get();
         $patientIds = $kunjunganData->pluck('patient.id')->filter()->unique()->values();
 
-        // Hitung jumlah kunjungan untuk setiap pasien dalam satu query
         $kunjunganCounts = Kunjungan::whereIn('pasien', $patientIds)->select('pasien', DB::raw('COUNT(*) as total'))->groupBy('pasien')->pluck('total', 'pasien');
         $row = 12;
         $no = 1;
@@ -2155,24 +1660,7 @@ class ReportController extends Controller
     }
     public function reportPanduHipertensi(Request $request)
     {
-        $bulanMap = [
-            1 => 'JANUARI',
-            2 => 'FEBRUARI',
-            3 => 'MARET',
-            4 => 'APRIL',
-            5 => 'MEI',
-            6 => 'JUNI',
-            7 => 'JULI',
-            8 => 'AGUSTUS',
-            9 => 'SEPTEMBER',
-            10 => 'OKTOBER',
-            11 => 'NOVEMBER',
-            12 => 'DESEMBER',
-        ];
-
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         $tanggal = Carbon::now()->translatedFormat('j F Y');
 
         $templatePath = public_path('assets/report/report-pandu-hipertensi.xlsx');
@@ -2182,9 +1670,9 @@ class ReportController extends Controller
 
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A9', 'BULAN ' . $bulan . ' TAHUN ' . $tahun);
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanTextUpper($bulan) . ' TAHUN ' . $tahun);
 
-        $kunjunganData = Kunjungan::whereMonth('tanggal', $angkaBulan)
+        $kunjunganData = Kunjungan::whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->whereHas('patient')
             ->with(['patient:id,name,dob,gender,nik,address,jenis_kartu'])
@@ -2215,12 +1703,10 @@ class ReportController extends Controller
 
             $action = Action::where('id_patient', $patient->id)->whereDate('tanggal', $data->tanggal)->first();
 
-            // Lewati jika tidak ada action atau tidak ada diagnosa 600
             if (!$action || !$action->diagnosa) {
                 continue;
             }
 
-            // Parse diagnosa
             if (is_string($action->diagnosa)) {
                 $diagnosaIds = json_decode($action->diagnosa, true);
             } elseif (is_array($action->diagnosa)) {
@@ -2275,24 +1761,7 @@ class ReportController extends Controller
     }
     public function reportPanduDiabetes(Request $request)
     {
-        $bulanMap = [
-            1 => 'JANUARI',
-            2 => 'FEBRUARI',
-            3 => 'MARET',
-            4 => 'APRIL',
-            5 => 'MEI',
-            6 => 'JUNI',
-            7 => 'JULI',
-            8 => 'AGUSTUS',
-            9 => 'SEPTEMBER',
-            10 => 'OKTOBER',
-            11 => 'NOVEMBER',
-            12 => 'DESEMBER',
-        ];
-
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         $tanggal = Carbon::now()->translatedFormat('j F Y');
 
         $templatePath = public_path('assets/report/report-pandu-diabetes.xlsx');
@@ -2302,16 +1771,15 @@ class ReportController extends Controller
 
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A9', 'BULAN ' . $bulan . ' TAHUN ' . $tahun);
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanTextUpper($bulan) . ' TAHUN ' . $tahun);
 
-        $kunjunganData = Kunjungan::whereMonth('tanggal', $angkaBulan)
+        $kunjunganData = Kunjungan::whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->whereHas('patient')
             ->with(['patient:id,name,dob,gender,nik,address,jenis_kartu'])
             ->get();
         $patientIds = $kunjunganData->pluck('patient.id')->filter()->unique()->values();
 
-        // Hitung jumlah kunjungan untuk setiap pasien dalam satu query
         $kunjunganCounts = Kunjungan::whereIn('pasien', $patientIds)->select('pasien', DB::raw('COUNT(*) as total'))->groupBy('pasien')->pluck('total', 'pasien');
         $row = 12;
         $no = 1;
@@ -2393,15 +1861,256 @@ class ReportController extends Controller
             $writer->save('php://output');
         }, 'laporan-pandu-ptm-diabetes.xlsx');
     }
+    public function reportIspa(Request $request)
+    {
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
 
-    // Helper functions for grouped data
+        $templatePath = public_path('assets/report/report-ispa.xlsx');
+        abort_unless(file_exists($templatePath), 404, 'Template Excel tidak ditemukan.');
+
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('C4', $this->getBulanTextUpper($bulan) . ' ' . $tahun);
+
+        $actions = Action::with('patient')->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
+
+        $diagnosisCodes = [
+            'pneumonia' => [733],
+            'severe' => [1015],
+            'batuk' => [967],
+        ];
+
+        $counters = [
+            'in' => array_fill_keys(array_keys($diagnosisCodes), [0, 0, 0, 0]),
+            'out' => array_fill_keys(array_keys($diagnosisCodes), [0, 0, 0, 0]),
+        ];
+        $ageGroup_5to9 = ['in' => 0, 'out' => 0];
+        $pneumonia_5to9_gender = ['in' => [0, 0], 'out' => [0, 0]];
+        $severe_5to9_gender = ['in' => [0, 0], 'out' => [0, 0]];
+
+        foreach ($actions as $action) {
+            $patient = $action->patient;
+            if (!$patient || !$patient->dob || !$patient->gender) {
+                continue;
+            }
+
+            $age = Carbon::parse($patient->dob)->age;
+            $gender = strtoupper($patient->gender);
+            $diagnosaArr = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
+            $primer = (int) $action->diagnosa_primer;
+
+            $region = $patient->wilayah_faskes == 1 ? 'in' : 'out';
+
+            if ($age >= 5 && $age <= 9) {
+                $ageGroup_5to9[$region]++;
+
+                $isPneumonia = (is_array($diagnosaArr) && array_intersect($diagnosisCodes['pneumonia'], $diagnosaArr)) || in_array($primer, $diagnosisCodes['pneumonia']);
+                if ($isPneumonia) {
+                    $genderIndex = match ($gender) {
+                        '2' => 0,
+                        '1' => 1,
+                        default => null,
+                    };
+                    if (!is_null($genderIndex)) {
+                        $pneumonia_5to9_gender[$region][$genderIndex]++;
+                        $severe_5to9_gender[$region][$genderIndex]++;
+                    }
+                }
+            }
+
+            foreach (['pneumonia', 'severe', 'batuk'] as $type) {
+                $isDiagnosed = is_array($diagnosaArr) && array_intersect($diagnosisCodes[$type], $diagnosaArr);
+                $isDiagnosed = $isDiagnosed || in_array($primer, $diagnosisCodes[$type]);
+                if (!$isDiagnosed) {
+                    continue;
+                }
+
+                $index = match (true) {
+                    $age < 1 && $gender === '2' => 0,
+                    $age < 1 && $gender === '1' => 1,
+                    $age >= 1 && $age < 5 && $gender === '2' => 2,
+                    $age >= 1 && $age < 5 && $gender === '1' => 3,
+                    default => null,
+                };
+
+                if (!is_null($index)) {
+                    $counters[$region][$type][$index]++;
+                }
+            }
+        }
+
+        $totalVisitsIn = $actions->filter(fn($a) => $a->patient && $a->patient->wilayah_faskes == 1)->count();
+        $totalVisitsOut = $actions->filter(fn($a) => $a->patient && $a->patient->wilayah_faskes == 0)->count();
+
+        $sheet->setCellValue('C10', $totalVisitsIn);
+        $sheet->setCellValue('C11', $totalVisitsOut);
+
+        $sheet->setCellValue('AG10', $ageGroup_5to9['in'] ?? 0);
+        $sheet->setCellValue('AG11', $ageGroup_5to9['out'] ?? 0);
+
+        $sheet->setCellValue('AH10', $pneumonia_5to9_gender['in'][0]);
+        $sheet->setCellValue('AI10', $pneumonia_5to9_gender['in'][1]);
+        $sheet->setCellValue('AH11', $pneumonia_5to9_gender['out'][0]);
+        $sheet->setCellValue('AI11', $pneumonia_5to9_gender['out'][1]);
+        $sheet->setCellValue('AK10', $pneumonia_5to9_gender['in'][0]);
+        $sheet->setCellValue('AL10', $pneumonia_5to9_gender['in'][1]);
+        $sheet->setCellValue('AK11', $pneumonia_5to9_gender['out'][0]);
+        $sheet->setCellValue('AL11', $pneumonia_5to9_gender['out'][1]);
+
+        $columnStarts = [
+            'pneumonia' => 'I',
+            'severe' => 'M',
+            'batuk' => 'AA',
+        ];
+
+        foreach (['in' => 10, 'out' => 11] as $area => $row) {
+            foreach ($columnStarts as $type => $startCol) {
+                $col = $startCol;
+                foreach ($counters[$area][$type] as $value) {
+                    $sheet->setCellValue($col . $row, $value);
+                    $col++;
+                }
+            }
+        }
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(fn() => $writer->save('php://output'), 'laporan-ispa.xlsx');
+    }
+    public function reportPendengaran(Request $request)
+    {
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
+        $tanggal = Carbon::now()->translatedFormat('j F Y');
+        $routeName = $request->route()->getName();
+        $tipe = str_contains($routeName, 'lama') ? 'lama' : 'baru';
+        $judulKasus = $tipe === 'lama' ? 'LAPORAN DATA INDERA KASUS LAMA' : 'LAPORAN DATA INDERA KASUS BARU';
+        $templatePath = public_path('assets/report/report-pendengaraN.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A8', $judulKasus);
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanTextUpper($bulan) . ' TAHUN ' . $tahun);
+
+        $kasusValue = $tipe === 'lama' ? 0 : 1;
+
+        $row = 13;
+        $no = 1;
+
+        $borderStyle = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => '000000'],
+                ],
+            ],
+            'alignment' => [
+                'wrapText' => true,
+                'vertical' => Alignment::VERTICAL_TOP,
+            ],
+        ];
+
+        $diagnosaValue = [1016, 1001, 921, 920, 919, 918, 917, 916, 915, 914, 717, 716, 715, 714, 713, 712, 711, 710, 709, 708, 707, 706, 705, 704, 703, 702, 701, 700, 699, 698, 697, 696, 695, 694, 693, 692, 691, 690];
+
+        $actions = $actions = Action::select(['id', 'tanggal', 'diagnosa', 'diagnosa_primer', 'kasus', 'sistol', 'diastol', 'tinggiBadan', 'beratBadan', 'rujuk_rs', 'id_patient'])
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->where('kasus', $kasusValue)
+            ->with(['hospitalReferral:id,name', 'patient:id,name,nik,dob,gender,address,phone,education,occupation,marrital_status,blood_type', 'patient.educations:id,name', 'patient.occupations:id,name', 'patient.marritalStatus:id,name'])
+            ->get()
+            ->filter(function ($action) use ($diagnosaValue) {
+                $diagnosa = [];
+
+                if (!empty($action->diagnosa)) {
+                    if (is_string($action->diagnosa)) {
+                        $decoded = json_decode($action->diagnosa, true);
+                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                            $diagnosa = array_map('intval', $decoded);
+                        }
+                    } elseif (is_array($action->diagnosa)) {
+                        $diagnosa = array_map('intval', $action->diagnosa);
+                    }
+                }
+
+                $primer = (int) $action->diagnosa_primer;
+
+                return !empty(array_intersect($diagnosaValue, $diagnosa)) || in_array($primer, $diagnosaValue);
+            });
+
+        foreach ($actions as $action) {
+            $patient = $action->patient;
+            $diagnosaIds = [];
+
+            if (!empty($action->diagnosa)) {
+                if (is_string($action->diagnosa)) {
+                    $decoded = json_decode($action->diagnosa, true);
+                    $diagnosaIds = is_array($decoded) ? array_map('intval', $decoded) : [];
+                } elseif (is_array($action->diagnosa)) {
+                    $diagnosaIds = array_map('intval', $action->diagnosa);
+                }
+            }
+
+            if (empty(array_intersect($diagnosaValue, $diagnosaIds))) {
+                continue;
+            }
+
+            $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+            $diagnosa = !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+
+            $sheet->setCellValue("A{$row}", $no);
+            $sheet->setCellValue("B{$row}", Carbon::parse($action->tanggal)->format('d-m-Y'));
+            $sheet->setCellValueExplicit("C{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue("D{$row}", $patient->name);
+            $sheet->setCellValue("E{$row}", Carbon::parse($patient->dob)->format('d-m-Y'));
+            $sheet->setCellValue("F{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
+            $sheet->setCellValue("G{$row}", 'Sulawesi Selatan');
+            $sheet->setCellValue("H{$row}", 'Kota Makassar');
+            $sheet->setCellValue("I{$row}", $patient->address);
+            $sheet->setCellValue("J{$row}", $patient->phone);
+            $sheet->setCellValue("K{$row}", $patient->educations->name ?? '-');
+            $sheet->setCellValue("L{$row}", $patient->occupations->name ?? '-');
+            $sheet->setCellValue("M{$row}", $patient->marritalStatus->name ?? '-');
+            $sheet->setCellValue("N{$row}", $patient->bloodType ?? '-');
+            $sheet->setCellValue("O{$row}", $action->sistol);
+            $sheet->setCellValue("P{$row}", $action->diastol);
+            $sheet->setCellValue("Q{$row}", $action->tinggiBadan);
+            $sheet->setCellValue("R{$row}", $action->beratBadan);
+            $sheet->setCellValue("S{$row}", $diagnosa);
+            $sheet->setCellValue("T{$row}", $action->hospitalReferral->name ?? '-');
+
+            $sheet->getStyle("A{$row}:T{$row}")->applyFromArray($borderStyle);
+
+            $row++;
+            $no++;
+        }
+        $tandaTanganRow = $row + 2;
+        $sheet->setCellValue("O{$tandaTanganRow}", "Makassar, {$tanggal}");
+        $sheet->setCellValue('O' . ($tandaTanganRow + 3), 'Pengelola');
+        $sheet->setCellValue('O' . ($tandaTanganRow + 5), 'Hatijasam,S.Kep.,Ns');
+        $sheet->setCellValue('O' . ($tandaTanganRow + 6), 'NIP. 198512052009022003');
+
+        $sheet->setCellValue('E' . ($tandaTanganRow + 2), 'Mengetahui,');
+        $sheet->setCellValue('E' . ($tandaTanganRow + 3), 'Kepala UPT Puskesmas Tamangapa');
+        $sheet->setCellValue('E' . ($tandaTanganRow + 5), 'dr. Fatimah M.Kes');
+        $sheet->setCellValue('E' . ($tandaTanganRow + 6), 'NIP.198511252011012009');
+
+        $fileName = $tipe === 'lama' ? 'laporan-pendengaran-kasus-lama.xlsx' : 'laporan-pendengaran-kasus-baru.xlsx';
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $fileName);
+    }
+
     private function getGroupedData($diagnosaValue, $bulan, $tahun)
     {
         $data = Action::whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->get()
             ->filter(function ($action) use ($diagnosaValue) {
-                return is_array($action->diagnosa) && !empty(array_intersect($diagnosaValue, $action->diagnosa));
+                $diagnosa = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
+
+                return (is_array($diagnosa) && array_intersect($diagnosaValue, $diagnosa)) || (!is_null($action->diagnosa_primer) && in_array((int) $action->diagnosa_primer, $diagnosaValue));
             });
 
         return [
@@ -2415,7 +2124,9 @@ class ReportController extends Controller
             ->whereYear('tanggal', $tahun)
             ->get()
             ->filter(function ($action) use ($diagnosaValue) {
-                return is_array($action->diagnosa) && !empty(array_intersect($diagnosaValue, $action->diagnosa));
+                $diagnosa = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
+
+                return (is_array($diagnosa) && array_intersect($diagnosaValue, $diagnosa)) || (!is_null($action->diagnosa_primer) && in_array((int) $action->diagnosa_primer, $diagnosaValue));
             });
 
         return $data;
