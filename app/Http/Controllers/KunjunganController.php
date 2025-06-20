@@ -402,7 +402,6 @@ class KunjunganController extends Controller
 
                     return implode(', ', $diagnoses);
                 })
-
                 ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('d-m-Y') : '-')
                 ->addColumn('action', function ($row) {
                     // Get the doctor list
@@ -431,6 +430,20 @@ class KunjunganController extends Controller
                                 </form>
                             </div>' .
                         $editModal;
+                })
+				->addColumn('action_id', function ($row) use ($actions) {
+					$kunjunganAction = $actions->where('tanggal', $row->tanggal)->where('id_patient', $row->pasien)->first();
+					if ($kunjunganAction) {
+						return $kunjunganAction->id;
+					}
+					return null;
+                })
+				->addColumn('status_satu_sehat', function ($row) use ($actions) {
+					$kunjunganAction = $actions->where('tanggal', $row->tanggal)->where('id_patient', $row->pasien)->first();
+					if ($kunjunganAction) {
+						return $kunjunganAction->status_satu_sehat;
+					}
+					return null;
                 })
                 ->rawColumns(['action'])
                 ->make(true);

@@ -125,6 +125,15 @@ class ActionController extends Controller
     }
     public function indexDokter(Request $request)
     {
+		$dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $poli = Poli::all();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
+
+        $routeName = $request->route()->getName();
+
         if ($request->ajax()) {
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
@@ -212,16 +221,8 @@ class ActionController extends Controller
 
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
-                ->addColumn('status_satu_sehat', function ($row) {
-                    $status = $row->status_satu_sehat;
-
-                    return $status == 1 ? 'Berhasil' : 'Belum';
-                })
-
-                ->addColumn('hasil_lab', function ($row) {
+                ->addColumn('hasil_lab', function ($row) use($dokter, $routeName) {
                     if ($row->hasilLab) {
-                        $dokter = User::where('role', 'dokter')->get();
-                        $routeName = request()->route()->getName();
                         $editModal = view('component.modal-edit-action-lab', [
                             'action' => $row,
                             'routeName' => $routeName,
@@ -256,11 +257,7 @@ class ActionController extends Controller
                     return $kunjunganCount == 1 ? 'Baru' : 'Lama';
                 })
 
-                ->addColumn('action', function ($row) {
-                    $dokter = User::where('role', 'dokter')->get();
-                    $rs = Hospital::all();
-                    $routeName = request()->route()->getName();
-                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
+                ->addColumn('action', function ($row) use($dokter, $rs, $routeName, $obats) {
                     $editModal = view('component.modal-edit-action', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
                     return '<div class="action-buttons">
                                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
@@ -286,21 +283,19 @@ class ActionController extends Controller
                 ->rawColumns(['action', 'hasil_lab'])
                 ->make(true);
         }
-
-        $dokter = User::where('role', 'dokter')->get();
-        $diagnosa = Diagnosis::all();
-        $penyakit = Disease::all();
-        $rs = Hospital::all();
-        $poli = Poli::all();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
-
-        $routeName = $request->route()->getName();
-        // dd(  $routeName);
-
         return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
     public function indexGigiDokter(Request $request)
     {
+		// For the non-AJAX case, provide the necessary data for the view
+        $dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $routeName = $request->route()->getName();
+        $poli = Poli::all();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
+
         if ($request->ajax()) {
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
@@ -425,13 +420,7 @@ class ActionController extends Controller
                     }
                 })
 
-                ->addColumn('action', function ($row) {
-                    // Get the doctor list
-                    $rs = Hospital::all();
-                    $dokter = User::where('role', 'dokter')->get();
-                    $routeName = request()->route()->getName();
-                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
-                    // Render modal edit with route name
+                ->addColumn('action', function ($row) use($rs, $dokter, $routeName, $obats) {
                     $editModal = view('component.modal-edit-action', ['rs' => $rs, 'action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
@@ -457,16 +446,6 @@ class ActionController extends Controller
                 ->rawColumns(['action', 'hasil_lab'])
                 ->make(true);
         }
-
-        // For the non-AJAX case, provide the necessary data for the view
-        $dokter = User::where('role', 'dokter')->get();
-        $diagnosa = Diagnosis::all();
-        $penyakit = Disease::all();
-        $rs = Hospital::all();
-        $routeName = $request->route()->getName();
-        $poli = Poli::all();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
-
         return view('content.action.index-dokter', compact('dokter', 'penyakit', 'rs', 'obats', 'diagnosa', 'routeName', 'poli'));
     }
     public function indexUgdDokter(Request $request)
@@ -981,6 +960,14 @@ class ActionController extends Controller
 
     public function indexDokterKb(Request $request)
     {
+		$dokter = User::where('role', 'dokter')->get();
+        $diagnosa = Diagnosis::all();
+        $penyakit = Disease::all();
+        $rs = Hospital::all();
+        $routeName = $request->route()->getName();
+        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
+        $poli = Poli::all();
+
         if ($request->ajax()) {
             $startDate = $request->input('start_date') ?? Carbon::today()->toDateString();
             $endDate = $request->input('end_date') ?? Carbon::today()->toDateString();
@@ -1105,13 +1092,7 @@ class ActionController extends Controller
                     }
                 })
 
-                ->addColumn('action', function ($row) {
-                    // Render action buttons
-                    $rs = Hospital::all();
-                    $dokter = User::where('role', 'dokter')->get();
-                    $routeName = request()->route()->getName();
-                    $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
-                    // Render modal for edit
+                ->addColumn('action', function ($row) use($rs, $dokter, $routeName, $obats) {
                     $editModal = view('component.modal-edit-action-kb', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
 
                     return '<div class="action-buttons">
@@ -1137,15 +1118,6 @@ class ActionController extends Controller
                 ->rawColumns(['action', 'hasil_lab'])
                 ->make(true);
         }
-
-        // Non-AJAX request handling
-        $dokter = User::where('role', 'dokter')->get();
-        $diagnosa = Diagnosis::all();
-        $penyakit = Disease::all();
-        $rs = Hospital::all();
-        $routeName = $request->route()->getName();
-        $obats = Obat::select('obat.id', 'obat.name', 'obat.code', 'obat.shape')->join('terima_obat', 'obat.id', '=', 'terima_obat.id_obat')->selectRaw('SUM(terima_obat.amount) as total_stock')->groupBy('obat.id', 'obat.name', 'obat.code', 'obat.shape')->get();
-        $poli = Poli::all();
         return view('content.action.index-kb', compact('dokter', 'penyakit', 'rs', 'diagnosa', 'routeName', 'obats', 'poli'));
     }
 
@@ -2773,12 +2745,13 @@ class ActionController extends Controller
                     // Render modal edit with route name
                     $editModal = view('component.modal-edit-action-apotik', ['action' => $row, 'routeName' => $routeName, 'dokter' => $dokter, 'rs' => $rs, 'obats' => $obats])->render();
 
-                    return '<div class="action-buttons">
+                    return '<div class="d-grid gap-2 d-md-block">
                 <button type="button" class="btn btn-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editActionModal' .
                         $row->id .
                         '">
                         <i class="fas fa-edit"></i>
                     </button>
+                    <a class="btn btn-warning" style="padding:6px; padding-right: 13px;" href="' . route('print-prescription', ['id' => $row->id]) . '" role="button" target="_blank"><i class="fas fa-print ms-2"></i></a>
             </div>' .
                         $editModal;
                 })

@@ -233,6 +233,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/lab', [ActionController::class, 'indexLab'])->name('lab.index');
 
             Route::get('/apotik', [ActionController::class, 'indexApotik'])->name('apotik.index');
+            Route::get('/pdf-example', [ObatController::class, 'generatePrescription'])->name('apotik.generate');
         });
 
     Route::post('/tindakan', [ActionController::class, 'store'])->name('action.store');
@@ -544,6 +545,14 @@ Route::prefix('obat')->group(function () {
     //stok obat
     Route::get('stok-obat', [ObatController::class, 'indexStokObat'])->name('stok-obat');
     Route::get('table-stok-obat', [ObatController::class, 'getStokObat'])->name('table-stok-obat');
+
+    // Resep Obat Setiap Pasien
+    Route::get('pasien', [ObatController::class, 'indexPrescription'])->name('obat-pasien');
+    Route::get('pasien/{id}', [ObatController::class, 'indexPrescriptionDetail'])->name('obat-pasien-detail');
+    Route::get('get-pasien', [ObatController::class, 'indexDataPrescription'])->name('table-obat-pasien');
+    
+    //generate resep obat
+    Route::get('/pdf-resep/{id}', [ObatController::class, 'generatePrescription'])->name('print-prescription');
 
 });
 // delete patient action & kunjungan

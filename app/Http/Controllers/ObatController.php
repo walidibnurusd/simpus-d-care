@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Obat;
 use App\Models\PengeluaranObatLain;
 use App\Models\TerimaObat;
+use App\Models\Patients;
+use App\Models\Action;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ObatController extends Controller
 {
@@ -633,5 +636,49 @@ class ObatController extends Controller
                     $modal;
             })
             ->make(true);
+    }
+
+    public function generatePrescription($id)
+    {
+        $action = Action::with('patient', 'actionObats.obat', 'diagnosaPrimer')->find($id);
+        $pdf = Pdf::loadView('pdf.prescription', compact('action'));
+        $pdf->setPaper([0, 0, 297.64, 419.53]);
+        return $pdf->stream('invoice.pdf');
+    }
+
+    public function indexPrescription() {
+        return view('content.obat.resep-obat-pasien');
+    }
+
+    public function indexDataPrescription(Request $request) {
+        $query = Patients::whereHas('actions.actionObats')->orderBy('created_at', 'desc');
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->editColumn('gender', function ($row) {
+                return $row->genderName ? $row->genderName->name : '-';
+            })
+            ->addColumn('actions', function ($user) {
+                return '
+                    <a class="btn btn-sm btn-primary" href="' . route('obat-pasien-detail', ['id' => $user->id]) . '" role="button">Detail</a>
+                ';
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    public function indexPrescriptionDetail($id) {
+        $patient = Patients::where('id', $id)
+        ->whereHas('actions', function ($query) {
+            $query->whereHas('actionObats')
+                ->orWhereNotNull('obat')
+                ->orWhere('obat', '!=', '');
+        })
+        ->with(['actions' => function ($query) {
+            $query->whereHas('actionObats')
+                ->orWhereNotNull('obat')
+                ->orWhere('obat', '!=', '');
+        }, 'actions.actionObats'])
+        ->first();
+        return view('content.obat.detail-resep-obat-pasien', compact('patient'));
     }
 }
