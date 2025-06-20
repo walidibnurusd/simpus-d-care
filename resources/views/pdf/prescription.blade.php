@@ -46,21 +46,33 @@
                     <td>Diagnosa</td>
                     <td>:</td>
                     <td colspan="6">
-                    @if($action->diagnosaPrimer)
-                        {{ $action->diagnosaPrimer->name }}
-                    @elseif(!$action->diagnosaPrimer)
                         @php
+                            $names = [];
+
+                            if ($action->diagnosaPrimer) {
+                                $names[] = $action->diagnosaPrimer->name;
+                            }
+
                             $diagnosisIds = $action->diagnosa ?? [];
-                            $diagnoses = Diagnosis::whereIn('id', $diagnosisIds)->get();
+                            if (!empty($diagnosisIds)) {
+                                $diagnoses = Diagnosis::whereIn('id', $diagnosisIds)->get();
+                                foreach ($diagnoses as $diagnosis) {
+                                    $names[] = $diagnosis->name;
+                                }
+                            }
                         @endphp
-                        @foreach ($diagnoses as $diagnosis)
+
+                        @if (count($names) > 1)
                             <ul style="margin: 0; padding-left: 7px">
-                                <li>{{ $diagnosis->name }}</li>
+                                @foreach ($names as $name)
+                                    <li>{{ $name }}</li>
+                                @endforeach
                             </ul>
-                        @endforeach
-                    @else
-                        -
-                    @endif
+                        @elseif (count($names) === 1)
+                            {{ $names[0] }}
+                        @else
+                            -
+                        @endif
                     </td>
                 </tr>
             </table>
