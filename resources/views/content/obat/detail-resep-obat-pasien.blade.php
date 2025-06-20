@@ -81,8 +81,8 @@
                                     </tr>
                                     @foreach($patient -> actions as $patientAction)
                                     <tr>
-                                        <td>{{ \Carbon\Carbon::parse($patientAction -> tanggal)->format('d-m-Y') }}</td>
-                                        <td>{{ $patientAction -> doctor }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($patientAction->tanggal)->format('d-m-Y') }}</td>
+                                        <td>{{ $patientAction->doctor }}</td>
                                         <td>
                                             @if($patientAction->actionObats->isNotEmpty())
                                                 <ol style="padding-left: 15px;">
