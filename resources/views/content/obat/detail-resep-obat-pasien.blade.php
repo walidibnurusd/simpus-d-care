@@ -18,6 +18,10 @@
     <li class="breadcrumb-item active">Daftar Pasien</li>
 @endsection
 
+@php
+    use App\Models\Diagnosis;
+@endphp
+
 @section('content')
     <div class="main-content content mt-6" id="main-content">
         @if (session('success'))
@@ -60,7 +64,7 @@
                                     <tr>
                                         <td>TTL</td>
                                         <td style="width: 30px; text-align: center">:</td>
-                                        <td>{{ $patient -> place_birth }}/{{ $patient -> dob }}</td>
+                                        <td>{{ $patient -> place_birth }}/{{ \Carbon\Carbon::parse($patient->dob)->format('d-m-Y') }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -72,23 +76,41 @@
                                         <th scope="col">Tanggal</th>
                                         <th scope="col">Dokter</th>
                                         <th scope="col">Obat</th>
-                                        <th scope="col">Diagnosa Utama</th>
+                                        <th scope="col">Diagnosa</th>
                                         <th scope="col">Aksi</th>
                                     </tr>
                                     @foreach($patient -> actions as $patientAction)
                                     <tr>
-                                        <td>{{ $patientAction -> tanggal }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($patientAction -> tanggal)->format('d-m-Y') }}</td>
                                         <td>{{ $patientAction -> doctor }}</td>
                                         <td>
-                                            <ol style="padding-left: 15px;">
-                                                @forelse($patientAction->actionObats as $patientObat)
-                                                    <li>{{ $patientObat -> obat -> name }}</li>
-                                                @empty
-                                                    <li>{{ $patientAction -> obat }}</li>
-                                                @endforelse
-                                            </ol>
+                                            @if($patientAction->actionObats->isNotEmpty())
+                                                <ol style="padding-left: 15px;">
+                                                    @foreach($patientAction->actionObats as $patientObat)
+                                                        <li>{{ $patientObat->obat->name }}</li>
+                                                    @endforeach
+                                                </ol>
+                                            @else
+                                                <p>{{ $patientAction->obat ?? '-' }}</p>
+                                            @endif
                                         </td>
-                                        <td>{{ $patientAction -> diagnosaPrimer -> name ?? '-' }}</td>
+                                        <td>
+                                            @if($patientAction->diagnosaPrimer)
+                                                {{ $patientAction->diagnosaPrimer->name }}
+                                            @elseif(!$patientAction->diagnosaPrimer)
+                                                @php
+                                                    $diagnosisIds = $patientAction->diagnosa ?? [];
+                                                    $diagnoses = Diagnosis::whereIn('id', $diagnosisIds)->get();
+                                                @endphp
+                                                <ol style="margin: 0; padding-left: 7px">
+                                                    @foreach ($diagnoses as $diagnosis)
+                                                        <li>{{ $diagnosis->name }}</li>
+                                                    @endforeach
+                                                </ol>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
                                         <td>
                                             <a class="btn btn-primary" href="{{ route('print-prescription', ['id' => $patientAction->id]) }}" target="_blank" role="button">Print</a>
                                         </td>
