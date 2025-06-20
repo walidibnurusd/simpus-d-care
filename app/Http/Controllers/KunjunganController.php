@@ -293,7 +293,7 @@ class KunjunganController extends Controller
 
             $kunjungans = $kunjungansQuery->get();
             $actions = $kunjungans->map(function ($kunjungan) {
-                return Action::with('satuSehatEncounter')->where('id_patient', $kunjungan->pasien)->whereDate('tanggal', $kunjungan->tanggal)->first();
+                return Action::with('satuSehatEncounter', 'diagnosaPrimer')->where('id_patient', $kunjungan->pasien)->whereDate('tanggal', $kunjungan->tanggal)->first();
             });
             if ($diagnosa) {
                 $kunjungans = $kunjungans->filter(function ($kunjungan) use ($actions, $diagnosa) {
@@ -384,8 +384,10 @@ class KunjunganController extends Controller
                     }
 
                     $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-
-                    return implode(', ', $diagnoses);
+					if ($action->diagnosaPrimer) {
+						array_push($diagnoses, $action->diagnosaPrimer->name);
+					}
+                    return implode(', ', array_unique($diagnoses));
                 })
                 ->addColumn('icd10', function ($row) use ($actions) {
                     $action = $actions->firstWhere('id_patient', $row->pasien);
