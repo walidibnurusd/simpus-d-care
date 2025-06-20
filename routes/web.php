@@ -252,7 +252,6 @@ Route::middleware('auth')->group(function () {
     // Route::get('/laporan/diare', [ReportController::class, 'printDiare'])->name('report.diare');
     Route::get('/laporan/diare', [ReportController::class, 'reportDiare'])->name('report.poli.diare');
     Route::get('/laporan/stp', [ReportController::class, 'reportSTP'])->name('report.stp');
-    Route::get('/laporan/ptm', [ReportController::class, 'reportPTM'])->name('report.ptm');
     Route::get('/laporan/afp', [ReportController::class, 'reportAFP'])->name('report.afp');
     Route::get('/laporan/difteri', [ReportController::class, 'reportDifteri'])->name('report.difteri');
     Route::get('/laporan/C1', [ReportController::class, 'reportC1'])->name('report.C1');
@@ -274,6 +273,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/bpjs', [ReportController::class, 'reportBpjs'])->name('report.bpjs');
     Route::get('/laporan/kunjungan', [ReportController::class, 'reportKunjungan'])->name('report.kunjungan');
     Route::get('/laporan/usia-produktif', [ReportController::class, 'reportUspro'])->name('report.uspro');
+    Route::get('/laporan/ispa', [ReportController::class, 'reportIspa'])->name('report.ispa');
+    Route::get('/report/pendengaran/baru', [ReportController::class, 'reportPendengaran'])
+    ->name('report.pendengaran.baru');
+
+Route::get('/report/pendengaran/lama', [ReportController::class, 'reportPendengaran'])
+    ->name('report.pendengaran.lama');
     Route::get('/laporan/pandu-hipertensi', [ReportController::class, 'reportPanduHipertensi'])->name('report.pandu.hipertensi');
     Route::get('/laporan/pandu-diabetes', [ReportController::class, 'reportPanduDiabetes'])->name('report.pandu.diabetes');
     Route::put('/profile/{id}', [AuthController::class, 'update'])->name('profile.update');

@@ -68,7 +68,6 @@
                         'label' => 'Laporan Surveilans Terpadu Penyakit Berbasis Puskesmas',
                         'route' => 'report.stp',
                     ],
-                    ['id' => 'modalPTM', 'label' => 'Rekap Penyakit Tidak Menular', 'route' => 'report.ptm'],
                     ['id' => 'modalAFP', 'label' => 'Laporan Penderita AFP', 'route' => 'report.afp'],
                     [
                         'id' => 'modalDifteri',
@@ -131,6 +130,21 @@
                         'label' => 'Laporan Kunjungan',
                         'route' => 'report.kunjungan',
                     ],
+                    [
+                        'id' => 'modalIspa',
+                        'label' => 'Laporan Ispa',
+                        'route' => 'report.ispa',
+                    ],
+                    [
+                        'id' => 'modalPendengaranBaru',
+                        'label' => 'Laporan Data Indera Kasus Baru',
+                        'route' => 'report.pendengaran.baru',
+                    ],
+                    [
+                        'id' => 'modalPendengaranLama',
+                        'label' => 'Laporan Data Indera Kasus Lama',
+                        'route' => 'report.pendengaran.lama',
+                    ],
                 ];
             @endphp
 
@@ -167,8 +181,6 @@
                         Penyakit Tifoid</button>
                     <button class="btn btn-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalSTP">Laporan
                         Surveilans Terpadu</button>
-                    <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalPTM">Rekap
-                        Penyakit Tidak Menular</button>
                     <button class="btn btn-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalAFP">Laporan
                         Penderita AFP</button>
                     <button class="btn btn-info w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalC1">Laporan Kasus
@@ -184,6 +196,12 @@
                     <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
                         data-bs-target="#modalKunjungan">Laporan
                         Kunjungan Baru dan Kunjungan Lama</button>
+                    <button class="btn btn-dark w-100 mb-3" data-bs-toggle="modal"
+                        data-bs-target="#modalPendengaranBaru">Laporan
+                        Data Indera Kasus Baru</button>
+                    <button class="btn btn-warning w-100 mb-3" data-bs-toggle="modal"
+                        data-bs-target="#modalPendengaranLama">Laporan
+                        Data Indera Kasus Lama</button>
 
                 </div>
 
@@ -207,7 +225,8 @@
                         Penyakit/DIARE</button>
                     <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
                         data-bs-target="#modalPanduDiabetes">Laporan Pandu PTM Diabetes</button>
-
+                    <button class="btn btn-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalIspa">Laporan
+                        Ispa</button>
 
                 </div>
             </div>
