@@ -112,7 +112,7 @@
                                             @endphp
 
                                             @if (count($names) > 1)
-                                                <ol style="margin: 0; padding-left: 7px">
+                                                <ol style="margin: 0; padding-left: 15px">
                                                     @foreach ($names as $name)
                                                         <li>{{ $name }}</li>
                                                     @endforeach
