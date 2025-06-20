@@ -541,6 +541,11 @@ Route::prefix('obat')->group(function () {
     Route::get('stok-obat', [ObatController::class, 'indexStokObat'])->name('stok-obat');
     Route::get('table-stok-obat', [ObatController::class, 'getStokObat'])->name('table-stok-obat');
 
+    // Resep Obat Setiap Pasien
+    Route::get('pasien', [ObatController::class, 'indexPrescription'])->name('obat-pasien');
+    Route::get('pasien/{id}', [ObatController::class, 'indexPrescriptionDetail'])->name('obat-pasien-detail');
+    Route::get('get-pasien', [ObatController::class, 'indexDataPrescription'])->name('table-obat-pasien');
+    
     //generate resep obat
     Route::get('/pdf-resep/{id}', [ObatController::class, 'generatePrescription'])->name('print-prescription');
 

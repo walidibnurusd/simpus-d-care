@@ -168,6 +168,7 @@
                             <li><a href="{{ route('kajian-awal.umum') }}">Kajian Awal</a></li>
                             <li><a href="{{ route('report.index') }}">Laporan</a></li>
                         @elseif(Auth::user()->role == 'apotik')
+                            <li><a href="{{ route('obat-pasien') }}">Pasien</a></li>
                             <li><a href="{{ route('action.apotik.index') }}">Tindakan</a></li>
                             <li><a href="{{ route('report.index') }}">Laporan</a></li>
                         @else

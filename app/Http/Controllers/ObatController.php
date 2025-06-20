@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Obat;
 use App\Models\PengeluaranObatLain;
 use App\Models\TerimaObat;
+use App\Models\Patients;
 use App\Models\Action;
 use Carbon\Carbon;
 use Exception;
@@ -643,5 +644,30 @@ class ObatController extends Controller
         $pdf = Pdf::loadView('pdf.prescription', compact('action'));
         $pdf->setPaper([0, 0, 297.64, 419.53]);
         return $pdf->stream('invoice.pdf');
+    }
+
+    public function indexPrescription() {
+        return view('content.obat.resep-obat-pasien');
+    }
+
+    public function indexDataPrescription(Request $request) {
+        $query = Patients::whereHas('actions.actionObats')->orderBy('created_at', 'desc');
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->editColumn('gender', function ($row) {
+                return $row->genderName ? $row->genderName->name : '-';
+            })
+            ->addColumn('actions', function ($user) {
+                return '
+                    <a class="btn btn-sm btn-primary" href="' . route('obat-pasien-detail', ['id' => $user->id]) . '" role="button">Detail</a>
+                ';
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    public function indexPrescriptionDetail($id) {
+        $patient = Patients::with('actions.actionObats')->find($id);
+        return view('content.obat.detail-resep-obat-pasien', compact('patient'));
     }
 }
