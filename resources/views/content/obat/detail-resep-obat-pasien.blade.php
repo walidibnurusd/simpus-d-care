@@ -44,27 +44,27 @@
                                     <tr>
                                         <td>NIK</td>
                                         <td style="width: 30px; text-align: center">:</td>
-                                        <td>{{ $patient -> nik }}</td>
+                                        <td>{{ $patient->nik }}</td>
                                     </tr>
                                     <tr>
                                         <td>No. RM</td>
                                         <td style="width: 30px; text-align: center">:</td>
-                                        <td>{{ $patient -> no_rm }}</td>
+                                        <td>{{ $patient->no_rm }}</td>
                                     </tr>
                                     <tr>
                                         <td>Nama</td>
                                         <td style="width: 30px; text-align: center">:</td>
-                                        <td>{{ $patient -> name }}</td>
+                                        <td>{{ $patient->name }}</td>
                                     </tr>
                                     <tr>
                                         <td>Alamat</td>
                                         <td style="width: 30px; text-align: center">:</td>
-                                        <td>{{ $patient -> address }}</td>
+                                        <td>{{ $patient->address }}</td>
                                     </tr>
                                     <tr>
                                         <td>TTL</td>
                                         <td style="width: 30px; text-align: center">:</td>
-                                        <td>{{ $patient -> place_birth }}/{{ \Carbon\Carbon::parse($patient->dob)->format('d-m-Y') }}</td>
+                                        <td>{{ $patient->place_birth }}/{{ \Carbon\Carbon::parse($patient->dob)->format('d-m-Y') }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -79,7 +79,7 @@
                                         <th scope="col">Diagnosa</th>
                                         <th scope="col">Aksi</th>
                                     </tr>
-                                    @foreach($patient -> actions as $patientAction)
+                                    @foreach($patient->actions as $patientAction)
                                     <tr>
                                         <td>{{ \Carbon\Carbon::parse($patientAction->tanggal)->format('d-m-Y') }}</td>
                                         <td>{{ $patientAction->doctor }}</td>
