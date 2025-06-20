@@ -266,8 +266,8 @@
                             name: 'status_satu_sehat'
                         },
 						{
-                            data: 'status_satu_sehat',
-                            name: 'status_satu_sehat'
+                            data: 'satu_sehat_encounter',
+                            name: 'satu_sehat_encounter'
                         },
 
                         {
