@@ -96,9 +96,6 @@
                     <th>DIAGNOSA UTAMA</th>
                     <th>ICD10</th>
                     <th>TINDAKAN</th>
-                    {{-- @if ($routeName == 'action.ruang.tindakan.index')
-                        <th>TINDAKAN RUANG TINDAKAN</th>
-                    @endif --}}
                     <th>RUJUKAN</th>
                     <th>KETERANGAN</th>
                     <th>DOKTER</th>
@@ -107,7 +104,6 @@
             <tbody>
                 @foreach ($actions as $index => $actions)
                     @php
-                        // Hitung jumlah kunjungan berdasarkan pasien
                         $kunjunganCount = App\Models\Kunjungan::where('pasien', $actions->patient->id)->count();
                         $diagnosaIds =
                             is_array($actions->diagnosa) || $actions->diagnosa instanceof \Countable
@@ -197,6 +193,22 @@
             </tbody>
         </table>
     </div>
+
+    <br><br><br>
+
+    <br><br><br>
+
+    <div style="width: 100%; text-align: center; margin-top: 30px;">
+        <p>Makassar, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
+        <p>Mengetahui,</p>
+        <p>Kepala UPT Puskesmas Tamangapa</p>
+
+        <br><br><br>
+
+        <p>dr. Fatimah .M.Kes</p>
+        <p>NIP: 198511252011012009</p>
+    </div>
+
 </body>
 
 </html>
