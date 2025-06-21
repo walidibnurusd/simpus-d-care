@@ -373,36 +373,41 @@ class KunjunganController extends Controller
                     }
                 })
                 ->addColumn('diagnosa', function ($row) use ($actions) {
-                    $action = $actions->firstWhere('id_patient', $row->pasien);
-                    if (!$action || empty($action->diagnosa)) {
-                        return '-';
-                    }
-                    if (is_array($action->diagnosa)) {
-                        $diagnosaIds = $action->diagnosa;
-                    } else {
-                        $diagnosaIds = explode(',', $action->diagnosa);
-                    }
-
-                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-					if ($action->diagnosaPrimer) {
-						array_push($diagnoses, $action->diagnosaPrimer->name);
+					$action = $actions->firstWhere('id_patient', $row->pasien);
+					if (!$action) {
+					    return '-';
 					}
-                    return implode(', ', array_unique($diagnoses));
+
+					$diagnoses = [];
+
+					if (!empty($action->diagnosa)) {
+					    $diagnosaIds = is_array($action->diagnosa) ? $action->diagnosa : explode(',', $action->diagnosa);
+					    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+					}
+
+					if (!empty($action->diagnosaPrimer)) {
+					    $diagnoses[] = $action->diagnosaPrimer->name;
+					}
+					return implode(', ', array_unique($diagnoses));
                 })
                 ->addColumn('icd10', function ($row) use ($actions) {
-                    $action = $actions->firstWhere('id_patient', $row->pasien);
-                    if (!$action || empty($action->diagnosa)) {
-                        return '-';
-                    }
-                    if (is_array($action->diagnosa)) {
-                        $diagnosaIds = $action->diagnosa;
-                    } else {
-                        $diagnosaIds = explode(',', $action->diagnosa);
-                    }
 
-                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('icd10')->toArray();
+					$action = $actions->firstWhere('id_patient', $row->pasien);
+					if (!$action) {
+					    return '-';
+					}
 
-                    return implode(', ', $diagnoses);
+					$diagnoses = [];
+
+					if (!empty($action->diagnosa)) {
+					    $diagnosaIds = is_array($action->diagnosa) ? $action->diagnosa : explode(',', $action->diagnosa);
+					    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('icd10')->toArray();
+					}
+
+					if (!empty($action->diagnosaPrimer)) {
+					    $diagnoses[] = $action->diagnosaPrimer->icd10;
+					}
+					return implode(', ', array_unique($diagnoses));
                 })
                 ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('d-m-Y') : '-')
                 ->addColumn('action', function ($row) {
