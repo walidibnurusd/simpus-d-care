@@ -125,17 +125,13 @@
                 serverSide: true,
                 ajax: {
                     url: '{{ route('table-obat-master-data') }}',
-                    // data: function(d) {
-                    //     // Send filter data along with the request
-                    //     d.start_date = $('#start_date').val();
-                    //     d.end_date = $('#end_date').val();
-                    //     d.poli = $('#poli').val();
-                    // }
                 },
                 columns: [
                     {
                         data: 'DT_RowIndex',
-                        name: 'DT_RowIndex'
+                        name: 'DT_RowIndex',
+                        orderable: false, 
+                        searchable: false
                     },
                     {
                         data: 'name',

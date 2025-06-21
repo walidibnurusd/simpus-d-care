@@ -128,84 +128,32 @@ class ObatController extends Controller
 
     public function getObatMasterData(Request $request)
     {
-        $obats = Obat::all();
+        $obats = Obat::query();
 
-        // Return the datatables response
         return datatables()
-            ->of($obats)
+            ->eloquent($obats)
             ->addIndexColumn()
-            ->editColumn('name', function ($row) {
-                return $row->name;
-            })
-            ->editColumn('code', function ($row) {
-                return $row->code ?? '';
-            })
-            ->editColumn('shape', function ($row) {
-                // Check the value of shape and return appropriate value
-                switch ($row->shape) {
-                    case 1:
-                        return 'Tablet';
-                    case 2:
-                        return 'Botol';
-                    case 3:
-                        return 'Pcs';
-                    case 4:
-                        return 'Suppositoria';
-                    case 5:
-                        return 'Ovula';
-                    case 6:
-                        return 'Drop';
-                    case 7:
-                        return 'Tube';
-                    case 8:
-                        return 'Pot';
-                    case 9:
-                        return 'Injeksi';
-                    case 10:
-                        return 'Kapsul';
-                    case 11:
-                        return 'Ampul';
-                    case 12:
-                        return 'Sachet';
-                    case 13:
-                        return 'Paket';
-                    case 14:
-                        return 'Vial';
-                    case 15:
-                        return 'Bungkus';
-                    case 16:
-                        return 'Strip';
-                    case 17:
-                        return 'Test';
-                    case 18:
-                        return 'Lbr';
-                    case 19:
-                        return 'Tabung';
-                    case 20:
-                        return 'Buah';
-                    case 21:
-                        return 'Lembar';
-                    default:
-                        return '';
-                }
-            })
+
+            ->editColumn('name', fn($row) => $row->name)
+            ->editColumn('code', fn($row) => $row->code ?? '-')
+
+            ->editColumn('shape', fn($row) => $row->shapeLabel)
 
             ->addColumn('action', function ($row) {
-                // Render the modal HTML for this specific row
                 $modal = view('component.modal-edit-master-obat', ['obat' => $row])->render();
 
-                return '<div class="action-buttons">
-                        <!-- Edit Button -->
-                        <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editMasterObatModal' .
-                    $row->id .
-                    '">
+                return <<<HTML
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs"
+                            data-bs-toggle="modal" data-bs-target="#editMasterObatModal{$row->id}">
                             <i class="fas fa-edit"></i>
                         </button>
-                        
-                       
-                    </div>' .
-                    $modal;
+                    </div>
+                    {$modal}
+                HTML;
             })
+
+            ->rawColumns(['action'])
             ->make(true);
     }
 
