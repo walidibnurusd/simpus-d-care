@@ -442,14 +442,14 @@ class KunjunganController extends Controller
                 })
 				->addColumn('status_satu_sehat', function ($row) use ($actions) {
 					$kunjunganAction = $actions->where('tanggal', $row->tanggal)->where('id_patient', $row->pasien)->first();
-					if ($kunjunganAction->status_satu_sehat) {
+					if ($kunjunganAction && $kunjunganAction->status_satu_sehat) {
 						return 'Berhasil';
 					}
 					return null;
                 })
 				->addColumn('satu_sehat_encounter', function ($row) use ($actions) {
 					$kunjunganAction = $actions->where('tanggal', $row->tanggal)->where('id_patient', $row->pasien)->first();
-					if ($kunjunganAction->satuSehatEncounter) {
+					if ($kunjunganAction && $kunjunganAction->satuSehatEncounter) {
 						return $kunjunganAction->satuSehatEncounter->encounter_id;
 					}
 					return null;
