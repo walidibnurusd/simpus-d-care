@@ -425,75 +425,42 @@ class ObatController extends Controller
 
     public function getPengeluaranObat(Request $request)
     {
-        $obats = PengeluaranObatLain::with('obat')->get();
+        $obats = PengeluaranObatLain::select(
+            'pengeluaran_obat_lain.*',
+            'obat.name as obat_name',
+            'obat.code as obat_code',
+            'obat.shape as obat_shape'
+        )
+        ->join('obat', 'obat.id', '=', 'pengeluaran_obat_lain.id_obat');;
 
-        // Return the datatables response
         return datatables()
-            ->of($obats)
+            ->eloquent($obats)
             ->addIndexColumn()
+            ->filterColumn('name', function ($query, $keyword) {
+            $query->where('obat.name', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('code', function ($query, $keyword) {
+                $query->where('obat.code', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('shape', function ($query, $keyword) {
+                $query->where('obat.shape', 'like', "%{$keyword}%");
+            })
             ->editColumn('date', function ($row) {
                 return $row->date;
             })
             ->editColumn('name', function ($row) {
-                return $row->obat->name;
+                return $row->obat_name;
             })
             ->editColumn('code', function ($row) {
-                return $row->obat->code ?? '';
+                return $row->obat_code ?? '';
             })
             ->editColumn('amount', function ($row) {
                 return $row->amount ?? '';
             })
             ->editColumn('shape', function ($row) {
-                // Check the value of shape and return appropriate value
-                switch ($row->obat->shape) {
-                    case 1:
-                        return 'Tablet';
-                    case 2:
-                        return 'Botol';
-                    case 3:
-                        return 'Pcs';
-                    case 4:
-                        return 'Suppositoria';
-                    case 5:
-                        return 'Ovula';
-                    case 6:
-                        return 'Drop';
-                    case 7:
-                        return 'Tube';
-                    case 8:
-                        return 'Pot';
-                    case 9:
-                        return 'Injeksi';
-                    case 10:
-                        return 'Kapsul';
-                    case 11:
-                        return 'Ampul';
-                    case 12:
-                        return 'Sachet';
-                    case 13:
-                        return 'Paket';
-                    case 14:
-                        return 'Vial';
-                    case 15:
-                        return 'Bungkus';
-                    case 16:
-                        return 'Strip';
-                    case 17:
-                        return 'Test';
-                    case 18:
-                        return 'Lbr';
-                    case 19:
-                        return 'Tabung';
-                    case 20:
-                        return 'Buah';
-                    case 21:
-                        return 'Lembar';
-                    default:
-                        return '';
-                }
+                return $row->obat->shapeLabel;
             })
             ->editColumn('unit', function ($row) {
-                // Check the value of shape and return appropriate value
                 switch ($row->unit) {
                     case 1:
                         return 'Home Care';
@@ -517,7 +484,6 @@ class ObatController extends Controller
             })
 
             ->addColumn('action', function ($row) {
-                // Render the modal HTML for this specific row
                 $modal = view('component.modal-edit-pengeluaran-obat', ['obat' => $row])->render();
 
                 return '<div class="action-buttons">

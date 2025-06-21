@@ -64,7 +64,6 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             KODE</th>
-
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             BENTUK OBAT</th>
@@ -77,7 +76,6 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             AKSI</th>
-
                                     </tr>
                                 </thead>
                             </table>
@@ -104,7 +102,9 @@
                 },
                 columns: [{
                         data: 'DT_RowIndex',
-                        name: 'DT_RowIndex'
+                        name: 'DT_RowIndex',
+                        orderable: false, 
+                        searchable: false
                     },
                     {
                         data: 'date',
