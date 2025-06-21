@@ -2896,12 +2896,12 @@ class ActionController extends Controller
 
                 $encounterBody = [
                     'resourceType' => 'Encounter',
-                    'identifier' => [
-                        [
-                            'system' => 'http://sys-ids.kemkes.go.id/encounter/' . env('Organization_ID_SANDBOX'),
-                            'value' => (string) $action->id . '-' . now()->format('d-m-Y'),
-                        ],
-                    ],
+					'identifier' => [
+					    [
+					        'system' => 'http://sys-ids.kemkes.go.id/encounter/' . config('satusehat.organization_id'),
+					        'value' => (string) $action->id . '-' . now()->format('d-m-Y'),
+					    ],
+					],
                     'status' => 'arrived',
                     'class' => [
                         'system' => 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
@@ -2984,9 +2984,9 @@ class ActionController extends Controller
                             ],
                         ],
                     ],
-                    'serviceProvider' => [
-                        'reference' => 'Organization/' . env('Organization_ID_SANDBOX'),
-                    ],
+					'serviceProvider' => [
+					    'reference' => 'Organization/' . config('satusehat.organization_id'),
+					],
                 ];
 
                 \Log::info('Request Body: ' . json_encode($encounterBody));

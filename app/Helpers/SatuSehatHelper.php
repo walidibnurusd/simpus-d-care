@@ -14,9 +14,9 @@ class SatuSehatHelper
             return Cache::get('satu_sehat_token');
         }
 
-        $clientId = env('Client_ID_SANDBOX');
-        $clientSecret = env('Client_Secret_SANDBOX');
-        $authUrl = env('Satu_Sehat_Auth_Url');
+        $clientId = config('satusehat.client_id');
+        $clientSecret = config('satusehat.client_secret');
+        $authUrl = config('satusehat.auth_url');
         Log::info('Satu Sehat Auth Config:', [
             'Client_ID_SANDBOX' => $clientId,
             'Client_Secret_SANDBOX' => $clientSecret,
@@ -51,7 +51,7 @@ class SatuSehatHelper
 {
     $token = self::getSatuSehatToken();
     \Log::info('Retrieved token: ' . $token);
-    $baseUrl = env('Satu_Sehat_Url');
+    $baseUrl = config('satusehat.base_url');
 
     // Log token and URL to ensure they are correct
     \Log::info('Requesting Patient data with NIK: ' . $nik);
@@ -109,7 +109,7 @@ class SatuSehatHelper
     public static function getDocterByNik($nik)
     {
         $token = self::getSatuSehatToken();
-        $baseUrl = env('Satu_Sehat_Url');
+        $baseUrl = config('satusehat.base_url');
 
         $response = Http::withToken($token)->get("$baseUrl/Practitioner", [
             'identifier' => 'https://fhir.kemkes.go.id/id/nik|' . $nik,
@@ -148,7 +148,7 @@ class SatuSehatHelper
     public static function postEncounterToSatuSehat($data)
     {
         $token = self::getSatuSehatToken(); // Ambil token dari cache / generate
-        $baseUrl = env('Satu_Sehat_Url');
+        $baseUrl = config('satusehat.base_url');
 
         // Log the URL and token to verify they are correct
         \Log::info('Satu Sehat URL: ' . $baseUrl);
