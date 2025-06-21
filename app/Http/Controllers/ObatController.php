@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class ObatController extends Controller
 {
@@ -127,84 +128,32 @@ class ObatController extends Controller
 
     public function getObatMasterData(Request $request)
     {
-        $obats = Obat::all();
+        $obats = Obat::query();
 
-        // Return the datatables response
         return datatables()
-            ->of($obats)
+            ->eloquent($obats)
             ->addIndexColumn()
-            ->editColumn('name', function ($row) {
-                return $row->name;
-            })
-            ->editColumn('code', function ($row) {
-                return $row->code ?? '';
-            })
-            ->editColumn('shape', function ($row) {
-                // Check the value of shape and return appropriate value
-                switch ($row->shape) {
-                    case 1:
-                        return 'Tablet';
-                    case 2:
-                        return 'Botol';
-                    case 3:
-                        return 'Pcs';
-                    case 4:
-                        return 'Suppositoria';
-                    case 5:
-                        return 'Ovula';
-                    case 6:
-                        return 'Drop';
-                    case 7:
-                        return 'Tube';
-                    case 8:
-                        return 'Pot';
-                    case 9:
-                        return 'Injeksi';
-                    case 10:
-                        return 'Kapsul';
-                    case 11:
-                        return 'Ampul';
-                    case 12:
-                        return 'Sachet';
-                    case 13:
-                        return 'Paket';
-                    case 14:
-                        return 'Vial';
-                    case 15:
-                        return 'Bungkus';
-                    case 16:
-                        return 'Strip';
-                    case 17:
-                        return 'Test';
-                    case 18:
-                        return 'Lbr';
-                    case 19:
-                        return 'Tabung';
-                    case 20:
-                        return 'Buah';
-                    case 21:
-                        return 'Lembar';
-                    default:
-                        return '';
-                }
-            })
+
+            ->editColumn('name', fn($row) => $row->name)
+            ->editColumn('code', fn($row) => $row->code ?? '-')
+
+            ->editColumn('shape', fn($row) => $row->shapeLabel)
 
             ->addColumn('action', function ($row) {
-                // Render the modal HTML for this specific row
                 $modal = view('component.modal-edit-master-obat', ['obat' => $row])->render();
 
-                return '<div class="action-buttons">
-                        <!-- Edit Button -->
-                        <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editMasterObatModal' .
-                    $row->id .
-                    '">
+                return <<<HTML
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs"
+                            data-bs-toggle="modal" data-bs-target="#editMasterObatModal{$row->id}">
                             <i class="fas fa-edit"></i>
                         </button>
-                        
-                       
-                    </div>' .
-                    $modal;
+                    </div>
+                    {$modal}
+                HTML;
             })
+
+            ->rawColumns(['action'])
             ->make(true);
     }
 
@@ -255,166 +204,62 @@ class ObatController extends Controller
     }
     public function getTerimaObat(Request $request)
     {
-        $obats = TerimaObat::with('obat')->get();
+        $obats = TerimaObat::select(
+            'terima_obat.*',
+            'obat.name as obat_name',
+            'obat.code as obat_code',
+            'obat.shape as obat_shape'
+        )
+        ->join('obat', 'obat.id', '=', 'terima_obat.id_obat');
 
-        // Return the datatables response
-        return datatables()
-            ->of($obats)
-            ->addIndexColumn()
-            ->editColumn('date', function ($row) {
-                return $row->date;
-            })
-            ->editColumn('name', function ($row) {
-                return $row->obat->name;
-            })
-            ->editColumn('code', function ($row) {
-                return $row->obat->code ?? '';
-            })
-            ->editColumn('mount', function ($row) {
-                return $row->amount ?? '';
-            })
-            ->editColumn('shape', function ($row) {
-                // Check the value of shape and return appropriate value
-                switch ($row->obat->shape) {
-                    case 1:
-                        return 'Tablet';
-                    case 2:
-                        return 'Botol';
-                    case 3:
-                        return 'Pcs';
-                    case 4:
-                        return 'Suppositoria';
-                    case 5:
-                        return 'Ovula';
-                    case 6:
-                        return 'Drop';
-                    case 7:
-                        return 'Tube';
-                    case 8:
-                        return 'Pot';
-                    case 9:
-                        return 'Injeksi';
-                    case 10:
-                        return 'Kapsul';
-                    case 11:
-                        return 'Ampul';
-                    case 12:
-                        return 'Sachet';
-                    case 13:
-                        return 'Paket';
-                    case 14:
-                        return 'Vial';
-                    case 15:
-                        return 'Bungkus';
-                    case 16:
-                        return 'Strip';
-                    case 17:
-                        return 'Test';
-                    case 18:
-                        return 'Lbr';
-                    case 19:
-                        return 'Tabung';
-                    case 20:
-                        return 'Buah';
-                    case 21:
-                        return 'Lembar';
-                    default:
-                        return '';
-                }
-            })
-
-            ->addColumn('action', function ($row) {
-                // Render the modal HTML for this specific row
-                $modal = view('component.modal-edit-terima-obat', ['obat' => $row])->render();
-
-                return '<div class="action-buttons">
-                        <!-- Edit Button -->
-                        <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editTerimaObatModal' .
-                    $row->id .
-                    '">
+        return datatables()->eloquent($obats)
+        ->addIndexColumn()
+        ->filterColumn('name', function ($query, $keyword) {
+            $query->where('obat.name', 'like', "%{$keyword}%");
+        })
+        ->filterColumn('code', function ($query, $keyword) {
+            $query->where('obat.code', 'like', "%{$keyword}%");
+        })
+        ->filterColumn('shape', function ($query, $keyword) {
+            $query->where('obat.shape', 'like', "%{$keyword}%");
+        })
+        ->editColumn('name', fn($row) => $row->obat_name)
+        ->editColumn('code', fn($row) => $row->obat_code ?? '')
+        ->editColumn('amount', fn($row) => $row->amount ?? '')
+        ->editColumn('shape', fn($row) => $row->obat->shapeLabel)
+        ->editColumn('date', fn($row) => $row->date)
+        ->addColumn('action', function ($row) {
+            $modal = view('component.modal-edit-terima-obat', ['obat' => $row])->render();
+            return '<div class="action-buttons">
+                        <button type="button" class="btn btn-primary btn-sm text-white font-weight-bold text-xs"
+                            data-bs-toggle="modal" data-bs-target="#editTerimaObatModal' . $row->id . '">
                             <i class="fas fa-edit"></i>
                         </button>
-                        
-                       
-                    </div>' .
-                    $modal;
-            })
-            ->make(true);
+                    </div>' . $modal;
+        })
+        ->rawColumns(['action'])
+        ->make(true);
+
     }
 
     public function getStokObat(Request $request)
     {
-        $obats = TerimaObat::with('obat')->get();
+        $obats = Obat::select('obat.*',
+                DB::raw('MAX(terima_obat.updated_at) as last_updated'),
+                DB::raw('SUM(terima_obat.amount) as total_amount')
+            )
+            ->join('terima_obat', 'terima_obat.id_obat', '=', 'obat.id')
+            ->groupBy('obat.id')
+            ->orderByDesc('last_updated');
 
-        // Return the datatables response
         return datatables()
-            ->of($obats)
+            ->eloquent($obats)
             ->addIndexColumn()
-            ->editColumn('date', function ($row) {
-                return $row->date;
-            })
-            ->editColumn('name', function ($row) {
-                return $row->obat->name;
-            })
-            ->editColumn('code', function ($row) {
-                return $row->obat->code ?? '';
-            })
-            ->editColumn('mount', function ($row) {
-                return $row->amount ?? '';
-            })
-            ->editColumn('updated_at', function ($row) {
-                return $row->updated_at ?? '';
-            })
-            ->editColumn('shape', function ($row) {
-                // Check the value of shape and return appropriate value
-                switch ($row->obat->shape) {
-                    case 1:
-                        return 'Tablet';
-                    case 2:
-                        return 'Botol';
-                    case 3:
-                        return 'Pcs';
-                    case 4:
-                        return 'Suppositoria';
-                    case 5:
-                        return 'Ovula';
-                    case 6:
-                        return 'Drop';
-                    case 7:
-                        return 'Tube';
-                    case 8:
-                        return 'Pot';
-                    case 9:
-                        return 'Injeksi';
-                    case 10:
-                        return 'Kapsul';
-                    case 11:
-                        return 'Ampul';
-                    case 12:
-                        return 'Sachet';
-                    case 13:
-                        return 'Paket';
-                    case 14:
-                        return 'Vial';
-                    case 15:
-                        return 'Bungkus';
-                    case 16:
-                        return 'Strip';
-                    case 17:
-                        return 'Test';
-                    case 18:
-                        return 'Lbr';
-                    case 19:
-                        return 'Tabung';
-                    case 20:
-                        return 'Buah';
-                    case 21:
-                        return 'Lembar';
-                    default:
-                        return '';
-                }
-            })
-
+            ->editColumn('name', fn ($row) => $row->name)
+            ->editColumn('code', fn ($row) => $row->code ?? '')
+            ->editColumn('amount', fn ($row) => $row->total_amount)
+            ->editColumn('updated_at', fn ($row) => $row->last_updated ? Carbon::parse($row->last_updated)->format('d-m-Y H:i:s') : '-')
+            ->editColumn('shape', fn ($row) => $row->shape_label)
             ->make(true);
     }
 
@@ -528,75 +373,42 @@ class ObatController extends Controller
 
     public function getPengeluaranObat(Request $request)
     {
-        $obats = PengeluaranObatLain::with('obat')->get();
+        $obats = PengeluaranObatLain::select(
+            'pengeluaran_obat_lain.*',
+            'obat.name as obat_name',
+            'obat.code as obat_code',
+            'obat.shape as obat_shape'
+        )
+        ->join('obat', 'obat.id', '=', 'pengeluaran_obat_lain.id_obat');;
 
-        // Return the datatables response
         return datatables()
-            ->of($obats)
+            ->eloquent($obats)
             ->addIndexColumn()
+            ->filterColumn('name', function ($query, $keyword) {
+            $query->where('obat.name', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('code', function ($query, $keyword) {
+                $query->where('obat.code', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('shape', function ($query, $keyword) {
+                $query->where('obat.shape', 'like', "%{$keyword}%");
+            })
             ->editColumn('date', function ($row) {
                 return $row->date;
             })
             ->editColumn('name', function ($row) {
-                return $row->obat->name;
+                return $row->obat_name;
             })
             ->editColumn('code', function ($row) {
-                return $row->obat->code ?? '';
+                return $row->obat_code ?? '';
             })
             ->editColumn('amount', function ($row) {
                 return $row->amount ?? '';
             })
             ->editColumn('shape', function ($row) {
-                // Check the value of shape and return appropriate value
-                switch ($row->obat->shape) {
-                    case 1:
-                        return 'Tablet';
-                    case 2:
-                        return 'Botol';
-                    case 3:
-                        return 'Pcs';
-                    case 4:
-                        return 'Suppositoria';
-                    case 5:
-                        return 'Ovula';
-                    case 6:
-                        return 'Drop';
-                    case 7:
-                        return 'Tube';
-                    case 8:
-                        return 'Pot';
-                    case 9:
-                        return 'Injeksi';
-                    case 10:
-                        return 'Kapsul';
-                    case 11:
-                        return 'Ampul';
-                    case 12:
-                        return 'Sachet';
-                    case 13:
-                        return 'Paket';
-                    case 14:
-                        return 'Vial';
-                    case 15:
-                        return 'Bungkus';
-                    case 16:
-                        return 'Strip';
-                    case 17:
-                        return 'Test';
-                    case 18:
-                        return 'Lbr';
-                    case 19:
-                        return 'Tabung';
-                    case 20:
-                        return 'Buah';
-                    case 21:
-                        return 'Lembar';
-                    default:
-                        return '';
-                }
+                return $row->obat->shapeLabel;
             })
             ->editColumn('unit', function ($row) {
-                // Check the value of shape and return appropriate value
                 switch ($row->unit) {
                     case 1:
                         return 'Home Care';
@@ -620,7 +432,6 @@ class ObatController extends Controller
             })
 
             ->addColumn('action', function ($row) {
-                // Render the modal HTML for this specific row
                 $modal = view('component.modal-edit-pengeluaran-obat', ['obat' => $row])->render();
 
                 return '<div class="action-buttons">

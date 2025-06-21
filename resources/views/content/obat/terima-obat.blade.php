@@ -97,16 +97,12 @@
                 serverSide: true,
                 ajax: {
                     url: '{{ route('table-terima-obat') }}',
-                    // data: function(d) {
-                    //     // Send filter data along with the request
-                    //     d.start_date = $('#start_date').val();
-                    //     d.end_date = $('#end_date').val();
-                    //     d.poli = $('#poli').val();
-                    // }
                 },
                 columns: [{
                         data: 'DT_RowIndex',
-                        name: 'DT_RowIndex'
+                        name: 'DT_RowIndex',
+                        orderable: false, 
+                        searchable: false
                     },
                     {
                         data: 'date',
@@ -125,8 +121,8 @@
                         name: 'shape'
                     },
                     {
-                        data: 'mount',
-                        name: 'mount'
+                        data: 'amount',
+                        name: 'amount'
                     },
                     {
                         data: 'action',
