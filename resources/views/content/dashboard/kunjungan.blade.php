@@ -192,7 +192,7 @@
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {
-								if (row.action_id) {
+								if (row.action_id && !row.status_satu_sehat) {
 									return `<input type="checkbox" class="actionCheckbox" value="${row.action_id}">`; // Checkbox for each rowAdd commentMore actions
 								}
 								return '';
@@ -307,6 +307,95 @@
                 //     tableKunjungan.ajax.reload(); // Reload the table with filter values
                 // });
 
+				$('#confirmSend').on('click', function() {
+					const selectedActions = [];
+					$('#kunjungan-table tbody input.actionCheckbox:checked').each(function() {
+						selectedActions.push($(this).val());
+					});
+
+					if (selectedActions.length > 0) {
+						$('#loadingIndicator').show();
+						$('#confirmSend').prop('disabled', true);
+						$('#closeSendModalButton').prop('disabled', true);
+
+						$.ajax({
+							url: "{{ route('sendToSatuSehat') }}",
+							method: 'POST',
+							data: {
+								actions: selectedActions,
+								_token: '{{ csrf_token() }}'
+							},
+							success: function(response) {
+								if (response.success) {
+									response.succeedActions.forEach(function(item) {
+										// Find the row with the same action_id
+										$('#kunjungan-table tbody tr').each(function() {
+											const checkbox = $(this).find('input.actionCheckbox');
+											if (checkbox.length && checkbox.val() == item.action_id) {
+												// Get the row data
+												const row = tableKunjungan.row($(this));
+												const rowData = row.data();
+
+												// Update the fields with returned data
+												rowData.status_satu_sehat = 'Berhasil'; // Or item.status if available
+												rowData.satu_sehat_encounter = item.encounter_id || '-'; // Adjust as needed
+
+												// Re-draw the row with updated data
+												row.data(rowData).invalidate().draw(false);
+											}
+										});
+									});
+
+									if (response.failed.length > 0) {
+										$('#loadingIndicator').hide();
+
+										// Aktifkan tombol Kirim dan Tutup Modal kembali
+										$('#confirmSend').prop('disabled', false);
+										$('#closeSendModalButton').prop('disabled', false);
+										// Jika ada yang gagal dikirim, tampilkan detailnya
+										let failedList = response.failed.map(f =>
+											`ID ${f.action_id}: ${f.reason}`).join('<br>');
+										Swal.fire({
+											icon: 'warning',
+											title: 'Sebagian Gagal Dikirim',
+											html: `<strong>${response.sent.length} berhasil</strong><br><strong>${response.failed.length} gagal</strong><br><br>${failedList}`
+										});
+									} else {
+										$('#loadingIndicator').hide();
+										$('#confirmSend').prop('disabled', false);
+										$('#closeSendModalButton').prop('disabled', false);
+										// Semua sukses
+										Swal.fire('Berhasil',
+											`${response.sent.length} data berhasil dikirim ke Satu Sehat.`,
+											'success');
+									}
+								} else {
+									$('#loadingIndicator').hide();
+									$('#confirmSend').prop('disabled', false);
+									$('#closeSendModalButton').prop('disabled', false);
+									Swal.fire('Gagal',
+										'Server mengembalikan error saat memproses permintaan.',
+										'error');
+								}
+								$('#sendModal').modal('hide');
+								$('#confirmSend').prop('disabled', false);
+								$('#closeSendModalButton').prop('disabled', false);
+
+							},
+							error: function(xhr, status, error) {
+								$('#loadingIndicator').hide();
+
+								// Aktifkan tombol Kirim dan Tutup Modal kembali
+								$('#confirmSend').prop('disabled', false);
+								$('#closeSendModalButton').prop('disabled', false);
+								console.error(xhr.responseText);
+								Swal.fire('Gagal', 'Kesalahan server atau jaringan.', 'error');
+								$('#sendModal').modal('hide');
+							}
+						});
+					}
+				});
+
             });
         </script>
 
@@ -359,75 +448,5 @@
 					Swal.fire('Peringatan', 'Pilih setidaknya satu kunjungan.', 'warning');
 				}
 			});
-
-			$('#confirmSend').on('click', function() {
-                const selectedActions = [];
-                $('#kunjungan-table tbody input.actionCheckbox:checked').each(function() {
-                    selectedActions.push($(this).val());
-                });
-
-                if (selectedActions.length > 0) {
-                    $('#loadingIndicator').show();
-                    $('#confirmSend').prop('disabled', true);
-                    $('#closeSendModalButton').prop('disabled', true);
-
-                    $.ajax({
-                        url: "{{ route('sendToSatuSehat') }}",
-                        method: 'POST',
-                        data: {
-                            actions: selectedActions,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                if (response.failed.length > 0) {
-                                    $('#loadingIndicator').hide();
-
-                                    // Aktifkan tombol Kirim dan Tutup Modal kembali
-                                    $('#confirmSend').prop('disabled', false);
-                                    $('#closeSendModalButton').prop('disabled', false);
-                                    // Jika ada yang gagal dikirim, tampilkan detailnya
-                                    let failedList = response.failed.map(f =>
-                                        `ID ${f.action_id}: ${f.reason}`).join('<br>');
-                                    Swal.fire({
-                                        icon: 'warning',
-                                        title: 'Sebagian Gagal Dikirim',
-                                        html: `<strong>${response.sent.length} berhasil</strong><br><strong>${response.failed.length} gagal</strong><br><br>${failedList}`
-                                    });
-                                } else {
-                                    $('#loadingIndicator').hide();
-                                    $('#confirmSend').prop('disabled', false);
-                                    $('#closeSendModalButton').prop('disabled', false);
-                                    // Semua sukses
-                                    Swal.fire('Berhasil',
-                                        `${response.sent.length} data berhasil dikirim ke Satu Sehat.`,
-                                        'success');
-                                }
-                            } else {
-                                $('#loadingIndicator').hide();
-                                $('#confirmSend').prop('disabled', false);
-                                $('#closeSendModalButton').prop('disabled', false);
-                                Swal.fire('Gagal',
-                                    'Server mengembalikan error saat memproses permintaan.',
-                                    'error');
-                            }
-                            $('#sendModal').modal('hide');
-                            $('#confirmSend').prop('disabled', false);
-                            $('#closeSendModalButton').prop('disabled', false);
-
-                        },
-                        error: function(xhr, status, error) {
-                            $('#loadingIndicator').hide();
-
-                            // Aktifkan tombol Kirim dan Tutup Modal kembali
-                            $('#confirmSend').prop('disabled', false);
-                            $('#closeSendModalButton').prop('disabled', false);
-                            console.error(xhr.responseText);
-                            Swal.fire('Gagal', 'Kesalahan server atau jaringan.', 'error');
-                            $('#sendModal').modal('hide');
-                        }
-                    });
-                }
-            });
 		</script>
     @endsection

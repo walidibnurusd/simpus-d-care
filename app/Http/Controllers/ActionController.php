@@ -2844,6 +2844,7 @@ class ActionController extends Controller
     {
         $successActions = [];
         $failedActions = [];
+		$succeedActions = [];
         // dd($request->actions);
         foreach ($request->actions as $actionId) {
             try {
@@ -2996,10 +2997,14 @@ class ActionController extends Controller
                     throw new \Exception('Gagal mengirim ke Satu Sehat');
                 }
 
-                SatuSehatEncounter::create([
+				$satuSehatEncounterData = [
                     'action_id' => $action->id,
                     'encounter_id' => $response['data']['id'] ?? null,
-                ]);
+                ];
+
+                SatuSehatEncounter::create($satuSehatEncounterData);
+
+				array_push($succeedActions, $satuSehatEncounterData);
 
                 $successActions[] = $action->patient->nik;
                 $action->update([
@@ -3019,6 +3024,7 @@ class ActionController extends Controller
             'success' => true,
             'message' => 'Proses selesai',
             'sent' => $successActions,
+			'succeedActions' => $succeedActions,
             'failed' => $failedActions,
         ]);
     }
