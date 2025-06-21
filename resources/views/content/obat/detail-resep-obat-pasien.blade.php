@@ -95,18 +95,30 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if($patientAction->diagnosaPrimer)
-                                                {{ $patientAction->diagnosaPrimer->name }}
-                                            @elseif(!$patientAction->diagnosaPrimer)
-                                                @php
-                                                    $diagnosisIds = $patientAction->diagnosa ?? [];
+                                            @php
+                                                $names = [];
+
+                                                if ($patientAction->diagnosaPrimer) {
+                                                    $names[] = $patientAction->diagnosaPrimer->name;
+                                                }
+
+                                                $diagnosisIds = $patientAction->diagnosa ?? [];
+                                                if (!empty($diagnosisIds)) {
                                                     $diagnoses = Diagnosis::whereIn('id', $diagnosisIds)->get();
-                                                @endphp
-                                                <ol style="margin: 0; padding-left: 7px">
-                                                    @foreach ($diagnoses as $diagnosis)
-                                                        <li>{{ $diagnosis->name }}</li>
+                                                    foreach ($diagnoses as $diagnosis) {
+                                                        $names[] = $diagnosis->name;
+                                                    }
+                                                }
+                                            @endphp
+
+                                            @if (count($names) > 1)
+                                                <ol style="margin: 0; padding-left: 15px">
+                                                    @foreach ($names as $name)
+                                                        <li>{{ $name }}</li>
                                                     @endforeach
                                                 </ol>
+                                            @elseif (count($names) === 1)
+                                                {{ $names[0] }}
                                             @else
                                                 -
                                             @endif

@@ -2856,6 +2856,7 @@ class ActionController extends Controller
     {
         $successActions = [];
         $failedActions = [];
+		$succeedActions = [];
         // dd($request->actions);
         foreach ($request->actions as $actionId) {
             try {
@@ -2877,42 +2878,42 @@ class ActionController extends Controller
                 $currentTime = Carbon::now()->subHours(8); // UTC offset
                 $formattedTime = $currentTime->format('Y-m-d\TH:i:s\+00:00');
 
-                $locationReference = 'Location/26f39285-649e-4d6e-b8e5-ed54013082a0';
+                $locationReference = 'Location/b13081cb-d36f-4008-91df-2d2824b90207';
                 $locationDisplay = 'Ruang Poli Gigi';
 
                 if ($action->tipe == 'poli-gigi') {
-                    $locationReference = 'Location/26f39285-649e-4d6e-b8e5-ed54013082a0';
+                    $locationReference = 'Location/b13081cb-d36f-4008-91df-2d2824b90207';
                     $locationDisplay = 'Ruang Poli Gigi';
                 }
                 else if ($action->tipe == 'poli-umum') {
-                    $locationReference = 'Location/0d2f9518-a37f-43e2-bfa6-0e6999f69bc4';
+                    $locationReference = 'Location/16def1e5-20aa-4977-a7d2-e447cc0a4bda';
                     $locationDisplay = 'Ruang Poli Umum';
                 }
                 else if ($action->tipe == 'poli-kia') {
-                    $locationReference = 'Location/a7c53d57-e940-4601-84f2-1e0be61e4638';
+                    $locationReference = 'Location/b65715b1-1373-4816-a5a4-fe50b7085046';
                     $locationDisplay = 'Ruang Poli Kia';
                 }
                 else if ($action->tipe == 'poli-kb') {
-                    $locationReference = 'Location/3933c54e-14f7-4233-bcd9-2f71a8cdf651';
+                    $locationReference = 'Location/9248ebc6-f5ec-4bef-b5e5-96a0e9343a47';
                     $locationDisplay = 'Ruang Poli Kb';
                 }
                 else if ($action->tipe == 'ruang-tindakan') {
-                    $locationReference = 'Location/4185d73b-62e2-4bbb-80c9-578e65c2b567';
+                    $locationReference = 'Location/155def73-23da-4e57-93a5-ab70b9ab38de';
                     $locationDisplay = 'Ruang UGD';
                 }
                 else if ($action->tipe == 'tindakan') {
-                    $locationReference = 'Location/a711d42b-b946-48a7-97c1-e6c22c1d558d';
+                    $locationReference = 'Location/6fc0cf13-3012-4c79-ac00-af31e5620d18';
                     $locationDisplay = 'Ruang Tindakan';
                 }
 
                 $encounterBody = [
                     'resourceType' => 'Encounter',
-                    'identifier' => [
-                        [
-                            'system' => 'http://sys-ids.kemkes.go.id/encounter/' . env('Organization_ID_SANDBOX'),
-                            'value' => (string) $action->id . '-' . now()->format('d-m-Y'),
-                        ],
-                    ],
+					'identifier' => [
+					    [
+					        'system' => 'http://sys-ids.kemkes.go.id/encounter/' . config('satusehat.organization_id'),
+					        'value' => (string) $action->id . '-' . now()->format('d-m-Y'),
+					    ],
+					],
                     'status' => 'arrived',
                     'class' => [
                         'system' => 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
@@ -2995,9 +2996,9 @@ class ActionController extends Controller
                             ],
                         ],
                     ],
-                    'serviceProvider' => [
-                        'reference' => 'Organization/' . env('Organization_ID_SANDBOX'),
-                    ],
+					'serviceProvider' => [
+					    'reference' => 'Organization/' . config('satusehat.organization_id'),
+					],
                 ];
 
                 \Log::info('Request Body: ' . json_encode($encounterBody));
@@ -3008,10 +3009,14 @@ class ActionController extends Controller
                     throw new \Exception('Gagal mengirim ke Satu Sehat');
                 }
 
-                SatuSehatEncounter::create([
+				$satuSehatEncounterData = [
                     'action_id' => $action->id,
                     'encounter_id' => $response['data']['id'] ?? null,
-                ]);
+                ];
+
+                SatuSehatEncounter::create($satuSehatEncounterData);
+
+				array_push($succeedActions, $satuSehatEncounterData);
 
                 $successActions[] = $action->patient->nik;
                 $action->update([
@@ -3031,6 +3036,7 @@ class ActionController extends Controller
             'success' => true,
             'message' => 'Proses selesai',
             'sent' => $successActions,
+			'succeedActions' => $succeedActions,
             'failed' => $failedActions,
         ]);
     }

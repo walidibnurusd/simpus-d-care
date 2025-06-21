@@ -293,7 +293,7 @@ class KunjunganController extends Controller
 
             $kunjungans = $kunjungansQuery->get();
             $actions = $kunjungans->map(function ($kunjungan) {
-                return Action::where('id_patient', $kunjungan->pasien)->whereDate('tanggal', $kunjungan->tanggal)->first();
+                return Action::with('satuSehatEncounter', 'diagnosaPrimer')->where('id_patient', $kunjungan->pasien)->whereDate('tanggal', $kunjungan->tanggal)->first();
             });
             if ($diagnosa) {
                 $kunjungans = $kunjungans->filter(function ($kunjungan) use ($actions, $diagnosa) {
@@ -373,34 +373,41 @@ class KunjunganController extends Controller
                     }
                 })
                 ->addColumn('diagnosa', function ($row) use ($actions) {
-                    $action = $actions->firstWhere('id_patient', $row->pasien);
-                    if (!$action || empty($action->diagnosa)) {
-                        return '-';
-                    }
-                    if (is_array($action->diagnosa)) {
-                        $diagnosaIds = $action->diagnosa;
-                    } else {
-                        $diagnosaIds = explode(',', $action->diagnosa);
-                    }
+					$action = $actions->firstWhere('id_patient', $row->pasien);
+					if (!$action) {
+					    return '-';
+					}
 
-                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+					$diagnoses = [];
 
-                    return implode(', ', $diagnoses);
+					if (!empty($action->diagnosa)) {
+					    $diagnosaIds = is_array($action->diagnosa) ? $action->diagnosa : explode(',', $action->diagnosa);
+					    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
+					}
+
+					if (!empty($action->diagnosaPrimer)) {
+					    $diagnoses[] = $action->diagnosaPrimer->name;
+					}
+					return implode(', ', array_unique($diagnoses));
                 })
                 ->addColumn('icd10', function ($row) use ($actions) {
-                    $action = $actions->firstWhere('id_patient', $row->pasien);
-                    if (!$action || empty($action->diagnosa)) {
-                        return '-';
-                    }
-                    if (is_array($action->diagnosa)) {
-                        $diagnosaIds = $action->diagnosa;
-                    } else {
-                        $diagnosaIds = explode(',', $action->diagnosa);
-                    }
 
-                    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('icd10')->toArray();
+					$action = $actions->firstWhere('id_patient', $row->pasien);
+					if (!$action) {
+					    return '-';
+					}
 
-                    return implode(', ', $diagnoses);
+					$diagnoses = [];
+
+					if (!empty($action->diagnosa)) {
+					    $diagnosaIds = is_array($action->diagnosa) ? $action->diagnosa : explode(',', $action->diagnosa);
+					    $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('icd10')->toArray();
+					}
+
+					if (!empty($action->diagnosaPrimer)) {
+					    $diagnoses[] = $action->diagnosaPrimer->icd10;
+					}
+					return implode(', ', array_unique($diagnoses));
                 })
                 ->editColumn('tanggal', fn($row) => $row->tanggal ? Carbon::parse($row->tanggal)->format('d-m-Y') : '-')
                 ->addColumn('action', function ($row) {
@@ -440,8 +447,15 @@ class KunjunganController extends Controller
                 })
 				->addColumn('status_satu_sehat', function ($row) use ($actions) {
 					$kunjunganAction = $actions->where('tanggal', $row->tanggal)->where('id_patient', $row->pasien)->first();
-					if ($kunjunganAction) {
-						return $kunjunganAction->status_satu_sehat;
+					if ($kunjunganAction && $kunjunganAction->status_satu_sehat) {
+						return 'Berhasil';
+					}
+					return null;
+                })
+				->addColumn('satu_sehat_encounter', function ($row) use ($actions) {
+					$kunjunganAction = $actions->where('tanggal', $row->tanggal)->where('id_patient', $row->pasien)->first();
+					if ($kunjunganAction && $kunjunganAction->satuSehatEncounter) {
+						return $kunjunganAction->satuSehatEncounter->encounter_id;
 					}
 					return null;
                 })
