@@ -43,9 +43,6 @@
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            TANGGAL</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             NAMA OBAT</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -83,21 +80,13 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('table-stok-obat') }}',
-                    // data: function(d) {
-                    //     // Send filter data along with the request
-                    //     d.start_date = $('#start_date').val();
-                    //     d.end_date = $('#end_date').val();
-                    //     d.poli = $('#poli').val();
-                    // }
+                    url: '{{ route('table-stok-obat') }}'
                 },
                 columns: [{
                         data: 'DT_RowIndex',
-                        name: 'DT_RowIndex'
-                    },
-                    {
-                        data: 'date',
-                        name: 'date'
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false
                     },
                     {
                         data: 'name',
@@ -112,8 +101,8 @@
                         name: 'shape'
                     },
                     {
-                        data: 'mount',
-                        name: 'mount'
+                        data: 'amount',
+                        name: 'amount'
                     },
                     {
                         data: 'updated_at',

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class ObatController extends Controller
 {
@@ -344,77 +345,22 @@ class ObatController extends Controller
 
     public function getStokObat(Request $request)
     {
-        $obats = TerimaObat::with('obat')->get();
+        $obats = Obat::select('obat.*',
+                DB::raw('MAX(terima_obat.updated_at) as last_updated'),
+                DB::raw('SUM(terima_obat.amount) as total_amount')
+            )
+            ->join('terima_obat', 'terima_obat.id_obat', '=', 'obat.id')
+            ->groupBy('obat.id')
+            ->orderByDesc('last_updated');
 
-        // Return the datatables response
         return datatables()
-            ->of($obats)
+            ->eloquent($obats)
             ->addIndexColumn()
-            ->editColumn('date', function ($row) {
-                return $row->date;
-            })
-            ->editColumn('name', function ($row) {
-                return $row->obat->name;
-            })
-            ->editColumn('code', function ($row) {
-                return $row->obat->code ?? '';
-            })
-            ->editColumn('mount', function ($row) {
-                return $row->amount ?? '';
-            })
-            ->editColumn('updated_at', function ($row) {
-                return $row->updated_at ?? '';
-            })
-            ->editColumn('shape', function ($row) {
-                // Check the value of shape and return appropriate value
-                switch ($row->obat->shape) {
-                    case 1:
-                        return 'Tablet';
-                    case 2:
-                        return 'Botol';
-                    case 3:
-                        return 'Pcs';
-                    case 4:
-                        return 'Suppositoria';
-                    case 5:
-                        return 'Ovula';
-                    case 6:
-                        return 'Drop';
-                    case 7:
-                        return 'Tube';
-                    case 8:
-                        return 'Pot';
-                    case 9:
-                        return 'Injeksi';
-                    case 10:
-                        return 'Kapsul';
-                    case 11:
-                        return 'Ampul';
-                    case 12:
-                        return 'Sachet';
-                    case 13:
-                        return 'Paket';
-                    case 14:
-                        return 'Vial';
-                    case 15:
-                        return 'Bungkus';
-                    case 16:
-                        return 'Strip';
-                    case 17:
-                        return 'Test';
-                    case 18:
-                        return 'Lbr';
-                    case 19:
-                        return 'Tabung';
-                    case 20:
-                        return 'Buah';
-                    case 21:
-                        return 'Lembar';
-                    default:
-                        return '';
-                }
-            })
-
+            ->editColumn('name', fn ($row) => $row->name)
+            ->editColumn('code', fn ($row) => $row->code ?? '')
+            ->editColumn('amount', fn ($row) => $row->total_amount)
+            ->editColumn('updated_at', fn ($row) => $row->last_updated ? Carbon::parse($row->last_updated)->format('d-m-Y H:i:s') : '-')
+            ->editColumn('shape', fn ($row) => $row->shape_label)
             ->make(true);
     }
 
