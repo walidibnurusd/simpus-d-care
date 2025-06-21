@@ -275,6 +275,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/kunjungan', [ReportController::class, 'reportKunjungan'])->name('report.kunjungan');
     Route::get('/laporan/usia-produktif', [ReportController::class, 'reportUspro'])->name('report.uspro');
     Route::get('/laporan/ispa', [ReportController::class, 'reportIspa'])->name('report.ispa');
+    Route::get('/laporan/indera', [ReportController::class, 'reportIndera'])->name('report.indera');
     Route::get('/report/pendengaran/baru', [ReportController::class, 'reportPendengaran'])
     ->name('report.pendengaran.baru');
 

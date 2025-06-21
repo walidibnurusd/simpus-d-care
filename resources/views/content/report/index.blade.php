@@ -145,6 +145,11 @@
                         'label' => 'Laporan Data Indera Kasus Lama',
                         'route' => 'report.pendengaran.lama',
                     ],
+                    [
+                        'id' => 'modalIndera',
+                        'label' => 'Laporan Data Online Indera',
+                        'route' => 'report.indera',
+                    ],
                 ];
             @endphp
 
@@ -227,6 +232,8 @@
                         data-bs-target="#modalPanduDiabetes">Laporan Pandu PTM Diabetes</button>
                     <button class="btn btn-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalIspa">Laporan
                         Ispa</button>
+                    <button class="btn btn-dark w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modalIndera">Laporan
+                        Data Online Indera</button>
 
                 </div>
             </div>

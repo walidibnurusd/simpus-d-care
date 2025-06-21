@@ -30,7 +30,7 @@ class ReportController extends Controller
         return [$bulan, $tahun];
     }
 
-    private function getBulanText($angkaBulan)
+    private function getBulanText($angkaBulan, $uppercase = false)
     {
         $bulanMap = [
             1 => 'Januari',
@@ -46,25 +46,8 @@ class ReportController extends Controller
             11 => 'November',
             12 => 'Desember',
         ];
-        return $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-    }
-    private function getBulanTextUpper($angkaBulan)
-    {
-        $bulanMap = [
-            1 => 'JANUARI',
-            2 => 'FEBRUARI',
-            3 => 'MARET',
-            4 => 'APRIL',
-            5 => 'MEI',
-            6 => 'JUNI',
-            7 => 'JULI',
-            8 => 'AGUSTUS',
-            9 => 'SEPTEMBER',
-            10 => 'OKTOBER',
-            11 => 'NOVEMBER',
-            12 => 'DESEMBER',
-        ];
-        return $bulanMap[$angkaBulan] ?? 'BULAN TIDAK DIKENAL';
+        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
+        return $uppercase ? strtoupper($bulan) : $bulan;
     }
     public function index(Request $request)
     {
@@ -76,21 +59,24 @@ class ReportController extends Controller
         [$bulan, $tahun] = $this->extractBulanTahun($request);
         $diagnosaValue = '600';
 
-        $tifoid = Action::whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->whereJsonContains('diagnosa', $diagnosaValue)->get();
+        $tifoid = Action::with(['patient:id,nik,name,dob,gender,address,indonesia_village'])
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->where(function ($query) use ($diagnosaValue) {
+                $query->whereJsonContains('diagnosa', $diagnosaValue)->orWhere('diagnosa_primer', $diagnosaValue);
+            })
+            ->select('id', 'tanggal', 'diagnosa', 'diagnosa_primer', 'id_patient')
+            ->get();
         return view('content.report.laporan-tifoid', compact('tifoid'));
     }
 
-    public function printDiare()
-    {
-        return view('content.report.print-diare');
-    }
     public function reportDiare(Request $request)
     {
         [$bulan, $tahun] = $this->extractBulanTahun($request);
 
         $diagnosaValue = '602';
 
-        $diare = Action::with(['patient', 'hospitalReferral'])
+        $diare = Action::with(['patient:id,name,nik,dob,gender,address,no_rm,nomor_kartu,rw', 'hospitalReferral'])
             ->where(function ($query) use ($diagnosaValue) {
                 $query
                     ->whereIn('diagnosa', [$diagnosaValue])
@@ -100,6 +86,7 @@ class ReportController extends Controller
 
             ->whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
+            ->select('id', 'tanggal', 'diagnosa', 'diagnosa_primer', 'id_patient', 'rujuk_rs', 'keluhan', 'keterangan', 'tindakan', 'doctor', 'tinggiBadan', 'beratBadan', 'lingkarPinggang', 'sistol', 'diastol')
             ->get();
 
         $diagnosaMap = [
@@ -110,14 +97,11 @@ class ReportController extends Controller
             602 => 'Tanpa Dehidrasi',
         ];
 
-        $diare = $diare->map(function ($data) use ($diagnosaMap, $dehidrasiMap) {
-            if (is_array($data->diagnosa) && in_array(602, $data->diagnosa)) {
-                $data->diagnosa_names = [$diagnosaMap[602]];
-                $data->dehidrasi = $dehidrasiMap[602];
-            } else {
-                $data->diagnosa_names = ['Tidak Diketahui'];
-                $data->dehidrasi = 'Tidak Diketahui';
-            }
+        $diare->transform(function ($data) use ($diagnosaMap, $dehidrasiMap, $diagnosaValue) {
+            $isMatch = (is_array($data->diagnosa) && in_array((int) $diagnosaValue, $data->diagnosa)) || $data->diagnosa_primer == $diagnosaValue;
+
+            $data->diagnosa_names = $isMatch ? [$diagnosaMap[$diagnosaValue] ?? 'Tidak Diketahui'] : ['Tidak Diketahui'];
+            $data->dehidrasi = $isMatch ? $dehidrasiMap[$diagnosaValue] ?? 'Tidak Diketahui' : 'Tidak Diketahui';
 
             return $data;
         });
@@ -127,7 +111,6 @@ class ReportController extends Controller
     public function reportSTP(Request $request)
     {
         [$bulan, $tahun] = $this->extractBulanTahun($request);
-        // Diagnosis Values Mapping
         $diagnoses = [
             'kolera' => ['989'],
             'diare' => ['602'],
@@ -155,40 +138,25 @@ class ReportController extends Controller
             'influenza' => ['731'],
         ];
 
-        // Retrieve and process data for each diagnosis
-        $diagnosisData = [];
-        foreach ($diagnoses as $key => $values) {
-            $diagnosisData[$key] = $this->getGroupedDataAll($values, $bulan, $tahun);
-        }
+        $groupedByAge = [];
+        $groupedByGender = [];
 
-        // Group cases by age
-        $groupedDataByAge = [];
-        foreach ($diagnosisData as $key => $data) {
-            $groupedDataByAge[$key] = $this->groupByAgeAll($data);
+        foreach ($diagnoses as $key => $codes) {
+            $rawData = $this->getGroupedDataAll($codes, $bulan, $tahun);
+            $groupedByAge[$key] = $this->groupByAgeAll($rawData);
+            $groupedByGender[$key] = $this->getTotalByGender($rawData);
         }
-
-        // Count total cases by gender
-        $groupedDataByGender = [];
-        foreach ($diagnosisData as $key => $data) {
-            $groupedDataByGender[$key] = [
-                'datas' => $this->getTotalByGender($data),
-            ];
-        }
-
-        // Load Excel template
         $templatePath = public_path('assets/report/report-surveilans.xlsx');
         if (!file_exists($templatePath)) {
             abort(404, 'Template Excel tidak ditemukan.');
         }
 
-        // Open the template Excel file
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
         $sheet->setCellValue('O4', $bulan);
         $sheet->setCellValue('O3', $tahun);
 
-        // Age columns
         $columns = [
             '0-7 hari' => 'C',
             '8-28 hari' => 'D',
@@ -206,12 +174,9 @@ class ReportController extends Controller
 
         $row = 9;
 
-        foreach ($groupedDataByAge as $key => $groupedAgeData) {
-            // Write data for age and gender
-            $this->writeAgeDataToExcel($sheet, $row, $groupedAgeData, $columns);
-            $this->writeGenderDataToExcelStp($sheet, $row, $groupedDataByGender[$key]['datas']);
-
-            // Increment row after writing data
+        foreach ($diagnoses as $key => $_) {
+            $this->writeAgeDataToExcel($sheet, $row, $groupedByAge[$key], $columns);
+            $this->writeGenderDataToExcelStp($sheet, $row, $groupedByGender[$key]);
             $row++;
         }
 
@@ -1288,8 +1253,6 @@ class ReportController extends Controller
 
             $row++;
         }
-
-        // Stream the Excel file to user
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
@@ -1298,24 +1261,7 @@ class ReportController extends Controller
 
     public function reportJamkesda(Request $request)
     {
-        $bulanMap = [
-            1 => 'JANUARI',
-            2 => 'FEBRUARI',
-            3 => 'MARET',
-            4 => 'APRIL',
-            5 => 'MEI',
-            6 => 'JUNI',
-            7 => 'JULI',
-            8 => 'AGUSTUS',
-            9 => 'SEPTEMBER',
-            10 => 'OKTOBER',
-            11 => 'NOVEMBER',
-            12 => 'DESEMBER',
-        ];
-
-        $angkaBulan = (int) $request->input('bulan');
-        $bulan = $bulanMap[$angkaBulan] ?? 'Bulan Tidak Dikenal';
-        $tahun = $request->tahun;
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
         $tanggal = Carbon::now()->translatedFormat('j F Y');
 
         $templatePath = public_path('assets/report/report-jamkesda.xlsx');
@@ -1325,9 +1271,9 @@ class ReportController extends Controller
 
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A9', 'BULAN ' . $bulan . ' TAHUN ' . $tahun);
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanText($bulan, true) . ' TAHUN ' . $tahun);
 
-        $kunjunganData = Kunjungan::whereMonth('tanggal', $angkaBulan)
+        $kunjunganData = Kunjungan::whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->whereHas('patient', function ($query) {
                 $query->where('jenis_kartu', 'jkd');
@@ -1341,7 +1287,7 @@ class ReportController extends Controller
         $borderStyle = [
             'borders' => [
                 'allBorders' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'borderStyle' => Border::BORDER_THIN,
                     'color' => ['argb' => '000000'],
                 ],
             ],
@@ -1377,7 +1323,7 @@ class ReportController extends Controller
                 default => 'Poli Gigi',
             };
             $sheet->setCellValue("H{$row}", $poliLabel);
-            $sheet->setCellValue("I{$row}", ''); // Kolom KET
+            $sheet->setCellValue("I{$row}", '');
 
             $sheet->getStyle("A{$row}:I{$row}")->applyFromArray($borderStyle);
 
@@ -1386,12 +1332,20 @@ class ReportController extends Controller
         }
 
         $tandaTanganRow = $row + 2;
-        $sheet->setCellValue('D' . ($tandaTanganRow + 1), "Makassar, {$tanggal}");
-        $sheet->setCellValue('D' . ($tandaTanganRow + 2), 'Mengetahui,');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 3), 'Kepala UPT Puskesmas Tamangapa');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 5), 'dr. Fatimah M.Kes');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 6), 'NIP.198511252011012009');
+        $tandaTanganData = ["Makassar, {$tanggal}", 'Mengetahui,', 'Kepala UPT Puskesmas Tamangapa', '', 'dr. Fatimah M.Kes', 'NIP.198511252011012009'];
 
+        $startRow = $tandaTanganRow + 1;
+
+        foreach ($tandaTanganData as $i => $text) {
+            $row = $startRow + $i;
+            $range = "A{$row}:I{$row}";
+            $sheet->mergeCells($range);
+            $sheet->setCellValue("A{$row}", $text);
+            $sheet
+                ->getStyle("A{$row}")
+                ->getAlignment()
+                ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        }
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
@@ -1399,8 +1353,7 @@ class ReportController extends Controller
     }
     public function reportBpjs(Request $request)
     {
-        $month = (int) $request->input('bulan');
-        $year = (int) $request->input('tahun');
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
 
         $templatePath = public_path('assets/report/report-bpjs.xlsx');
         if (!file_exists($templatePath)) {
@@ -1410,12 +1363,12 @@ class ReportController extends Controller
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
-        $visits = Kunjungan::whereMonth('tanggal', $month)
-            ->whereYear('tanggal', $year)
+        $visits = Kunjungan::whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
             ->with(['patient:id,jenis_kartu,wilayah_faskes'])
             ->get();
 
-        $actions = Action::whereNotNull('rujuk_rs')->whereMonth('tanggal', $month)->whereYear('tanggal', $year)->select('id_patient', 'tanggal')->get()->groupBy(fn($a) => $a->id_patient . '|' . Carbon::parse($a->tanggal)->toDateString());
+        $actions = Action::whereNotNull('rujuk_rs')->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->select('id_patient', 'tanggal')->get()->groupBy(fn($a) => $a->id_patient . '|' . Carbon::parse($a->tanggal)->toDateString());
 
         $patients = Patients::pluck('wilayah_faskes', 'id');
 
@@ -1504,8 +1457,7 @@ class ReportController extends Controller
     }
     public function reportKunjungan(Request $request)
     {
-        $month = (int) $request->input('bulan');
-        $year = (int) $request->input('tahun');
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
 
         $templatePath = public_path('assets/report/report-kunjungan.xlsx');
         if (!file_exists($templatePath)) {
@@ -1515,13 +1467,13 @@ class ReportController extends Controller
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
-        $visits = Kunjungan::whereMonth('tanggal', $month)
-            ->whereYear('tanggal', $year)
+        $visits = Kunjungan::whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
             ->with(['patient:id,gender'])
             ->get();
 
         $poliList = ['poli-umum', 'poli-gigi', 'poli-kia', 'poli-kb', 'ruang-tindakan'];
-        $startRow = 12;
+        $startRow = 13;
 
         $grouped = $visits->groupBy([fn($item) => strtolower($item->poli ?? 'others'), fn($item) => $item->patient->id]);
 
@@ -1548,7 +1500,7 @@ class ReportController extends Controller
 
                 $genderCounts[$gender][$status]++;
             }
-
+            $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanText($bulan, true));
             $sheet->setCellValue("B{$row}", $genderCounts['2']['first']);
             $sheet->setCellValue("C{$row}", $genderCounts['1']['first']);
             $sheet->setCellValue("D{$row}", $genderCounts['2']['repeat']);
@@ -1573,86 +1525,75 @@ class ReportController extends Controller
 
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanTextUpper($bulan) . ' TAHUN ' . $tahun);
-
-        $kunjunganData = Kunjungan::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
-            ->whereHas('patient', function ($query) {
-                $query->whereRaw('TIMESTAMPDIFF(YEAR, dob, CURDATE()) BETWEEN 15 AND 59');
-            })
-            ->with(['patient:id,name,dob,gender,nik,address'])
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanText($bulan, true) . ' TAHUN ' . $tahun);
+        $patients = Patients::with([
+            'kunjungans' => function ($q) use ($bulan, $tahun) {
+                $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+            },
+            'actions' => function ($q) use ($bulan, $tahun) {
+                $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+            },
+        ])
+            ->withCount(['kunjungans'])
+            ->whereRaw('TIMESTAMPDIFF(YEAR, dob, CURDATE()) BETWEEN 15 AND 59')
+            ->whereHas('kunjungans', fn($q) => $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun))
+            ->select('id', 'name', 'dob', 'gender', 'nik', 'address')
             ->get();
-        $patientIds = $kunjunganData->pluck('patient.id')->filter()->unique()->values();
 
-        $kunjunganCounts = Kunjungan::whereIn('pasien', $patientIds)->select('pasien', DB::raw('COUNT(*) as total'))->groupBy('pasien')->pluck('total', 'pasien');
         $row = 12;
         $no = 1;
 
         $borderStyle = [
             'borders' => [
                 'allBorders' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'borderStyle' => Border::BORDER_THIN,
                     'color' => ['argb' => '000000'],
                 ],
             ],
         ];
 
-        foreach ($kunjunganData as $data) {
-            $patient = $data->patient;
+        foreach ($patients as $patient) {
+            foreach ($patient->kunjungans as $kunjungan) {
+                $action = $patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+                $diagnosa = '-';
 
-            if (!$patient || empty($patient->name) || empty($patient->dob) || empty($patient->nik) || empty($patient->address) || !isset($patient->gender) || empty($data->tanggal) || empty($data->poli)) {
-                continue;
-            }
-
-            $action = Action::where('id_patient', $patient->id)->whereDate('tanggal', $data->tanggal)->first();
-
-            $diagnosa = '-';
-            if ($action) {
-                $rawDiagnosa = $action->diagnosa;
-
-                if (is_string($rawDiagnosa)) {
-                    $diagnosaIds = json_decode($rawDiagnosa, true);
-                } elseif (is_array($rawDiagnosa)) {
-                    $diagnosaIds = $rawDiagnosa;
-                } else {
-                    $diagnosaIds = [];
+                if ($action && $action->diagnosa) {
+                    $ids = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
+                    $ids = is_array($ids) ? array_map('intval', $ids) : [];
+                    $diagnosa = Diagnosis::whereIn('id', $ids)->pluck('name')->implode(', ') ?: '-';
                 }
 
-                $diagnosaIds = array_map('intval', $diagnosaIds);
-                $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-                $diagnosa = !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
+                $sheet->setCellValue("A{$row}", $no);
+                $sheet->setCellValue("B{$row}", Carbon::parse($kunjungan->tanggal)->format('d-m-Y'));
+                $sheet->setCellValue("C{$row}", $patient->name);
+                $sheet->setCellValueExplicit("D{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                $sheet->setCellValue("E{$row}", Carbon::parse($patient->dob)->format('d-m-Y'));
+                $sheet->setCellValue("F{$row}", Carbon::parse($patient->dob)->age . ' thn');
+                $sheet->setCellValue("G{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
+                $sheet->setCellValue("H{$row}", $patient->address);
+                $sheet->setCellValue("I{$row}", $diagnosa);
+                $isFirstVisit = $patient->kunjungans->count() === 1;
+                $sheet->setCellValue("J{$row}", $isFirstVisit ? 'Baru' : 'Lama');
+                $sheet->getStyle("A{$row}:J{$row}")->applyFromArray($borderStyle);
+
+                $row++;
+                $no++;
             }
-
-            $kunjunganCount = $kunjunganCounts[$patient->id] ?? 0;
-            $sheet->setCellValue("A{$row}", $no);
-            $sheet->setCellValue("B{$row}", Carbon::parse($data->tanggal)->format('d-m-Y'));
-            $sheet->setCellValue("C{$row}", $patient->name);
-            $sheet
-                ->getStyle("D{$row}")
-                ->getNumberFormat()
-                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
-            $sheet->setCellValueExplicit("D{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-            $sheet->setCellValue("E{$row}", Carbon::parse($patient->dob)->format('d-m-Y'));
-            $sheet->setCellValue("F{$row}", Carbon::parse($patient->dob)->age . ' thn');
-            $sheet->setCellValue("G{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
-            $sheet->setCellValue("H{$row}", $patient->address);
-            $sheet->setCellValue("I{$row}", $diagnosa);
-            $sheet->setCellValue("J{$row}", $kunjunganCount == 1 ? 'Baru' : 'Lama');
-
-            $sheet->getStyle("A{$row}:J{$row}")->applyFromArray($borderStyle);
-
-            $row++;
-            $no++;
         }
-
-        // Tanda tangan dinamis
         $tandaTanganRow = $row + 2;
-        $sheet->setCellValue('D' . ($tandaTanganRow + 1), "Makassar, {$tanggal}");
-        $sheet->setCellValue('D' . ($tandaTanganRow + 2), 'Mengetahui,');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 3), 'Kepala UPT Puskesmas Tamangapa');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 5), 'dr. Fatimah M.Kes');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 6), 'NIP.198511252011012009');
+        $tandaTanganData = ["Makassar, {$tanggal}", 'Mengetahui,', 'Kepala UPT Puskesmas Tamangapa', '', 'dr. Fatimah M.Kes', 'NIP.198511252011012009'];
+        $startRow = $tandaTanganRow + 1;
 
+        foreach ($tandaTanganData as $i => $text) {
+            $row = $startRow + $i;
+            $range = "A{$row}:J{$row}";
+            $sheet->mergeCells($range);
+            $sheet->setCellValue("A{$row}", $text);
+            $sheet
+                ->getStyle("A{$row}")
+                ->getAlignment()
+                ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        }
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
@@ -1670,89 +1611,83 @@ class ReportController extends Controller
 
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanTextUpper($bulan) . ' TAHUN ' . $tahun);
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanText($bulan, true) . ' TAHUN ' . $tahun);
 
-        $kunjunganData = Kunjungan::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
-            ->whereHas('patient')
-            ->with(['patient:id,name,dob,gender,nik,address,jenis_kartu'])
+        $patients = Patients::with([
+            'kunjungans' => function ($q) use ($bulan, $tahun) {
+                $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+            },
+            'actions' => function ($q) use ($bulan, $tahun) {
+                $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+            },
+        ])
+            ->withCount(['kunjungans'])
+            ->whereHas('kunjungans', fn($q) => $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun))
+            ->select('id', 'name', 'dob', 'gender', 'nik', 'address')
             ->get();
-        $patientIds = $kunjunganData->pluck('patient.id')->filter()->unique()->values();
-
-        // Hitung jumlah kunjungan untuk setiap pasien dalam satu query
-        $kunjunganCounts = Kunjungan::whereIn('pasien', $patientIds)->select('pasien', DB::raw('COUNT(*) as total'))->groupBy('pasien')->pluck('total', 'pasien');
         $row = 12;
         $no = 1;
 
         $borderStyle = [
             'borders' => [
                 'allBorders' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'borderStyle' => Border::BORDER_THIN,
                     'color' => ['argb' => '000000'],
                 ],
             ],
         ];
         $targetDiagnosaId = [811, 810, 718];
 
-        foreach ($kunjunganData as $data) {
-            $patient = $data->patient;
+        foreach ($patients as $patient) {
+            foreach ($patient->kunjungans as $kunjungan) {
+                $action = $patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+                $diagnosa = '-';
 
-            if (!$patient || empty($patient->name) || empty($patient->dob) || empty($patient->nik) || empty($patient->address) || !isset($patient->gender) || empty($data->tanggal) || empty($data->poli)) {
-                continue;
+                $diagnosaIds = $this->getDiagnosaIds($action);
+
+                if (empty(array_intersect($targetDiagnosaId, $diagnosaIds))) {
+                    continue;
+                }
+
+                $filteredDiagnosa = array_intersect($diagnosaIds, $targetDiagnosaId);
+                $diagnosa = Diagnosis::whereIn('id', $filteredDiagnosa)->pluck('name')->implode(', ') ?: '-';
+
+                $sheet->setCellValue("A{$row}", $no);
+                $sheet->setCellValue("B{$row}", Carbon::parse($kunjungan->tanggal)->format('d-m-Y'));
+                $sheet->setCellValue("C{$row}", $patient->name);
+                $sheet
+                    ->getStyle("D{$row}")
+                    ->getNumberFormat()
+                    ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
+                $sheet->setCellValueExplicit("D{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                $sheet->setCellValue("E{$row}", Carbon::parse($patient->dob)->format('d-m-Y'));
+                $sheet->setCellValue("F{$row}", Carbon::parse($patient->dob)->age . ' thn');
+                $sheet->setCellValue("G{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
+                $sheet->setCellValue("H{$row}", $patient->address);
+                $sheet->setCellValue("I{$row}", $diagnosa);
+                $isFirstVisit = $patient->kunjungans->count() === 1;
+                $sheet->setCellValue("J{$row}", $isFirstVisit ? 'Baru' : 'Lama');
+
+                $sheet->getStyle("A{$row}:J{$row}")->applyFromArray($borderStyle);
+
+                $row++;
+                $no++;
             }
-
-            $action = Action::where('id_patient', $patient->id)->whereDate('tanggal', $data->tanggal)->first();
-
-            if (!$action || !$action->diagnosa) {
-                continue;
-            }
-
-            if (is_string($action->diagnosa)) {
-                $diagnosaIds = json_decode($action->diagnosa, true);
-            } elseif (is_array($action->diagnosa)) {
-                $diagnosaIds = $action->diagnosa;
-            } else {
-                $diagnosaIds = [];
-            }
-
-            $diagnosaIds = array_map('intval', $diagnosaIds);
-
-            if (empty(array_intersect($targetDiagnosaId, $diagnosaIds))) {
-                continue;
-            }
-
-            $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-            $diagnosa = !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
-
-            $kunjunganCount = $kunjunganCounts[$patient->id] ?? 0;
-            $sheet->setCellValue("A{$row}", $no);
-            $sheet->setCellValue("B{$row}", Carbon::parse($data->tanggal)->format('d-m-Y'));
-            $sheet->setCellValue("C{$row}", $patient->name);
-            $sheet
-                ->getStyle("D{$row}")
-                ->getNumberFormat()
-                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
-            $sheet->setCellValueExplicit("D{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-            $sheet->setCellValue("E{$row}", Carbon::parse($patient->dob)->format('d-m-Y'));
-            $sheet->setCellValue("F{$row}", Carbon::parse($patient->dob)->age . ' thn');
-            $sheet->setCellValue("G{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
-            $sheet->setCellValue("H{$row}", $patient->address);
-            $sheet->setCellValue("I{$row}", $diagnosa);
-            $sheet->setCellValue("J{$row}", $kunjunganCount == 1 ? 'Baru' : 'Lama');
-
-            $sheet->getStyle("A{$row}:J{$row}")->applyFromArray($borderStyle);
-
-            $row++;
-            $no++;
         }
-
-        // Tanda tangan dinamis
         $tandaTanganRow = $row + 2;
-        $sheet->setCellValue('D' . ($tandaTanganRow + 1), "Makassar, {$tanggal}");
-        $sheet->setCellValue('D' . ($tandaTanganRow + 2), 'Mengetahui,');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 3), 'Kepala UPT Puskesmas Tamangapa');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 5), 'dr. Fatimah M.Kes');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 6), 'NIP.198511252011012009');
+        $tandaTanganData = ["Makassar, {$tanggal}", 'Mengetahui,', 'Kepala UPT Puskesmas Tamangapa', '', 'dr. Fatimah M.Kes', 'NIP.198511252011012009'];
+        $startRow = $tandaTanganRow + 1;
+
+        foreach ($tandaTanganData as $i => $text) {
+            $row = $startRow + $i;
+            $range = "A{$row}:J{$row}";
+            $sheet->mergeCells($range);
+            $sheet->setCellValue("A{$row}", $text);
+            $sheet
+                ->getStyle("A{$row}")
+                ->getAlignment()
+                ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        }
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         return response()->streamDownload(function () use ($writer) {
@@ -1771,90 +1706,82 @@ class ReportController extends Controller
 
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanTextUpper($bulan) . ' TAHUN ' . $tahun);
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanText($bulan, true) . ' TAHUN ' . $tahun);
 
-        $kunjunganData = Kunjungan::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
-            ->whereHas('patient')
-            ->with(['patient:id,name,dob,gender,nik,address,jenis_kartu'])
+        $patients = Patients::with([
+            'kunjungans' => function ($q) use ($bulan, $tahun) {
+                $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+            },
+            'actions' => function ($q) use ($bulan, $tahun) {
+                $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+            },
+        ])
+            ->withCount(['kunjungans'])
+            ->whereHas('kunjungans', fn($q) => $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun))
+            ->select('id', 'name', 'dob', 'gender', 'nik', 'address')
             ->get();
-        $patientIds = $kunjunganData->pluck('patient.id')->filter()->unique()->values();
-
-        $kunjunganCounts = Kunjungan::whereIn('pasien', $patientIds)->select('pasien', DB::raw('COUNT(*) as total'))->groupBy('pasien')->pluck('total', 'pasien');
         $row = 12;
         $no = 1;
 
         $borderStyle = [
             'borders' => [
                 'allBorders' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'borderStyle' => Border::BORDER_THIN,
                     'color' => ['argb' => '000000'],
                 ],
             ],
         ];
         $targetDiagnosaId = [667, 668, 907];
 
-        foreach ($kunjunganData as $data) {
-            $patient = $data->patient;
+        foreach ($patients as $patient) {
+            foreach ($patient->kunjungans as $kunjungan) {
+                $action = $patient->actions->firstWhere('tanggal', $kunjungan->tanggal);
+                $diagnosa = '-';
 
-            if (!$patient || empty($patient->name) || empty($patient->dob) || empty($patient->nik) || empty($patient->address) || !isset($patient->gender) || empty($data->tanggal) || empty($data->poli)) {
-                continue;
+                $diagnosaIds = $this->getDiagnosaIds($action);
+
+                if (empty(array_intersect($targetDiagnosaId, $diagnosaIds))) {
+                    continue;
+                }
+
+                $filteredDiagnosa = array_intersect($diagnosaIds, $targetDiagnosaId);
+                $diagnosa = Diagnosis::whereIn('id', $filteredDiagnosa)->pluck('name')->implode(', ') ?: '-';
+                $sheet->setCellValue("A{$row}", $no);
+                $sheet->setCellValue("B{$row}", Carbon::parse($kunjungan->tanggal)->format('d-m-Y'));
+                $sheet->setCellValue("C{$row}", $patient->name);
+                $sheet
+                    ->getStyle("D{$row}")
+                    ->getNumberFormat()
+                    ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
+                $sheet->setCellValueExplicit("D{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                $sheet->setCellValue("E{$row}", Carbon::parse($patient->dob)->format('d-m-Y'));
+                $sheet->setCellValue("F{$row}", Carbon::parse($patient->dob)->age . ' thn');
+                $sheet->setCellValue("G{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
+                $sheet->setCellValue("H{$row}", $patient->address);
+                $sheet->setCellValue("I{$row}", $diagnosa);
+                $isFirstVisit = $patient->kunjungans->count() === 1;
+                $sheet->setCellValue("J{$row}", $isFirstVisit ? 'Baru' : 'Lama');
+
+                $sheet->getStyle("A{$row}:J{$row}")->applyFromArray($borderStyle);
+
+                $row++;
+                $no++;
             }
-
-            $action = Action::where('id_patient', $patient->id)->whereDate('tanggal', $data->tanggal)->first();
-
-            // Lewati jika tidak ada action atau tidak ada diagnosa 600
-            if (!$action || !$action->diagnosa) {
-                continue;
-            }
-
-            // Parse diagnosa
-            if (is_string($action->diagnosa)) {
-                $diagnosaIds = json_decode($action->diagnosa, true);
-            } elseif (is_array($action->diagnosa)) {
-                $diagnosaIds = $action->diagnosa;
-            } else {
-                $diagnosaIds = [];
-            }
-
-            $diagnosaIds = array_map('intval', $diagnosaIds);
-
-            if (empty(array_intersect($targetDiagnosaId, $diagnosaIds))) {
-                continue;
-            }
-
-            $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
-            $diagnosa = !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
-
-            $kunjunganCount = $kunjunganCounts[$patient->id] ?? 0;
-            $sheet->setCellValue("A{$row}", $no);
-            $sheet->setCellValue("B{$row}", Carbon::parse($data->tanggal)->format('d-m-Y'));
-            $sheet->setCellValue("C{$row}", $patient->name);
-            $sheet
-                ->getStyle("D{$row}")
-                ->getNumberFormat()
-                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
-            $sheet->setCellValueExplicit("D{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-            $sheet->setCellValue("E{$row}", Carbon::parse($patient->dob)->format('d-m-Y'));
-            $sheet->setCellValue("F{$row}", Carbon::parse($patient->dob)->age . ' thn');
-            $sheet->setCellValue("G{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
-            $sheet->setCellValue("H{$row}", $patient->address);
-            $sheet->setCellValue("I{$row}", $diagnosa);
-            $sheet->setCellValue("J{$row}", $kunjunganCount == 1 ? 'Baru' : 'Lama');
-
-            $sheet->getStyle("A{$row}:J{$row}")->applyFromArray($borderStyle);
-
-            $row++;
-            $no++;
         }
-
-        // Tanda tangan dinamis
         $tandaTanganRow = $row + 2;
-        $sheet->setCellValue('D' . ($tandaTanganRow + 1), "Makassar, {$tanggal}");
-        $sheet->setCellValue('D' . ($tandaTanganRow + 2), 'Mengetahui,');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 3), 'Kepala UPT Puskesmas Tamangapa');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 5), 'dr. Fatimah M.Kes');
-        $sheet->setCellValue('D' . ($tandaTanganRow + 6), 'NIP.198511252011012009');
+        $tandaTanganData = ["Makassar, {$tanggal}", 'Mengetahui,', 'Kepala UPT Puskesmas Tamangapa', '', 'dr. Fatimah M.Kes', 'NIP.198511252011012009'];
+        $startRow = $tandaTanganRow + 1;
+
+        foreach ($tandaTanganData as $i => $text) {
+            $row = $startRow + $i;
+            $range = "A{$row}:J{$row}";
+            $sheet->mergeCells($range);
+            $sheet->setCellValue("A{$row}", $text);
+            $sheet
+                ->getStyle("A{$row}")
+                ->getAlignment()
+                ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        }
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         return response()->streamDownload(function () use ($writer) {
@@ -1870,7 +1797,7 @@ class ReportController extends Controller
 
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('C4', $this->getBulanTextUpper($bulan) . ' ' . $tahun);
+        $sheet->setCellValue('C4', $this->getBulanText($bulan, true) . ' ' . $tahun);
 
         $actions = Action::with('patient')->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
 
@@ -1983,7 +1910,7 @@ class ReportController extends Controller
         $routeName = $request->route()->getName();
         $tipe = str_contains($routeName, 'lama') ? 'lama' : 'baru';
         $judulKasus = $tipe === 'lama' ? 'LAPORAN DATA INDERA KASUS LAMA' : 'LAPORAN DATA INDERA KASUS BARU';
-        $templatePath = public_path('assets/report/report-pendengaraN.xlsx');
+        $templatePath = public_path('assets/report/report-pendengaran.xlsx');
         if (!file_exists($templatePath)) {
             abort(404, 'Template Excel tidak ditemukan.');
         }
@@ -1991,7 +1918,7 @@ class ReportController extends Controller
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A8', $judulKasus);
-        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanTextUpper($bulan) . ' TAHUN ' . $tahun);
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanText($bulan . true) . ' TAHUN ' . $tahun);
 
         $kasusValue = $tipe === 'lama' ? 0 : 1;
 
@@ -2013,7 +1940,7 @@ class ReportController extends Controller
 
         $diagnosaValue = [1016, 1001, 921, 920, 919, 918, 917, 916, 915, 914, 717, 716, 715, 714, 713, 712, 711, 710, 709, 708, 707, 706, 705, 704, 703, 702, 701, 700, 699, 698, 697, 696, 695, 694, 693, 692, 691, 690];
 
-        $actions = $actions = Action::select(['id', 'tanggal', 'diagnosa', 'diagnosa_primer', 'kasus', 'sistol', 'diastol', 'tinggiBadan', 'beratBadan', 'rujuk_rs', 'id_patient'])
+        $actions = Action::select(['id', 'tanggal', 'diagnosa', 'diagnosa_primer', 'kasus', 'sistol', 'diastol', 'tinggiBadan', 'beratBadan', 'rujuk_rs', 'id_patient'])
             ->whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->where('kasus', $kasusValue)
@@ -2040,21 +1967,7 @@ class ReportController extends Controller
 
         foreach ($actions as $action) {
             $patient = $action->patient;
-            $diagnosaIds = [];
-
-            if (!empty($action->diagnosa)) {
-                if (is_string($action->diagnosa)) {
-                    $decoded = json_decode($action->diagnosa, true);
-                    $diagnosaIds = is_array($decoded) ? array_map('intval', $decoded) : [];
-                } elseif (is_array($action->diagnosa)) {
-                    $diagnosaIds = array_map('intval', $action->diagnosa);
-                }
-            }
-
-            if (empty(array_intersect($diagnosaValue, $diagnosaIds))) {
-                continue;
-            }
-
+            $diagnosaIds = $this->getDiagnosaIds($action);
             $diagnoses = Diagnosis::whereIn('id', $diagnosaIds)->pluck('name')->toArray();
             $diagnosa = !empty($diagnoses) ? implode(', ', $diagnoses) : '-';
 
@@ -2101,7 +2014,162 @@ class ReportController extends Controller
             $writer->save('php://output');
         }, $fileName);
     }
+    private function getDiagnosaIds($action): array
+    {
+        $ids = [];
 
+        if (!empty($action->diagnosa)) {
+            $decoded = is_string($action->diagnosa) ? json_decode($action->diagnosa, true) : $action->diagnosa;
+
+            if (is_array($decoded)) {
+                $ids = array_map('intval', $decoded);
+            }
+        }
+
+        if (!empty($action->diagnosa_primer)) {
+            $ids[] = (int) $action->diagnosa_primer;
+        }
+
+        return array_unique($ids);
+    }
+
+    public function reportIndera(Request $request)
+    {
+        [$bulan, $tahun] = $this->extractBulanTahun($request);
+        $tanggal = Carbon::now()->translatedFormat('j F Y');
+
+        $templatePath = public_path('assets/report/report-indera.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template Excel tidak ditemukan.');
+        }
+
+        $spreadsheet = IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A8', 'LAPORAN DATA ONLINE INDERA');
+        $sheet->setCellValue('A9', 'BULAN ' . $this->getBulanText($bulan, true) . ' TAHUN ' . $tahun);
+
+        $row = 15;
+        $no = 1;
+
+        $borderStyle = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => '000000'],
+                ],
+            ],
+            'alignment' => [
+                'wrapText' => true,
+                'vertical' => Alignment::VERTICAL_TOP,
+            ],
+        ];
+
+        $diagnosaValue = [1016, 700, 716, 713, 711];
+
+        $actions = $actions = Action::select(['id', 'tanggal', 'diagnosa', 'diagnosa_primer', 'tinggiBadan', 'beratBadan', 'rujuk_rs', 'id_patient'])
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->with(['hospitalReferral:id,name', 'patient:id,name,nik,dob,gender,address,phone,education,occupation,marrital_status,blood_type', 'patient.educations:id,name', 'patient.occupations:id,name', 'patient.marritalStatus:id,name'])
+            ->get()
+            ->filter(function ($action) use ($diagnosaValue) {
+                $diagnosaIds = [];
+
+                if (!empty($action->diagnosa)) {
+                    if (is_string($action->diagnosa)) {
+                        $decoded = json_decode($action->diagnosa, true);
+                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                            $diagnosaIds = array_map('intval', $decoded);
+                        }
+                    } elseif (is_array($action->diagnosa)) {
+                        $diagnosaIds = array_map('intval', $action->diagnosa);
+                    }
+                }
+
+                if (!empty($action->diagnosa_primer)) {
+                    $diagnosaIds[] = (int) $action->diagnosa_primer;
+                }
+
+                $diagnosaIds = array_unique($diagnosaIds);
+
+                return !empty(array_intersect($diagnosaValue, $diagnosaIds));
+            });
+        foreach ($actions as $action) {
+            $patient = $action->patient;
+            $diagnosaIds = [];
+
+            if (!empty($action->diagnosa)) {
+                if (is_string($action->diagnosa)) {
+                    $decoded = json_decode($action->diagnosa, true);
+                    $diagnosaIds = is_array($decoded) ? array_map('intval', $decoded) : [];
+                } elseif (is_array($action->diagnosa)) {
+                    $diagnosaIds = array_map('intval', $action->diagnosa);
+                }
+            }
+
+            if (!empty($action->diagnosa_primer)) {
+                $diagnosaIds[] = (int) $action->diagnosa_primer;
+            }
+
+            $sheet->setCellValue("A{$row}", $no);
+            $sheet->setCellValue("B{$row}", Carbon::parse($action->tanggal)->format('d-m-Y'));
+            $sheet->setCellValueExplicit("C{$row}", $patient->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue("D{$row}", $patient->name);
+            $sheet->setCellValue("E{$row}", Carbon::parse($patient->dob)->format('d-m-Y'));
+            $sheet->setCellValue("F{$row}", $patient->gender == 1 ? 'Perempuan' : 'Laki-laki');
+            $sheet->setCellValue("G{$row}", 'Sulawesi Selatan');
+            $sheet->setCellValue("H{$row}", 'Kota Makassar');
+            $sheet->setCellValue("I{$row}", $patient->address);
+            $sheet->setCellValue("J{$row}", $patient->phone);
+            $sheet->setCellValue("K{$row}", $patient->educations->name ?? '-');
+            $sheet->setCellValue("L{$row}", $patient->occupations->name ?? '-');
+            $sheet->setCellValue("M{$row}", $patient->marritalStatus->name ?? '-');
+            $sheet->setCellValue("N{$row}", $patient->bloodType ?? '-');
+            $diagnosaColumn = [
+                700 => ['O', 'P', 'Q'], // Katarak
+                1016 => ['R', 'S', 'T'], // Kelainan Refraksi
+                716 => ['U', 'V', 'W'], // Tuli Kongenital
+                713 => ['X', 'Y', 'Z'], // OMSK
+                711 => ['AA', 'AB', 'AC'], // Serumen
+            ];
+
+            foreach ($diagnosaColumn as $kolomSet) {
+                foreach ($kolomSet as $col) {
+                    $sheet->setCellValue("{$col}{$row}", 'Tidak');
+                }
+            }
+
+            $diagnosaIds = $this->getDiagnosaIds($action);
+
+            foreach ($diagnosaColumn as $id => $kolomSet) {
+                if (in_array($id, $diagnosaIds)) {
+                    $sheet->setCellValue("{$kolomSet[0]}{$row}", 'Ya'); // sisi kanan (misal Telinga Kanan)
+                    $sheet->setCellValue("{$kolomSet[1]}{$row}", 'Ya'); // sisi kiri (misal Telinga Kiri)
+                    $sheet->setCellValue("{$kolomSet[2]}{$row}", !empty($action->rujuk_rs) ? 'Ya' : 'Tidak'); // rujuk_rs
+                }
+            }
+
+            $sheet->getStyle("A{$row}:AC{$row}")->applyFromArray($borderStyle);
+
+            $row++;
+            $no++;
+        }
+        $tandaTanganRow = $row + 2;
+        $sheet->setCellValue("O{$tandaTanganRow}", "Makassar, {$tanggal}");
+        $sheet->setCellValue('O' . ($tandaTanganRow + 3), 'Pengelola');
+        $sheet->setCellValue('O' . ($tandaTanganRow + 5), 'Hatijasam,S.Kep.,Ns');
+        $sheet->setCellValue('O' . ($tandaTanganRow + 6), 'NIP. 198512052009022003');
+
+        $sheet->setCellValue('E' . ($tandaTanganRow + 2), 'Mengetahui,');
+        $sheet->setCellValue('E' . ($tandaTanganRow + 3), 'Kepala UPT Puskesmas Tamangapa');
+        $sheet->setCellValue('E' . ($tandaTanganRow + 5), 'dr. Fatimah M.Kes');
+        $sheet->setCellValue('E' . ($tandaTanganRow + 6), 'NIP.198511252011012009');
+
+        $fileName = 'laporan-indera.xlsx';
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $fileName);
+    }
     private function getGroupedData($diagnosaValue, $bulan, $tahun)
     {
         $data = Action::whereMonth('tanggal', $bulan)

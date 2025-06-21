@@ -1147,7 +1147,19 @@ class ActionController extends Controller
         }
 
         $query->orderBy('tanggal', 'asc');
-        $query->with('diagnosaPrimer');
+        $query->select([
+            'id', 'tanggal', 'id_patient',
+            'tinggiBadan', 'beratBadan', 'lingkarPinggang',
+            'kasus', 'tipe', 'keluhan', 'diagnosa_primer',
+            'tindakan', 'tindakan_ruang_tindakan', 'rujuk_rs',
+            'keterangan', 'doctor', 'beri_tindakan','diagnosa','diagnosa_primer','sistol','diastol'
+        ]);
+        $query->with([
+            'patient:id,no_rm,nik,name,dob,jenis_kartu,nomor_kartu,address,rw,gender',
+            'patient.genderName:id,name',
+            'diagnosaPrimer:id,name,icd10',
+            'hospitalReferral:id,name'
+        ]);
         $actions = $query->get();
 
         return view('content.action.print', compact('actions', 'startDate', 'endDate'));
